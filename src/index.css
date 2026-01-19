@@ -173,3 +173,17 @@ body {
   background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
   background-size: 20px 20px;
 }
+
+/* Presentation mode global scale wrapper */
+.present-scale {
+  transform: scale(1);
+  transform-origin: top center;
+}
+
+/* Loosen Tailwind max-width constraints in presentation mode */
+.present-scale .max-w-3xl,
+.present-scale .max-w-4xl,
+.present-scale .max-w-5xl,
+.present-scale .max-w-6xl {
+  max-width: 100% !important;
+}

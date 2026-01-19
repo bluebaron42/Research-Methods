@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { X, Menu, ChevronLeft, ChevronRight, Lightbulb, CheckCircle, Target, FlaskConical, BarChart, Beaker, AlertTriangle, Eye, EyeOff, Zap, Brain, Clock, TrendingUp, Projector } from 'lucide-react'
+import { X, Menu, ChevronLeft, ChevronRight, Lightbulb, CheckCircle, Target, FlaskConical, BarChart, Beaker, AlertTriangle, Eye, EyeOff, Zap, Brain, TrendingUp, Projector, AlertCircle } from 'lucide-react'
 import { useEffect } from 'react'
 
 // ============= TYPES =============
@@ -13,7 +13,7 @@ interface Question {
 // ============= INTERACTIVE COMPONENTS =============
 
 // Do Now Quiz Component
-const DoNowQuiz: React.FC<{ questions: Question[] }> = ({ questions }) => {
+const DoNowQuiz: React.FC<{ questions: Question[], isPresenting?: boolean }> = ({ questions, isPresenting = false }) => {
   const [answers, setAnswers] = useState<Record<number, number>>({})
   const [showResults, setShowResults] = useState(false)
 
@@ -26,74 +26,100 @@ const DoNowQuiz: React.FC<{ questions: Question[] }> = ({ questions }) => {
   )
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 h-full content-start gap-8 p-8">
-      <div className="space-y-6">
-        <div className="bg-gradient-to-br from-pink-900/40 to-purple-900/20 rounded-2xl border border-pink-500/20 p-8 shadow-lg relative overflow-hidden">
+    <div
+      className={`grid h-full content-start transition-all ${isPresenting ? 'gap-6 p-6' : 'grid-cols-1 lg:grid-cols-2 gap-8 p-8'}`}
+      style={isPresenting ? { gridTemplateColumns: '1fr 3fr' } : undefined}
+    >
+      {/* Left Panel - Compact Task Description */}
+      <div className={isPresenting ? 'space-y-4' : 'space-y-6'}>
+        <div className={`bg-gradient-to-br from-pink-900/40 to-purple-900/20 rounded-xl border border-pink-500/20 shadow-lg relative overflow-hidden ${isPresenting ? 'p-6' : 'p-8'}`}>
           <div className="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 blur-3xl rounded-full"></div>
-          <h3 className="text-2xl font-bold text-white mb-4">Task: Activation & Retrieval</h3>
-          <p className="text-gray-300">
+          <h3 className={`font-bold text-white ${isPresenting ? 'text-3xl mb-3' : 'text-2xl mb-6'}`}>Task: Activation & Retrieval</h3>
+          <p className={`text-gray-300 leading-relaxed ${isPresenting ? 'text-lg' : ''}`}>
             Activate your psychological knowledge. These questions test recall from previous lessons and foundational content.
           </p>
         </div>
-        <div className="flex flex-col gap-3">
-          {!showResults ? (
-            <>
-              <button
-                onClick={() => setShowResults(true)}
-                disabled={Object.keys(answers).length < 5}
-                className="bg-pink-600 hover:bg-pink-500 disabled:opacity-50 disabled:grayscale text-white rounded-xl font-bold px-8 py-4 transition-all shadow-lg hover:shadow-pink-500/20"
-              >
-                Submit Answers
-              </button>
-              <button
-                onClick={() => setShowResults(true)}
-                className="bg-transparent hover:bg-gray-800 text-gray-400 border border-gray-700 hover:border-gray-500 rounded-xl font-semibold px-8 py-3 text-sm transition-all"
-              >
-                Reveal All Answers
-              </button>
-            </>
-          ) : (
-            <div className="bg-green-900/30 border border-green-500/30 rounded-xl p-6 text-center animate-fadeIn shadow-[0_0_30px_rgba(34,197,94,0.1)]">
-              <span className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300 block mb-2">
-                Score: {score} / 5
-              </span>
-              <span className="text-green-200/70 font-mono uppercase tracking-widest text-xs">
-                Knowledge Retrieved
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="space-y-3 overflow-y-auto pr-2 custom-scrollbar max-h-full">
-        {questions.map((q) => (
-          <div key={q.id} className="bg-gray-900/50 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors p-4">
-            <h4 className="font-semibold text-gray-200 mb-3 text-sm">
-              <span className="text-pink-500 mr-2">{String(q.id).padStart(2, '0')}.</span>
-              {q.question}
-            </h4>
-            <div className="grid grid-cols-1 gap-2">
-              {q.options.map((opt, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => !showResults && handleSelect(q.id, idx)}
-                  className={`rounded-lg text-left transition-all px-4 py-2 text-xs border ${
-                    showResults
-                      ? idx === q.correct
-                        ? 'bg-green-900/30 border-green-500 text-green-300'
-                        : answers[q.id] === idx
-                          ? 'bg-red-900/30 border-red-500 text-red-300'
-                          : 'bg-gray-900/50 border-transparent text-gray-600 opacity-50'
-                      : answers[q.id] === idx
-                        ? 'bg-pink-600 border-pink-500 text-white'
-                        : 'bg-gray-800 border-transparent hover:bg-gray-750 text-gray-400 hover:text-white'
-                  }`}
-                >
-                  {opt}
-                </button>
-              ))}
-            </div>
+        {!showResults ? (
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => setShowResults(true)}
+              disabled={Object.keys(answers).length < 5}
+              className={`bg-pink-600 hover:bg-pink-500 disabled:opacity-50 disabled:grayscale text-white rounded-lg font-bold transition-all shadow-lg hover:shadow-pink-500/20 ${isPresenting ? 'px-6 py-3 text-lg' : 'px-8 py-4'}`}
+            >
+              Submit
+            </button>
+            <button
+              onClick={() => setShowResults(true)}
+              className={`bg-transparent hover:bg-gray-800 text-gray-400 border border-gray-700 hover:border-gray-500 rounded-lg font-semibold transition-all ${isPresenting ? 'px-6 py-2 text-sm' : 'px-8 py-3 text-sm'}`}
+            >
+              Reveal All
+            </button>
           </div>
-        ))}
+        ) : (
+          <div className={`bg-green-900/30 border border-green-500/30 rounded-lg text-center animate-fadeIn shadow-[0_0_30px_rgba(34,197,94,0.1)] ${isPresenting ? 'p-6' : 'p-6'}`}>
+            <span className={`font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300 block mb-2 ${isPresenting ? 'text-5xl' : 'text-5xl'}`}>
+              {score} / 5
+            </span>
+            <span className={`text-green-200/70 font-mono uppercase tracking-widest ${isPresenting ? 'text-xs' : 'text-xs'}`}>
+              Knowledge Retrieved
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Right Panel - Question Grid */}
+      <div className={`${isPresenting ? '' : 'space-y-4 overflow-y-auto pr-2 custom-scrollbar max-h-full'}`}>
+        {isPresenting ? (
+          <div className="grid grid-cols-3 gap-4">
+            {questions.map((q) => (
+              <div key={q.id} className="bg-gray-900/50 rounded-lg border border-gray-800 p-5 hover:border-gray-700 transition-colors min-h-[160px] flex flex-col">
+                <h4 className="font-semibold text-gray-200 mb-3 text-xl leading-tight">
+                  <span className="text-pink-500 mr-2">{String(q.id).padStart(2, '0')}.</span>
+                  {q.question}
+                </h4>
+                <div className="flex-grow flex items-center">
+                  {showResults ? (
+                    <div className="text-green-400 font-bold animate-fadeIn flex items-center gap-2 text-lg">
+                      <CheckCircle size={28} /> <span className="text-base">{q.options[q.correct]}</span>
+                    </div>
+                  ) : (
+                    <span className="text-gray-500 text-sm">Reveal answers to show</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          questions.map((q) => (
+            <div key={q.id} className={`bg-gray-900/50 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors p-4`}>
+              <h4 className={`font-semibold text-gray-200 mb-4 text-sm`}>
+                <span className="text-pink-500 mr-3">{String(q.id).padStart(2, '0')}.</span>
+                {q.question}
+              </h4>
+              <div className="grid grid-cols-1 gap-2">
+                {q.options.map((opt, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => !showResults && handleSelect(q.id, idx)}
+                    className={`rounded-lg text-left transition-all border px-4 py-2 text-xs ${
+                      showResults
+                        ? idx === q.correct
+                          ? 'bg-green-900/30 border-green-500 text-green-300'
+                          : answers[q.id] === idx
+                            ? 'bg-red-900/30 border-red-500 text-red-300'
+                            : 'bg-gray-900/50 border-transparent text-gray-600 opacity-50'
+                        : answers[q.id] === idx
+                          ? 'bg-pink-600 border-pink-500 text-white'
+                          : 'bg-gray-800 border-transparent hover:bg-gray-750 text-gray-400 hover:text-white'
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   )
@@ -775,6 +801,13 @@ const HypothesisLab: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
   const [results, setResults] = useState<{ music: number[], silence: number[] } | null>(null)
   const [conclusion, setConclusion] = useState('')
 
+  const reset = () => {
+    setGameState('setup')
+    setHypothesis(null)
+    setResults(null)
+    setConclusion('')
+  }
+
   const runExperiment = () => {
     setGameState('running')
     setTimeout(() => {
@@ -807,13 +840,6 @@ const HypothesisLab: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
       
       setGameState('results')
     }, 2000)
-  }
-
-  const reset = () => {
-    setGameState('intro')
-    setHypothesis(null)
-    setResults(null)
-    setConclusion('')
   }
 
   if (gameState === 'intro') {
@@ -1343,39 +1369,1588 @@ const HypothesisWritingTask: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }
   )
 }
 
+// Hypothesis Machine - interactive slot-style simulation
+const HypothesisMachine: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const scenarios = [
+    {
+      title: 'Watching Television Before Bed',
+      scenario: 'Does watching television before bed change how well people sleep?',
+      nullText: 'Watching television before bed has no impact on how well you sleep.',
+      altText: 'Watching scary movies before bed affects how fast you fall asleep.'
+    },
+    {
+      title: 'Music & Learning',
+      scenario: 'Does music while revising change how many words students remember?',
+      nullText: 'Listening to music while revising has no effect on how many words are remembered.',
+      altText: 'Students who revise with music will remember fewer words than students who revise in silence.'
+    },
+    {
+      title: 'Caffeine & Reaction Time',
+      scenario: 'Does drinking coffee before a reaction time test change performance?',
+      nullText: 'Drinking coffee before a reaction time test has no effect on scores.',
+      altText: 'Participants who drink coffee will react faster than those who do not drink coffee.'
+    },
+    {
+      title: 'Background Noise & Reading',
+      scenario: 'Does background noise affect reading comprehension?',
+      nullText: 'Background noise has no effect on reading comprehension scores.',
+      altText: 'Loud background noise reduces reading comprehension scores compared to quiet.'
+    },
+    {
+      title: 'Breakfast & Concentration',
+      scenario: 'Does eating breakfast improve concentration?',
+      nullText: 'Eating breakfast has no effect on concentration test performance.',
+      altText: 'Students who eat breakfast concentrate better than those who skip breakfast.'
+    },
+    {
+      title: 'Screen Time & Sleep',
+      scenario: 'Does using a phone before bed change sleep quality?',
+      nullText: 'Using a phone before bed has no impact on sleep quality.',
+      altText: 'Screen use before bed increases time to fall asleep.'
+    },
+    {
+      title: 'Exercise & Memory',
+      scenario: 'Does light exercise before study improve memory?',
+      nullText: 'Light exercise before study has no effect on recall.',
+      altText: 'Students who exercise recall more words than those who rest.'
+    },
+    {
+      title: 'Room Temperature & Productivity',
+      scenario: 'Does room temperature affect productivity?',
+      nullText: 'Room temperature has no effect on task completion speed.',
+      altText: 'Working in cooler rooms speeds up task completion compared to warmer rooms.'
+    },
+    {
+      title: 'Music Type & Math Accuracy',
+      scenario: 'Does the type of music affect maths accuracy?',
+      nullText: 'Type of music has no effect on maths accuracy.',
+      altText: 'Lyrical music reduces maths accuracy compared to instrumental music.'
+    },
+    {
+      title: 'Lighting & Mood',
+      scenario: 'Does brighter lighting improve mood?',
+      nullText: 'Lighting level has no effect on reported mood.',
+      altText: 'Brighter lighting increases positive mood ratings.'
+    },
+    {
+      title: 'Study Time & Test Score',
+      scenario: 'Does study duration change test scores?',
+      nullText: 'Study duration has no effect on test scores.',
+      altText: 'Students who study for 60 minutes score higher than those who study for 20 minutes.'
+    },
+    {
+      title: 'Class Size & Participation',
+      scenario: 'Does class size affect participation?',
+      nullText: 'Class size has no effect on the number of times a student speaks.',
+      altText: 'Smaller classes increase participation compared to larger classes.'
+    },
+    {
+      title: 'Multitasking & Errors',
+      scenario: 'Does multitasking increase errors?',
+      nullText: 'Doing two tasks at once has no effect on error rate.',
+      altText: 'Multitasking increases errors compared to single-tasking.'
+    },
+    {
+      title: 'Social Media Break & Stress',
+      scenario: 'Do social media breaks change stress levels?',
+      nullText: 'A short social media break has no effect on stress ratings.',
+      altText: 'Social media breaks increase stress compared to quiet breaks.'
+    },
+    {
+      title: 'Background Colour & Memory',
+      scenario: 'Does slide background colour affect memory?',
+      nullText: 'Background colour of slides has no effect on recall.',
+      altText: 'High-contrast slide backgrounds improve recall compared to low-contrast backgrounds.'
+    }
+  ]
+
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [isSpinning, setIsSpinning] = useState(false)
+  const [showResults, setShowResults] = useState(true) // Start true so first load shows something
+  const [revealNull, setRevealNull] = useState(false)
+  const [revealAlt, setRevealAlt] = useState(false)
+
+  const startSpin = () => {
+    if (isSpinning) return
+    setIsSpinning(true)
+    setShowResults(false)
+    setRevealNull(false)
+    setRevealAlt(false)
+
+    const duration = 2000 // 2 seconds spin
+    const startTime = Date.now()
+
+    const interval = setInterval(() => {
+      // Pick random scenario during spin for chaotic effect
+      setActiveIndex(Math.floor(Math.random() * scenarios.length))
+
+      if (Date.now() - startTime >= duration) {
+        clearInterval(interval)
+        // Land on a random final scenario
+        const final = Math.floor(Math.random() * scenarios.length)
+        setActiveIndex(final)
+        setIsSpinning(false)
+        setShowResults(true)
+      }
+    }, 80) // Fast updates
+  }
+
+  const current = scenarios[activeIndex]
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-8'}`}>
+      {/* Machine Frame */}
+      <div className={`bg-gray-800 border-4 border-gray-600 rounded-2xl shadow-2xl relative overflow-hidden group ${isPresenting ? 'p-6 flex-grow flex flex-col' : 'p-8'}`}>
+        {/* Glossy overlay effect */}
+        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none rounded-t-xl"></div>
+        
+        {/* Header Section - Compact */}
+        <div className={`flex items-center justify-between relative z-10 ${isPresenting ? 'mb-4' : 'mb-10'}`}>
+          <div className="flex items-center gap-2">
+            <div className={`bg-gradient-to-br from-pink-500 to-purple-600 rounded-lg shadow-lg border border-pink-400/30 ${isPresenting ? 'p-3' : 'p-4'}`}>
+              <Projector className="text-white" size={32} />
+            </div>
+            <div>
+              <h2 className={`font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 uppercase tracking-widest ${isPresenting ? 'text-3xl leading-tight' : 'text-3xl'}`}>
+                Hypothesis Gen
+              </h2>
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                <p className={`text-gray-400 font-mono uppercase ${isPresenting ? 'text-xs' : 'text-xs'}`}>Online</p>
+              </div>
+            </div>
+          </div>
+          {/* Button - Compact */}
+          <button
+            onClick={startSpin}
+            disabled={isSpinning}
+            className={`
+              relative font-black uppercase tracking-widest transition-all transform rounded-lg
+              ${isPresenting ? 'px-6 py-3 text-sm' : 'px-10 py-5 text-xl'}
+              ${isSpinning 
+                ? 'bg-gray-700 text-gray-500 translate-y-1 shadow-inner cursor-wait border-b-0' 
+                : 'bg-red-600 hover:bg-red-500 text-white shadow-[0_4px_0_rgb(153,27,27)] hover:shadow-[0_2px_0_rgb(153,27,27)] active:shadow-none active:translate-y-1 border-b-2 border-red-800'
+              }
+            `}
+          >
+            <span className="flex items-center gap-2 relative z-10 filter drop-shadow-md">
+              {isSpinning ? <Brain className="animate-spin" size={isPresenting ? 16 : 24} /> : <Zap className="fill-current" size={isPresenting ? 16 : 24} />}
+              {isSpinning ? 'GEN...' : 'GEN'}
+            </span>
+          </button>
+        </div>
+
+        {/* The Screen / Slot Window */}
+        <div className={`bg-black rounded-lg border-y-4 border-x-2 border-gray-700 shadow-[inset_0_0_30px_rgba(0,0,0,0.8)] relative overflow-hidden flex-grow flex flex-col justify-center ${isPresenting ? 'p-6 mb-4' : 'p-8 mb-10'}`}>
+          {/* Scanline effect */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 pointer-events-none bg-[length:100%_4px,3px_100%]"></div>
+          
+          <div className="text-center flex flex-col items-center justify-center relative z-20">
+            <h3 className={`text-gray-500 font-mono uppercase tracking-[0.2em] mb-3 ${isPresenting ? 'text-xs' : 'text-xs'}`}>Scenario</h3>
+            <p className={`font-black font-mono leading-tight transition-all duration-75 ${isPresenting ? 'text-3xl' : 'text-2xl md:text-4xl'} text-green-400 ${
+              isSpinning ? 'blur-[2px] opacity-70 scale-95' : 'blur-0 opacity-100 scale-100 text-shadow-glow'
+            }`}>
+              {current.scenario}
+            </p>
+          </div>
+        </div>
+
+        {/* Results Output Slots - Sliding Panels */}
+        <div className={`grid grid-cols-2 relative z-10 ${isPresenting ? 'gap-12' : 'gap-8'}`}>
+          {/* Null Slot */}
+          <div
+            onClick={() => showResults && !isSpinning && setRevealNull(true)}
+            className={`
+              border-2 border-blue-500/30 bg-gray-900/80 rounded-2xl relative transition-all duration-700 transform cursor-pointer
+              ${isPresenting ? 'p-8' : 'p-6'}
+              ${showResults ? 'opacity-100 translate-y-0 scale-100' : 'opacity-50 translate-y-4 scale-95 grayscale'}
+              ${!showResults || isSpinning ? 'pointer-events-none' : 'hover:border-blue-400/60'}
+            `}
+          >
+            <div className={`absolute -top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 rounded-full font-bold uppercase tracking-wider shadow-lg border-2 border-gray-800 ${isPresenting ? 'py-2 text-lg' : 'py-1 text-xs'}`}>
+              Null Hypothesis (H₀)
+            </div>
+            {showResults && revealNull ? (
+              <p className={`text-blue-100 font-medium text-center mt-2 leading-relaxed font-mono ${isPresenting ? 'text-2xl' : 'text-lg'}`}>
+                {`"${current.nullText}"`}
+              </p>
+            ) : (
+              <div className={`flex flex-col items-center justify-center text-blue-200/70 mt-2 ${isPresenting ? 'py-10' : 'py-6'}`}>
+                <Eye className={`mb-2 opacity-70 ${isPresenting ? 'w-16 h-16' : ''}`} />
+                <span className={`${isPresenting ? 'text-2xl' : 'text-sm'} font-semibold`}>Click to reveal H₀</span>
+              </div>
+            )}
+          </div>
+
+          {/* Alt Slot */}
+          <div
+            onClick={() => showResults && !isSpinning && setRevealAlt(true)}
+            className={`
+              border-2 border-pink-500/30 bg-gray-900/80 rounded-2xl relative transition-all duration-700 delay-150 transform cursor-pointer
+              ${isPresenting ? 'p-8' : 'p-6'}
+              ${showResults ? 'opacity-100 translate-y-0 scale-100' : 'opacity-50 translate-y-4 scale-95 grayscale'}
+              ${!showResults || isSpinning ? 'pointer-events-none' : 'hover:border-pink-400/60'}
+            `}
+          >
+            <div className={`absolute -top-4 left-1/2 transform -translate-x-1/2 bg-pink-600 text-white px-4 rounded-full font-bold uppercase tracking-wider shadow-lg border-2 border-gray-800 ${isPresenting ? 'py-2 text-lg' : 'py-1 text-xs'}`}>
+              Alternative Hypothesis (H₁)
+            </div>
+            {showResults && revealAlt ? (
+              <p className={`text-pink-100 font-medium text-center mt-2 leading-relaxed font-mono ${isPresenting ? 'text-2xl' : 'text-lg'}`}>
+                {`"${current.altText}"`}
+              </p>
+            ) : (
+              <div className={`flex flex-col items-center justify-center text-pink-200/70 mt-2 ${isPresenting ? 'py-10' : 'py-6'}`}>
+                <Eye className={`mb-2 opacity-70 ${isPresenting ? 'w-16 h-16' : ''}`} />
+                <span className={`font-semibold ${isPresenting ? 'text-2xl' : 'text-sm'}`}>Click to reveal H₁</span>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* Decorative Industrial Screws */}
+        <div className="absolute top-4 left-4 w-3 h-3 rounded-full bg-gray-700 shadow-[inset_1px_1px_2px_rgba(0,0,0,0.5),1px_1px_0_rgba(255,255,255,0.1)]"></div>
+        <div className="absolute top-4 right-4 w-3 h-3 rounded-full bg-gray-700 shadow-[inset_1px_1px_2px_rgba(0,0,0,0.5),1px_1px_0_rgba(255,255,255,0.1)]"></div>
+        <div className="absolute bottom-4 left-4 w-3 h-3 rounded-full bg-gray-700 shadow-[inset_1px_1px_2px_rgba(0,0,0,0.5),1px_1px_0_rgba(255,255,255,0.1)]"></div>
+        <div className="absolute bottom-4 right-4 w-3 h-3 rounded-full bg-gray-700 shadow-[inset_1px_1px_2px_rgba(0,0,0,0.5),1px_1px_0_rgba(255,255,255,0.1)]"></div>
+      </div>
+    </div>
+  )
+}
+
+// Null vs Alternative classifier - AFL
+const HypothesisStatementCheck: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const statements = [
+    { id: 1, text: 'Music has no effect on learning.', correct: 'null' as const },
+    { id: 2, text: 'Students who revise with music will remember fewer words than those in silence.', correct: 'alternative' as const },
+    { id: 3, text: 'Watching TV before bed has no impact on sleep quality.', correct: 'null' as const },
+    { id: 4, text: 'Caffeine before a test will change reaction times.', correct: 'alternative' as const },
+  ]
+
+  const [answers, setAnswers] = useState<Record<number, 'null' | 'alternative' | undefined>>({})
+  const [showResults, setShowResults] = useState(false)
+  const [revealed, setRevealed] = useState<Record<number, boolean>>({})
+
+  const score = statements.reduce((acc, s) => acc + (answers[s.id] === s.correct ? 1 : 0), 0)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-8'}`}>
+      <div className="mb-4">
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-4xl'} font-black text-white mb-1`}>Thumbs Up/Down: Null or Alternative?</h2>
+        <p className={`${isPresenting ? 'text-sm' : ''} text-gray-400`}>Classify each statement as H₀ (no effect) or H₁ (effect).</p>
+      </div>
+
+      <div className={`grid grid-cols-2 flex-grow overflow-auto custom-scrollbar ${isPresenting ? 'gap-3' : 'gap-4'}`}>
+        {statements.map((s) => (
+          <div key={s.id} className={`bg-gray-900/70 border border-gray-700 rounded-lg flex flex-col ${isPresenting ? 'p-4 gap-3' : 'p-5 gap-4'}`}>
+            <div className="flex items-center justify-between">
+              <span className={`${isPresenting ? 'text-sm' : 'text-sm'} text-pink-400 font-bold`}>Statement {s.id}</span>
+              {(showResults || (isPresenting && revealed[s.id])) && (
+                <span className={`${isPresenting ? 'text-xs px-2 py-1' : 'text-xs px-3 py-1'} font-bold rounded-full ${
+                  s.correct === 'null' ? 'bg-blue-500/20 text-blue-300' : 'bg-pink-500/20 text-pink-300'
+                }`}>
+                  {s.correct === 'null' ? 'Null' : 'Alternative'}
+                </span>
+              )}
+            </div>
+            <p className={`text-gray-200 leading-relaxed ${isPresenting ? 'text-sm' : ''}`}>{s.text}</p>
+
+            {!isPresenting && (
+              <div className="flex gap-3">
+                <button
+                  onClick={() => !showResults && setAnswers(prev => ({ ...prev, [s.id]: 'null' }))}
+                  className={`flex-1 rounded-lg border font-bold transition-all ${isPresenting ? 'px-3 py-2 text-xs' : 'px-4 py-3'} ${
+                    answers[s.id] === 'null'
+                      ? 'border-blue-500 bg-blue-900/30 text-blue-200'
+                      : 'border-gray-700 bg-gray-800 text-gray-300 hover:border-blue-500/50'
+                  }`}
+                >
+                  Null (H₀)
+                </button>
+                <button
+                  onClick={() => !showResults && setAnswers(prev => ({ ...prev, [s.id]: 'alternative' }))}
+                  className={`flex-1 rounded-lg border font-bold transition-all ${isPresenting ? 'px-3 py-2 text-xs' : 'px-4 py-3'} ${
+                    answers[s.id] === 'alternative'
+                      ? 'border-pink-500 bg-pink-900/30 text-pink-200'
+                      : 'border-gray-700 bg-gray-800 text-gray-300 hover:border-pink-500/50'
+                  }`}
+                >
+                  Alternative (H₁)
+                </button>
+              </div>
+            )}
+
+            {isPresenting && !revealed[s.id] && !showResults && (
+              <button
+                onClick={() => setRevealed(prev => ({ ...prev, [s.id]: true }))}
+                className={`self-start rounded-lg border border-gray-700 text-gray-300 hover:border-pink-500/50 transition-all ${isPresenting ? 'px-3 py-1 text-xs' : 'px-4 py-2 text-sm'}`}
+              >
+                Reveal answer
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {!isPresenting && (
+        <div className="mt-6 flex items-center gap-4">
+          {!showResults ? (
+            <button
+              onClick={() => setShowResults(true)}
+              disabled={Object.keys(answers).length < statements.length}
+              className="px-6 py-3 rounded-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white disabled:opacity-50 disabled:grayscale"
+            >
+              Check My Classifications
+            </button>
+          ) : (
+            <div className="px-4 py-3 rounded-xl bg-green-900/30 border border-green-500/40 text-green-200 font-mono">
+              Score: {score} / {statements.length}
+            </div>
+          )}
+        </div>
+      )}
+
+      {isPresenting && (
+        <div className="mt-4 flex items-center gap-2">
+          <button
+            onClick={() => setRevealed(Object.fromEntries(statements.map(s => [s.id, true])))}
+            className="px-4 py-2 rounded-lg text-sm font-bold bg-pink-600 hover:bg-pink-500 text-white"
+          >
+            Reveal All
+          </button>
+          <button
+            onClick={() => setRevealed({})}
+            className="px-4 py-2 rounded-lg text-sm font-bold bg-gray-800 hover:bg-gray-700 text-gray-200"
+          >
+            Hide All
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Hypothesis writing for GCSE scenario (music & learning)
+const HypothesisWriterGCSE: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [step, setStep] = useState<1 | 2 | 3>(1)
+
+  const templates = {
+    null: 'There will be no difference in _____ between _____ and _____.',
+    alt_dir: 'Students who _____ will score higher/lower on _____ than students who _____.',
+    alt_nd: 'There will be a difference in _____ between _____ and _____.'
+  }
+
+  const Header = () => (
+    <div className="mb-4">
+      <h2 className={`${isPresenting ? 'text-2xl' : 'text-5xl'} font-black text-white mb-1`}>Independent Task: Hypothesis Writer</h2>
+      <p className={`${isPresenting ? 'text-xs' : ''} text-gray-400`}>Scenario: "Does music affect people's ability to learn?"</p>
+      <div className={`mt-2 grid grid-cols-3 ${isPresenting ? 'gap-3' : 'gap-3'}`}>
+        {[1,2,3].map((i) => (
+          <div key={i} className={`h-1 rounded-full ${step >= i ? 'bg-gradient-to-r from-pink-500 to-purple-500' : 'bg-gray-700'}`} />
+        ))}
+      </div>
+      <div className="mt-1 grid grid-cols-3 text-xs text-gray-400 font-semibold">
+        <span className="text-xs">1: Plan</span>
+        <span className="text-center text-xs">2: H₀</span>
+        <span className="text-right text-xs">3: H₁</span>
+      </div>
+    </div>
+  )
+
+  const ActionBar = () => (
+    <div className={`mt-3 flex items-center justify-between ${isPresenting ? 'text-xs' : ''}`}>
+      <button
+        onClick={() => setStep((prev) => (prev > 1 ? (prev - 1) as 1 | 2 | 3 : prev))}
+        className={`rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold ${isPresenting ? 'px-3 py-2' : 'px-6 py-3'}`}
+        disabled={step === 1}
+      >
+        Back
+      </button>
+      {step < 3 ? (
+        <button
+          onClick={() => setStep((prev) => (prev + 1) as 1 | 2 | 3)}
+          className={`rounded-lg bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold shadow-lg ${isPresenting ? 'px-4 py-2' : 'px-8 py-3'}`}
+        >
+          Next
+        </button>
+      ) : (
+        <button
+          className={`rounded-lg font-bold shadow-lg ${isPresenting ? 'px-4 py-2' : 'px-8 py-3'} bg-green-600 text-white hover:bg-green-500`}
+        >
+          Ready ✓
+        </button>
+      )}
+    </div>
+  )
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-4' : 'p-10'}`}>
+      <Header />
+
+      {step === 1 && (
+        <div className={`grid grid-cols-3 flex-grow ${isPresenting ? 'gap-3' : 'gap-6'}`}>
+          <div className={`rounded-lg border bg-gray-900/60 border-gray-700 ${isPresenting ? 'p-3' : 'p-6'}`}>
+            <h3 className={`${isPresenting ? 'text-xs' : 'text-xl'} font-bold text-blue-300 mb-2`}>Identify Variables</h3>
+            <ul className={`text-gray-200 ${isPresenting ? 'text-xs' : 'text-sm'} space-y-1`}>
+              <li>IV: Music while revising (present vs silence)</li>
+              <li>DV: Memory test score / words remembered</li>
+              <li>Control: prior knowledge, intelligence, sleep</li>
+            </ul>
+          </div>
+          <div className={`rounded-lg border bg-gray-900/60 border-gray-700 ${isPresenting ? 'p-3' : 'p-6'}`}>
+            <h3 className={`${isPresenting ? 'text-xs' : 'text-xl'} font-bold text-pink-300 mb-2`}>Choose Format</h3>
+            <div className={`grid grid-cols-1 ${isPresenting ? 'gap-2' : 'gap-2'}`}>
+              <button className={`rounded-lg border border-pink-500/40 text-pink-200 hover:bg-pink-900/20 text-left ${isPresenting ? 'px-2 py-1 text-xs' : 'px-4 py-3'}`}>
+                Directional (One-Tailed)
+                <div className={`${isPresenting ? 'text-xs' : 'text-xs'} text-pink-300 opacity-80`}>Predicts higher/lower</div>
+              </button>
+              <button className={`rounded-lg border border-blue-500/40 text-blue-200 hover:bg-blue-900/20 text-left ${isPresenting ? 'px-2 py-1 text-xs' : 'px-4 py-3'}`}>
+                Non-Directional (Two-Tailed)
+                <div className={`${isPresenting ? 'text-xs' : 'text-xs'} text-blue-300 opacity-80`}>Predicts a difference</div>
+              </button>
+            </div>
+          </div>
+          <div className={`rounded-lg border bg-gray-900/60 border-gray-700 ${isPresenting ? 'p-3' : 'p-6'}`}>
+            <h3 className={`${isPresenting ? 'text-xs' : 'text-xl'} font-bold text-emerald-300 mb-2`}>Templates</h3>
+            <div className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'}`}>
+              <div className="bg-blue-950/30 border border-blue-500/30 rounded p-2 text-blue-200 text-xs">{templates.null}</div>
+              <div className="bg-pink-950/30 border border-pink-500/30 rounded p-2 text-pink-200 text-xs">{templates.alt_dir}</div>
+              <div className="bg-purple-950/30 border border-purple-500/30 rounded p-2 text-purple-200 text-xs">{templates.alt_nd}</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {step === 2 && (
+        <div className={`grid grid-cols-2 flex-grow ${isPresenting ? 'gap-3' : 'gap-6'}`}> 
+          <div className={`rounded-lg border bg-gray-900/60 border-gray-700 flex flex-col ${isPresenting ? 'p-3' : 'p-6'}`}>
+            <h3 className={`${isPresenting ? 'text-xs' : 'text-2xl'} font-bold text-blue-300 mb-2`}>Write H₀ (Null)</h3>
+            <div className="flex flex-wrap gap-1 mb-2">
+              {['no difference', 'no effect', 'chance'].map((chip) => (
+                <span key={chip} className={`${isPresenting ? 'px-2 py-1 text-xs' : 'px-3 py-1 text-xs'} rounded-full bg-blue-900/40 text-blue-200 border border-blue-500/30`}>{chip}</span>
+              ))}
+            </div>
+            <div className="text-gray-300 text-sm leading-relaxed flex-grow flex items-center justify-center">
+              <p className="text-center p-4 bg-blue-900/20 border border-blue-500/20 rounded-lg">There will be <span className="font-semibold text-blue-200">no difference</span> in test scores between students who revise with music and those who revise in silence.</p>
+            </div>
+          </div>
+          <div className={`rounded-lg border bg-blue-950/20 border-blue-500/30 ${isPresenting ? 'p-3' : 'p-6'}`}>
+            <h4 className={`${isPresenting ? 'text-xs' : ''} text-blue-300 font-bold mb-2`}>Preview</h4>
+            <p className={`${isPresenting ? 'text-xs' : 'text-lg'} text-gray-100 font-mono leading-tight min-h-[100px]`}>A well-formed null hypothesis states that any observed difference is due to chance alone, not to your independent variable.</p>
+          </div>
+        </div>
+      )}
+
+      {step === 3 && (
+        <div className={`grid grid-cols-2 flex-grow ${isPresenting ? 'gap-3' : 'gap-6'}`}>
+          <div className={`rounded-lg border bg-gray-900/60 border-gray-700 flex flex-col ${isPresenting ? 'p-3' : 'p-6'}`}>
+            <h3 className={`${isPresenting ? 'text-xs' : 'text-2xl'} font-bold text-pink-300 mb-2`}>Write H₁ (Alternative)</h3>
+            <div className="flex flex-wrap gap-1 mb-2">
+              {['higher', 'lower', 'difference'].map((chip) => (
+                <span key={chip} className={`${isPresenting ? 'px-2 py-1 text-xs' : 'px-3 py-1 text-xs'} rounded-full bg-pink-900/40 text-pink-200 border border-pink-500/30`}>{chip}</span>
+              ))}
+            </div>
+            <div className="text-gray-300 text-sm leading-relaxed flex-grow flex items-center justify-center">
+              <p className="text-center p-4 bg-pink-900/20 border border-pink-500/20 rounded-lg">Students who revise <span className="font-semibold text-pink-200">with music</span> will score <span className="font-semibold text-pink-200">lower</span> on the test compared to students who revise in silence.</p>
+            </div>
+          </div>
+          <div className={`rounded-lg border bg-pink-950/20 border-pink-500/30 ${isPresenting ? 'p-3' : 'p-6'}`}>
+            <h4 className={`${isPresenting ? 'text-xs' : ''} text-pink-300 font-bold mb-2`}>✓ Checklist</h4>
+            <ul className={`text-gray-200 ${isPresenting ? 'text-xs' : 'text-sm'} space-y-1`}>
+              <li>✓ Names the IV (music vs silence)</li>
+              <li>✓ Names the DV (words remembered / test score)</li>
+              <li>✓ Predicts effect clearly</li>
+              <li>✓ Is testable and measurable</li>
+            </ul>
+          </div>
+        </div>
+      )}
+
+      <ActionBar />
+    </div>
+  )
+}
+
+// Teacher Input: Hypotheses (well-presented deck slide)
+const HypothesisTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const points = [
+    { title: 'Aim vs Hypothesis', desc: 'An aim is a general purpose; a hypothesis is a specific, testable prediction.' },
+    { title: 'H₀: Null Hypothesis', desc: 'Predicts no effect or no difference (any difference is due to chance).' },
+    { title: 'H₁: Alternative Hypothesis', desc: 'Predicts an effect or a difference (directional or non-directional).' },
+    { title: 'Operationalisation', desc: 'Define variables in measurable terms (e.g., words remembered, time to fall asleep).' },
+  ]
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-16' : 'p-10'}`}>
+      <div className="mb-8 text-center">
+        <h2 className={`${isPresenting ? 'text-7xl' : 'text-5xl'} font-black text-white mb-3`}>Teacher Input: Hypotheses</h2>
+        <p className={`${isPresenting ? 'text-3xl' : ''} text-gray-400`}>Clear predictions make research testable and replicable.</p>
+      </div>
+      <div className={`grid grid-cols-2 max-w-6xl mx-auto ${isPresenting ? 'gap-12' : 'gap-6'}`}>
+        {points.map((p, i) => (
+          <div key={i} className={`rounded-2xl border bg-gradient-to-br from-gray-900/60 to-gray-800/40 border-gray-700 shadow-xl ${isPresenting ? 'p-10' : 'p-6'}`}>
+            <div className={`flex items-center gap-4 ${isPresenting ? 'mb-4' : 'mb-2'}`}>
+              <div className={`${isPresenting ? 'w-16 h-16' : 'w-10 h-10'} rounded-full bg-pink-500/20 flex items-center justify-center`}>
+                <Target className="text-pink-400" size={isPresenting ? 36 : 22} />
+              </div>
+              <h3 className={`${isPresenting ? 'text-4xl' : 'text-xl'} font-bold text-pink-300`}>{p.title}</h3>
+            </div>
+            <p className={`text-gray-200 leading-relaxed ${isPresenting ? 'text-2xl' : 'text-sm'}`}>{p.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div className={`grid grid-cols-2 max-w-6xl mx-auto mt-8 ${isPresenting ? 'gap-12' : 'gap-6'}`}>
+        <div className={`rounded-2xl border-2 border-blue-500/40 bg-blue-950/20 ${isPresenting ? 'p-10' : 'p-6'}`}>
+          <h4 className={`${isPresenting ? 'text-3xl' : ''} text-blue-300 font-bold mb-2`}>Example H₀ (Null)</h4>
+          <p className={`${isPresenting ? 'text-3xl' : 'text-lg'} text-gray-200`}>There will be <span className="text-blue-300 font-semibold">no difference</span> in test scores between students who revise with music and those who revise in silence.</p>
+        </div>
+        <div className={`rounded-2xl border-2 border-pink-500/40 bg-pink-950/20 ${isPresenting ? 'p-10' : 'p-6'}`}>
+          <h4 className={`${isPresenting ? 'text-3xl' : ''} text-pink-300 font-bold mb-2`}>Example H₁ (Alternative)</h4>
+          <p className={`${isPresenting ? 'text-3xl' : 'text-lg'} text-gray-200`}>Students who revise in silence will score <span className="text-pink-300 font-semibold">higher</span> than students who revise with music.</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Teacher Input: Variables (well-presented deck slide)
+const VariablesTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const cards = [
+    { title: 'Independent Variable (IV)', color: 'blue', desc: 'The variable we manipulate (e.g., music vs silence).' },
+    { title: 'Dependent Variable (DV)', color: 'pink', desc: 'The variable we measure (e.g., test score / words remembered).' },
+    { title: 'Extraneous Variables', color: 'emerald', desc: 'Other factors that could influence the DV (e.g., prior knowledge, intelligence, sleep). Control to keep it fair.' },
+  ]
+
+  const colorMap: Record<string, { border: string, bg: string, text: string }> = {
+    blue:   { border: 'border-blue-500/40',   bg: 'bg-blue-900/20',   text: 'text-blue-300' },
+    pink:   { border: 'border-pink-500/40',   bg: 'bg-pink-900/20',   text: 'text-pink-300' },
+    emerald:{ border: 'border-emerald-500/40',bg: 'bg-emerald-900/20',text: 'text-emerald-300' },
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-16' : 'p-10'}`}>
+      <div className="mb-8 text-center">
+        <h2 className={`${isPresenting ? 'text-7xl' : 'text-5xl'} font-black text-white mb-3`}>Teacher Input: Variables</h2>
+        <p className={`${isPresenting ? 'text-3xl' : ''} text-gray-400`}>Define and control variables to ensure a fair test.</p>
+      </div>
+
+      <div className={`grid grid-cols-3 max-w-6xl mx-auto ${isPresenting ? 'gap-10' : 'gap-6'}`}>
+        {cards.map((c, i) => (
+          <div key={i} className={`rounded-2xl border-2 ${colorMap[c.color].border} ${colorMap[c.color].bg} shadow-xl ${isPresenting ? 'p-10' : 'p-6'}`}>
+            <h3 className={`${isPresenting ? 'text-4xl' : 'text-2xl'} font-bold mb-2 ${colorMap[c.color].text}`}>{c.title}</h3>
+            <p className={`text-gray-200 leading-relaxed ${isPresenting ? 'text-2xl' : ''}`}>{c.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className={`max-w-5xl mx-auto mt-8 rounded-2xl border border-gray-700 bg-gray-900/40 ${isPresenting ? 'p-10' : 'p-6'}`}>
+        <h4 className={`${isPresenting ? 'text-3xl' : ''} text-gray-300 font-bold mb-2`}>Top Tip</h4>
+        <p className={`${isPresenting ? 'text-2xl' : ''} text-gray-300`}>Write variables in measurable terms and link your controls to fairness (e.g., same test, same time limit, similar prior knowledge).</p>
+      </div>
+    </div>
+  )
+}
+
+// Variables lab (IV, DV, Extraneous)
+const VariableLab: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const extraneous = ['Prior knowledge', 'Intelligence', 'Education level']
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-12' : 'p-8'}`}>
+      <h2 className={`${isPresenting ? 'text-6xl' : 'text-4xl'} font-black text-white mb-2 flex items-center gap-3`}>
+        <FlaskConical className="text-green-400" size={isPresenting ? 56 : 40} />
+        Music & Learning Lab
+      </h2>
+      <p className={`${isPresenting ? 'text-2xl' : ''} text-gray-400 mb-6`}>Identify IV, DV, and extraneous variables.</p>
+
+      <div className={`grid grid-cols-3 ${isPresenting ? 'gap-10' : 'gap-6'}`}>
+        <div className={`bg-blue-900/20 border-2 border-blue-500/40 rounded-2xl ${isPresenting ? 'p-10' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-4xl' : 'text-2xl'} font-bold text-blue-300 mb-2`}>IV</h3>
+          <p className={`${isPresenting ? 'text-2xl' : ''} text-gray-200`}>Music while revising (present vs silent)</p>
+          <p className={`${isPresenting ? 'text-xl' : 'text-sm'} text-blue-200 mt-3`}>The variable we manipulate.</p>
+        </div>
+        <div className={`bg-pink-900/20 border-2 border-pink-500/40 rounded-2xl ${isPresenting ? 'p-10' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-4xl' : 'text-2xl'} font-bold text-pink-300 mb-2`}>DV</h3>
+          <p className={`${isPresenting ? 'text-2xl' : ''} text-gray-200`}>Test score / number of words remembered</p>
+          <p className={`${isPresenting ? 'text-xl' : 'text-sm'} text-pink-200 mt-3`}>The outcome we measure.</p>
+        </div>
+        <div className={`bg-emerald-900/20 border-2 border-emerald-500/40 rounded-2xl ${isPresenting ? 'p-10' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-4xl' : 'text-2xl'} font-bold text-emerald-300 mb-2`}>Extraneous</h3>
+          <ul className={`space-y-2 text-gray-200 ${isPresenting ? 'text-2xl' : ''}`}>
+            {extraneous.map((item, idx) => (
+              <li key={idx} className="flex items-start gap-2">
+                <AlertTriangle size={isPresenting ? 24 : 16} className="text-emerald-300 mt-1" />
+                <span className={`${isPresenting ? 'text-2xl' : 'text-sm'}`}>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <p className={`${isPresenting ? 'text-xl' : 'text-sm'} text-emerald-200 mt-3`}>Control these to keep the test fair.</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Variable Detective task with reveal answers
+const VariableDetective: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const scenarios = [
+    {
+      id: 1,
+      text: 'Energy drinks before a maths quiz.',
+      iv: 'Energy drink vs water',
+      dv: 'Quiz score',
+      extraneous: 'Prior maths ability, sleep'
+    },
+    {
+      id: 2,
+      text: 'Background noise while reading.',
+      iv: 'Noise level (loud vs quiet)',
+      dv: 'Reading comprehension score',
+      extraneous: 'Reading ability, tiredness'
+    },
+    {
+      id: 3,
+      text: 'Sleep hours before a memory test.',
+      iv: 'Hours of sleep (4 vs 8)',
+      dv: 'Memory test score',
+      extraneous: 'Stress, caffeine intake'
+    }
+  ]
+
+  const [revealed, setRevealed] = useState<Record<number, boolean>>({})
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-4' : 'p-8'}`}>
+      <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-1`}>Variable Detective</h2>
+      <p className={`${isPresenting ? 'text-xs' : ''} text-gray-400 mb-4`}>Identify IV, DV and suggest 2 extraneous variables for each scenario.</p>
+
+      <div className={`grid grid-cols-3 flex-grow overflow-auto custom-scrollbar ${isPresenting ? 'gap-3' : 'gap-4'}`}>
+        {scenarios.map((s) => (
+          <div key={s.id} className={`bg-gray-900/70 border border-gray-700 rounded-lg flex flex-col justify-between ${isPresenting ? 'p-3' : 'p-5'}`}>
+            <div>
+              <div className={`flex items-center justify-between ${isPresenting ? 'mb-2' : 'mb-3'}`}>
+                <span className={`${isPresenting ? 'text-xs' : 'text-sm'} text-pink-400 font-bold`}>Scenario {s.id}</span>
+                <button
+                  onClick={() => setRevealed(prev => ({ ...prev, [s.id]: !prev[s.id] }))}
+                  className={`${isPresenting ? 'text-xs px-2 py-1' : 'text-xs px-3 py-1'} rounded-lg border border-gray-700 text-gray-300 hover:border-pink-500/50`}
+                >
+                  {revealed[s.id] ? 'Hide' : 'Reveal'}
+                </button>
+              </div>
+              <p className={`text-gray-200 leading-relaxed ${isPresenting ? 'text-xs mb-2' : 'mb-4'}`}>{s.text}</p>
+            </div>
+            {revealed[s.id] && (
+              <div className={`space-y-1 bg-gray-800/60 border border-gray-700 rounded-lg animate-fadeIn ${isPresenting ? 'p-2' : 'p-4'}`}>
+                <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-blue-200`}><strong>IV:</strong> {s.iv}</p>
+                <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-pink-200`}><strong>DV:</strong> {s.dv}</p>
+                <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-emerald-200`}><strong>Extraneous:</strong> {s.extraneous}</p>
+              </div>
+            )}
+            {!revealed[s.id] && (
+              <p className={`${isPresenting ? 'text-xs' : 'text-xs'} text-gray-500`}>Think first, then reveal.</p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Extended task card for exam-style question
+const ExtendedExamTask: React.FC = () => {
+  const [showTips, setShowTips] = useState(false)
+  
+  return (
+    <div className="flex flex-col h-full p-8 animate-fadeIn">
+      <h2 className="text-4xl font-black text-white mb-2">Extended Task: Exam-Style</h2>
+      <p className="text-gray-400 mb-6">Apply what you learned about hypotheses and variables.</p>
+  
+      <div className="bg-gray-900/70 border border-gray-700 rounded-2xl p-6 mb-6">
+        <h3 className="text-2xl font-bold text-pink-300 mb-3">Scenario</h3>
+        <p className="text-gray-200 leading-relaxed">
+          A psychologist wants to investigate whether background music affects concentration during revision. She plays classical music to one group of students while they revise, and no music to another group. Both groups then complete the same memory test.
+        </p>
+      </div>
+  
+      <div className="bg-gray-900/70 border border-gray-700 rounded-xl p-4 mb-6">
+        <h4 className="text-sm font-bold text-green-400 uppercase mb-3">Required Tasks</h4>
+        <ul className="space-y-2 text-gray-200 text-sm grid grid-cols-2 gap-4">
+          <li>• State the IV and DV</li>
+          <li>• Write null and alternative hypotheses</li>
+          <li>• Identify two extraneous variables to control</li>
+          <li>• Suggest an ethical safeguard</li>
+          <li>• Outline the procedure</li>
+          <li>• Explain what "fair test" means here</li>
+        </ul>
+      </div>
+
+      <button
+        onClick={() => setShowTips(!showTips)}
+        className="w-full py-3 mb-4 rounded-lg font-bold transition-all bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white"
+      >
+        {showTips ? '✕ Hide Exam Tips' : '+ Show Exam Tips'}
+      </button>
+
+      {showTips && (
+        <div className="bg-blue-900/30 border-2 border-blue-500/30 rounded-xl p-4 mb-4 animate-fadeIn">
+          <h4 className="text-sm font-bold text-blue-300 uppercase mb-3">Exam Tips</h4>
+          <div className="space-y-2 text-blue-100 text-sm">
+            <div className="flex gap-2">
+              <span className="font-semibold text-blue-300 min-w-fit">• H₀ (Null):</span>
+              <p>No effect / no difference. E.g., "There will be no difference in memory test scores..."</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-semibold text-blue-300 min-w-fit">• H₁ (Alt):</span>
+              <p>Predicts an effect. E.g., "Students revising with music will score lower..."</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-semibold text-blue-300 min-w-fit">• Extraneous:</span>
+              <p>Prior knowledge, intelligence, educational level, time of day, room temperature, music volume.</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-semibold text-blue-300 min-w-fit">• Controls:</span>
+              <p>Keep fair by controlling confounding variables. Only music should vary between groups.</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-semibold text-blue-300 min-w-fit">• Ethics:</span>
+              <p>Informed consent, right to withdraw, debriefing, confidentiality.</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= A-LEVEL LESSON 1: UNIFIED VISUAL DESIGN =============
+
+// Scientific Approach: Unified Teacher Input Slide
+const ScientificApproachTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-8'}>
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>The Scientific Approach</h2>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>What defines science and how psychologists approach research</p>
+      </div>
+
+      {/* Core Features Grid */}
+      <div className={`grid grid-cols-3 ${isPresenting ? 'gap-3 mb-4' : 'gap-4 mb-8'}`}>
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-2 flex items-center gap-2`}>
+            <TrendingUp size={isPresenting ? 20 : 24} />
+            Replicability
+          </h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 leading-relaxed`}>
+            Results can be repeated under the same conditions by different researchers. Builds confidence that findings are reliable, not due to chance.
+          </p>
+        </div>
+
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-2 flex items-center gap-2`}>
+            <Target size={isPresenting ? 20 : 24} />
+            Objectivity
+          </h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 leading-relaxed`}>
+            Measurements free from bias using standardised procedures and controlled conditions. Ensures findings reflect reality, not researcher expectations.
+          </p>
+        </div>
+
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-2 flex items-center gap-2`}>
+            <Zap size={isPresenting ? 20 : 24} />
+            Falsifiability
+          </h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 leading-relaxed`}>
+            Theories must be testable and potentially provable false. If we cannot disprove it, it gains credibility. Core principle of Karl Popper.
+          </p>
+        </div>
+      </div>
+
+      {/* Nomothetic vs Ideographic Section */}
+      <div className={`rounded-xl border border-gray-700 bg-gray-900/40 ${isPresenting ? 'p-4' : 'p-6'}`}>
+        <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-4`}>Two Approaches to Psychology</h3>
+        <div className={`grid grid-cols-2 ${isPresenting ? 'gap-3' : 'gap-4'}`}>
+          <div className={`rounded-lg border border-blue-500/30 bg-blue-950/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <h4 className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-blue-300 mb-2`}>Nomothetic</h4>
+            <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+              <li>• Seeks <span className="font-semibold">universal laws</span></li>
+              <li>• Applies to all similar people</li>
+              <li>• Uses quantitative data</li>
+              <li>• Laboratory-based</li>
+              <li>• <span className="text-blue-300">Scientific</span> approach</li>
+            </ul>
+          </div>
+          <div className={`rounded-lg border border-amber-500/30 bg-amber-950/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <h4 className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-amber-300 mb-2`}>Ideographic</h4>
+            <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+              <li>• Focuses on <span className="font-semibold">individual uniqueness</span></li>
+              <li>• Specific to each person</li>
+              <li>• Uses qualitative data</li>
+              <li>• Real-world settings</li>
+              <li>• <span className="text-amber-300">Humanistic</span> approach</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Scientific Features Interactive - 3 Core Features Only
+// Falsifiability Courtroom Simulation - Interactive Learning Game
+const ScientificFeaturesInteractive: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [activeTab, setActiveTab] = useState<'court' | 'create'>('court')
+  const [showNotes, setShowNotes] = useState(false)
+  const [courtVotes, setCourtVotes] = useState<Record<number, 'falsifiable' | 'unfalsifiable' | null>>({})
+  const [courtRevealed, setCourtRevealed] = useState<Record<number, boolean>>({})
+  const [userClaim, setUserClaim] = useState('')
+  const [studentClaims, setStudentClaims] = useState<Array<{ text: string; votes: { falsifiable: number; unfalsifiable: number }; userVote?: 'falsifiable' | 'unfalsifiable' }>>([])
+
+  const courtClaims = [
+    {
+      id: 1,
+      claim: 'High caffeine intake impairs sleep quality',
+      falsifiable: true,
+      disproof: 'Test by giving participants caffeine/placebo, measure sleep quality (EEG, duration) - if no difference = disproved'
+    },
+    {
+      id: 2,
+      claim: 'Some people are naturally lucky',
+      falsifiable: false,
+      disproof: '"Luck" is undefined. What would disprove it? Any bad outcome? Too vague to test scientifically.'
+    },
+    {
+      id: 3,
+      claim: 'Cognitive therapy reduces anxiety in adults with social phobia',
+      falsifiable: true,
+      disproof: 'Administer therapy, measure anxiety pre/post using standardised scales - if anxiety unchanged/increases = disproved'
+    },
+    {
+      id: 4,
+      claim: 'The universe is connected by cosmic energy that science cannot measure',
+      falsifiable: false,
+      disproof: 'If it "cannot" be measured, there is no way to test it. Unfalsifiable by definition.'
+    },
+    {
+      id: 5,
+      claim: 'Sleep deprivation reduces working memory capacity',
+      falsifiable: true,
+      disproof: 'Deprive participants of sleep, test working memory (digit span, N-back task) - results can disprove the claim'
+    }
+  ]
+
+  const handleAddClaim = () => {
+    if (userClaim.trim()) {
+      setStudentClaims([...studentClaims, { text: userClaim, votes: { falsifiable: 0, unfalsifiable: 0 } }])
+      setUserClaim('')
+    }
+  }
+
+  const handleVoteOnClaim = (index: number, vote: 'falsifiable' | 'unfalsifiable') => {
+    setStudentClaims(studentClaims.map((c, i) => 
+      i === index 
+        ? {
+            ...c,
+            votes: {
+              ...c.votes,
+              [vote]: c.votes[vote] + (c.userVote === vote ? 0 : 1)
+            },
+            userVote: c.userVote === vote ? undefined : vote
+          }
+        : c
+    ))
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-8'}`}>
+      {/* Header with Notes Toggle */}
+      <div className={`flex items-center justify-between mb-4 ${isPresenting ? 'gap-2' : 'gap-4'}`}>
+        <div>
+          <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white`}>Falsifiability Courtroom</h2>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400`}>Judge scientific claims & challenge peers</p>
+        </div>
+        <button
+          onClick={() => setShowNotes(!showNotes)}
+          className={`px-4 py-2 rounded-lg font-bold transition-all whitespace-nowrap ${
+            showNotes
+              ? 'bg-rose-600 hover:bg-rose-500 text-white'
+              : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
+          } ${isPresenting ? 'text-xs px-3 py-1' : ''}`}
+        >
+          {showNotes ? 'Hide' : 'Show'} Notes
+        </button>
+      </div>
+
+      {/* Condensed Notes Panel */}
+      {showNotes && (
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 mb-4 animate-fadeIn ${isPresenting ? 'p-3' : 'p-5'}`}>
+          <h3 className={`${isPresenting ? 'text-sm' : 'text-lg'} font-bold text-rose-300 mb-3`}>Key Concepts</h3>
+          <div className={`grid grid-cols-3 gap-3 ${isPresenting ? 'text-xs' : 'text-sm'}`}>
+            <div className="bg-gray-900/50 rounded-lg p-3 border-l-4 border-rose-500">
+              <p className="font-semibold text-rose-300 mb-2">📋 Definition</p>
+              <p className="text-gray-200">A scientific theory must be capable of being proven false. We should attempt to disprove theories—if we cannot, they gain credibility.</p>
+            </div>
+            <div className="bg-gray-900/50 rounded-lg p-3 border-l-4 border-blue-500">
+              <p className="font-semibold text-blue-300 mb-2">💡 Example</p>
+              <p className="text-gray-200">"High caffeine impairs sleep" is falsifiable (can be tested). "Some people have psychic powers" is not (unfalsifiable by definition).</p>
+            </div>
+            <div className="bg-gray-900/50 rounded-lg p-3 border-l-4 border-emerald-500">
+              <p className="font-semibold text-emerald-300 mb-2">⭐ Why It Matters</p>
+              <p className="text-gray-200">Distinguishes science from pseudoscience. Theories that cannot be tested are not scientifically useful.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tab Navigation */}
+      <div className={`flex gap-2 mb-4 ${isPresenting ? 'gap-1' : ''}`}>
+        <button
+          onClick={() => setActiveTab('court')}
+          className={`px-4 py-2 rounded-lg font-bold transition-all ${
+            activeTab === 'court'
+              ? 'bg-rose-600 text-white'
+              : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+          } ${isPresenting ? 'text-xs px-3 py-1' : ''}`}
+        >
+          🏛️ Judge Claims
+        </button>
+        <button
+          onClick={() => setActiveTab('create')}
+          className={`px-4 py-2 rounded-lg font-bold transition-all ${
+            activeTab === 'create'
+              ? 'bg-rose-600 text-white'
+              : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+          } ${isPresenting ? 'text-xs px-3 py-1' : ''}`}
+        >
+          🎯 Create & Challenge
+        </button>
+      </div>
+
+      {/* PART A: COURT GAME */}
+      {activeTab === 'court' && (
+        <div className={`flex-grow overflow-y-auto custom-scrollbar space-y-3 ${isPresenting ? 'mb-2' : 'mb-4'}`}>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 mb-3`}>Can each claim be tested and potentially proven false? Judge them!</p>
+          
+          {courtClaims.map((item) => (
+            <div
+              key={item.id}
+              className={`rounded-xl border-2 transition-all ${
+                courtRevealed[item.id]
+                  ? 'border-rose-500 bg-rose-900/30'
+                  : 'border-gray-700 bg-gray-900/50 hover:border-rose-500/50'
+              } ${isPresenting ? 'p-3' : 'p-4'}`}
+            >
+              {/* Claim Header */}
+              <div className={`flex items-start justify-between gap-3 ${isPresenting ? 'mb-2' : 'mb-3'}`}>
+                <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 flex-grow font-semibold`}>{item.claim}</p>
+                <button
+                  onClick={() => setCourtRevealed(prev => ({ ...prev, [item.id]: !prev[item.id] }))}
+                  className={`text-xs px-2 py-1 rounded font-bold whitespace-nowrap ${
+                    courtRevealed[item.id]
+                      ? 'bg-gray-700 text-gray-300'
+                      : 'bg-gray-800 hover:bg-gray-700 text-gray-400'
+                  }`}
+                >
+                  {courtRevealed[item.id] ? 'Hide' : 'Explain'}
+                </button>
+              </div>
+
+              {/* Voting Buttons */}
+              <div className={`flex gap-2 mb-3 ${isPresenting ? 'gap-1' : ''}`}>
+                <button
+                  onClick={() => setCourtVotes(prev => ({ ...prev, [item.id]: prev[item.id] === 'falsifiable' ? null : 'falsifiable' }))}
+                  className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${
+                    courtVotes[item.id] === 'falsifiable'
+                      ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                      : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                  } ${isPresenting ? 'text-xs py-1' : ''}`}
+                >
+                  ✓ Falsifiable
+                </button>
+                <button
+                  onClick={() => setCourtVotes(prev => ({ ...prev, [item.id]: prev[item.id] === 'unfalsifiable' ? null : 'unfalsifiable' }))}
+                  className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${
+                    courtVotes[item.id] === 'unfalsifiable'
+                      ? 'bg-red-600 hover:bg-red-500 text-white'
+                      : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                  } ${isPresenting ? 'text-xs py-1' : ''}`}
+                >
+                  ✗ Unfalsifiable
+                </button>
+              </div>
+
+              {/* Reveal Panel */}
+              {courtRevealed[item.id] && (
+                <div className={`bg-gray-900/70 rounded-lg p-3 border-l-4 border-blue-500 animate-fadeIn space-y-2`}>
+                  <div>
+                    <p className={`${isPresenting ? 'text-xs' : 'text-sm'} font-semibold text-blue-300 mb-1`}>Verdict:</p>
+                    <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+                      <span className={item.falsifiable ? 'text-emerald-400 font-bold' : 'text-red-400 font-bold'}>
+                        {item.falsifiable ? '✓ FALSIFIABLE' : '✗ UNFALSIFIABLE'}
+                      </span>
+                    </p>
+                  </div>
+                  <div>
+                    <p className={`${isPresenting ? 'text-xs' : 'text-sm'} font-semibold text-gray-300 mb-1`}>How to test:</p>
+                    <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300`}>{item.disproof}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* PART B: STUDENT CLAIM CREATOR */}
+      {activeTab === 'create' && (
+        <div className={`flex-grow flex flex-col overflow-hidden`}>
+          {/* Input Section */}
+          <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 mb-4 ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <label className={`${isPresenting ? 'text-xs' : 'text-sm'} font-bold text-rose-300 block mb-2`}>
+              Create a claim for the class to judge:
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={userClaim}
+                onChange={(e) => setUserClaim(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAddClaim()}
+                placeholder="E.g., 'Video games improve hand-eye coordination'"
+                className={`flex-grow bg-gray-900/50 border border-gray-700 rounded-lg text-gray-200 placeholder-gray-600 focus:outline-none focus:border-rose-500 ${isPresenting ? 'px-2 py-1 text-xs' : 'px-3 py-2 text-sm'}`}
+              />
+              <button
+                onClick={handleAddClaim}
+                disabled={!userClaim.trim()}
+                className={`px-4 py-2 rounded-lg font-bold bg-rose-600 hover:bg-rose-500 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all ${isPresenting ? 'text-xs px-3 py-1' : ''}`}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+
+          {/* Claims Display */}
+          <div className={`flex-grow overflow-y-auto custom-scrollbar space-y-3`}>
+            {studentClaims.length === 0 ? (
+              <div className="flex items-center justify-center h-32 text-gray-500">
+                <p className={`${isPresenting ? 'text-xs' : 'text-sm'}`}>No claims yet. Be the first to challenge the class!</p>
+              </div>
+            ) : (
+              studentClaims.map((claim, idx) => (
+                <div key={idx} className={`rounded-xl border border-gray-700 bg-gray-900/50 ${isPresenting ? 'p-3' : 'p-4'}`}>
+                  <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 font-semibold mb-3`}>{claim.text}</p>
+                  
+                  <div className={`flex gap-2 ${isPresenting ? 'gap-1' : ''}`}>
+                    <button
+                      onClick={() => handleVoteOnClaim(idx, 'falsifiable')}
+                      className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${
+                        claim.userVote === 'falsifiable'
+                          ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                      } ${isPresenting ? 'text-xs py-1' : ''}`}
+                    >
+                      ✓ {claim.votes.falsifiable}
+                    </button>
+                    <button
+                      onClick={() => handleVoteOnClaim(idx, 'unfalsifiable')}
+                      className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${
+                        claim.userVote === 'unfalsifiable'
+                          ? 'bg-red-600 hover:bg-red-500 text-white'
+                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                      } ${isPresenting ? 'text-xs py-1' : ''}`}
+                    >
+                      ✗ {claim.votes.unfalsifiable}
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Hypothesis Design Teach - Part 1: Core Concepts
+const HypothesisDesignTeachPart1: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-8'}>
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>Hypothesis Design</h2>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>Part 1: Operationalisation & Types</p>
+      </div>
+
+      <div className={`grid grid-cols-2 ${isPresenting ? 'gap-3' : 'gap-6'}`}>
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-3 flex items-center gap-2`}>
+            <Target size={isPresenting ? 20 : 24} />
+            Operationalisation
+          </h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 mb-3`}>Define abstract psychological concepts in measurable, observable terms.</p>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'}`}>
+            <div className="bg-gray-900/50 rounded-lg p-2 border-l-4 border-red-500">
+              <p className="text-red-200 font-semibold">❌ Vague:</p>
+              <p className="text-gray-200">"Anxiety levels"</p>
+            </div>
+            <div className="bg-gray-900/50 rounded-lg p-2 border-l-4 border-emerald-500">
+              <p className="text-emerald-200 font-semibold">✓ Operationalised:</p>
+              <p className="text-gray-200">"Score on Beck Anxiety Inventory (0–63)"</p>
+            </div>
+          </div>
+        </div>
+
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-3 flex items-center gap-2`}>
+            <Zap size={isPresenting ? 20 : 24} />
+            Hypothesis Types
+          </h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'}`}>
+            <div className="bg-blue-950/30 rounded-lg p-2 border-l-4 border-blue-500">
+              <p className="text-blue-300 font-semibold mb-1">Directional (One-Tailed)</p>
+              <p className="text-gray-200">Predicts <span className="font-semibold">direction</span> of effect. Use when theory is strong.</p>
+            </div>
+            <div className="bg-purple-950/30 rounded-lg p-2 border-l-4 border-purple-500">
+              <p className="text-purple-300 font-semibold mb-1">Non-Directional (Two-Tailed)</p>
+              <p className="text-gray-200">Predicts a <span className="font-semibold">difference</span> only. Use when exploring.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 col-span-1 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-3 flex items-center gap-2`}>
+            <AlertCircle size={isPresenting ? 20 : 24} />
+            Null Hypothesis (H₀)
+          </h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 mb-2`}>States <span className="font-semibold">no effect</span> or <span className="font-semibold">no difference</span>. Any difference is due to chance.</p>
+          <div className="bg-gray-900/50 rounded-lg p-2 border-l-4 border-gray-400 text-xs text-gray-300">"There will be no significant difference between groups."</div>
+        </div>
+
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 col-span-1 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-3 flex items-center gap-2`}>
+            <Lightbulb size={isPresenting ? 20 : 24} />
+            Alternative Hypothesis (H₁)
+          </h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 mb-2`}>Predicts an <span className="font-semibold">effect</span> or <span className="font-semibold">difference</span>. Directional or non-directional.</p>
+          <div className="bg-gray-900/50 rounded-lg p-2 border-l-4 border-gray-400 text-xs text-gray-300">"Participants receiving treatment will show higher scores..."</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Hypothesis Design Teach - Part 2: Variables & Controls
+const HypothesisDesignTeachPart2: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-8'}>
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>Hypothesis Design</h2>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>Part 2: Variables & Controls</p>
+      </div>
+
+      <div className={`grid grid-cols-2 ${isPresenting ? 'gap-3' : 'gap-6'} mb-6`}>
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-2`}>Independent Variable (IV)</h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 mb-3`}>What the researcher <span className="font-semibold">manipulates</span> or varies between groups.</p>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300 italic`}>Example: Type of music (classical vs silence)</p>
+        </div>
+
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-2`}>Dependent Variable (DV)</h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 mb-3`}>What the researcher <span className="font-semibold">measures</span> as the outcome or effect.</p>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300 italic`}>Example: Memory test score (words recalled)</p>
+        </div>
+
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-2`}>Extraneous Variables</h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 mb-3`}>Confounding factors that could affect the DV and must be <span className="font-semibold">controlled</span>.</p>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300 italic`}>Example: Prior knowledge, intelligence, sleep, room temperature</p>
+        </div>
+
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-2`}>Controls & Fairness</h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 mb-3`}>Techniques to keep the test <span className="font-semibold">fair</span>—only the IV should differ between groups.</p>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300 italic`}>Example: Randomisation, standardisation, matching participants</p>
+        </div>
+      </div>
+
+      <div className={`rounded-xl border border-gray-700 bg-gray-900/40 ${isPresenting ? 'p-4' : 'p-6'}`}>
+        <h4 className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-white mb-2`}>Full Example</h4>
+        <div className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 space-y-1 font-mono`}>
+          <p><span className="text-rose-300 font-bold">Scenario:</span> Does caffeine affect reaction time?</p>
+          <p><span className="text-rose-300 font-bold">IV:</span> Caffeine (placebo vs 100mg)</p>
+          <p><span className="text-rose-300 font-bold">DV:</span> Reaction time in milliseconds</p>
+          <p><span className="text-rose-300 font-bold">Controls:</span> Randomise allocation, standardise task, control sleep & diet</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Falsification Teach Slide (A-Level)
+const FalsificationTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={`${isPresenting ? 'mb-4' : 'mb-8'} text-center`}>
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>Teacher Input: Falsification</h2>
+        <p className={`${isPresenting ? 'text-sm' : ''} text-gray-400`}>Karl Popper's criterion for scientific validity</p>
+      </div>
+
+      <div className={`grid grid-cols-2 max-w-6xl mx-auto ${isPresenting ? 'gap-3' : 'gap-6'}`}>
+        <div className={`rounded-lg border-2 border-rose-500/40 bg-rose-950/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-2xl'} text-rose-300 font-bold mb-2`}>The Principle</h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-lg'} text-gray-200 leading-relaxed mb-3`}>
+            A theory is only scientific if it can be tested and potentially proven false. We should actively try to <span className="text-rose-300 font-semibold">disprove</span> theories—if we cannot, they gain credibility.
+          </p>
+          <div className={`${isPresenting ? 'p-2' : 'p-4'} bg-gray-900/50 rounded-lg border-l-4 border-rose-500`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 italic`}>
+              "All swans are white" is falsifiable—finding one black swan disproves it.
+            </p>
+          </div>
+        </div>
+
+        <div className={`rounded-lg border-2 border-blue-500/40 bg-blue-950/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-2xl'} text-blue-300 font-bold mb-2`}>Why It Matters</h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-lg'} text-gray-200 leading-relaxed mb-3`}>
+            Falsifiability distinguishes science from pseudoscience. Unfalsifiable claims (e.g., "some people have psychic powers") cannot be tested and are not scientific.
+          </p>
+          <div className={`${isPresenting ? 'p-2' : 'p-4'} bg-gray-900/50 rounded-lg border-l-4 border-blue-500`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 italic`}>
+              Good science invites challenges. Bad science evades them.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className={`max-w-6xl mx-auto grid grid-cols-2 ${isPresenting ? 'gap-3 mt-3' : 'gap-6 mt-6'}`}>
+        <div className={`rounded-lg border border-emerald-500/30 bg-emerald-950/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+          <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} text-emerald-400 font-bold mb-2`}>✓ Falsifiable (Scientific)</h4>
+          <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <li>• "High caffeine intake impairs sleep quality."</li>
+            <li>• "Working memory capacity is 7±2 items."</li>
+            <li>• "Stress increases cortisol levels."</li>
+          </ul>
+        </div>
+        <div className={`rounded-lg border border-red-500/30 bg-red-950/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+          <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} text-red-400 font-bold mb-2`}>✗ Unfalsifiable (Non-scientific)</h4>
+          <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <li>• "Everything happens for a reason."</li>
+            <li>• "Freud's unconscious can explain any behavior."</li>
+            <li>• "Some dreams predict the future."</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Falsifiability Checker - AFL (A-Level)
+const FalsifiabilityChecker: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const statements = [
+    { id: 1, text: 'Sleep deprivation impairs cognitive performance on memory tasks.', falsifiable: true },
+    { id: 2, text: 'Everything in the universe is connected by energy.', falsifiable: false },
+    { id: 3, text: 'Serotonin levels correlate with depression severity.', falsifiable: true },
+    { id: 4, text: 'True happiness comes from within.', falsifiable: false },
+  ]
+
+  const [answers, setAnswers] = useState<Record<number, boolean | undefined>>({})
+  const [showResults, setShowResults] = useState(false)
+  const [revealed, setRevealed] = useState<Record<number, boolean>>({})
+
+  const score = statements.reduce((acc, s) => acc + (answers[s.id] === s.falsifiable ? 1 : 0), 0)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-8'}`}>
+      <div className={`${isPresenting ? 'mb-4' : 'mb-6'}`}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-1`}>Falsifiability Check</h2>
+        <p className={`${isPresenting ? 'text-xs' : ''} text-gray-400`}>Which statements are scientifically testable?</p>
+      </div>
+
+      <div className={`grid grid-cols-2 flex-grow overflow-auto custom-scrollbar ${isPresenting ? 'gap-3' : 'gap-4'}`}>
+        {statements.map((s) => (
+          <div key={s.id} className={`bg-gray-900/70 border border-gray-700 rounded-lg flex flex-col ${isPresenting ? 'p-4 gap-2' : 'p-5 gap-4'}`}>
+            <div className="flex items-center justify-between">
+              <span className={`${isPresenting ? 'text-xs' : 'text-sm'} text-rose-400 font-bold`}>Statement {s.id}</span>
+              {(showResults || (isPresenting && revealed[s.id])) && (
+                <span className={`${isPresenting ? 'text-xs px-2 py-1' : 'text-xs px-3 py-1'} font-bold rounded-full ${
+                  s.falsifiable ? 'bg-emerald-500/20 text-emerald-300' : 'bg-red-500/20 text-red-300'
+                }`}>
+                  {s.falsifiable ? 'Falsifiable' : 'Unfalsifiable'}
+                </span>
+              )}
+            </div>
+            <p className={`text-gray-200 leading-relaxed ${isPresenting ? 'text-xs' : ''}`}>{s.text}</p>
+
+            {!isPresenting && (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => !showResults && setAnswers(prev => ({ ...prev, [s.id]: true }))}
+                  className={`flex-1 rounded-lg border font-bold transition-all ${isPresenting ? 'px-3 py-2 text-xs' : 'px-4 py-3'} ${
+                    answers[s.id] === true
+                      ? 'border-emerald-500 bg-emerald-900/30 text-emerald-200'
+                      : 'border-gray-700 bg-gray-800 text-gray-300 hover:border-emerald-500/50'
+                  }`}
+                >
+                  Falsifiable
+                </button>
+                <button
+                  onClick={() => !showResults && setAnswers(prev => ({ ...prev, [s.id]: false }))}
+                  className={`flex-1 rounded-lg border font-bold transition-all ${isPresenting ? 'px-3 py-2 text-xs' : 'px-4 py-3'} ${
+                    answers[s.id] === false
+                      ? 'border-red-500 bg-red-900/30 text-red-200'
+                      : 'border-gray-700 bg-gray-800 text-gray-300 hover:border-red-500/50'
+                  }`}
+                >
+                  Unfalsifiable
+                </button>
+              </div>
+            )}
+
+            {isPresenting && !revealed[s.id] && !showResults && (
+              <button
+                onClick={() => setRevealed(prev => ({ ...prev, [s.id]: true }))}
+                className={`self-start rounded-lg border border-gray-700 text-gray-300 hover:border-rose-500/50 transition-all ${isPresenting ? 'px-3 py-1 text-xs' : 'px-4 py-2 text-sm'}`}
+              >
+                Reveal
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {!isPresenting && (
+        <div className="mt-4 flex items-center gap-4">
+          {!showResults ? (
+            <button
+              onClick={() => setShowResults(true)}
+              disabled={Object.keys(answers).length < statements.length}
+              className="px-6 py-3 rounded-xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white disabled:opacity-50 disabled:grayscale"
+            >
+              Check Answers
+            </button>
+          ) : (
+            <div className="px-4 py-3 rounded-xl bg-emerald-900/30 border border-emerald-500/40 text-emerald-200 font-mono">
+              Score: {score} / {statements.length}
+            </div>
+          )}
+        </div>
+      )}
+
+      {isPresenting && (
+        <div className="mt-4 flex items-center gap-2">
+          <button
+            onClick={() => setRevealed(Object.fromEntries(statements.map(s => [s.id, true])))}
+            className="px-4 py-2 rounded-lg text-sm font-bold bg-rose-600 hover:bg-rose-500 text-white"
+          >
+            Reveal All
+          </button>
+          <button
+            onClick={() => setRevealed({})}
+            className="px-4 py-2 rounded-lg text-sm font-bold bg-gray-800 hover:bg-gray-700 text-gray-200"
+          >
+            Hide All
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Hypothesis Writing (A-Level) - Directional vs Non-Directional Task
+const HypothesisWriterALevel: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [selectedType, setSelectedType] = useState<'directional' | 'nondirectional' | null>(null)
+  const [showExample, setShowExample] = useState(false)
+
+  const scenario = 'A researcher hypothesises that acute sleep deprivation (4 hours) impairs performance on a working memory task compared to normal sleep (8 hours).'
+
+  const exampleDirectional = 'Participants who experience acute sleep deprivation (4 hours) will score significantly lower on the working memory task compared to participants who receive normal sleep (8 hours).'
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-4' : 'p-8'}`}>
+      <div className={`${isPresenting ? 'mb-3' : 'mb-6'}`}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Write an Experimental Hypothesis</h2>
+        <p className={`${isPresenting ? 'text-xs' : ''} text-gray-400`}>Choose hypothesis type and operationalise variables</p>
+      </div>
+
+      <div className={`bg-gradient-to-br from-rose-900/30 to-rose-800/20 border-2 border-rose-500/50 rounded-lg ${isPresenting ? 'p-4 mb-3' : 'p-6 mb-6'}`}>
+        <h3 className={`${isPresenting ? 'text-sm' : 'text-xl'} font-bold text-rose-300 mb-2`}>Research Scenario</h3>
+        <p className={`${isPresenting ? 'text-xs' : 'text-lg'} text-gray-200 leading-relaxed italic`}>
+          {scenario}
+        </p>
+      </div>
+
+      <div className={`grid grid-cols-2 ${isPresenting ? 'gap-3 mb-3' : 'gap-4 mb-6'}`}>
+        <button
+          onClick={() => setSelectedType('directional')}
+          className={`${isPresenting ? 'p-3' : 'p-4'} rounded-lg border-2 text-left transition-all ${
+            selectedType === 'directional'
+              ? 'border-rose-500 bg-rose-600 text-white'
+              : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-rose-500/50'
+          }`}>
+          <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} font-bold mb-1`}>Directional (One-Tailed)</h4>
+          <p className={`${isPresenting ? 'text-xs' : 'text-xs'} opacity-80`}>Predicts direction of effect (higher/lower)</p>
+        </button>
+        <button
+          onClick={() => setSelectedType('nondirectional')}
+          className={`${isPresenting ? 'p-3' : 'p-4'} rounded-lg border-2 text-left transition-all ${
+            selectedType === 'nondirectional'
+              ? 'border-blue-500 bg-blue-600 text-white'
+              : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-blue-500/50'
+          }`}>
+          <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} font-bold mb-1`}>Non-Directional (Two-Tailed)</h4>
+          <p className={`${isPresenting ? 'text-xs' : 'text-xs'} opacity-80`}>Predicts a difference (not direction)</p>
+        </button>
+      </div>
+
+      {selectedType ? (
+        <div className={`bg-blue-950/20 border-2 border-blue-500/30 rounded-lg ${isPresenting ? 'p-3 mb-3' : 'p-5 mb-4'} animate-fadeIn`}>
+          <h4 className={`${isPresenting ? 'text-xs' : 'text-lg'} font-bold text-blue-300 mb-2`}>Your Hypothesis (Example)</h4>
+          <p className={`${isPresenting ? 'text-xs' : 'text-base'} text-gray-100 leading-relaxed`}>
+            {exampleDirectional}
+          </p>
+          <div className={`mt-3 text-xs text-blue-300 space-y-1`}>
+            <p><span className="font-semibold">IV (Independent):</span> Sleep duration (4 hours vs 8 hours)</p>
+            <p><span className="font-semibold">DV (Dependent):</span> Working memory task score</p>
+            <p><span className="font-semibold">Type:</span> {selectedType === 'directional' ? 'Directional—predicts lower scores' : 'Non-directional—predicts difference'}</p>
+          </div>
+        </div>
+      ) : (
+        <div className={`bg-gray-900/40 border border-gray-700 rounded-lg ${isPresenting ? 'p-3 mb-3' : 'p-5 mb-4'} text-center text-gray-400`}>
+          <p className={isPresenting ? 'text-xs' : 'text-sm'}>Select a hypothesis type to see an example ↑</p>
+        </div>
+      )}
+
+      <button
+        onClick={() => setShowExample(!showExample)}
+        className={`w-full ${isPresenting ? 'py-2 text-sm' : 'py-3'} rounded-lg font-bold transition-all bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white`}
+      >
+        {showExample ? '✕ Hide Exam Tips' : '+ Show Exam Tips'}
+      </button>
+
+      {showExample && (
+        <div className={`bg-amber-900/30 border-2 border-amber-500/50 rounded-lg ${isPresenting ? 'p-3 mt-3' : 'p-5 mt-4'} animate-fadeIn`}>
+          <h3 className={`${isPresenting ? 'text-xs' : 'text-lg'} font-bold text-amber-300 mb-3`}>Exam Tips for High-Quality Hypotheses</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-amber-100`}>
+            <div className="flex gap-2">
+              <span className="text-amber-300 font-bold min-w-fit">• Operationalise:</span>
+              <p>Define variables in measurable terms (e.g., "score on X test", "time in seconds")</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="text-amber-300 font-bold min-w-fit">• Be specific:</span>
+              <p>Name the groups being compared ("participants who..." vs "participants who...")</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="text-amber-300 font-bold min-w-fit">• Directional:</span>
+              <p>States effect direction (higher/lower). Use when theory predicts direction.</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="text-amber-300 font-bold min-w-fit">• Non-directional:</span>
+              <p>Predicts difference without direction. Use when exploring or theory is unclear.</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="text-amber-300 font-bold min-w-fit">• Testable:</span>
+              <p>Must be falsifiable—possible to prove wrong with evidence.</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Extended Exam Task for A-Level Lesson 1
+const ExtendedExamTaskALevel: React.FC = () => {
+  const [showTips, setShowTips] = useState(false)
+  
+  return (
+    <div className="flex flex-col h-full p-8 animate-fadeIn">
+      <h2 className="text-4xl font-black text-white mb-2">Extended Task: Exam-Style (A-Level)</h2>
+      <p className="text-gray-400 mb-6">Apply your understanding of the scientific approach and hypothesis formulation.</p>
+  
+      <div className="bg-gray-900/70 border border-gray-700 rounded-2xl p-6 mb-6">
+        <h3 className="text-2xl font-bold text-rose-300 mb-3">Scenario</h3>
+        <p className="text-gray-200 leading-relaxed">
+          A psychologist wants to investigate whether mindfulness meditation reduces anxiety levels in university students. She recruits 40 participants, randomly allocating 20 to a 4-week mindfulness program and 20 to a control group (no intervention). Both groups complete the Beck Anxiety Inventory before and after the 4-week period.
+        </p>
+      </div>
+  
+      <div className="bg-gray-900/70 border border-gray-700 rounded-xl p-4 mb-6">
+        <h4 className="text-sm font-bold text-emerald-400 uppercase mb-3">Required Tasks</h4>
+        <ul className="space-y-2 text-gray-200 text-sm grid grid-cols-2 gap-4">
+          <li>• Write a directional experimental hypothesis</li>
+          <li>• Write the corresponding null hypothesis</li>
+          <li>• Identify two extraneous variables and controls</li>
+          <li>• Explain empiricism in this study</li>
+          <li>• Assess whether hypothesis is falsifiable</li>
+          <li>• Suggest one ethical consideration (BPS code)</li>
+        </ul>
+      </div>
+
+      <button
+        onClick={() => setShowTips(!showTips)}
+        className="w-full py-3 mb-4 rounded-lg font-bold transition-all bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white"
+      >
+        {showTips ? '✕ Hide Exam Tips' : '+ Show Exam Tips'}
+      </button>
+
+      {showTips && (
+        <div className="bg-amber-900/30 border-2 border-amber-500/30 rounded-xl p-4 mb-6 animate-fadeIn">
+          <h4 className="text-sm font-bold text-amber-300 uppercase mb-3">Exam Tips</h4>
+          <div className="space-y-2 text-amber-100 text-sm">
+            <div className="flex gap-2">
+              <span className="font-semibold text-amber-300 min-w-fit">H₁ (Directional):</span>
+              <p>States direction of effect with operationalised variables. E.g., "Participants in the mindfulness group will show significantly lower anxiety scores..."</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-semibold text-amber-300 min-w-fit">H₀ (Null):</span>
+              <p>States no significant effect. E.g., "There will be no significant difference in anxiety scores between..."</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-semibold text-amber-300 min-w-fit">Extraneous:</span>
+              <p>Prior anxiety levels, baseline stress, medication, motivation, age, sleep quality.</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-semibold text-amber-300 min-w-fit">Empiricism:</span>
+              <p>Uses measurable data (BAI scores), not speculation. Relies on direct observation.</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-semibold text-amber-300 min-w-fit">Falsifiable:</span>
+              <p>The hypothesis can be tested and potentially disproven. If BAI scores don't differ, the hypothesis is falsified.</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="font-semibold text-amber-300 min-w-fit">Ethics:</span>
+              <p>Informed consent before allocation, right to withdraw, debriefing after intervention, protecting psychological wellbeing.</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // Lesson definitions with level-specific availability
 const allLessons = [
-  // SHARED LESSONS (both GCSE and A-Level)
-  { id: 1, title: '01: Aims & Hypotheses', levels: ['gcse', 'alevel'], description: 'GCSE & A Level' },
-  { id: 2, title: '02: Variables & Extraneous Variables', levels: ['gcse', 'alevel'], description: 'GCSE & A Level' },
-  { id: 3, title: '03: Experimental Designs', levels: ['gcse', 'alevel'], description: 'GCSE & A Level' },
-  { id: 4, title: '04: Types of Experiments', levels: ['gcse', 'alevel'], description: 'GCSE & A Level' },
-  { id: 5, title: '05: Sampling Methods', levels: ['gcse', 'alevel'], description: 'GCSE & A Level' },
-  { id: 6, title: '06: Ethical Considerations', levels: ['gcse', 'alevel'], description: 'GCSE & A Level' },
-  { id: 9, title: '09: Correlations & Data Analysis', levels: ['gcse', 'alevel'], description: 'GCSE & A Level' },
-  
-  // GCSE-SPECIFIC LESSONS
-  { id: 7, title: '07: Interviews & Questionnaires', levels: ['gcse'], description: 'GCSE Only' },
-  { id: 8, title: '08: Observation Studies', levels: ['gcse'], description: 'GCSE Only' },
-  { id: 10, title: '10: Case Studies', levels: ['gcse'], description: 'GCSE Only' },
-  { id: 11, title: '11: Reliability & Validity', levels: ['gcse'], description: 'GCSE Only' },
-  { id: 12, title: '12: Types of Data', levels: ['gcse'], description: 'GCSE Only' },
-  { id: 13, title: '13: Descriptive Statistics', levels: ['gcse'], description: 'GCSE Only' },
-  { id: 14, title: '14: Interpretation & Display of Data', levels: ['gcse'], description: 'GCSE Only' },
-  
-  // A-LEVEL-SPECIFIC LESSONS
-  { id: 15, title: '07: Research Issues', levels: ['alevel'], description: 'A Level Only' },
-  { id: 16, title: '08: Pilot Studies', levels: ['alevel'], description: 'A Level Only' },
-  { id: 17, title: '09: Observational Techniques', levels: ['alevel'], description: 'A Level Only' },
-  { id: 18, title: '10: Observational Design', levels: ['alevel'], description: 'A Level Only' },
-  { id: 19, title: '11: Self-Report Techniques', levels: ['alevel'], description: 'A Level Only' },
-  { id: 20, title: '12: Self-Report Design', levels: ['alevel'], description: 'A Level Only' },
-  { id: 21, title: '13: Types of Data', levels: ['alevel'], description: 'A Level Only' },
-  { id: 22, title: '14: Measures of Central Tendency & Dispersion', levels: ['alevel'], description: 'A Level Only' },
-  { id: 23, title: '15: Presentation of Quantitative Data', levels: ['alevel'], description: 'A Level Only' },
-  { id: 24, title: '16: Mathematical Content', levels: ['alevel'], description: 'A Level Only' },
-  { id: 25, title: '17: Statistical Testing: The Sign Test', levels: ['alevel'], description: 'A Level Only' },
-  { id: 26, title: '18: Peer Review & Research Ethics', levels: ['alevel'], description: 'A Level Only' },
+  // ============= GCSE LESSONS (8 Total) =============
+  { id: 1, title: 'Lesson 1: The Basics of Investigation', levels: ['gcse'], description: 'Hypotheses & Variables' },
+  { id: 2, title: 'Lesson 2: Selecting Participants', levels: ['gcse'], description: 'Sampling Methods' },
+  { id: 3, title: 'Lesson 3: Experimental Design', levels: ['gcse'], description: 'Structuring Test Groups' },
+  { id: 4, title: 'Lesson 4: Non-Experimental Methods', levels: ['gcse'], description: 'Interviews & Questionnaires' },
+  { id: 5, title: 'Lesson 5: Observation & Correlation', levels: ['gcse'], description: 'Watching & Measuring Relationships' },
+  { id: 6, title: 'Lesson 6: Ethical Considerations', levels: ['gcse'], description: 'BPS Guidelines' },
+  { id: 7, title: 'Lesson 7: Data Handling I', levels: ['gcse'], description: 'Types & Averages' },
+  { id: 8, title: 'Lesson 8: Data Handling II', levels: ['gcse'], description: 'Graphs & Distributions' },
+
+  // ============= A-LEVEL LESSONS (11 Total) =============
+  { id: 9, title: 'Lesson 1: The Scientific Approach', levels: ['alevel'], description: 'Is Psychology a Science?' },
+  { id: 10, title: 'Lesson 2: Control & Validity', levels: ['alevel'], description: 'Keeping it Pure' },
+  { id: 11, title: 'Lesson 3: Advanced Experimental Design', levels: ['alevel'], description: 'Robust Planning' },
+  { id: 12, title: 'Lesson 4: Reliability & Validity (Deep Dive)', levels: ['alevel'], description: 'Accuracy vs Consistency' },
+  { id: 13, title: 'Lesson 5: Ethics & Professional Standards', levels: ['alevel'], description: 'Advanced Ethics' },
+  { id: 14, title: 'Lesson 6: Observational Techniques', levels: ['alevel'], description: 'Systematic Watching' },
+  { id: 15, title: 'Lesson 7: Self-Report & Other Methods', levels: ['alevel'], description: 'Questionnaires & Content Analysis' },
+  { id: 16, title: 'Lesson 8: Descriptive Statistics', levels: ['alevel'], description: 'Standard Deviation & Distributions' },
+  { id: 17, title: 'Lesson 9: Inferential Statistics I', levels: ['alevel'], description: 'Probability & Significance' },
+  { id: 18, title: 'Lesson 10: Inferential Statistics II', levels: ['alevel'], description: 'The Tests' },
+  { id: 19, title: 'Lesson 11: Professional Context', levels: ['alevel'], description: 'Peer Review & Economy' },
 ]
 
 // Get lessons filtered by current level
@@ -1385,16 +2960,26 @@ const getActiveLessons = (currentLevel: 'gcse' | 'alevel') => {
 
 // Slide counts per lesson
 const lessonSlideCounts: Record<number, number> = {
-  1: 11, 2: 5, 3: 5, 4: 5, 5: 5, 6: 5, 7: 5, 8: 5, 9: 5, 10: 5, 11: 5, 
-  12: 5, 13: 5, 14: 5, 15: 5, 16: 5, 17: 5, 18: 5, 19: 5, 20: 5, 21: 5, 22: 5, 
-  23: 5, 24: 5, 25: 5, 26: 5
+  1: 10,
+  2: 5, 3: 5, 4: 5, 5: 5, 6: 5, 7: 5, 8: 5,
+  9: 9, 10: 5, 11: 5, 12: 5, 13: 5, 14: 5, 15: 5, 16: 5, 17: 5, 18: 5, 19: 5
 }
 
-// Lesson 1 slides data
-const lesson1Slides = [
-  'donow', 'intro', 'aims', 'hypotheses', 'types', 'midcheck', 
-  'directional', 'writing', 'simulation', 'evaluation', 'endcheck'
-]
+// Utility: build slides with teacher-first ordering per cycle
+const buildSlides = (cyclePrefixes: string[], includeExtended = true) => {
+  const slides: string[] = ['donow']
+  for (const prefix of cyclePrefixes) {
+    slides.push(`${prefix}_teach`, `${prefix}_sim`, `${prefix}_afl`, `${prefix}_task`)
+  }
+  if (includeExtended) slides.push('extended')
+  return slides
+}
+
+// Lesson 1 slides data (GCSE)
+const lesson1Slides = buildSlides(['hypo', 'variables'])
+
+// Lesson 9 slides data (A-Level Lesson 1: The Scientific Approach) - 9 focused slides
+const lesson9Slides = ['donow', 'science_teach', 'science_sim', 'science_afl', 'hypothesis_teach', 'hypothesis_sim', 'falsification_teach', 'falsification_afl', 'extended']
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -1497,6 +3082,15 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isPresenting, currentSlide, slideCount])
 
+  // Reset to first lesson when switching levels
+  useEffect(() => {
+    const firstLessonForLevel = getActiveLessons(level)[0]
+    if (firstLessonForLevel) {
+      setCurrentLesson(firstLessonForLevel.id)
+      setCurrentSlide(0)
+    }
+  }, [level])
+
   const handleLessonChange = (lessonId: number) => {
     setCurrentLesson(lessonId)
     setCurrentSlide(0)
@@ -1504,113 +3098,257 @@ function App() {
 
   // Render Lesson 1 content
   const renderLesson1 = () => {
-      const slideType = lesson1Slides[currentSlide]
+    const slideType = lesson1Slides[currentSlide]
 
-      // Do Now Quiz (Slide 0)
-      if (slideType === 'donow') {
-        const doNowQuestions = [
-          { id: 1, question: "What does 'IV' stand for in research?", options: ['Intelligent Variable', 'Independent Variable', 'Internal Validity', 'Inverse Variation'], correct: 1 },
-          { id: 2, question: "What is the purpose of a control group?", options: ['To confuse participants', 'To provide a baseline for comparison', 'To test multiple variables', 'To speed up the experiment'], correct: 1 },
-          { id: 3, question: 'Which of these is an ethical guideline in psychology?', options: ['Paying participants extra for risky tasks', 'Informed consent', 'Hiding the study purpose permanently', 'Forcing participation'], correct: 1 },
-          { id: 4, question: 'What does a sample represent?', options: ['The entire population', 'A subset of the population', 'Only volunteers', 'The researchers'], correct: 1 },
-          { id: 5, question: 'What is meant by "replication" in science?', options: ['Copying answers', 'Repeating a study to verify results', 'Making multiple copies of data', 'Publishing the same paper twice'], correct: 1 }
-        ]
-      
-        return <DoNowQuiz questions={doNowQuestions} />
-      }
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "What does 'scientific' mean?",
+          options: [
+            'Based on systematic observation and testing',
+            'Based on tradition',
+            'Based on feelings',
+            'Based on opinion'
+          ],
+          correct: 0
+        },
+        {
+          id: 2,
+          question: 'Which of these is a measurement?',
+          options: [
+            'People feel happy',
+            'Temperature is 20°C',
+            'The sky looks blue',
+            'Music sounds nice'
+          ],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "What does 'objective' mean?",
+          options: [
+            'Based on guesses',
+            'Based on personal feelings',
+            'Based on facts that can be measured',
+            'Based on beliefs'
+          ],
+          correct: 2
+        },
+        {
+          id: 4,
+          question: 'If you repeat an experiment and get the same result, this shows:',
+          options: ['Bias', 'Error', 'Luck', 'Reliability'],
+          correct: 3
+        },
+        {
+          id: 5,
+          question: "A 'variable' is something that:",
+          options: ['Is always the same', 'Can change or vary', 'Never changes', 'Cannot be measured'],
+          correct: 1
+        }
+      ]
 
-      // Intro Slide (Slide 1)
-      if (slideType === 'intro') {
-        return (
-          <div className="flex flex-col items-center justify-center h-full animate-fadeIn">
-            <div className="max-w-4xl text-center space-y-8">
-              <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 shadow-2xl shadow-pink-500/50 mb-6">
-                <Target size={64} className="text-white" />
-              </div>
-              <h1 className="text-6xl font-black text-white mb-4">
-                Aims & Hypotheses
-              </h1>
-              <p className="text-2xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
-                {level === 'gcse' 
-                  ? 'Learn how psychologists plan their research by writing clear aims and testable predictions called hypotheses.'
-                  : 'Understand the fundamental principles of research design through the formulation of aims and the construction of falsifiable hypotheses within the hypothetico-deductive framework.'}
-              </p>
-              <div className="flex gap-4 justify-center items-center pt-8">
-                <div className="px-6 py-3 bg-pink-900/30 border border-pink-500/50 rounded-lg">
-                  <p className="text-pink-300 font-bold">{lesson1Slides.length - 1} Slides</p>
-                </div>
-                <div className="px-6 py-3 bg-purple-900/30 border border-purple-500/50 rounded-lg">
-                  <p className="text-purple-300 font-bold">2 Knowledge Checks</p>
-                </div>
-                <div className="px-6 py-3 bg-cyan-900/30 border border-cyan-500/50 rounded-lg">
-                  <p className="text-cyan-300 font-bold">1 Simulation</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )
-      }
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
 
-      // Aims Slide (Slide 2) - Interactive reveal cards
-      if (slideType === 'aims') {
-        return <AimsInteractive level={level} />
-      }
+    if (slideType === 'hypo_sim') {
+      return <HypothesisMachine isPresenting={isPresenting} />
+    }
 
-      // Hypotheses Slide (Slide 3) - Click-to-compare
-      if (slideType === 'hypotheses') {
-        return <HypothesesComparison level={level} />
-      }
+    if (slideType === 'hypo_teach') {
+      return <HypothesisTeachSlide isPresenting={isPresenting} />
+    }
 
-      // Types of Hypotheses (Slide 4) - Card deck
-      if (slideType === 'types') {
-        return <HypothesisTypes level={level} />
-      }
+    if (slideType === 'hypo_afl') {
+      return <HypothesisStatementCheck isPresenting={isPresenting} />
+    }
 
-      // Mid-lesson Knowledge Check (Slide 5)
-      if (slideType === 'midcheck') {
-        const midQuestions = level === 'gcse' 
-          ? [
-              { id: 1, question: 'An aim is...', options: ['A specific prediction', 'A general statement of purpose', 'A statistical test', 'A type of graph'], correct: 1 },
-              { id: 2, question: 'Which is more specific?', options: ['An aim', 'A hypothesis', 'Both are equally specific', 'Neither are specific'], correct: 1 },
-              { id: 3, question: 'The null hypothesis predicts...', options: ['A positive result', 'A negative result', 'No difference or relationship', 'A correlation'], correct: 2 },
-              { id: 4, question: 'The alternative hypothesis is also called...', options: ['The null hypothesis', 'The experimental hypothesis', 'The control hypothesis', 'The fake hypothesis'], correct: 1 }
-            ]
-          : [
-              { id: 1, question: 'What is the key difference between an aim and a hypothesis?', options: ['Aims are tested, hypotheses are not', 'Hypotheses are falsifiable predictions, aims are general statements', 'Aims use statistics, hypotheses do not', 'There is no difference'], correct: 1 },
-              { id: 2, question: 'A one-tailed hypothesis...', options: ['Predicts a direction of effect', 'Has no direction', 'Is always rejected', 'Cannot be tested'], correct: 0 },
-              { id: 3, question: 'H₀ is rejected when...', options: ['p > 0.05', 'p < 0.05', 'p = 0.05', 'p is undefined'], correct: 1 },
-              { id: 4, question: 'Operationalisation means...', options: ['Performing surgery', 'Defining variables in measurable terms', 'Removing variables', 'Operating equipment'], correct: 1 }
-            ]
-      
-        return <SplitKnowledgeCheck questions={midQuestions} title="Mid-Lesson Check" subtitle="Test your understanding so far" />
-      }
+    if (slideType === 'hypo_task') {
+      return <HypothesisWriterGCSE isPresenting={isPresenting} />
+    }
 
-      // Directional vs Non-directional (Slide 6) - Interactive slider
-      if (slideType === 'directional') {
-        return <DirectionalSlider level={level} />
-      }
+    if (slideType === 'variables_sim') {
+      return <VariableLab isPresenting={isPresenting} />
+    }
 
-      // Writing Good Hypotheses (Slide 7) - Matching game
-      if (slideType === 'writing') {
-        return <HypothesisWriter level={level} />
-      }
+    if (slideType === 'variables_teach') {
+      return <VariablesTeachSlide isPresenting={isPresenting} />
+    }
 
-      // Interactive Simulation (Slide 8) - Hypothesis Testing Lab
-      if (slideType === 'simulation') {
-        return <HypothesisLab level={level} />
-      }
+    if (slideType === 'variables_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: 'In the music study, what is being manipulated?',
+          options: ['The test score', 'Music vs silence', 'Time of day', 'Teacher style'],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: 'What is the dependent variable in the music study?',
+          options: ['Number of participants', 'Music vs silence', 'Words remembered / test score', 'Study room'],
+          correct: 2
+        },
+        {
+          id: 3,
+          question: 'Which is an extraneous variable we should control?',
+          options: ['Prior knowledge of the material', 'Number of groups', 'Presence of DV', 'Using hypotheses'],
+          correct: 0
+        },
+        {
+          id: 4,
+          question: 'Why control extraneous variables?',
+          options: ['To make it more fun', 'To keep the test fair and valid', 'To reduce sample size', 'To make it longer'],
+          correct: 1
+        }
+      ]
 
-      // Evaluation (Slide 9) - Evidence matching
-      if (slideType === 'evaluation') {
-        return <EvaluationSlide level={level} />
-      }
+      return <SplitKnowledgeCheck questions={questions} title="Quick Quiz: Variables" subtitle="IV vs DV vs Extraneous" />
+    }
 
-      // End Knowledge Check (Slide 10) - Write Your Own Hypothesis
-      if (slideType === 'endcheck') {
-        return <HypothesisWritingTask level={level} />
-      }
+    if (slideType === 'variables_task') {
+      return <VariableDetective isPresenting={isPresenting} />
+    }
 
-      return <div>Loading...</div>
+    if (slideType === 'extended') {
+      return <ExtendedExamTask />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 9 content (A-Level Lesson 1: The Scientific Approach)
+  const renderLesson9 = () => {
+    const slideType = lesson9Slides[currentSlide]
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "What does 'empiricism' mean in science?",
+          options: [
+            'Knowledge from intuition',
+            'Knowledge from direct observation and measurement',
+            'Knowledge from tradition',
+            'Knowledge from authority'
+          ],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: 'Which is a feature of a falsifiable theory?',
+          options: [
+            'It can explain any outcome',
+            'It cannot be tested',
+            'It can potentially be proven false',
+            'It is always true'
+          ],
+          correct: 2
+        },
+        {
+          id: 3,
+          question: 'The nomothetic approach seeks to establish:',
+          options: ['Individual case studies', 'Universal laws applicable to all', 'Personal narratives', 'Subjective experiences'],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: 'Replicability means:',
+          options: [
+            'Using complex procedures',
+            'Repeating an experiment and getting the same results',
+            'Recruiting more participants',
+            'Publishing results'
+          ],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: 'Karl Popper argued that good science should:',
+          options: [
+            'Prove theories correct',
+            'Avoid testing theories',
+            'Attempt to disprove theories',
+            'Rely on anecdotal evidence'
+          ],
+          correct: 2
+        }
+      ]
+
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'science_teach') {
+      return <ScientificApproachTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'science_sim') {
+      return <ScientificFeaturesInteractive isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'science_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: 'Why is objectivity important in psychological research?',
+          options: [
+            'It makes research faster',
+            'It prevents researcher bias from affecting results',
+            'It reduces the need for participants',
+            'It makes results more subjective'
+          ],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: 'Which feature involves repeating an experiment to get consistent results?',
+          options: ['Falsifiability', 'Objectivity', 'Replicability', 'Empiricism'],
+          correct: 2
+        },
+        {
+          id: 3,
+          question: 'A theory that cannot be tested is:',
+          options: ['Scientific', 'Falsifiable', 'Unfalsifiable', 'Replicable'],
+          correct: 2
+        },
+        {
+          id: 4,
+          question: 'What does replicability demonstrate?',
+          options: [
+            'Results are due to chance',
+            'Results are consistent across repeated trials',
+            'Results are biased',
+            'Results cannot be measured'
+          ],
+          correct: 1
+        }
+      ]
+
+      return <SplitKnowledgeCheck questions={questions} title="Quick Check: Scientific Features" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'hypothesis_teach') {
+      return <HypothesisDesignTeachPart1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'hypothesis_sim') {
+      return <HypothesisWriterALevel isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'falsification_teach') {
+      return <FalsificationTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'falsification_afl') {
+      return <FalsifiabilityChecker isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevel />
+    }
+
+    return <div>Loading...</div>
   }
 
   // Render placeholder for other lessons
@@ -1719,10 +3457,21 @@ function App() {
             )}
 
             {/* Main Presentation Content */}
-            <main className="flex-grow flex items-center justify-center overflow-auto custom-scrollbar p-8">
-              <div className="w-full h-full flex items-center justify-center">
-                {currentLesson === 1 && renderLesson1()}
-                {currentLesson !== 1 && renderPlaceholder()}
+            <main className={`flex-grow flex ${isPresenting ? 'items-start justify-center p-12' : 'items-center justify-center p-8'} overflow-auto custom-scrollbar`}>
+              <div className={`w-full h-full flex ${isPresenting ? 'items-start justify-center' : 'items-center justify-center'}`}>
+                {isPresenting ? (
+                  <div className="present-scale" style={{ width: '100%', maxWidth: '1200px' }}>
+                    {currentLesson === 1 && renderLesson1()}
+                    {currentLesson === 9 && renderLesson9()}
+                    {currentLesson !== 1 && currentLesson !== 9 && renderPlaceholder()}
+                  </div>
+                ) : (
+                  <>
+                    {currentLesson === 1 && renderLesson1()}
+                    {currentLesson === 9 && renderLesson9()}
+                    {currentLesson !== 1 && currentLesson !== 9 && renderPlaceholder()}
+                  </>
+                )}
               </div>
             </main>
           </div>
@@ -1901,7 +3650,8 @@ function App() {
             {/* Lesson Content */}
             <main className="flex-grow relative overflow-auto custom-scrollbar bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-900 via-[#0a0a0a] to-[#0a0a0a]">
               {currentLesson === 1 && renderLesson1()}
-              {currentLesson !== 1 && renderPlaceholder()}
+              {currentLesson === 9 && renderLesson9()}
+              {currentLesson !== 1 && currentLesson !== 9 && renderPlaceholder()}
             </main>
 
             {/* Navigation Footer */}

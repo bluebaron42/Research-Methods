@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight, Target, Lightbulb, CheckCircle } from 'lucide-react'
+import HypothesisWheel from './activities/HypothesisWheel'
 
 // Slide data for Lesson 1: Aims & Hypotheses
 const slides = [
   {
     id: 1,
     title: 'What is an Aim?',
+    type: 'text',
     gcse: {
       content: 'An aim is a general statement explaining the purpose of a study. It tells us what the researcher wants to find out.',
       points: [
@@ -23,12 +25,13 @@ const slides = [
         'Distinguishes exploratory from confirmatory research',
         'Forms the basis for hypothesis development'
       ],
-      example: 'Aim: To investigate the relationship between cognitive load and working memory performance in educational settings.'
+      example: 'Aim: To explore the impact of social media on adolescent behavior.'
     }
   },
   {
     id: 2,
     title: 'What is a Hypothesis?',
+    type: 'text',
     gcse: {
       content: 'A hypothesis is a testable prediction about what will happen in a study. It is more specific than an aim.',
       points: [
@@ -52,6 +55,7 @@ const slides = [
   {
     id: 3,
     title: 'Alternative Hypothesis',
+    type: 'text',
     gcse: {
       content: 'The alternative hypothesis states that there WILL be a difference or relationship between variables. This is what the researcher expects to find.',
       points: [
@@ -75,6 +79,7 @@ const slides = [
   {
     id: 4,
     title: 'Null Hypothesis',
+    type: 'text',
     gcse: {
       content: 'The null hypothesis states that there will be NO difference or relationship between variables. Any difference found is due to chance.',
       points: [
@@ -98,6 +103,7 @@ const slides = [
   {
     id: 5,
     title: 'Writing Good Hypotheses',
+    type: 'text',
     gcse: {
       content: 'A good hypothesis must be clear, testable, and include the variables being studied. It should be specific enough that anyone could test it.',
       points: [
@@ -118,6 +124,17 @@ const slides = [
       ],
       example: 'Operationalised hypothesis: Participants aged 18-25 who complete a Stroop task under time pressure (30 seconds) will make significantly more errors (measured as incorrect colour naming) than those without time pressure (self-paced), with a predicted medium effect size (d = 0.5).'
     }
+  },
+  {
+    id: 6,
+    title: 'Hypothesis Identification',
+    type: 'activity',
+    gcse: {
+        component: <HypothesisWheel />
+    },
+    alevel: {
+        component: <HypothesisWheel />
+    }
   }
 ]
 
@@ -132,6 +149,7 @@ export default function Lesson1({ presentationMode, setPresentationMode, onBack 
   const [level, setLevel] = useState<'gcse' | 'alevel'>('gcse')
   
   const slide = slides[currentSlide]
+  // @ts-ignore
   const content = slide[level]
 
   return (
@@ -186,44 +204,53 @@ export default function Lesson1({ presentationMode, setPresentationMode, onBack 
         {/* Main Content */}
         <main className="flex-1 flex items-center justify-center p-6">
           <div className="w-full max-w-4xl animate-fadeIn" key={`${currentSlide}-${level}`}>
-            <div className="glass-panel rounded-xl p-8 border border-pink-500/20">
-              
-              {/* Slide Title */}
-              <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="text-pink-400">{slide.id}.</span>
-                {slide.title}
-              </h2>
-              
-              {/* Content */}
-              <p className="text-lg text-gray-300 leading-relaxed mb-6">
-                {content.content}
-              </p>
-              
-              {/* Key Points */}
-              <div className="mb-6">
-                <h3 className="text-sm font-semibold text-pink-400 uppercase tracking-wide mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4" />
-                  Key Points
-                </h3>
-                <ul className="space-y-2">
-                  {content.points.map((point, idx) => (
-                    <li key={idx} className="flex items-start gap-3 text-gray-300">
-                      <span className="text-pink-400 mt-1">→</span>
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              {/* Example */}
-              <div className="bg-slate-800/50 rounded-lg p-4 border-l-4 border-pink-500">
-                <h3 className="text-sm font-semibold text-pink-400 uppercase tracking-wide mb-2 flex items-center gap-2">
-                  <Lightbulb className="w-4 h-4" />
-                  Example
-                </h3>
-                <p className="text-gray-300 whitespace-pre-line">{content.example}</p>
-              </div>
-            </div>
+            
+            {/* Conditional Rendering based on Slide Type */}
+            {slide.type === 'activity' ? (
+                <div className="w-full h-[600px]">
+                    {content.component}
+                </div>
+            ) : (
+                <div className="glass-panel rounded-xl p-8 border border-pink-500/20">
+                    {/* Slide Title */}
+                    <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                        <span className="text-pink-400">{slide.id}.</span>
+                        {slide.title}
+                    </h2>
+                    
+                    {/* Content */}
+                    <p className="text-lg text-gray-300 leading-relaxed mb-6">
+                        {content.content}
+                    </p>
+                    
+                    {/* Key Points */}
+                    <div className="mb-6">
+                        <h3 className="text-sm font-semibold text-pink-400 uppercase tracking-wide mb-3 flex items-center gap-2">
+                            <CheckCircle className="w-4 h-4" />
+                            Key Points
+                        </h3>
+                        <ul className="space-y-2">
+                            {content.points?.map((point: string, idx: number) => (
+                                <li key={idx} className="flex items-start gap-3 text-gray-300">
+                                    <span className="text-pink-400 mt-1">→</span>
+                                    <span>{point}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    
+                    {/* Example */}
+                    {content.example && (
+                        <div className="bg-slate-800/50 rounded-lg p-4 border-l-4 border-pink-500">
+                            <h3 className="text-sm font-semibold text-pink-400 uppercase tracking-wide mb-2 flex items-center gap-2">
+                                <Lightbulb className="w-4 h-4" />
+                                Example
+                            </h3>
+                            <p className="text-gray-300 whitespace-pre-line">{content.example}</p>
+                        </div>
+                    )}
+                </div>
+            )}
           </div>
         </main>
 
