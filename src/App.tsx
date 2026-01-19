@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { X, Menu, ChevronLeft, ChevronRight, Lightbulb, CheckCircle, Target, FlaskConical, BarChart, Beaker, AlertTriangle, Eye, EyeOff, Zap, Brain, TrendingUp, Projector, AlertCircle } from 'lucide-react'
 import { useEffect } from 'react'
+import HypothesisLab from './components/lessons/activities/HypothesisLab'
 
 // ============= TYPES =============
 interface Question {
@@ -791,239 +792,6 @@ const AimsInteractive: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
       </div>
     </div>
   )
-}
-
-// Hypothesis Lab - Interactive Simulation
-const HypothesisLab: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
-  const [gameState, setGameState] = useState<'intro' | 'setup' | 'running' | 'results'>('intro')
-  const [hypothesis, setHypothesis] = useState<'directional' | 'nondirectional' | null>(null)
-  const [participants, setParticipants] = useState(20)
-  const [results, setResults] = useState<{ music: number[], silence: number[] } | null>(null)
-  const [conclusion, setConclusion] = useState('')
-
-  const reset = () => {
-    setGameState('setup')
-    setHypothesis(null)
-    setResults(null)
-    setConclusion('')
-  }
-
-  const runExperiment = () => {
-    setGameState('running')
-    setTimeout(() => {
-      // Simulate experiment results
-      const musicScores = Array.from({ length: participants / 2 }, () => 
-        Math.floor(Math.random() * 20) + 60) // 60-80 range
-      const silenceScores = Array.from({ length: participants / 2 }, () => 
-        Math.floor(Math.random() * 20) + 70) // 70-90 range (higher)
-      
-      setResults({ music: musicScores, silence: silenceScores })
-      
-      const musicMean = musicScores.reduce((a, b) => a + b) / musicScores.length
-      const silenceMean = silenceScores.reduce((a, b) => a + b) / silenceScores.length
-      
-      if (level === 'gcse') {
-        setConclusion(
-          `The silence group scored higher (M = ${silenceMean.toFixed(1)}) than the music group (M = ${musicMean.toFixed(1)}). ` +
-          `This supports our ${hypothesis} hypothesis that predicted ${hypothesis === 'directional' ? 'silence would score higher' : 'there would be a difference'}.`
-        )
-      } else {
-        const diff = Math.abs(silenceMean - musicMean)
-        const pooledSD = 8 // simplified
-        const cohensD = (diff / pooledSD).toFixed(2)
-        setConclusion(
-          `Silence group (M = ${silenceMean.toFixed(2)}, SD = 8.0) significantly outperformed music group (M = ${musicMean.toFixed(2)}, SD = 8.0), ` +
-          `t(${participants - 2}) = 3.45, p = 0.002, d = ${cohensD}. ` +
-          `We reject H₀ in favor of H₁. Effect size is medium-to-large.`
-        )
-      }
-      
-      setGameState('results')
-    }, 2000)
-  }
-
-  if (gameState === 'intro') {
-    return (
-      <div className="flex flex-col items-center justify-center h-full p-8 animate-fadeIn">
-        <div className="max-w-3xl text-center">
-          <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 shadow-2xl shadow-purple-500/50 mb-8">
-            <Beaker size={64} className="text-white" />
-          </div>
-          <h2 className="text-6xl font-black text-white mb-6">Hypothesis Testing Lab</h2>
-          <p className="text-2xl text-gray-300 mb-12 leading-relaxed">
-            {level === 'gcse'
-              ? 'Run a virtual experiment to test if background music affects memory test scores!'
-              : 'Design and execute a controlled experiment testing the effect of auditory distraction on cognitive performance.'}
-          </p>
-          <button
-            onClick={() => setGameState('setup')}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-2xl px-12 py-6 rounded-xl shadow-2xl shadow-purple-500/50 transition-all transform hover:scale-105"
-          >
-            Start Experiment →
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  if (gameState === 'setup') {
-    return (
-      <div className="flex flex-col h-full p-8 animate-fadeIn">
-        <h2 className="text-5xl font-black text-white mb-8">Design Your Experiment</h2>
-        
-        <div className="max-w-4xl space-y-8">
-          <div className="bg-gray-900/80 border border-gray-700 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-pink-400 mb-6">Step 1: Choose Your Hypothesis</h3>
-            <div className="grid grid-cols-2 gap-6">
-              <button
-                onClick={() => setHypothesis('directional')}
-                className={`p-8 rounded-xl border-2 transition-all ${
-                  hypothesis === 'directional'
-                    ? 'border-pink-500 bg-pink-900/20 shadow-lg shadow-pink-500/30'
-                    : 'border-gray-600 bg-gray-800 hover:border-pink-500/50'
-                }`}
-              >
-                <h4 className="text-xl font-bold text-white mb-3">Directional</h4>
-                <p className="text-gray-300">
-                  "Students in silence will score <span className="text-pink-400 font-bold">HIGHER</span> than students with music"
-                </p>
-              </button>
-              <button
-                onClick={() => setHypothesis('nondirectional')}
-                className={`p-8 rounded-xl border-2 transition-all ${
-                  hypothesis === 'nondirectional'
-                    ? 'border-blue-500 bg-blue-900/20 shadow-lg shadow-blue-500/30'
-                    : 'border-gray-600 bg-gray-800 hover:border-blue-500/50'
-                }`}
-              >
-                <h4 className="text-xl font-bold text-white mb-3">Non-Directional</h4>
-                <p className="text-gray-300">
-                  "There will be a <span className="text-blue-400 font-bold">DIFFERENCE</span> between students with music and silence"
-                </p>
-              </button>
-            </div>
-          </div>
-
-          <div className="bg-gray-900/80 border border-gray-700 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-purple-400 mb-6">Step 2: Set Sample Size</h3>
-            <div className="flex items-center gap-6">
-              <input
-                type="range"
-                min="10"
-                max="100"
-                step="10"
-                value={participants}
-                onChange={(e) => setParticipants(Number(e.target.value))}
-                className="flex-1 h-3 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-purple-600 to-pink-600"
-              />
-              <div className="text-4xl font-black text-white min-w-[100px] text-right">
-                {participants}
-              </div>
-            </div>
-            <p className="text-gray-400 mt-4">
-              {level === 'gcse' 
-                ? 'More participants = more reliable results'
-                : 'Larger sample size increases statistical power and reduces standard error'}
-            </p>
-          </div>
-
-          <button
-            onClick={runExperiment}
-            disabled={!hypothesis}
-            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 disabled:opacity-50 disabled:grayscale text-white font-bold text-2xl px-12 py-6 rounded-xl shadow-2xl transition-all"
-          >
-            Run Experiment →
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  if (gameState === 'running') {
-    return (
-      <div className="flex flex-col items-center justify-center h-full animate-fadeIn">
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center w-40 h-40 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 shadow-2xl shadow-purple-500/50 mb-8 animate-pulse">
-            <Beaker size={80} className="text-white" />
-          </div>
-          <h2 className="text-5xl font-black text-white mb-4">Running Experiment...</h2>
-          <p className="text-2xl text-gray-400">Testing {participants} participants</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (gameState === 'results' && results) {
-    const musicMean = results.music.reduce((a, b) => a + b) / results.music.length
-    const silenceMean = results.silence.reduce((a, b) => a + b) / results.silence.length
-
-    return (
-      <div className="flex flex-col h-full p-8 animate-fadeIn overflow-y-auto custom-scrollbar">
-        <h2 className="text-5xl font-black text-white mb-8">Experimental Results</h2>
-        
-        <div className="grid grid-cols-2 gap-8 mb-8">
-          <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/20 border-2 border-blue-500/50 rounded-2xl p-8">
-            <h3 className="text-3xl font-bold text-blue-300 mb-6">🎵 Music Group</h3>
-            <div className="text-6xl font-black text-blue-400 mb-4">
-              {musicMean.toFixed(1)}
-            </div>
-            <p className="text-gray-300">Mean Score (out of 100)</p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {results.music.slice(0, 10).map((score, idx) => (
-                <div key={idx} className="bg-blue-950/50 px-3 py-1 rounded text-blue-200 text-sm">
-                  {score}
-                </div>
-              ))}
-              {results.music.length > 10 && (
-                <div className="bg-blue-950/50 px-3 py-1 rounded text-blue-300 text-sm">
-                  +{results.music.length - 10} more...
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-green-900/30 to-emerald-800/20 border-2 border-green-500/50 rounded-2xl p-8">
-            <h3 className="text-3xl font-bold text-green-300 mb-6">🤫 Silence Group</h3>
-            <div className="text-6xl font-black text-green-400 mb-4">
-              {silenceMean.toFixed(1)}
-            </div>
-            <p className="text-gray-300">Mean Score (out of 100)</p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {results.silence.slice(0, 10).map((score, idx) => (
-                <div key={idx} className="bg-green-950/50 px-3 py-1 rounded text-green-200 text-sm">
-                  {score}
-                </div>
-              ))}
-              {results.silence.length > 10 && (
-                <div className="bg-green-950/50 px-3 py-1 rounded text-green-300 text-sm">
-                  +{results.silence.length - 10} more...
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 border-2 border-purple-500/50 rounded-2xl p-8 mb-8">
-          <h3 className="text-2xl font-bold text-purple-300 mb-4 flex items-center gap-3">
-            <BarChart className="text-purple-400" />
-            Conclusion
-          </h3>
-          <p className="text-xl text-gray-200 leading-relaxed">
-            {conclusion}
-          </p>
-        </div>
-
-        <button
-          onClick={reset}
-          className="bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white font-bold text-xl px-8 py-4 rounded-xl transition-all"
-        >
-          ← Run Another Experiment
-        </button>
-      </div>
-    )
-  }
-
-  return null
 }
 
 // Evaluation - Strengths and Limitations
@@ -2929,28 +2697,35 @@ const ExtendedExamTaskALevel: React.FC = () => {
 
 // Lesson definitions with level-specific availability
 const allLessons = [
-  // ============= GCSE LESSONS (8 Total) =============
-  { id: 1, title: 'Lesson 1: The Basics of Investigation', levels: ['gcse'], description: 'Hypotheses & Variables' },
-  { id: 2, title: 'Lesson 2: Selecting Participants', levels: ['gcse'], description: 'Sampling Methods' },
-  { id: 3, title: 'Lesson 3: Experimental Design', levels: ['gcse'], description: 'Structuring Test Groups' },
-  { id: 4, title: 'Lesson 4: Non-Experimental Methods', levels: ['gcse'], description: 'Interviews & Questionnaires' },
-  { id: 5, title: 'Lesson 5: Observation & Correlation', levels: ['gcse'], description: 'Watching & Measuring Relationships' },
+  // ============= GCSE LESSONS (15 Total) =============
+  { id: 1, title: 'Lesson 1: Hypotheses and Variables', levels: ['gcse'], description: 'IV, DV, Null & Alt' },
+  { id: 2, title: 'Lesson 2: Extraneous Variables', levels: ['gcse'], description: 'Standardisation & Control' },
+  { id: 3, title: 'Lesson 3: Types of Experiment', levels: ['gcse'], description: 'Lab, Field, Natural' },
+  { id: 4, title: 'Lesson 4: Experimental Designs', levels: ['gcse'], description: 'IG, RM, MP' },
+  { id: 5, title: 'Lesson 5: Sampling Methods', levels: ['gcse'], description: 'Random, Opportunity, Stratified' },
   { id: 6, title: 'Lesson 6: Ethical Considerations', levels: ['gcse'], description: 'BPS Guidelines' },
-  { id: 7, title: 'Lesson 7: Data Handling I', levels: ['gcse'], description: 'Types & Averages' },
-  { id: 8, title: 'Lesson 8: Data Handling II', levels: ['gcse'], description: 'Graphs & Distributions' },
+  { id: 7, title: 'Lesson 7: Interviews & Questionnaires', levels: ['gcse'], description: 'Self-Report Methods' },
+  { id: 8, title: 'Lesson 8: Observation Studies', levels: ['gcse'], description: 'Watching Behaviour' },
+  { id: 9, title: 'Lesson 9: Correlations', levels: ['gcse'], description: 'Relationships Between Variables' },
+  { id: 10, title: 'Lesson 10: Case Studies', levels: ['gcse'], description: 'In-Depth Analysis' },
+  { id: 11, title: 'Lesson 11: Reliability and Validity', levels: ['gcse'], description: 'Consistency & Truth' },
+  { id: 12, title: 'Lesson 12: Types of Data', levels: ['gcse'], description: 'Quantitative & Qualitative' },
+  { id: 13, title: 'Lesson 13: Descriptive Statistics', levels: ['gcse'], description: 'Mean, Median, Mode, Range' },
+  { id: 14, title: 'Lesson 14: Display of Data', levels: ['gcse'], description: 'Graphs & Charts' },
+  { id: 15, title: 'Lesson 15: Computation', levels: ['gcse'], description: 'Arithmetic Skills' },
 
   // ============= A-LEVEL LESSONS (11 Total) =============
-  { id: 9, title: 'Lesson 1: The Scientific Approach', levels: ['alevel'], description: 'Is Psychology a Science?' },
-  { id: 10, title: 'Lesson 2: Control & Validity', levels: ['alevel'], description: 'Keeping it Pure' },
-  { id: 11, title: 'Lesson 3: Advanced Experimental Design', levels: ['alevel'], description: 'Robust Planning' },
-  { id: 12, title: 'Lesson 4: Reliability & Validity (Deep Dive)', levels: ['alevel'], description: 'Accuracy vs Consistency' },
-  { id: 13, title: 'Lesson 5: Ethics & Professional Standards', levels: ['alevel'], description: 'Advanced Ethics' },
-  { id: 14, title: 'Lesson 6: Observational Techniques', levels: ['alevel'], description: 'Systematic Watching' },
-  { id: 15, title: 'Lesson 7: Self-Report & Other Methods', levels: ['alevel'], description: 'Questionnaires & Content Analysis' },
-  { id: 16, title: 'Lesson 8: Descriptive Statistics', levels: ['alevel'], description: 'Standard Deviation & Distributions' },
-  { id: 17, title: 'Lesson 9: Inferential Statistics I', levels: ['alevel'], description: 'Probability & Significance' },
-  { id: 18, title: 'Lesson 10: Inferential Statistics II', levels: ['alevel'], description: 'The Tests' },
-  { id: 19, title: 'Lesson 11: Professional Context', levels: ['alevel'], description: 'Peer Review & Economy' },
+  { id: 16, title: 'Lesson 1: The Scientific Approach', levels: ['alevel'], description: 'Is Psychology a Science?' },
+  { id: 17, title: 'Lesson 2: Control & Validity', levels: ['alevel'], description: 'Keeping it Pure' },
+  { id: 18, title: 'Lesson 3: Advanced Experimental Design', levels: ['alevel'], description: 'Robust Planning' },
+  { id: 19, title: 'Lesson 4: Reliability & Validity (Deep Dive)', levels: ['alevel'], description: 'Accuracy vs Consistency' },
+  { id: 20, title: 'Lesson 5: Ethics & Professional Standards', levels: ['alevel'], description: 'Advanced Ethics' },
+  { id: 21, title: 'Lesson 6: Observational Techniques', levels: ['alevel'], description: 'Systematic Watching' },
+  { id: 22, title: 'Lesson 7: Self-Report & Other Methods', levels: ['alevel'], description: 'Questionnaires & Content Analysis' },
+  { id: 23, title: 'Lesson 8: Descriptive Statistics', levels: ['alevel'], description: 'Standard Deviation & Distributions' },
+  { id: 24, title: 'Lesson 9: Inferential Statistics I', levels: ['alevel'], description: 'Probability & Significance' },
+  { id: 25, title: 'Lesson 10: Inferential Statistics II', levels: ['alevel'], description: 'The Tests' },
+  { id: 26, title: 'Lesson 11: Professional Context', levels: ['alevel'], description: 'Peer Review & Economy' },
 ]
 
 // Get lessons filtered by current level
@@ -2960,9 +2735,10 @@ const getActiveLessons = (currentLevel: 'gcse' | 'alevel') => {
 
 // Slide counts per lesson
 const lessonSlideCounts: Record<number, number> = {
-  1: 10,
-  2: 5, 3: 5, 4: 5, 5: 5, 6: 5, 7: 5, 8: 5,
-  9: 9, 10: 5, 11: 5, 12: 5, 13: 5, 14: 5, 15: 5, 16: 5, 17: 5, 18: 5, 19: 5
+  // GCSE (15 lessons)
+  1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10, 7: 10, 8: 10, 9: 10, 10: 10, 11: 10, 12: 10, 13: 10, 14: 10, 15: 10,
+  // A-Level (11 lessons)
+  16: 10, 17: 10, 18: 10, 19: 10, 20: 10, 21: 10, 22: 10, 23: 10, 24: 10, 25: 10, 26: 10
 }
 
 // Utility: build slides with teacher-first ordering per cycle
@@ -3104,76 +2880,85 @@ function App() {
       const doNowQuestions: Question[] = [
         {
           id: 1,
-          question: "What does 'scientific' mean?",
-          options: [
-            'Based on systematic observation and testing',
-            'Based on tradition',
-            'Based on feelings',
-            'Based on opinion'
-          ],
-          correct: 0
+          question: "What does 'objective' mean?",
+          options: ["Based on opinion", "Based on measurable fact", "Based on feelings"],
+          correct: 1
         },
         {
           id: 2,
-          question: 'Which of these is a measurement?',
-          options: [
-            'People feel happy',
-            'Temperature is 20°C',
-            'The sky looks blue',
-            'Music sounds nice'
-          ],
-          correct: 1
-        },
-        {
-          id: 3,
-          question: "What does 'objective' mean?",
-          options: [
-            'Based on guesses',
-            'Based on personal feelings',
-            'Based on facts that can be measured',
-            'Based on beliefs'
-          ],
+          question: "A 'theory' in psychology is...",
+          options: ["A complete guess", "A proven fact", "A suggested explanation for behaviour"],
           correct: 2
         },
         {
+          id: 3,
+          question: "Which measurement is most scientific?",
+          options: ["'It felt cold'", "'It was 4°C'", "'It was freezing'"],
+          correct: 1
+        },
+        {
           id: 4,
-          question: 'If you repeat an experiment and get the same result, this shows:',
-          options: ['Bias', 'Error', 'Luck', 'Reliability'],
-          correct: 3
+          question: "Why do we repeat experiments?",
+          options: ["To check reliability", "To waste time", "To make it harder"],
+          correct: 0
         },
         {
           id: 5,
-          question: "A 'variable' is something that:",
-          options: ['Is always the same', 'Can change or vary', 'Never changes', 'Cannot be measured'],
-          correct: 1
+          question: "Prediction is a key part of science. True or False?",
+          options: ["True", "False"],
+          correct: 0
         }
       ]
 
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
 
-    if (slideType === 'hypo_sim') {
-      return <HypothesisMachine isPresenting={isPresenting} />
-    }
-
     if (slideType === 'hypo_teach') {
       return <HypothesisTeachSlide isPresenting={isPresenting} />
     }
 
+    if (slideType === 'hypo_sim') {
+      return <HypothesisLab isPresenting={isPresenting} />
+    }
+
     if (slideType === 'hypo_afl') {
-      return <HypothesisStatementCheck isPresenting={isPresenting} />
+      const questions: Question[] = [
+        {
+          id: 1,
+          scenario: "A study tests if Red Bull improves reaction time compared to water.",
+          question: "What is the IV?",
+          options: ["Reaction Speed", "Type of Drink", "Participants"],
+          correct: 1
+        },
+        {
+          id: 2,
+          scenario: "Music study: Does background music affect memory recall?",
+          question: "What is the DV?",
+          options: ["The music played", "Number of words remembered", "Time of day"],
+          correct: 1
+        },
+        {
+          id: 3,
+          scenario: "Testing phone notifications and concentration.",
+          question: "Which is an extraneous variable?",
+          options: ["Phone notifications (IV)", "Focus time (DV)", "Prior anxiety levels"],
+          correct: 2
+        }
+      ]
+
+      return <SplitKnowledgeCheck questions={questions} title="Quick Check: Hypotheses & Variables" subtitle="Identify IV, DV & Extraneous Variables" />
     }
 
     if (slideType === 'hypo_task') {
       return <HypothesisWriterGCSE isPresenting={isPresenting} />
     }
 
-    if (slideType === 'variables_sim') {
-      return <VariableLab isPresenting={isPresenting} />
-    }
-
     if (slideType === 'variables_teach') {
       return <VariablesTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'variables_sim') {
+      return <VariableLab isPresenting={isPresenting} />
     }
 
     if (slideType === 'variables_afl') {
