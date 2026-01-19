@@ -1,7 +1,12 @@
 import { useState } from 'react'
-import { X, Menu, ChevronLeft, ChevronRight, Lightbulb, CheckCircle, Target, FlaskConical, BarChart, Beaker, AlertTriangle, Eye, EyeOff, Zap, Brain, TrendingUp, Projector, AlertCircle } from 'lucide-react'
+import { X, Menu, ChevronLeft, ChevronRight, Lightbulb, CheckCircle, Target, FlaskConical, Beaker, AlertTriangle, Eye, EyeOff, Zap, Brain, TrendingUp, Projector, AlertCircle } from 'lucide-react'
 import { useEffect } from 'react'
 import HypothesisLab from './components/lessons/activities/HypothesisLab'
+import { AimsAndHypothesesTeach } from './components/lessons/activities/AimsAndHypothesesTeach'
+import { VariablesTeachALevel } from './components/lessons/activities/VariablesTeachALevel'
+import { VariableLabALevel } from './components/lessons/activities/VariableLabALevel'
+import { VariableDetectiveALevel } from './components/lessons/activities/VariableDetectiveALevel'
+import { ExtendedExamTaskALevelLesson1 } from './components/lessons/activities/ExtendedExamTaskALevelLesson1'
 
 // ============= TYPES =============
 interface Question {
@@ -9,6 +14,48 @@ interface Question {
   question: string
   options: string[]
   correct: number
+}
+
+// ============= PRESENTATION MODE SCALING HELPERS =============
+// Consistent zoom/sizing logic for presentation mode
+const zoom = {
+  // Text sizes
+  text: {
+    xs: (presenting: boolean) => presenting ? 'text-xs' : 'text-xs',
+    sm: (presenting: boolean) => presenting ? 'text-sm' : 'text-sm',
+    base: (presenting: boolean) => presenting ? 'text-lg' : 'text-base',
+    lg: (presenting: boolean) => presenting ? 'text-2xl' : 'text-lg',
+    xl: (presenting: boolean) => presenting ? 'text-3xl' : 'text-xl',
+    '2xl': (presenting: boolean) => presenting ? 'text-4xl' : 'text-2xl',
+    '3xl': (presenting: boolean) => presenting ? 'text-5xl' : 'text-3xl',
+    '4xl': (presenting: boolean) => presenting ? 'text-6xl' : 'text-4xl',
+  },
+  // Icon sizes
+  icon: {
+    sm: (presenting: boolean) => presenting ? 20 : 16,
+    base: (presenting: boolean) => presenting ? 24 : 20,
+    lg: (presenting: boolean) => presenting ? 32 : 24,
+    xl: (presenting: boolean) => presenting ? 48 : 32,
+    '2xl': (presenting: boolean) => presenting ? 64 : 48,
+  },
+  // Padding
+  p: {
+    xs: (presenting: boolean) => presenting ? 'p-2' : 'p-1',
+    sm: (presenting: boolean) => presenting ? 'p-3' : 'p-2',
+    base: (presenting: boolean) => presenting ? 'p-4' : 'p-3',
+    md: (presenting: boolean) => presenting ? 'p-6' : 'p-4',
+    lg: (presenting: boolean) => presenting ? 'p-8' : 'p-6',
+    xl: (presenting: boolean) => presenting ? 'p-10' : 'p-8',
+  },
+  // Gaps
+  gap: {
+    xs: (presenting: boolean) => presenting ? 'gap-2' : 'gap-1',
+    sm: (presenting: boolean) => presenting ? 'gap-3' : 'gap-2',
+    base: (presenting: boolean) => presenting ? 'gap-4' : 'gap-3',
+    md: (presenting: boolean) => presenting ? 'gap-6' : 'gap-4',
+    lg: (presenting: boolean) => presenting ? 'gap-8' : 'gap-6',
+    xl: (presenting: boolean) => presenting ? 'gap-12' : 'gap-8',
+  },
 }
 
 // ============= INTERACTIVE COMPONENTS =============
@@ -2714,18 +2761,22 @@ const allLessons = [
   { id: 14, title: 'Lesson 14: Display of Data', levels: ['gcse'], description: 'Graphs & Charts' },
   { id: 15, title: 'Lesson 15: Computation', levels: ['gcse'], description: 'Arithmetic Skills' },
 
-  // ============= A-LEVEL LESSONS (11 Total) =============
-  { id: 16, title: 'Lesson 1: The Scientific Approach', levels: ['alevel'], description: 'Is Psychology a Science?' },
-  { id: 17, title: 'Lesson 2: Control & Validity', levels: ['alevel'], description: 'Keeping it Pure' },
-  { id: 18, title: 'Lesson 3: Advanced Experimental Design', levels: ['alevel'], description: 'Robust Planning' },
-  { id: 19, title: 'Lesson 4: Reliability & Validity (Deep Dive)', levels: ['alevel'], description: 'Accuracy vs Consistency' },
-  { id: 20, title: 'Lesson 5: Ethics & Professional Standards', levels: ['alevel'], description: 'Advanced Ethics' },
-  { id: 21, title: 'Lesson 6: Observational Techniques', levels: ['alevel'], description: 'Systematic Watching' },
-  { id: 22, title: 'Lesson 7: Self-Report & Other Methods', levels: ['alevel'], description: 'Questionnaires & Content Analysis' },
-  { id: 23, title: 'Lesson 8: Descriptive Statistics', levels: ['alevel'], description: 'Standard Deviation & Distributions' },
-  { id: 24, title: 'Lesson 9: Inferential Statistics I', levels: ['alevel'], description: 'Probability & Significance' },
-  { id: 25, title: 'Lesson 10: Inferential Statistics II', levels: ['alevel'], description: 'The Tests' },
-  { id: 26, title: 'Lesson 11: Professional Context', levels: ['alevel'], description: 'Peer Review & Economy' },
+  // ============= A-LEVEL LESSONS (17 Total) =============
+  { id: 16, title: 'Lesson 1: Experimental Method', levels: ['alevel'], description: 'Aims, Hypotheses, Variables' },
+  { id: 17, title: 'Lesson 2: Control of Variables', levels: ['alevel'], description: 'Extraneous, Confounding, Demand' },
+  { id: 18, title: 'Lesson 3: Experimental Design', levels: ['alevel'], description: 'Independent Groups, RM, Matched Pairs' },
+  { id: 19, title: 'Lesson 4: Types of Experiment', levels: ['alevel'], description: 'Lab, Field, Natural, Quasi' },
+  { id: 20, title: 'Lesson 5: Sampling', levels: ['alevel'], description: 'Population, Techniques, Bias' },
+  { id: 21, title: 'Lesson 6: Ethical Issues', levels: ['alevel'], description: 'BPS Code of Ethics' },
+  { id: 22, title: 'Lesson 7: Observational Techniques', levels: ['alevel'], description: 'Systematic Observation' },
+  { id: 23, title: 'Lesson 8: Self-Report Methods', levels: ['alevel'], description: 'Interviews & Questionnaires' },
+  { id: 24, title: 'Lesson 9: Correlations', levels: ['alevel'], description: 'Correlation Analysis' },
+  { id: 25, title: 'Lesson 10: Kinds of Data', levels: ['alevel'], description: 'Qualitative & Quantitative' },
+  { id: 26, title: 'Lesson 11: Descriptive Statistics', levels: ['alevel'], description: 'Measures of Central Tendency' },
+  { id: 27, title: 'Lesson 12: Data Presentation', levels: ['alevel'], description: 'Graphs & Charts' },
+  { id: 28, title: 'Lesson 13: Mathematical Skills', levels: ['alevel'], description: 'Quantitative Methods' },
+  { id: 29, title: 'Lesson 14: Statistical Testing', levels: ['alevel'], description: 'Inferential Statistics' },
+  { id: 30, title: 'Lesson 15: Peer Review & Economy', levels: ['alevel'], description: 'Science & Society' },
 ]
 
 // Get lessons filtered by current level
@@ -2737,8 +2788,8 @@ const getActiveLessons = (currentLevel: 'gcse' | 'alevel') => {
 const lessonSlideCounts: Record<number, number> = {
   // GCSE (15 lessons)
   1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10, 7: 10, 8: 10, 9: 10, 10: 10, 11: 10, 12: 10, 13: 10, 14: 10, 15: 10,
-  // A-Level (11 lessons)
-  16: 10, 17: 10, 18: 10, 19: 10, 20: 10, 21: 10, 22: 10, 23: 10, 24: 10, 25: 10, 26: 10
+  // A-Level (17 lessons)
+  16: 10, 17: 10, 18: 10, 19: 10, 20: 10, 21: 10, 22: 10, 23: 10, 24: 10, 25: 10, 26: 10, 27: 10, 28: 10, 29: 10, 30: 10
 }
 
 // Utility: build slides with teacher-first ordering per cycle
@@ -2756,6 +2807,20 @@ const lesson1Slides = buildSlides(['hypo', 'variables'])
 
 // Lesson 9 slides data (A-Level Lesson 1: The Scientific Approach) - 9 focused slides
 const lesson9Slides = ['donow', 'science_teach', 'science_sim', 'science_afl', 'hypothesis_teach', 'hypothesis_sim', 'falsification_teach', 'falsification_afl', 'extended']
+
+// Lesson 16 slides data (A-Level Lesson 1: Experimental Method)
+const lesson16Slides: Array<'donow' | 'hypo_teach' | 'hypo_sim' | 'hypo_afl' | 'hypo_task' | 'variables_teach' | 'variables_sim' | 'variables_afl' | 'variables_task' | 'extended'> = [
+  'donow',
+  'hypo_teach',
+  'hypo_sim',
+  'hypo_afl',
+  'hypo_task',
+  'variables_teach',
+  'variables_sim',
+  'variables_afl',
+  'variables_task',
+  'extended'
+]
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -3136,6 +3201,194 @@ function App() {
     return <div>Loading...</div>
   }
 
+  // Render Lesson 16 content (A-Level Lesson 1: Experimental Method)
+  const renderLesson16 = () => {
+    const slideType = lesson16Slides[currentSlide]
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "What is the difference between an aim and a hypothesis?",
+          options: [
+            "They are the same thing",
+            "An aim is general; a hypothesis is specific and testable",
+            "A hypothesis is general; an aim is specific",
+            "Only experiments have aims"
+          ],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Which is a directional hypothesis?",
+          options: [
+            "There will be a difference in test scores",
+            "Students will score higher with music than without",
+            "Music affects concentration",
+            "Do students revise better with music?"
+          ],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "What does 'operationalisation' mean?",
+          options: [
+            "Running an experiment",
+            "Defining variables in measurable terms",
+            "Counting participants",
+            "Writing a hypothesis"
+          ],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "In an experiment, the IV is:",
+          options: [
+            "The variable that is measured",
+            "The variable that is manipulated",
+            "The confounding variable",
+            "The random variable"
+          ],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Which is an example of operationalising 'talkativeness'?",
+          options: [
+            "Whether someone is chatty or quiet",
+            "Counting words spoken in five minutes",
+            "Asking if they like talking",
+            "Measuring their voice volume"
+          ],
+          correct: 1
+        }
+      ]
+
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'hypo_teach') {
+      return <AimsAndHypothesesTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'hypo_sim') {
+      return <HypothesesComparison level="alevel" />
+    }
+
+    if (slideType === 'hypo_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "Which statement distinguishes an aim from a hypothesis?",
+          options: [
+            "An aim predicts the relationship between variables",
+            "A hypothesis is tested; an aim is not",
+            "An aim is general; a hypothesis is specific and testable",
+            "They are identical in psychological research"
+          ],
+          correct: 2
+        },
+        {
+          id: 2,
+          question: "A directional hypothesis differs from non-directional because:",
+          options: [
+            "It names the variables being tested",
+            "It predicts the direction of the effect",
+            "It uses more scientific language",
+            "It is always more accurate"
+          ],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Operationalising the IV 'sleep deprivation' could mean:",
+          options: [
+            "Testing whether sleep matters",
+            "Giving participants either 4 hours or 8 hours of sleep",
+            "Asking participants how tired they feel",
+            "Measuring brain activity"
+          ],
+          correct: 1
+        }
+      ]
+
+      return <KnowledgeCheck questions={questions} title="Quick Check: Aims & Hypotheses" subtitle="Understand the fundamentals" />
+    }
+
+    if (slideType === 'hypo_task') {
+      return <HypothesisWriter level="alevel" />
+    }
+
+    if (slideType === 'variables_teach') {
+      return <VariablesTeachALevel isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'variables_sim') {
+      return <VariableLabALevel isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'variables_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: 'To operationalise the DV "memory performance", a researcher could:',
+          options: [
+            'Ask participants if they have good memory',
+            'Measure the number of words correctly recalled from a list',
+            'Assess whether the participant studied hard',
+            'Use their intuition about memory ability'
+          ],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: 'An extraneous variable in a memory study could be:',
+          options: [
+            'The number of words in the list (if fixed)',
+            'Participants\' prior knowledge of the material',
+            'The same instructions for all participants',
+            'The same time limit for all groups'
+          ],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: 'If the IV has two levels (e.g., music vs silence), this represents:',
+          options: [
+            'Two dependent variables',
+            'Two different hypotheses',
+            'Two experimental conditions to compare',
+            'Two populations'
+          ],
+          correct: 2
+        },
+        {
+          id: 4,
+          question: 'Why must variables be operationalised in research?',
+          options: [
+            'To make the hypothesis more dramatic',
+            'To ensure variables can be measured objectively and clearly',
+            'To reduce the number of participants needed',
+            'To guarantee the results will be significant'
+          ],
+          correct: 1
+        }
+      ]
+
+      return <KnowledgeCheck questions={questions} title="Quick Check: Variables & Operationalisation" subtitle="Applied understanding" />
+    }
+
+    if (slideType === 'variables_task') {
+      return <VariableDetectiveALevel isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 />
+    }
+
+    return <div>Loading...</div>
+  }
+
   // Render placeholder for other lessons
   const renderPlaceholder = () => {
     const lesson = allLessons.find(l => l.id === currentLesson)
@@ -3248,13 +3501,15 @@ function App() {
                   <div className="present-scale" style={{ width: '100%', maxWidth: '1200px' }}>
                     {currentLesson === 1 && renderLesson1()}
                     {currentLesson === 9 && renderLesson9()}
-                    {currentLesson !== 1 && currentLesson !== 9 && renderPlaceholder()}
+                    {currentLesson === 16 && renderLesson16()}
+                    {currentLesson !== 1 && currentLesson !== 9 && currentLesson !== 16 && renderPlaceholder()}
                   </div>
                 ) : (
                   <>
                     {currentLesson === 1 && renderLesson1()}
                     {currentLesson === 9 && renderLesson9()}
-                    {currentLesson !== 1 && currentLesson !== 9 && renderPlaceholder()}
+                    {currentLesson === 16 && renderLesson16()}
+                    {currentLesson !== 1 && currentLesson !== 9 && currentLesson !== 16 && renderPlaceholder()}
                   </>
                 )}
               </div>
@@ -3436,7 +3691,8 @@ function App() {
             <main className="flex-grow relative overflow-auto custom-scrollbar bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-900 via-[#0a0a0a] to-[#0a0a0a]">
               {currentLesson === 1 && renderLesson1()}
               {currentLesson === 9 && renderLesson9()}
-              {currentLesson !== 1 && currentLesson !== 9 && renderPlaceholder()}
+              {currentLesson === 16 && renderLesson16()}
+              {currentLesson !== 1 && currentLesson !== 9 && currentLesson !== 16 && renderPlaceholder()}
             </main>
 
             {/* Navigation Footer */}
