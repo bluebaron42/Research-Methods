@@ -1,220 +1,249 @@
 import React, { useState } from 'react'
-import { CheckCircle, XCircle } from 'lucide-react'
 
 interface Props {
   isPresenting: boolean
 }
 
-interface Question {
-  id: number
-  scenario: string
-  question: string
-  options: string[]
-  correct: number
-  explanation: string
-}
-
-export const VariableDetectiveASLevel: React.FC<Props> = ({ isPresenting }) => {
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({})
-  const [showExplanation, setShowExplanation] = useState(false)
-
-  const questions: Question[] = [
-    {
-      id: 1,
-      scenario:
-        'A researcher studies the effect of coffee consumption on exam performance. Some students drink coffee before the exam, while others drink water.',
-      question: 'What is the IV in this study?',
-      options: [
-        'The type of beverage consumed (coffee vs. water)',
-        'The exam score',
-        'The number of students',
-        'The difficulty of the exam'
-      ],
-      correct: 0,
-      explanation: 'The IV is what the researcher manipulates or varies—in this case, the type of beverage. The exam score would be the DV (what is measured).'
-    },
-    {
-      id: 2,
-      scenario:
-        'A study investigates whether the temperature of a room affects concentration levels. One group works in a 18°C room, another in a 24°C room.',
-      question: 'How many levels does the IV have?',
-      options: ['1 level', '2 levels', '3 levels', '10 levels'],
-      correct: 1,
-      explanation: 'There are 2 levels of the IV: the 18°C condition and the 24°C condition. Each represents a different condition being compared.'
-    },
-    {
-      id: 3,
-      scenario:
-        'A researcher wants to measure if a new study technique improves retention. Students use the new technique and their recall of information is tested.',
-      question: 'What would be the best operationalisation of the DV (retention)?',
-      options: [
-        'Whether students remember something',
-        'Number of correct answers in a recall test',
-        'How the student feels about their memory',
-        'How much time was spent studying'
-      ],
-      correct: 1,
-      explanation:
-        'Operationalisation requires a measurable definition. "Number of correct answers" is objective and measurable, unlike feelings or general impressions.'
-    },
-    {
-      id: 4,
-      scenario:
-        'A study examines whether sleep deprivation affects reaction time. Group A sleeps 4 hours, Group B sleeps 8 hours.',
-      question: 'Identify the correct relationship:',
-      options: [
-        'IV = reaction time; DV = sleep duration',
-        'IV = sleep duration; DV = reaction time',
-        'Both are independent variables',
-        'Both are dependent variables'
-      ],
-      correct: 1,
-      explanation:
-        'The researcher manipulates sleep duration (IV), and measures reaction time (DV). Remember: IV is what changes, DV is what we measure.'
-    },
-    {
-      id: 5,
-      scenario:
-        'Researchers study the effect of social media use on self-esteem in teenagers. They measure self-esteem using a standardised questionnaire.',
-      question: 'The operationalisation of the DV in this study is:',
-      options: [
-        'Time spent on social media per day',
-        'Whether teenagers like themselves',
-        'A standardised self-esteem questionnaire score',
-        'The number of social media followers'
-      ],
-      correct: 2,
-      explanation:
-        'The operationalisation is the specific, measurable method used. A standardised questionnaire score is objective and repeatable, making it a proper operationalisation.'
-    }
-  ]
-
-  const question = questions[currentQuestion]
-  const selectedAnswer = selectedAnswers[question.id]
-  const isCorrect = selectedAnswer === question.correct
-  const isAnswered = selectedAnswer !== undefined
-  const textSize = isPresenting ? 'text-2xl' : 'text-lg'
-  const headingSize = isPresenting ? 'text-3xl' : 'text-2xl'
-
-  const handleSelectAnswer = (index: number) => {
-    if (!isAnswered) {
-      setSelectedAnswers({
-        ...selectedAnswers,
-        [question.id]: index
-      })
-      setShowExplanation(true)
-    }
+export const VariableDetectiveALevel: React.FC<Props> = ({ isPresenting }) => {
+  // Research topics by psychology area
+  const researchTopics = {
+    memory: [
+      { name: 'Word List Recall', description: 'Testing how many words participants remember from a list' },
+      { name: 'Serial Position Effect', description: 'Do we remember words better from the start or end of a list?' },
+      { name: 'Chunking Study', description: 'Does grouping information improve recall?' }
+    ],
+    social: [
+      { name: 'Conformity Experiment', description: 'Do people change their answers when others disagree?' },
+      { name: 'Bystander Effect', description: 'Does group size affect helping behaviour?' },
+      { name: 'Authority Obedience', description: 'How far will people go when instructed by authority?' }
+    ],
+    cognitive: [
+      { name: 'Stroop Effect', description: 'Conflict between reading words and naming colours' },
+      { name: 'Dual Task Performance', description: 'Can we do two things at once effectively?' },
+      { name: 'Attention & Distraction', description: 'How does noise affect concentration?' }
+    ]
   }
 
-  const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
-      setShowExplanation(false)
-    }
+  const ivOptions = {
+    memory: ['List length (10 vs 20 words)', 'Presentation time (1s vs 3s)', 'Word type (concrete vs abstract)', 'Rehearsal allowed (yes vs no)'],
+    social: ['Group size (1 vs 5 confederates)', 'Authority figure present (yes vs no)', 'Similarity to confederates (high vs low)', 'Time pressure (rushed vs relaxed)'],
+    cognitive: ['Congruent vs incongruent stimuli', 'Background noise (silence vs 70dB)', 'Task difficulty (easy vs hard)', 'Caffeine condition (with vs without)']
   }
 
-  const handlePrev = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1)
-      setShowExplanation(true)
-    }
+  const dvMeasures = {
+    memory: ['Number of words recalled', 'Recall accuracy (%)', 'Time to recall (seconds)', 'Order accuracy score'],
+    social: ['Conformity rate (%)', 'Response time (seconds)', 'Helping behaviour (yes/no)', 'Obedience level (1-10)'],
+    cognitive: ['Reaction time (ms)', 'Error rate (%)', 'Task completion time', 'Accuracy score']
   }
 
-  const correctCount = Object.entries(selectedAnswers).filter(([id, answer]) => {
-    const q = questions.find((q) => q.id === Number(id))
-    return q && answer === q.correct
-  }).length
+  const [selectedArea, setSelectedArea] = useState<'memory' | 'social' | 'cognitive' | null>(null)
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null)
+  const [selectedIV, setSelectedIV] = useState<string | null>(null)
+  const [selectedDV, setSelectedDV] = useState<string | null>(null)
+  const [showSimulation, setShowSimulation] = useState(false)
+  const [simulationData, setSimulationData] = useState<{group1: number[], group2: number[]} | null>(null)
+
+  const runSimulation = () => {
+    const generateData = (mean: number, variance: number, n: number) => 
+      Array.from({ length: n }, () => Math.round(mean + (Math.random() - 0.5) * variance * 2))
+    
+    const group1 = generateData(65, 15, 10)
+    const group2 = generateData(78, 12, 10)
+    setSimulationData({ group1, group2 })
+    setShowSimulation(true)
+  }
+
+  const resetStudy = () => {
+    setSelectedArea(null)
+    setSelectedTopic(null)
+    setSelectedIV(null)
+    setSelectedDV(null)
+    setShowSimulation(false)
+    setSimulationData(null)
+  }
+
+  const textSize = isPresenting ? 'text-sm' : 'text-base'
+  const headingSize = isPresenting ? 'text-xl' : 'text-3xl'
 
   return (
-    <div className={`w-full h-full p-8 flex flex-col overflow-auto custom-scrollbar`}>
-      <div className="flex justify-between items-center mb-8">
-        <h2 className={`${headingSize} font-bold text-rose-400`}>Variable Detective</h2>
-        <div className="text-gray-400 font-mono">
-          {currentQuestion + 1} / {questions.length}
+    <div className={`flex flex-col h-full overflow-auto custom-scrollbar animate-fadeIn ${isPresenting ? 'p-4' : 'p-6'}`}>
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <h2 className={`${headingSize} font-bold text-rose-400 mb-1`}>🔬 Research Scenario Builder</h2>
+          <p className={`${textSize} text-gray-400`}>Design your own psychology study step-by-step</p>
         </div>
+        {selectedArea && (
+          <button onClick={resetStudy} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm text-gray-300">
+            Start Over
+          </button>
+        )}
       </div>
 
-      {/* Scenario */}
-      <div className="bg-gray-900 border-l-4 border-blue-500 p-6 rounded-lg mb-8">
-        <p className={`${textSize} text-gray-200 leading-relaxed`}>{question.scenario}</p>
-      </div>
+      {/* Step 1: Choose Research Area */}
+      {!selectedArea && (
+        <div className="mb-6">
+          <h3 className={`${textSize} font-bold text-amber-400 mb-4`}>Step 1: Choose a Research Area</h3>
+          <div className="grid grid-cols-3 gap-4">
+            {(['memory', 'social', 'cognitive'] as const).map(area => (
+              <button
+                key={area}
+                onClick={() => setSelectedArea(area)}
+                className="p-6 bg-gray-800 border-2 border-gray-700 rounded-xl hover:border-rose-500 transition-all text-left"
+              >
+                <div className="text-3xl mb-2">{area === 'memory' ? '🧠' : area === 'social' ? '👥' : '⚡'}</div>
+                <h4 className="font-bold text-white capitalize mb-1">{area} Psychology</h4>
+                <p className="text-xs text-gray-400">
+                  {area === 'memory' ? 'How we encode, store & retrieve information' : 
+                   area === 'social' ? 'How others influence our behaviour' : 
+                   'Mental processes like attention & perception'}
+                </p>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
-      {/* Question */}
-      <h3 className={`${textSize} font-bold text-amber-400 mb-6`}>{question.question}</h3>
+      {/* Step 2: Select Topic */}
+      {selectedArea && !selectedTopic && (
+        <div className="mb-6 animate-fadeIn">
+          <h3 className={`${textSize} font-bold text-amber-400 mb-4`}>Step 2: Select a Research Topic</h3>
+          <div className="grid grid-cols-3 gap-4">
+            {researchTopics[selectedArea].map(topic => (
+              <button
+                key={topic.name}
+                onClick={() => setSelectedTopic(topic.name)}
+                className="p-5 bg-gray-800 border-2 border-gray-700 rounded-xl hover:border-blue-500 transition-all text-left"
+              >
+                <h4 className="font-bold text-white mb-2">{topic.name}</h4>
+                <p className="text-xs text-gray-400">{topic.description}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
-      {/* Options */}
-      <div className="space-y-4 flex-grow">
-        {question.options.map((option, idx) => (
-          <button
-            key={idx}
-            onClick={() => handleSelectAnswer(idx)}
-            disabled={isAnswered}
-            className={`w-full text-left p-4 rounded-lg border-2 transition-all font-semibold ${
-              !isAnswered
-                ? 'border-gray-600 bg-gray-800 hover:border-rose-500 hover:bg-gray-700 cursor-pointer'
-                : idx === question.correct
-                  ? 'border-green-500 bg-green-900/30 text-green-100'
-                  : idx === selectedAnswer
-                    ? 'border-red-500 bg-red-900/30 text-red-100'
-                    : 'border-gray-600 bg-gray-800 text-gray-400'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <span className={textSize}>{option}</span>
-              {isAnswered && idx === question.correct && <CheckCircle className="text-green-500" size={24} />}
-              {isAnswered && idx === selectedAnswer && idx !== question.correct && <XCircle className="text-red-500" size={24} />}
+      {/* Step 3: Choose IV */}
+      {selectedTopic && !selectedIV && (
+        <div className="mb-6 animate-fadeIn">
+          <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 mb-4">
+            <p className="text-sm text-gray-300"><span className="text-rose-400 font-bold">Your Study:</span> {selectedTopic}</p>
+          </div>
+          <h3 className={`${textSize} font-bold text-amber-400 mb-4`}>Step 3: Choose Your Independent Variable (IV)</h3>
+          <p className="text-sm text-gray-400 mb-4">The IV is what you MANIPULATE or CHANGE in your experiment</p>
+          <div className="grid grid-cols-2 gap-3">
+            {ivOptions[selectedArea!].map(iv => (
+              <button
+                key={iv}
+                onClick={() => setSelectedIV(iv)}
+                className="p-4 bg-gray-800 border-2 border-gray-700 rounded-xl hover:border-blue-500 transition-all text-left"
+              >
+                <p className="text-white font-semibold">{iv}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Step 4: Choose DV */}
+      {selectedIV && !selectedDV && (
+        <div className="mb-6 animate-fadeIn">
+          <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 mb-4">
+            <p className="text-sm text-gray-300"><span className="text-rose-400 font-bold">Study:</span> {selectedTopic}</p>
+            <p className="text-sm text-gray-300"><span className="text-blue-400 font-bold">IV:</span> {selectedIV}</p>
+          </div>
+          <h3 className={`${textSize} font-bold text-amber-400 mb-4`}>Step 4: Choose Your Dependent Variable (DV)</h3>
+          <p className="text-sm text-gray-400 mb-4">The DV is what you MEASURE - the outcome of your experiment</p>
+          <div className="grid grid-cols-2 gap-3">
+            {dvMeasures[selectedArea!].map(dv => (
+              <button
+                key={dv}
+                onClick={() => setSelectedDV(dv)}
+                className="p-4 bg-gray-800 border-2 border-gray-700 rounded-xl hover:border-cyan-500 transition-all text-left"
+              >
+                <p className="text-white font-semibold">{dv}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Step 5: Review & Simulate */}
+      {selectedDV && !showSimulation && (
+        <div className="animate-fadeIn">
+          <h3 className={`${textSize} font-bold text-green-400 mb-4`}>✓ Your Research Design</h3>
+          <div className="bg-gray-800 border-2 border-green-500/50 rounded-xl p-6 mb-6">
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <p className="text-xs text-gray-400 uppercase mb-1">Research Area</p>
+                <p className="text-white font-bold capitalize">{selectedArea} Psychology</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-400 uppercase mb-1">Topic</p>
+                <p className="text-white font-bold">{selectedTopic}</p>
+              </div>
+              <div>
+                <p className="text-xs text-blue-400 uppercase mb-1">Independent Variable (IV)</p>
+                <p className="text-white font-bold">{selectedIV}</p>
+              </div>
+              <div>
+                <p className="text-xs text-cyan-400 uppercase mb-1">Dependent Variable (DV)</p>
+                <p className="text-white font-bold">{selectedDV}</p>
+              </div>
             </div>
-          </button>
-        ))}
-      </div>
-
-      {/* Explanation */}
-      {showExplanation && isAnswered && (
-        <div className={`mt-8 p-6 rounded-lg border-l-4 ${isCorrect ? 'bg-green-900/30 border-green-600' : 'bg-red-900/30 border-red-600'}`}>
-          <h4 className={`${textSize} font-bold ${isCorrect ? 'text-green-300' : 'text-red-300'} mb-3`}>
-            {isCorrect ? '✓ Correct!' : '✗ Not quite right'}
-          </h4>
-          <p className={`${textSize} ${isCorrect ? 'text-green-100' : 'text-red-100'}`}>{question.explanation}</p>
-        </div>
-      )}
-
-      {/* Navigation */}
-      {isAnswered && (
-        <div className="flex gap-4 mt-8">
+            <div className="mt-6 pt-4 border-t border-gray-700">
+              <p className="text-xs text-amber-400 uppercase mb-2">Generated Hypothesis</p>
+              <p className="text-gray-200 italic">
+                "Participants in the {selectedIV?.split('(')[0].trim()} condition will show different {selectedDV?.toLowerCase()} compared to the control condition."
+              </p>
+            </div>
+          </div>
           <button
-            onClick={handlePrev}
-            disabled={currentQuestion === 0}
-            className={`flex-1 py-3 px-6 rounded-lg font-bold ${
-              currentQuestion === 0
-                ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                : 'bg-gray-700 hover:bg-gray-600 text-white'
-            }`}
+            onClick={runSimulation}
+            className="w-full py-4 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 rounded-xl font-bold text-white text-lg transition-all"
           >
-            ← Previous
-          </button>
-
-          <button
-            onClick={handleNext}
-            disabled={currentQuestion === questions.length - 1}
-            className={`flex-1 py-3 px-6 rounded-lg font-bold ${
-              currentQuestion === questions.length - 1
-                ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                : 'bg-rose-600 hover:bg-rose-500 text-white'
-            }`}
-          >
-            Next →
+            🧪 Run Simulation with Virtual Participants
           </button>
         </div>
       )}
 
-      {/* Score Summary - Show only when all questions are answered */}
-      {selectedAnswers[questions[questions.length - 1].id] !== undefined && (
-        <div className="mt-8 p-6 bg-gray-800 rounded-lg border border-gray-700 text-center">
-          <p className={`${textSize} text-gray-300 mb-2`}>Your Score:</p>
-          <p className={`${isPresenting ? 'text-5xl' : 'text-3xl'} font-bold text-rose-400`}>
-            {correctCount} / {questions.length}
-          </p>
+      {/* Simulation Results */}
+      {showSimulation && simulationData && (
+        <div className="animate-fadeIn">
+          <h3 className={`${textSize} font-bold text-green-400 mb-4`}>📊 Simulation Results</h3>
+          <div className="grid grid-cols-2 gap-6 mb-6">
+            <div className="bg-blue-900/30 border border-blue-500/50 rounded-xl p-5">
+              <h4 className="text-blue-300 font-bold mb-3">Condition 1 (Control)</h4>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {simulationData.group1.map((score, i) => (
+                  <span key={i} className="px-3 py-1 bg-blue-800/50 rounded text-blue-200 text-sm">{score}</span>
+                ))}
+              </div>
+              <p className="text-blue-200">Mean: <span className="font-bold">{(simulationData.group1.reduce((a,b) => a+b, 0) / simulationData.group1.length).toFixed(1)}</span></p>
+            </div>
+            <div className="bg-rose-900/30 border border-rose-500/50 rounded-xl p-5">
+              <h4 className="text-rose-300 font-bold mb-3">Condition 2 (Experimental)</h4>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {simulationData.group2.map((score, i) => (
+                  <span key={i} className="px-3 py-1 bg-rose-800/50 rounded text-rose-200 text-sm">{score}</span>
+                ))}
+              </div>
+              <p className="text-rose-200">Mean: <span className="font-bold">{(simulationData.group2.reduce((a,b) => a+b, 0) / simulationData.group2.length).toFixed(1)}</span></p>
+            </div>
+          </div>
+          <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
+            <h4 className="text-amber-400 font-bold mb-3">What does this tell us?</h4>
+            <p className="text-gray-300 text-sm leading-relaxed">
+              The experimental group (M = {(simulationData.group2.reduce((a,b) => a+b, 0) / simulationData.group2.length).toFixed(1)}) 
+              showed higher scores than the control group (M = {(simulationData.group1.reduce((a,b) => a+b, 0) / simulationData.group1.length).toFixed(1)}). 
+              This suggests the IV ({selectedIV}) may have affected the DV ({selectedDV}).
+            </p>
+          </div>
+          <button
+            onClick={resetStudy}
+            className="w-full mt-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl font-bold text-white transition-all"
+          >
+            Design Another Study
+          </button>
         </div>
       )}
     </div>

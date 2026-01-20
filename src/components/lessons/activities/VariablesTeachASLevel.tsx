@@ -57,12 +57,13 @@ export const VariablesTeachASLevel: React.FC<Props> = ({ isPresenting }) => {
     <div className={`w-full h-full ${padding} flex flex-col overflow-auto custom-scrollbar`}>
       <h2 className={`${headingSize} font-bold text-rose-400 mb-8`}>Variables in Research</h2>
 
-      <div className={`space-y-4`}>
+      {/* Grid layout for presentation mode */}
+      <div className={isPresenting ? `grid grid-cols-1 gap-6 mb-8` : `space-y-4`}>
         {sections.map((section) => (
           <div key={section.id}>
             <button
               onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}
-              className={`w-full p-6 rounded-lg font-bold text-left transition-all flex justify-between items-center ${
+              className={`w-full ${isPresenting ? 'p-8' : 'p-6'} rounded-lg font-bold text-left transition-all flex justify-between items-center ${
                 expandedSection === section.id
                   ? `bg-${section.color}-600 text-white shadow-lg shadow-${section.color}-600/30`
                   : `bg-gray-800 text-gray-300 hover:bg-gray-700`
@@ -76,10 +77,10 @@ export const VariablesTeachASLevel: React.FC<Props> = ({ isPresenting }) => {
             </button>
 
             {expandedSection === section.id && (
-              <div className={`bg-gray-900/50 border border-gray-700 rounded-lg mt-2 p-6 border-t-4 border-t-${section.color}-500 ${gap} flex flex-col`}>
+              <div className={`bg-gray-900/50 border border-gray-700 rounded-lg mt-2 ${isPresenting ? 'p-8' : 'p-6'} border-t-4 border-t-${section.color}-500 ${gap} flex flex-col`}>
                 {/* Definition */}
-                <div className="bg-gray-800/50 p-4 rounded border-l-4 border-gray-600">
-                  <p className={`${textSize} text-gray-100`}>{section.description}</p>
+                <div className={`bg-gray-800/50 ${isPresenting ? 'p-6' : 'p-4'} rounded border-l-4 border-gray-600`}>
+                  <p className={`${textSize} text-gray-100 leading-relaxed`}>{section.description}</p>
                 </div>
 
                 {/* IV Section */}
@@ -94,7 +95,7 @@ export const VariablesTeachASLevel: React.FC<Props> = ({ isPresenting }) => {
                       </div>
                       <p className={`${textSize} text-gray-300 font-semibold mb-2`}>Levels of the IV:</p>
                       <ul className={`${textSize} text-gray-300 space-y-2`}>
-                        {section.example.levels.map((level, idx) => (
+                        {section.example.levels?.map((level, idx) => (
                           <li key={idx} className="flex items-center gap-3 ml-4">
                             <span className="w-2 h-2 bg-rose-400 rounded-full"></span>
                             {level}
@@ -139,7 +140,7 @@ export const VariablesTeachASLevel: React.FC<Props> = ({ isPresenting }) => {
                       </div>
                       <p className={`${textSize} font-bold text-amber-300 mb-2`}>Benefits:</p>
                       <ul className={`${textSize} text-gray-300 space-y-2`}>
-                        {section.example.benefits.map((benefit, idx) => (
+                        {section.example.benefits?.map((benefit, idx) => (
                           <li key={idx} className="flex items-start gap-3 ml-4">
                             <ChevronRight className="flex-shrink-0 text-amber-400 mt-1" size={isPresenting ? 28 : 16} />
                             {benefit}

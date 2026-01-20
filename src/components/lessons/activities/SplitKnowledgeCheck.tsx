@@ -18,11 +18,13 @@ export const SplitKnowledgeCheck: React.FC<Props> = ({ questions, title, subtitl
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({})
   const [showExplanation, setShowExplanation] = useState(false)
+  const [optionsRevealed, setOptionsRevealed] = useState<Record<number, boolean>>({})
 
   const question = questions[currentQuestion]
   const selectedAnswer = selectedAnswers[question.id]
   const isCorrect = selectedAnswer === question.correct
   const isAnswered = selectedAnswer !== undefined
+  const areOptionsVisible = optionsRevealed[question.id] !== false
 
   const handleSelectAnswer = (index: number) => {
     if (!isAnswered) {
@@ -32,6 +34,13 @@ export const SplitKnowledgeCheck: React.FC<Props> = ({ questions, title, subtitl
       })
       setShowExplanation(true)
     }
+  }
+
+  const revealOptions = () => {
+    setOptionsRevealed({
+      ...optionsRevealed,
+      [question.id]: true
+    })
   }
 
   const handleNext = () => {
@@ -78,7 +87,18 @@ export const SplitKnowledgeCheck: React.FC<Props> = ({ questions, title, subtitl
         <p className="text-2xl text-gray-100 font-semibold">{question.question}</p>
       </div>
 
+      {/* Reveal Button */}
+      {!areOptionsVisible && (
+        <button
+          onClick={revealOptions}
+          className="w-full py-6 px-8 mb-8 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-rose-600/30 text-2xl"
+        >
+          Click to Reveal Answer Options
+        </button>
+      )}
+
       {/* Options */}
+      {areOptionsVisible && (
       <div className="space-y-3 flex-grow mb-8">
         {question.options.map((option, idx) => (
           <button
@@ -103,6 +123,7 @@ export const SplitKnowledgeCheck: React.FC<Props> = ({ questions, title, subtitl
           </button>
         ))}
       </div>
+      )}
 
       {/* Navigation */}
       <div className="flex gap-4 mt-auto">

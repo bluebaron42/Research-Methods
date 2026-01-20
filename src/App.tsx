@@ -3,9 +3,9 @@ import { X, Menu, ChevronLeft, ChevronRight, Lightbulb, CheckCircle, Target, Fla
 import HypothesisLab from './components/lessons/activities/HypothesisLab'
 import { AimsAndHypothesesTeach } from './components/lessons/activities/AimsAndHypothesesTeach'
 import { VariablesTeachASLevel } from './components/lessons/activities/VariablesTeachASLevel'
-import { VariableLabASLevel } from './components/lessons/activities/VariableLabASLevel'
-import { VariableDetectiveASLevel } from './components/lessons/activities/VariableDetectiveASLevel'
-import { ExtendedExamTaskASLevelLesson1 } from './components/lessons/activities/ExtendedExamTaskASLevelLesson1'
+import { VariableLabALevel } from './components/lessons/activities/VariableLabASLevel'
+import { VariableDetectiveALevel } from './components/lessons/activities/VariableDetectiveASLevel'
+import { ExtendedExamTaskALevelLesson1 } from './components/lessons/activities/ExtendedExamTaskASLevelLesson1'
 import { ALevelLesson1ResearchMethodsRecap } from './components/lessons/activities/ALevelLesson1ResearchMethodsRecap'
 
 // ============= TYPES =============
@@ -14,6 +14,7 @@ interface Question {
   question: string
   options: string[]
   correct: number
+  scenario?: string  // Optional scenario context for the question
 }
 
 // ============= PRESENTATION MODE SCALING HELPERS =============
@@ -463,10 +464,20 @@ const DirectionalSlider: React.FC<{ level: 'gcse' | 'aslevel' }> = ({ level }) =
 }
 
 // Hypothesis Writer - Matching/Building Activity
+// Hypothesis Writer - Interactive Builder with Cycling Button Options
 const HypothesisWriter: React.FC<{ level: 'gcse' | 'aslevel' }> = ({ level }) => {
-  const [selectedParts, setSelectedParts] = useState<Record<string, string>>({})
+  // Index-based state for cycling through options
+  const [indices, setIndices] = useState<Record<string, number>>({})
   
-  const exercise = level === 'gcse' ? {
+  // Define exercise data with explicit typing
+  type ExerciseData = {
+    scenario: string
+    parts: Record<string, string[]>
+    correct: Record<string, string>
+    labels: Record<string, string>
+  }
+
+  const gcseExercise: ExerciseData = {
     scenario: 'A psychologist wants to test if listening to classical music improves test performance.',
     parts: {
       population: ['Students', 'Teachers', 'Musicians'],
@@ -481,8 +492,17 @@ const HypothesisWriter: React.FC<{ level: 'gcse' | 'aslevel' }> = ({ level }) =>
       action: 'while taking a test',
       prediction: 'will score higher',
       condition2: 'students who sit in silence'
+    },
+    labels: {
+      population: 'Population',
+      condition1: 'Condition 1',
+      action: 'Action',
+      prediction: 'Prediction',
+      condition2: 'Condition 2'
     }
-  } : {
+  }
+
+  const aslevelExercise: ExerciseData = {
     scenario: 'Research investigating the effect of sleep deprivation on executive function in young adults.',
     parts: {
       population: ['Participants aged 18-25', 'All adults', 'Sleep-deprived individuals'],
@@ -499,74 +519,117 @@ const HypothesisWriter: React.FC<{ level: 'gcse' | 'aslevel' }> = ({ level }) =>
       prediction: 'will demonstrate significantly impaired',
       comparison: 'compared to well-rested controls',
       stats: '(p < 0.05)'
+    },
+    labels: {
+      population: 'Population',
+      condition1: 'Condition 1',
+      measure: 'Measurement',
+      prediction: 'Prediction',
+      comparison: 'Comparison',
+      stats: 'Statistical Threshold'
     }
   }
 
-  const isComplete = Object.keys(exercise.correct).every(key => selectedParts[key])
-  const isCorrect = isComplete && Object.keys(exercise.correct).every(
-    key => selectedParts[key] === exercise.correct[key as keyof typeof exercise.correct]
-  )
+  const exercise = level === 'gcse' ? gcseExercise : aslevelExercise
+
+  // Cycle to next option for a part
+  const cycleOption = (partKey: string, options: string[]) => {
+    setIndices(prev => ({
+      ...prev,
+      [partKey]: ((prev[partKey] ?? 0) + 1) % options.length
+    }))
+  }
+
+  // Get current value for a part
+  const getCurrentValue = (partKey: string, options: string[]) => {
+    return options[indices[partKey] ?? 0]
+  }
+
+  // Build the hypothesis string from current selections
+  const buildHypothesis = () => {
+    return Object.entries(exercise.parts)
+      .map(([key, options]) => getCurrentValue(key, options))
+      .join(' ')
+  }
+
+  // Check if current selections match the correct answer
+  const isCorrect = Object.entries(exercise.correct).every(([key, correctValue]) => {
+    const options = exercise.parts[key]
+    if (!options) return false
+    return getCurrentValue(key, options) === correctValue
+  })
 
   return (
     <div className="flex flex-col h-full p-8 animate-fadeIn">
       <h2 className="text-5xl font-black text-white mb-6">Build a Good Hypothesis</h2>
-      <p className="text-xl text-gray-300 mb-8 max-w-4xl">
+      <p className="text-xl text-gray-300 mb-6 max-w-4xl">
         <span className="text-pink-400 font-bold">Scenario:</span> {exercise.scenario}
       </p>
+      <p className="text-lg text-gray-400 mb-8">
+        Click the buttons below to cycle through options and build the correct hypothesis.
+      </p>
 
-      <div className="grid grid-cols-1 gap-6 mb-8 max-w-5xl">
-        {Object.entries(exercise.parts).map(([partKey, options]) => (
-          <div key={partKey} className="bg-gray-900/50 border border-gray-700 rounded-xl p-6">
-            <h3 className="text-pink-400 font-bold uppercase text-sm mb-4 tracking-wider">
-              {partKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-            </h3>
-            <div className="flex gap-3 flex-wrap">
-              {options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setSelectedParts(prev => ({ ...prev, [partKey]: option }))}
-                  className={`px-6 py-3 rounded-lg border-2 transition-all font-semibold ${
-                    selectedParts[partKey] === option
-                      ? 'border-pink-500 bg-pink-600 text-white shadow-lg shadow-pink-500/30'
-                      : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-pink-500/50 hover:bg-gray-700'
-                  }`}
-                >
-                  {option}
-                </button>
-              ))}
+      {/* Live Hypothesis Preview */}
+      <div className={`max-w-5xl rounded-2xl border-2 p-6 mb-8 transition-all ${
+        isCorrect 
+          ? 'border-green-500 bg-green-900/20 shadow-lg shadow-green-500/30' 
+          : 'border-pink-500/30 bg-gray-900/50'
+      }`}>
+        <div className="flex items-center gap-3 mb-4">
+          {isCorrect && (
+            <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+              <CheckCircle className="text-green-400" size={24} />
             </div>
-          </div>
-        ))}
+          )}
+          <h3 className={`text-lg font-semibold ${isCorrect ? 'text-green-300' : 'text-pink-300'}`}>
+            {isCorrect ? '✓ Well-Operationalised Hypothesis!' : 'Your Hypothesis:'}
+          </h3>
+        </div>
+        <p className="text-xl text-gray-200 leading-relaxed italic">
+          "{buildHypothesis()}"
+        </p>
       </div>
 
-      {isComplete && (
-        <div className={`max-w-5xl rounded-2xl border-2 p-8 mb-6 animate-fadeIn ${
-          isCorrect
-            ? 'border-green-500 bg-green-900/20 shadow-lg shadow-green-500/30'
-            : 'border-red-500 bg-red-900/20 shadow-lg shadow-red-500/30'
-        }`}>
-          <div className="flex items-center gap-3 mb-4">
-            <div className={`w-12 h-12 rounded-full ${isCorrect ? 'bg-green-500/20' : 'bg-red-500/20'} flex items-center justify-center`}>
-              {isCorrect ? <CheckCircle className="text-green-400" size={28} /> : <X className="text-red-400" size={28} />}
-            </div>
-            <h3 className={`text-2xl font-bold ${isCorrect ? 'text-green-300' : 'text-red-300'}`}>
-              {isCorrect ? '✓ Well-Operationalised Hypothesis!' : '✗ Try Again - Check Your Selection'}
-            </h3>
-          </div>
-          <div className="bg-gray-900/50 rounded-lg p-6 border-l-4 border-gray-500">
-            <p className="text-xl text-gray-200 leading-relaxed">
-              {Object.values(selectedParts).join(' ')}
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Button Grid for Cycling Options */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl">
+        {Object.entries(exercise.parts).map(([partKey, options]) => {
+          const currentValue = getCurrentValue(partKey, options)
+          const isPartCorrect = currentValue === exercise.correct[partKey]
+          const label = exercise.labels[partKey] || partKey
+          
+          return (
+            <button
+              key={partKey}
+              onClick={() => cycleOption(partKey, options)}
+              className={`p-4 rounded-xl border-2 transition-all text-left group hover:scale-[1.02] ${
+                isPartCorrect
+                  ? 'border-green-500 bg-green-900/30 shadow-lg shadow-green-500/20'
+                  : 'border-pink-500/30 bg-gray-900/50 hover:border-pink-500 hover:bg-gray-800'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-pink-400">
+                  {label}
+                </span>
+                <span className="text-xs text-gray-500 group-hover:text-pink-400 transition-colors">
+                  Click to change →
+                </span>
+              </div>
+              <p className={`font-semibold text-sm leading-snug ${isPartCorrect ? 'text-green-300' : 'text-white'}`}>
+                {currentValue}
+              </p>
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }
-// Knowledge Check Component - Full Width
-const KnowledgeCheck: React.FC<{ questions: Question[], title: string, subtitle: string }> = ({ questions, title, subtitle }) => {
+// Knowledge Check Component - Full Width with Presentation Mode Reveal
+const KnowledgeCheck: React.FC<{ questions: Question[], title: string, subtitle: string, isPresenting?: boolean }> = ({ questions, title, subtitle, isPresenting = false }) => {
   const [answers, setAnswers] = useState<Record<number, number>>({})
   const [showResults, setShowResults] = useState(false)
+  const [optionsRevealed, setOptionsRevealed] = useState(!isPresenting) // Auto-reveal if not presenting
 
   const handleSelect = (qId: number, optionIdx: number) => 
     setAnswers(prev => ({ ...prev, [qId]: optionIdx }))
@@ -587,6 +650,19 @@ const KnowledgeCheck: React.FC<{ questions: Question[], title: string, subtitle:
           <p className="text-gray-400">{subtitle}</p>
         </div>
 
+        {/* Reveal Options Button - Only in Presentation Mode */}
+        {isPresenting && !optionsRevealed && (
+          <div className="text-center mb-6">
+            <button
+              onClick={() => setOptionsRevealed(true)}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl font-bold px-8 py-4 text-lg transition-all shadow-lg shadow-purple-500/30 flex items-center gap-3 mx-auto"
+            >
+              <Eye size={24} />
+              Reveal Options
+            </button>
+          </div>
+        )}
+
         <div className="space-y-4 mb-6">
           {questions.map((q) => (
             <div key={q.id} className="bg-gray-900/80 rounded-xl border border-gray-700 p-5">
@@ -594,48 +670,57 @@ const KnowledgeCheck: React.FC<{ questions: Question[], title: string, subtitle:
                 <span className="text-purple-400 mr-2">{q.id}.</span>
                 {q.question}
               </h4>
-              <div className="grid grid-cols-1 gap-2">
-                {q.options.map((opt, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => !showResults && handleSelect(q.id, idx)}
-                    className={`rounded-lg text-left transition-all px-4 py-3 border ${
-                      showResults
-                        ? idx === q.correct
-                          ? 'bg-green-900/40 border-green-500 text-green-200 font-bold'
+              {optionsRevealed ? (
+                <div className="grid grid-cols-1 gap-2">
+                  {q.options.map((opt, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => !showResults && handleSelect(q.id, idx)}
+                      className={`rounded-lg text-left transition-all px-4 py-3 border ${
+                        showResults
+                          ? idx === q.correct
+                            ? 'bg-green-900/40 border-green-500 text-green-200 font-bold'
+                            : answers[q.id] === idx
+                              ? 'bg-red-900/40 border-red-500 text-red-200'
+                              : 'bg-gray-800/50 border-transparent text-gray-500'
                           : answers[q.id] === idx
-                            ? 'bg-red-900/40 border-red-500 text-red-200'
-                            : 'bg-gray-800/50 border-transparent text-gray-500'
-                        : answers[q.id] === idx
-                          ? 'bg-purple-600 border-purple-500 text-white font-semibold'
-                          : 'bg-gray-800 border-gray-700 hover:bg-gray-750 text-gray-300 hover:text-white hover:border-purple-500/50'
-                    }`}
-                  >
-                    {opt}
-                  </button>
-                ))}
-              </div>
+                            ? 'bg-purple-600 border-purple-500 text-white font-semibold'
+                            : 'bg-gray-800 border-gray-700 hover:bg-gray-750 text-gray-300 hover:text-white hover:border-purple-500/50'
+                      }`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center py-6 bg-gray-800/30 rounded-lg border border-dashed border-gray-600">
+                  <EyeOff className="text-gray-500 mr-2" size={20} />
+                  <span className="text-gray-500 italic">Options hidden - click Reveal to show</span>
+                </div>
+              )}
             </div>
           ))}
         </div>
 
-        {!showResults ? (
-          <button
-            onClick={() => setShowResults(true)}
-            disabled={Object.keys(answers).length < questions.length}
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 disabled:grayscale text-white rounded-xl font-bold px-8 py-4 text-lg transition-all shadow-lg"
-          >
-            Check Answers
-          </button>
-        ) : (
-          <div className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 border-2 border-purple-500/50 rounded-xl p-8 text-center shadow-[0_0_40px_rgba(168,85,247,0.2)]">
-            <span className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 block mb-3">
-              {score} / {questions.length}
-            </span>
-            <span className="text-purple-200 font-semibold text-xl">
-              {score === questions.length ? '🎉 Perfect Score!' : score >= questions.length * 0.75 ? '✨ Great Work!' : score >= questions.length * 0.5 ? '👍 Good Try!' : '📚 Keep Learning!'}
-            </span>
-          </div>
+        {optionsRevealed && (
+          !showResults ? (
+            <button
+              onClick={() => setShowResults(true)}
+              disabled={Object.keys(answers).length < questions.length}
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 disabled:grayscale text-white rounded-xl font-bold px-8 py-4 text-lg transition-all shadow-lg"
+            >
+              Check Answers
+            </button>
+          ) : (
+            <div className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 border-2 border-purple-500/50 rounded-xl p-8 text-center shadow-[0_0_40px_rgba(168,85,247,0.2)]">
+              <span className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 block mb-3">
+                {score} / {questions.length}
+              </span>
+              <span className="text-purple-200 font-semibold text-xl">
+                {score === questions.length ? '🎉 Perfect Score!' : score >= questions.length * 0.75 ? '✨ Great Work!' : score >= questions.length * 0.5 ? '👍 Good Try!' : '📚 Keep Learning!'}
+              </span>
+            </div>
+          )
         )}
       </div>
     </div>
@@ -3016,7 +3101,7 @@ function App() {
     }
 
     if (slideType === 'hypo_sim') {
-      return <HypothesisLab isPresenting={isPresenting} />
+      return <HypothesisLab />
     }
 
     if (slideType === 'hypo_afl') {
@@ -3366,7 +3451,7 @@ function App() {
     }
 
     if (slideType === 'variables_sim') {
-      return <VariableLabASLevel isPresenting={isPresenting} />
+      return <VariableLabALevel isPresenting={isPresenting} />
     }
 
     if (slideType === 'variables_afl') {
@@ -3421,11 +3506,11 @@ function App() {
     }
 
     if (slideType === 'variables_task') {
-      return <VariableDetectiveASLevel isPresenting={isPresenting} />
+      return <VariableDetectiveALevel isPresenting={isPresenting} />
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTaskASLevelLesson1 />
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
     }
 
     return <div>Loading...</div>

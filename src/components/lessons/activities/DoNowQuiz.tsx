@@ -17,11 +17,13 @@ export const DoNowQuiz: React.FC<Props> = ({ questions, isPresenting }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({})
   const [showExplanation, setShowExplanation] = useState(false)
+  const [optionsRevealed, setOptionsRevealed] = useState<Record<number, boolean>>({})
 
   const question = questions[currentQuestion]
   const selectedAnswer = selectedAnswers[question.id]
   const isCorrect = selectedAnswer === question.correct
   const isAnswered = selectedAnswer !== undefined
+  const areOptionsVisible = optionsRevealed[question.id] || !isPresenting
 
   const textSize = isPresenting ? 'text-2xl' : 'text-lg'
   const headingSize = isPresenting ? 'text-4xl' : 'text-2xl'
@@ -35,6 +37,13 @@ export const DoNowQuiz: React.FC<Props> = ({ questions, isPresenting }) => {
       })
       setShowExplanation(true)
     }
+  }
+
+  const revealOptions = () => {
+    setOptionsRevealed({
+      ...optionsRevealed,
+      [question.id]: true
+    })
   }
 
   const handleNext = () => {
@@ -80,7 +89,18 @@ export const DoNowQuiz: React.FC<Props> = ({ questions, isPresenting }) => {
         <p className={`${textSize} text-gray-100 font-semibold`}>{question.question}</p>
       </div>
 
+      {/* Reveal Button for Presentation Mode */}
+      {isPresenting && !areOptionsVisible && (
+        <button
+          onClick={revealOptions}
+          className={`w-full py-6 px-8 mb-8 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-rose-600/30 ${textSize}`}
+        >
+          Click to Reveal Answer Options
+        </button>
+      )}
+
       {/* Options */}
+      {areOptionsVisible && (
       <div className="space-y-3 flex-grow mb-8">
         {question.options.map((option, idx) => (
           <button
@@ -105,6 +125,7 @@ export const DoNowQuiz: React.FC<Props> = ({ questions, isPresenting }) => {
           </button>
         ))}
       </div>
+      )}
 
       {/* Navigation */}
       <div className="flex gap-4 mt-auto">

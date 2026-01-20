@@ -11,6 +11,17 @@ export const HypothesisWriterASLevel: React.FC<Props> = ({ isPresenting }) => {
   const [feedback, setFeedback] = useState<string | null>(null)
   const [hasVariable, setHasVariable] = useState(false)
   const [isPredictive, setIsPredictive] = useState(false)
+  
+  // Template options
+  const [population, setPopulation] = useState('Students')
+  const [condition1, setCondition1] = useState('who revise for 2 hours')
+  const [condition2, setCondition2] = useState('who revise for 30 minutes')
+  const [outcome, setOutcome] = useState('exam scores')
+
+  const populationOptions = ['Students', 'Participants', 'Adults', 'Children', 'Teenagers']
+  const condition1Options = ['who revise for 2 hours', 'who study quietly', 'who take breaks', 'who use flashcards', 'who work in groups']
+  const condition2Options = ['who revise for 30 minutes', 'who study with distractions', 'who study continuously', 'who use notes only', 'who work alone']
+  const outcomeOptions = ['exam scores', 'reaction times', 'memory recall', 'concentration levels', 'performance']
 
   const textSize = isPresenting ? 'text-2xl' : 'text-lg'
   const headingSize = isPresenting ? 'text-4xl' : 'text-2xl'
@@ -87,6 +98,102 @@ export const HypothesisWriterASLevel: React.FC<Props> = ({ isPresenting }) => {
           Non-Directional
         </button>
       </div>
+
+      {/* Template Builder */}
+      {isDirectional !== null && (
+        <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-8">
+          <p className={`${textSize} font-bold text-amber-400 mb-6`}>Build Your Hypothesis Template:</p>
+          
+          {/* Population Options */}
+          <div className="mb-6">
+            <label className="block text-gray-300 mb-3 font-semibold">Population:</label>
+            <div className="flex flex-wrap gap-2">
+              {populationOptions.map(p => (
+                <button
+                  key={p}
+                  onClick={() => setPopulation(p)}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                    population === p
+                      ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/30'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600'
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Condition 1 Options */}
+          <div className="mb-6">
+            <label className="block text-gray-300 mb-3 font-semibold">Condition 1 (Group A):</label>
+            <div className="flex flex-wrap gap-2">
+              {condition1Options.map(c => (
+                <button
+                  key={c}
+                  onClick={() => setCondition1(c)}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-all text-sm ${
+                    condition1 === c
+                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600'
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Condition 2 Options */}
+          <div className="mb-6">
+            <label className="block text-gray-300 mb-3 font-semibold">Condition 2 (Group B):</label>
+            <div className="flex flex-wrap gap-2">
+              {condition2Options.map(c => (
+                <button
+                  key={c}
+                  onClick={() => setCondition2(c)}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-all text-sm ${
+                    condition2 === c
+                      ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/30'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600'
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Outcome Variable Options */}
+          <div className="mb-6">
+            <label className="block text-gray-300 mb-3 font-semibold">Outcome Variable (DV):</label>
+            <div className="flex flex-wrap gap-2">
+              {outcomeOptions.map(o => (
+                <button
+                  key={o}
+                  onClick={() => setOutcome(o)}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-all text-sm ${
+                    outcome === o
+                      ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600'
+                  }`}
+                >
+                  {o}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-gray-800 p-4 rounded border-l-4 border-amber-500">
+            <p className="text-gray-300 text-sm font-semibold mb-2">Generated Template:</p>
+            <p className="text-gray-100 italic">
+              {isDirectional
+                ? `"${population} ${condition1} will score higher on ${outcome} than ${population.toLowerCase()} ${condition2}"`
+                : `"There will be a difference in ${outcome} between ${population.toLowerCase()} ${condition1} and those ${condition2}"`}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Examples */}
       {isDirectional !== null && (

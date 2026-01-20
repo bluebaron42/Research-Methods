@@ -15,8 +15,16 @@ interface Question {
   sample: Answer[]
 }
 
-export const ExtendedExamTaskASLevelLesson1: React.FC = () => {
+interface Props {
+  isPresenting?: boolean
+}
+
+export const ExtendedExamTaskALevelLesson1: React.FC<Props> = ({ isPresenting = false }) => {
   const [expandedQuestions, setExpandedQuestions] = useState<Record<number, boolean>>({})
+  const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({})
+  const [currentShortCard, setCurrentShortCard] = useState(0)
+  const [currentLongCard, setCurrentLongCard] = useState(0)
+  const [viewMode, setViewMode] = useState<'list' | 'cards'>('list')
 
   const questions: Question[] = [
     {
@@ -123,13 +131,200 @@ export const ExtendedExamTaskASLevelLesson1: React.FC = () => {
     })
   }
 
+  const toggleCard = (id: number) => {
+    setFlippedCards({
+      ...flippedCards,
+      [id]: !flippedCards[id]
+    })
+  }
+
+  const shortQuestions = questions.filter(q => q.marks <= 3)
+  const longQuestions = questions.filter(q => q.marks > 3)
+
+  const textSize = isPresenting ? 'text-2xl' : 'text-lg'
+  const headingSize = isPresenting ? 'text-4xl' : 'text-2xl'
+
+  const renderCard = (question: Question, index: number, total: number, onNext: () => void, onPrev: () => void) => {
+    const isFlipped = flippedCards[question.id]
+    
+    return (
+      <div className="flex flex-col h-full gap-6">
+        {/* Card Counter */}
+        <div className="flex justify-between items-center">
+          <div className="text-gray-400 font-mono text-sm">
+            <span className="text-rose-400 font-bold">{index + 1}</span> / <span className="text-gray-500">{total}</span>
+          </div>
+          <span className="px-3 py-1 bg-rose-600/30 border border-rose-600 text-rose-200 rounded-full text-xs font-bold">
+            {question.marks} marks
+          </span>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="flex-grow flex flex-col">
+          {!isFlipped ? (
+            // Front - Question
+            <div className="flex-grow flex flex-col justify-center items-center text-center gap-4">
+              <div className="text-rose-400 text-xs uppercase tracking-widest font-bold">Question</div>
+              <p className="text-2xl md:text-3xl font-bold text-gray-100 leading-tight max-w-2xl">
+                {question.question}
+              </p>
+              <button
+                onClick={() => toggleCard(question.id)}
+                className="mt-8 px-8 py-3 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold rounded-lg transition-all"
+              >
+                Reveal Answer
+              </button>
+            </div>
+          ) : (
+            // Back - Answer
+            <div className="flex-grow flex flex-col gap-4 overflow-auto custom-scrollbar">
+              <div className="text-green-400 text-xs uppercase tracking-widest font-bold">Sample Answer</div>
+              {question.sample.map((sample, idx) => (
+                <div key={idx} className="space-y-3">
+                  <div className="flex items-baseline gap-3">
+                    <span className="px-2 py-1 bg-green-600 text-white rounded text-xs font-bold flex-shrink-0">
+                      {sample.marks} marks
+                    </span>
+                  </div>
+                  <p className="text-lg text-gray-200 leading-relaxed">
+                    {sample.text}
+                  </p>
+                  <div className="border-l-3 border-green-600/50 pl-4 py-2">
+                    <p className="text-sm text-gray-400">
+                      <span className="text-green-400 font-semibold">Marking Guide:</span> {sample.explanation}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              <button
+                onClick={() => toggleCard(question.id)}
+                className="mt-6 px-6 py-2 bg-gray-700 hover:bg-gray-600 text-gray-100 font-bold rounded-lg text-sm transition-all"
+              >
+                Back to Question
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Navigation Buttons */}
+        <div className="flex gap-3 pt-4 border-t border-gray-700">
+          <button
+            onClick={onPrev}
+            disabled={index === 0}
+            className={`flex-1 py-3 px-4 rounded-lg font-bold transition-all text-sm ${
+              index === 0
+                ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+                : 'bg-gray-700 hover:bg-gray-600 text-white'
+            }`}
+          >
+            ← Previous
+          </button>
+          <button
+            onClick={onNext}
+            disabled={index === total - 1}
+            className={`flex-1 py-3 px-4 rounded-lg font-bold transition-all text-sm ${
+              index === total - 1
+                ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+                : 'bg-rose-600 hover:bg-rose-500 text-white'
+            }`}
+          >
+            Next →
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="w-full h-full p-8 flex flex-col overflow-auto custom-scrollbar">
-      <h2 className="text-4xl font-bold text-rose-400 mb-2">Extended Exam Task</h2>
-      <p className="text-xl text-gray-400 mb-8">Practice exam questions on Experimental Method</p>
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <h2 className={headingSize + " font-bold text-rose-400 mb-2"}>Extended Exam Task</h2>
+          <p className={textSize + " text-gray-400"}>Practice exam questions on Experimental Method</p>
+        </div>
+        
+        {/* View Mode Toggle */}
+        {isPresenting && (
+          <div className="flex gap-2 bg-gray-800 p-1 rounded-lg">
+            <button
+              onClick={() => setViewMode('cards')}
+              className={`px-4 py-2 rounded font-bold transition-all ${
+                viewMode === 'cards'
+                  ? 'bg-rose-600 text-white'
+                  : 'bg-transparent text-gray-400 hover:text-white'
+              }`}
+            >
+              Card View
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={`px-4 py-2 rounded font-bold transition-all ${
+                viewMode === 'list'
+                  ? 'bg-rose-600 text-white'
+                  : 'bg-transparent text-gray-400 hover:text-white'
+              }`}
+            >
+              List View
+            </button>
+          </div>
+        )}
+      </div>
 
-      {/* Instructions */}
-      <div className="bg-blue-900/30 border border-blue-600 rounded-lg p-6 mb-8 flex gap-4">
+      {/* Card View for Presentation Mode */}
+      {viewMode === 'cards' && isPresenting ? (
+        <div className="flex-grow flex flex-col gap-8">
+          {/* Deck Selector - Info */}
+          <div className="grid grid-cols-2 gap-6">
+            <div className="bg-blue-900/20 border border-blue-500/50 rounded-lg p-6">
+              <h3 className="text-xl font-bold text-blue-300 mb-1">Short Answer Questions</h3>
+              <p className="text-sm text-gray-400">2-3 mark questions</p>
+            </div>
+            <div className="bg-amber-900/20 border border-amber-500/50 rounded-lg p-6">
+              <h3 className="text-xl font-bold text-amber-300 mb-1">Extended Answer Questions</h3>
+              <p className="text-sm text-gray-400">5-6 mark questions</p>
+            </div>
+          </div>
+
+          {/* Decks Container */}
+          <div className="grid grid-cols-2 gap-8 flex-grow min-h-0">
+            {/* Short Questions Deck */}
+            <div className="border border-blue-500/30 rounded-lg p-8 bg-gradient-to-br from-blue-950/30 to-transparent flex flex-col">
+              <h4 className="text-lg font-bold text-blue-300 mb-6 pb-4 border-b border-blue-500/20">
+                Short Answers <span className="text-sm text-gray-500">({shortQuestions.length} cards)</span>
+              </h4>
+              <div className="flex-grow">
+                {renderCard(
+                  shortQuestions[currentShortCard],
+                  currentShortCard,
+                  shortQuestions.length,
+                  () => setCurrentShortCard(Math.min(currentShortCard + 1, shortQuestions.length - 1)),
+                  () => setCurrentShortCard(Math.max(currentShortCard - 1, 0))
+                )}
+              </div>
+            </div>
+
+            {/* Long Questions Deck */}
+            <div className="border border-amber-500/30 rounded-lg p-8 bg-gradient-to-br from-amber-950/30 to-transparent flex flex-col">
+              <h4 className="text-lg font-bold text-amber-300 mb-6 pb-4 border-b border-amber-500/20">
+                Extended Answers <span className="text-sm text-gray-500">({longQuestions.length} cards)</span>
+              </h4>
+              <div className="flex-grow">
+                {renderCard(
+                  longQuestions[currentLongCard],
+                  currentLongCard,
+                  longQuestions.length,
+                  () => setCurrentLongCard(Math.min(currentLongCard + 1, longQuestions.length - 1)),
+                  () => setCurrentLongCard(Math.max(currentLongCard - 1, 0))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        // Original List View
+        <>
+          {/* Instructions */}
+          <div className="bg-blue-900/30 border border-blue-600 rounded-lg p-6 mb-8 flex gap-4">
         <AlertCircle className="text-blue-400 flex-shrink-0" size={24} />
         <div>
           <p className="text-lg font-bold text-blue-300 mb-2">How to use this section:</p>
@@ -227,6 +422,8 @@ export const ExtendedExamTaskASLevelLesson1: React.FC = () => {
           </li>
         </ul>
       </div>
-    </div>
-  )
+      </>
+    )}
+  </div>
+)
 }
