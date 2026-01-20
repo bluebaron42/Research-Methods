@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Menu, ChevronLeft, ChevronRight, Lightbulb, CheckCircle, Target, FlaskConical, Beaker, AlertTriangle, Eye, EyeOff, Zap, Brain, TrendingUp, Projector, AlertCircle } from 'lucide-react'
-import { useEffect } from 'react'
 import HypothesisLab from './components/lessons/activities/HypothesisLab'
 import { AimsAndHypothesesTeach } from './components/lessons/activities/AimsAndHypothesesTeach'
-import { VariablesTeachALevel } from './components/lessons/activities/VariablesTeachALevel'
-import { VariableLabALevel } from './components/lessons/activities/VariableLabALevel'
-import { VariableDetectiveALevel } from './components/lessons/activities/VariableDetectiveALevel'
-import { ExtendedExamTaskALevelLesson1 } from './components/lessons/activities/ExtendedExamTaskALevelLesson1'
+import { VariablesTeachASLevel } from './components/lessons/activities/VariablesTeachASLevel'
+import { VariableLabASLevel } from './components/lessons/activities/VariableLabASLevel'
+import { VariableDetectiveASLevel } from './components/lessons/activities/VariableDetectiveASLevel'
+import { ExtendedExamTaskASLevelLesson1 } from './components/lessons/activities/ExtendedExamTaskASLevelLesson1'
+import { ALevelLesson1ResearchMethodsRecap } from './components/lessons/activities/ALevelLesson1ResearchMethodsRecap'
 
 // ============= TYPES =============
 interface Question {
@@ -174,7 +174,7 @@ const DoNowQuiz: React.FC<{ questions: Question[], isPresenting?: boolean }> = (
 }
 
 // Hypotheses Comparison - Side by side
-const HypothesesComparison: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
+const HypothesesComparison: React.FC<{ level: 'gcse' | 'aslevel' }> = ({ level }) => {
   const content = level === 'gcse' ? {
     aimText: 'To investigate whether background music affects concentration.',
     hypothesisText: 'Students who listen to music while studying will remember fewer words than students who study in silence.',
@@ -259,7 +259,7 @@ const HypothesesComparison: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level })
 }
 
 // Hypothesis Types - Card deck with flip
-const HypothesisTypes: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
+const HypothesisTypes: React.FC<{ level: 'gcse' | 'aslevel' }> = ({ level }) => {
   const [selectedType, setSelectedType] = useState<string | null>(null)
   
   const types = level === 'gcse' ? [
@@ -362,7 +362,7 @@ const HypothesisTypes: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
 }
 
 // Directional vs Non-directional Slider
-const DirectionalSlider: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
+const DirectionalSlider: React.FC<{ level: 'gcse' | 'aslevel' }> = ({ level }) => {
   const [value, setValue] = useState(50)
   
   const isDirectional = value > 50
@@ -463,7 +463,7 @@ const DirectionalSlider: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) =>
 }
 
 // Hypothesis Writer - Matching/Building Activity
-const HypothesisWriter: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
+const HypothesisWriter: React.FC<{ level: 'gcse' | 'aslevel' }> = ({ level }) => {
   const [selectedParts, setSelectedParts] = useState<Record<string, string>>({})
   
   const exercise = level === 'gcse' ? {
@@ -761,7 +761,7 @@ const SplitKnowledgeCheck: React.FC<{ questions: Question[], title: string, subt
 }
 
 // Aims Interactive Component - Click to reveal cards
-const AimsInteractive: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
+const AimsInteractive: React.FC<{ level: 'gcse' | 'aslevel' }> = ({ level }) => {
   const [revealed, setRevealed] = useState<string | null>(null)
   
   const content = level === 'gcse' ? {
@@ -842,7 +842,7 @@ const AimsInteractive: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
 }
 
 // Evaluation - Strengths and Limitations
-const EvaluationSlide: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
+const EvaluationSlide: React.FC<{ level: 'gcse' | 'aslevel' }> = ({ level }) => {
   const [selectedPoint, setSelectedPoint] = useState<string | null>(null)
 
   const evaluationPoints = level === 'gcse' ? [
@@ -971,7 +971,7 @@ const EvaluationSlide: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
 }
 
 // Hypothesis Writing Task - Final Assessment Component
-const HypothesisWritingTask: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }) => {
+const HypothesisWritingTask: React.FC<{ level: 'gcse' | 'aslevel' }> = ({ level }) => {
   const [aimText, setAimText] = useState('')
   const [hypothesisText, setHypothesisText] = useState('')
   const [feedbackShown, setFeedbackShown] = useState(false)
@@ -1163,9 +1163,9 @@ const HypothesisWritingTask: React.FC<{ level: 'gcse' | 'alevel' }> = ({ level }
               </div>
             </div>
 
-            {level === 'alevel' && (
+            {level === 'aslevel' && (
               <div className="bg-purple-950/30 border border-purple-500/30 rounded-xl p-6">
-                <h4 className="text-purple-300 font-bold mb-3">A-Level Enhancement</h4>
+                <h4 className="text-purple-300 font-bold mb-3">AS Level Enhancement</h4>
                 <p className="text-purple-200 text-sm mb-3">
                   Consider how you could strengthen this using the hypothetico-deductive framework:
                 </p>
@@ -1937,7 +1937,7 @@ const ExtendedExamTask: React.FC = () => {
   )
 }
 
-// ============= A-LEVEL LESSON 1: UNIFIED VISUAL DESIGN =============
+// ============= AS LEVEL LESSON 1: UNIFIED VISUAL DESIGN =============
 
 // Scientific Approach: Unified Teacher Input Slide
 const ScientificApproachTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
@@ -2401,7 +2401,7 @@ const HypothesisDesignTeachPart2: React.FC<{ isPresenting?: boolean }> = ({ isPr
   )
 }
 
-// Falsification Teach Slide (A-Level)
+// Falsification Teach Slide (AS Level)
 const FalsificationTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
   return (
     <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
@@ -2458,7 +2458,7 @@ const FalsificationTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPrese
   )
 }
 
-// Falsifiability Checker - AFL (A-Level)
+// Falsifiability Checker - AFL (AS Level)
 const FalsifiabilityChecker: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
   const statements = [
     { id: 1, text: 'Sleep deprivation impairs cognitive performance on memory tasks.', falsifiable: true },
@@ -2570,8 +2570,8 @@ const FalsifiabilityChecker: React.FC<{ isPresenting?: boolean }> = ({ isPresent
   )
 }
 
-// Hypothesis Writing (A-Level) - Directional vs Non-Directional Task
-const HypothesisWriterALevel: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+// Hypothesis Writing (AS Level) - Directional vs Non-Directional Task
+const HypothesisWriterASLevel: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
   const [selectedType, setSelectedType] = useState<'directional' | 'nondirectional' | null>(null)
   const [showExample, setShowExample] = useState(false)
 
@@ -2672,13 +2672,13 @@ const HypothesisWriterALevel: React.FC<{ isPresenting?: boolean }> = ({ isPresen
   )
 }
 
-// Extended Exam Task for A-Level Lesson 1
-const ExtendedExamTaskALevel: React.FC = () => {
+// Extended Exam Task for AS Level Lesson 1
+const ExtendedExamTaskASLevel: React.FC = () => {
   const [showTips, setShowTips] = useState(false)
   
   return (
     <div className="flex flex-col h-full p-8 animate-fadeIn">
-      <h2 className="text-4xl font-black text-white mb-2">Extended Task: Exam-Style (A-Level)</h2>
+      <h2 className="text-4xl font-black text-white mb-2">Extended Task: Exam-Style (AS Level)</h2>
       <p className="text-gray-400 mb-6">Apply your understanding of the scientific approach and hypothesis formulation.</p>
   
       <div className="bg-gray-900/70 border border-gray-700 rounded-2xl p-6 mb-6">
@@ -2761,26 +2761,40 @@ const allLessons = [
   { id: 14, title: 'Lesson 14: Display of Data', levels: ['gcse'], description: 'Graphs & Charts' },
   { id: 15, title: 'Lesson 15: Computation', levels: ['gcse'], description: 'Arithmetic Skills' },
 
-  // ============= A-LEVEL LESSONS (17 Total) =============
-  { id: 16, title: 'Lesson 1: Experimental Method', levels: ['alevel'], description: 'Aims, Hypotheses, Variables' },
-  { id: 17, title: 'Lesson 2: Control of Variables', levels: ['alevel'], description: 'Extraneous, Confounding, Demand' },
-  { id: 18, title: 'Lesson 3: Experimental Design', levels: ['alevel'], description: 'Independent Groups, RM, Matched Pairs' },
-  { id: 19, title: 'Lesson 4: Types of Experiment', levels: ['alevel'], description: 'Lab, Field, Natural, Quasi' },
-  { id: 20, title: 'Lesson 5: Sampling', levels: ['alevel'], description: 'Population, Techniques, Bias' },
-  { id: 21, title: 'Lesson 6: Ethical Issues', levels: ['alevel'], description: 'BPS Code of Ethics' },
-  { id: 22, title: 'Lesson 7: Observational Techniques', levels: ['alevel'], description: 'Systematic Observation' },
-  { id: 23, title: 'Lesson 8: Self-Report Methods', levels: ['alevel'], description: 'Interviews & Questionnaires' },
-  { id: 24, title: 'Lesson 9: Correlations', levels: ['alevel'], description: 'Correlation Analysis' },
-  { id: 25, title: 'Lesson 10: Kinds of Data', levels: ['alevel'], description: 'Qualitative & Quantitative' },
-  { id: 26, title: 'Lesson 11: Descriptive Statistics', levels: ['alevel'], description: 'Measures of Central Tendency' },
-  { id: 27, title: 'Lesson 12: Data Presentation', levels: ['alevel'], description: 'Graphs & Charts' },
-  { id: 28, title: 'Lesson 13: Mathematical Skills', levels: ['alevel'], description: 'Quantitative Methods' },
-  { id: 29, title: 'Lesson 14: Statistical Testing', levels: ['alevel'], description: 'Inferential Statistics' },
-  { id: 30, title: 'Lesson 15: Peer Review & Economy', levels: ['alevel'], description: 'Science & Society' },
+  // ============= AS LEVEL LESSONS (17 Total) =============
+  { id: 16, title: 'Lesson 1: Experimental Method', levels: ['aslevel'], description: 'Aims, Hypotheses, Variables' },
+  { id: 17, title: 'Lesson 2: Control of Variables', levels: ['aslevel'], description: 'Extraneous, Confounding, Demand' },
+  { id: 18, title: 'Lesson 3: Experimental Design', levels: ['aslevel'], description: 'Independent Groups, RM, Matched Pairs' },
+  { id: 19, title: 'Lesson 4: Types of Experiment', levels: ['aslevel'], description: 'Lab, Field, Natural, Quasi' },
+  { id: 20, title: 'Lesson 5: Sampling', levels: ['aslevel'], description: 'Population, Techniques, Bias' },
+  { id: 21, title: 'Lesson 6: Ethical Issues', levels: ['aslevel'], description: 'BPS Code of Ethics' },
+  { id: 22, title: 'Lesson 7: Observational Techniques', levels: ['aslevel'], description: 'Systematic Observation' },
+  { id: 23, title: 'Lesson 8: Self-Report Methods', levels: ['aslevel'], description: 'Interviews & Questionnaires' },
+  { id: 24, title: 'Lesson 9: Correlations', levels: ['aslevel'], description: 'Correlation Analysis' },
+  { id: 25, title: 'Lesson 10: Kinds of Data', levels: ['aslevel'], description: 'Qualitative & Quantitative' },
+  { id: 26, title: 'Lesson 11: Descriptive Statistics', levels: ['aslevel'], description: 'Measures of Central Tendency' },
+  { id: 27, title: 'Lesson 12: Data Presentation', levels: ['aslevel'], description: 'Graphs & Charts' },
+  { id: 28, title: 'Lesson 13: Mathematical Skills', levels: ['aslevel'], description: 'Quantitative Methods' },
+  { id: 29, title: 'Lesson 14: Statistical Testing', levels: ['aslevel'], description: 'Inferential Statistics' },
+  { id: 30, title: 'Lesson 15: Peer Review & Economy', levels: ['aslevel'], description: 'Science & Society' },
+  
+  // ============= A LEVEL (YEAR 2) RESEARCH METHODS (from textbook) =============
+  { id: 31, title: 'Lesson 1: Research Methods Recap', levels: ['alevel'], description: 'Year 1 Overview' },
+  { id: 32, title: 'Lesson 2: Correlations', levels: ['alevel'], description: 'Coefficients & Interpretation' },
+  { id: 33, title: 'Lesson 3: Case Studies & Content Analysis', levels: ['alevel'], description: 'Coding & Thematic Analysis' },
+  { id: 34, title: 'Lesson 4: Reliability', levels: ['alevel'], description: 'Test-Retest & Inter-Observer' },
+  { id: 35, title: 'Lesson 5: Validity', levels: ['alevel'], description: 'Face, Concurrent, Ecological' },
+  { id: 36, title: 'Lesson 6: Choosing a Statistical Test', levels: ['alevel'], description: 'Design & Measurement Level' },
+  { id: 37, title: 'Lesson 7: Probability & Significance', levels: ['alevel'], description: 'Critical Values & Errors' },
+  { id: 38, title: 'Lesson 8: Non-Parametric Tests', levels: ['alevel'], description: 'Mann-Whitney & Wilcoxon' },
+  { id: 39, title: 'Lesson 9: Parametric Tests', levels: ['alevel'], description: 'Unrelated & Related t-tests' },
+  { id: 40, title: 'Lesson 10: Tests of Correlation', levels: ['alevel'], description: "Spearman's rho & Pearson's r" },
+  { id: 41, title: 'Lesson 11: Test of Association', levels: ['alevel'], description: 'Chi-Squared (χ²)' },
+  { id: 42, title: 'Lesson 12: Reporting Investigations', levels: ['alevel'], description: 'Abstract to Referencing' },
 ]
 
 // Get lessons filtered by current level
-const getActiveLessons = (currentLevel: 'gcse' | 'alevel') => {
+const getActiveLessons = (currentLevel: 'gcse' | 'aslevel' | 'alevel') => {
   return allLessons.filter(lesson => lesson.levels.includes(currentLevel))
 }
 
@@ -2788,8 +2802,10 @@ const getActiveLessons = (currentLevel: 'gcse' | 'alevel') => {
 const lessonSlideCounts: Record<number, number> = {
   // GCSE (15 lessons)
   1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10, 7: 10, 8: 10, 9: 10, 10: 10, 11: 10, 12: 10, 13: 10, 14: 10, 15: 10,
-  // A-Level (17 lessons)
-  16: 10, 17: 10, 18: 10, 19: 10, 20: 10, 21: 10, 22: 10, 23: 10, 24: 10, 25: 10, 26: 10, 27: 10, 28: 10, 29: 10, 30: 10
+  // AS Level (15 lessons)
+  16: 10, 17: 10, 18: 10, 19: 10, 20: 10, 21: 10, 22: 10, 23: 10, 24: 10, 25: 10, 26: 10, 27: 10, 28: 10, 29: 10, 30: 10,
+  // A Level (12 lessons)
+  31: 9, 32: 10, 33: 10, 34: 10, 35: 10, 36: 10, 37: 10, 38: 10, 39: 10, 40: 10, 41: 10, 42: 10
 }
 
 // Utility: build slides with teacher-first ordering per cycle
@@ -2805,10 +2821,10 @@ const buildSlides = (cyclePrefixes: string[], includeExtended = true) => {
 // Lesson 1 slides data (GCSE)
 const lesson1Slides = buildSlides(['hypo', 'variables'])
 
-// Lesson 9 slides data (A-Level Lesson 1: The Scientific Approach) - 9 focused slides
+// Lesson 9 slides data (AS Level Lesson 1: The Scientific Approach) - 9 focused slides
 const lesson9Slides = ['donow', 'science_teach', 'science_sim', 'science_afl', 'hypothesis_teach', 'hypothesis_sim', 'falsification_teach', 'falsification_afl', 'extended']
 
-// Lesson 16 slides data (A-Level Lesson 1: Experimental Method)
+// Lesson 16 slides data (AS Level Lesson 1: Experimental Method)
 const lesson16Slides: Array<'donow' | 'hypo_teach' | 'hypo_sim' | 'hypo_afl' | 'hypo_task' | 'variables_teach' | 'variables_sim' | 'variables_afl' | 'variables_task' | 'extended'> = [
   'donow',
   'hypo_teach',
@@ -2826,7 +2842,7 @@ function App() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [currentLesson, setCurrentLesson] = useState(1)
   const [isSidebarOpen, setSidebarOpen] = useState(true)
-  const [level, setLevel] = useState<'gcse' | 'alevel'>('gcse')
+  const [level, setLevel] = useState<'gcse' | 'aslevel' | 'alevel'>('gcse')
   const [isPresenting, setIsPresenting] = useState(false)
 
   const slideCount = lessonSlideCounts[currentLesson] || 5
@@ -2850,7 +2866,7 @@ function App() {
       progressBar: 'from-green-800 to-green-500',
       accentBorder: 'border-green-500/50',
     },
-    alevel: {
+    aslevel: {
       primary: 'red',
       bg: 'bg-rose-600',
       bgHover: 'hover:bg-rose-500',
@@ -2866,6 +2882,23 @@ function App() {
       sideBg: 'bg-rose-500/5',
       progressBar: 'from-rose-800 to-rose-500',
       accentBorder: 'border-rose-500/50',
+    },
+    alevel: {
+      primary: 'indigo',
+      bg: 'bg-indigo-600',
+      bgHover: 'hover:bg-indigo-500',
+      bgLight: 'bg-indigo-900/10',
+      border: 'border-indigo-500',
+      text: 'text-indigo-400',
+      textDark: 'text-indigo-300',
+      shadowColor: 'shadow-indigo-600/20',
+      gradientFrom: 'from-indigo-800',
+      gradientTo: 'to-indigo-500',
+      buttonBg: 'bg-indigo-600',
+      buttonBgHover: 'hover:bg-indigo-500',
+      sideBg: 'bg-indigo-500/5',
+      progressBar: 'from-indigo-800 to-indigo-500',
+      accentBorder: 'border-indigo-500/50',
     }
   }
 
@@ -3068,7 +3101,7 @@ function App() {
     return <div>Loading...</div>
   }
 
-  // Render Lesson 9 content (A-Level Lesson 1: The Scientific Approach)
+  // Render Lesson 9 content (AS Level Lesson 1: The Scientific Approach)
   const renderLesson9 = () => {
     const slideType = lesson9Slides[currentSlide]
 
@@ -3183,7 +3216,7 @@ function App() {
     }
 
     if (slideType === 'hypothesis_sim') {
-      return <HypothesisWriterALevel isPresenting={isPresenting} />
+      return <HypothesisWriterASLevel isPresenting={isPresenting} />
     }
 
     if (slideType === 'falsification_teach') {
@@ -3195,13 +3228,22 @@ function App() {
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTaskALevel />
+      return <ExtendedExamTaskASLevel />
     }
 
     return <div>Loading...</div>
   }
 
-  // Render Lesson 16 content (A-Level Lesson 1: Experimental Method)
+  // Render Lesson 16 content (AS Level Lesson 1: Experimental Method)
+  // A Level Lesson 1: Research Methods Recap
+  const renderALevelLesson1 = () => {
+    return (
+      <div className="w-full h-full">
+        <ALevelLesson1ResearchMethodsRecap isPresenting={isPresenting} currentSlide={currentSlide} />
+      </div>
+    )
+  }
+
   const renderLesson16 = () => {
     const slideType = lesson16Slides[currentSlide]
 
@@ -3272,7 +3314,7 @@ function App() {
     }
 
     if (slideType === 'hypo_sim') {
-      return <HypothesesComparison level="alevel" />
+      return <HypothesesComparison level="aslevel" />
     }
 
     if (slideType === 'hypo_afl') {
@@ -3316,15 +3358,15 @@ function App() {
     }
 
     if (slideType === 'hypo_task') {
-      return <HypothesisWriter level="alevel" />
+      return <HypothesisWriter level="aslevel" />
     }
 
     if (slideType === 'variables_teach') {
-      return <VariablesTeachALevel isPresenting={isPresenting} />
+      return <VariablesTeachASLevel isPresenting={isPresenting} />
     }
 
     if (slideType === 'variables_sim') {
-      return <VariableLabALevel isPresenting={isPresenting} />
+      return <VariableLabASLevel isPresenting={isPresenting} />
     }
 
     if (slideType === 'variables_afl') {
@@ -3379,11 +3421,11 @@ function App() {
     }
 
     if (slideType === 'variables_task') {
-      return <VariableDetectiveALevel isPresenting={isPresenting} />
+      return <VariableDetectiveASLevel isPresenting={isPresenting} />
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTaskALevelLesson1 />
+      return <ExtendedExamTaskASLevelLesson1 />
     }
 
     return <div>Loading...</div>
@@ -3398,7 +3440,19 @@ function App() {
           <div className="text-8xl mb-6">🚧</div>
           <h2 className="text-3xl font-bold text-white mb-4">{lesson?.title}</h2>
           <p className="text-gray-400 text-xl">Placeholder for future content...</p>
-          <p className="text-gray-500 text-sm mt-4">Level: {lesson?.levels.includes('gcse') && lesson?.levels.includes('alevel') ? 'GCSE & A-Level' : lesson?.levels.includes('gcse') ? 'GCSE Only' : 'A-Level Only'}</p>
+          <p className="text-gray-500 text-sm mt-4">Level: {lesson?.levels.includes('gcse') && lesson?.levels.includes('aslevel') && lesson?.levels.includes('alevel')
+            ? 'GCSE, AS & A Level'
+            : lesson?.levels.includes('gcse') && lesson?.levels.includes('aslevel')
+              ? 'GCSE & AS Level'
+              : lesson?.levels.includes('gcse') && lesson?.levels.includes('alevel')
+                ? 'GCSE & A Level'
+                : lesson?.levels.includes('aslevel') && lesson?.levels.includes('alevel')
+                  ? 'AS & A Level'
+                  : lesson?.levels.includes('gcse')
+                    ? 'GCSE Only'
+                    : lesson?.levels.includes('aslevel')
+                      ? 'AS Level Only'
+                      : 'A Level Only'}</p>
         </div>
       </div>
     )
@@ -3452,14 +3506,24 @@ function App() {
                       GCSE
                     </button>
                     <button
-                      onClick={() => setLevel('alevel')}
+                      onClick={() => setLevel('aslevel')}
                       className={`flex-1 py-2 px-4 rounded-md text-sm font-bold transition-all ${
-                        level === 'alevel'
+                        level === 'aslevel'
                           ? 'bg-red-600 text-white shadow-lg'
                           : 'text-gray-400 hover:text-white'
                       }`}
                     >
-                      A-Level
+                      AS Level
+                    </button>
+                    <button
+                      onClick={() => setLevel('alevel')}
+                      className={`flex-1 py-2 px-4 rounded-md text-sm font-bold transition-all ${
+                        level === 'alevel'
+                          ? 'bg-indigo-600 text-white shadow-lg'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      A Level
                     </button>
                   </div>
                 </div>
@@ -3474,7 +3538,9 @@ function App() {
                         currentLesson === lesson.id
                           ? level === 'gcse'
                             ? 'border-green-500 bg-green-900/10 text-white shadow-[inset_10px_0_20px_-10px_rgba(34,197,94,0.2)]'
-                            : 'border-rose-500 bg-rose-900/10 text-white shadow-[inset_10px_0_20px_-10px_rgba(244,63,94,0.2)]'
+                            : level === 'aslevel'
+                            ? 'border-rose-500 bg-rose-900/10 text-white shadow-[inset_10px_0_20px_-10px_rgba(244,63,94,0.2)]'
+                            : 'border-indigo-500 bg-indigo-900/10 text-white shadow-[inset_10px_0_20px_-10px_rgba(99,102,241,0.2)]'
                           : 'border-transparent text-gray-500 hover:bg-gray-900 hover:text-gray-300'
                       } cursor-pointer`}
                     >
@@ -3484,7 +3550,9 @@ function App() {
                           <div className={`w-2 h-2 rounded-full ${
                             level === 'gcse'
                               ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,1)]'
-                              : 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,1)]'
+                              : level === 'aslevel'
+                              ? 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,1)]'
+                              : 'bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,1)]'
                           }`}></div>
                         )}
                       </div>
@@ -3502,14 +3570,16 @@ function App() {
                     {currentLesson === 1 && renderLesson1()}
                     {currentLesson === 9 && renderLesson9()}
                     {currentLesson === 16 && renderLesson16()}
-                    {currentLesson !== 1 && currentLesson !== 9 && currentLesson !== 16 && renderPlaceholder()}
+                    {currentLesson === 31 && renderALevelLesson1()}
+                    {currentLesson !== 1 && currentLesson !== 9 && currentLesson !== 16 && currentLesson !== 31 && renderPlaceholder()}
                   </div>
                 ) : (
                   <>
                     {currentLesson === 1 && renderLesson1()}
                     {currentLesson === 9 && renderLesson9()}
                     {currentLesson === 16 && renderLesson16()}
-                    {currentLesson !== 1 && currentLesson !== 9 && currentLesson !== 16 && renderPlaceholder()}
+                    {currentLesson === 31 && renderALevelLesson1()}
+                    {currentLesson !== 1 && currentLesson !== 9 && currentLesson !== 16 && currentLesson !== 31 && renderPlaceholder()}
                   </>
                 )}
               </div>
@@ -3517,70 +3587,67 @@ function App() {
           </div>
 
           {/* Presentation Controls - Bottom Bar */}
-          <div className="h-24 border-t border-gray-700 bg-gray-950/80 backdrop-blur flex items-center justify-between px-8 gap-6">
-            {/* Previous Button */}
-            <button
-              onClick={prevSlide}
-              disabled={currentSlide === 0}
-              className={`flex items-center gap-2 px-8 py-3 rounded-lg font-bold text-lg transition-all ${
-                currentSlide === 0
-                  ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                  : level === 'gcse'
-                    ? 'bg-green-600 text-white hover:bg-green-500 shadow-lg shadow-green-600/20'
-                    : 'bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-600/20'
-              }`}
-            >
-              <ChevronLeft size={24} />
-              PREV
-            </button>
+          <div className="h-24 px-8 border-t border-gray-700 bg-gray-950/80 backdrop-blur flex items-center justify-between">
+              {/* Previous Button */}
+              <button
+                onClick={prevSlide}
+                disabled={currentSlide === 0}
+                className={`flex items-center gap-2 px-8 py-3 text-lg rounded-lg font-bold transition-all ${
+                  currentSlide === 0
+                    ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+                    : level === 'gcse'
+                      ? 'bg-green-600 text-white hover:bg-green-500 shadow-lg shadow-green-600/20'
+                      : level === 'aslevel'
+                      ? 'bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-600/20'
+                      : 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/20'
+                }`}
+              >
+                <ChevronLeft size={24} />
+                PREV
+              </button>
 
-            {/* Slide Counter & Dots */}
-            <div className="flex items-center gap-10">
-              <span className="text-gray-300 font-mono text-3xl font-bold">
-                {String(currentSlide + 1).padStart(2, '0')} / {String(slideCount).padStart(2, '0')}
-              </span>
-              <div className="flex gap-4">
-                {Array.from({ length: slideCount }).map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentSlide(idx)}
-                    className={`rounded-full transition-all ${
-                      idx === currentSlide
-                        ? level === 'gcse'
-                          ? 'w-5 h-5 bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]'
-                          : 'w-5 h-5 bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'
-                        : 'w-3 h-3 bg-gray-700 hover:bg-gray-600'
-                    }`}
-                    aria-label={`Go to slide ${idx + 1}`}
-                  />
-                ))}
+              {/* Slide Counter & Dots */}
+              <div className="flex items-center gap-10">
+                <span className="text-gray-300 font-mono text-3xl font-bold">
+                  {String(currentSlide + 1).padStart(2, '0')} / {String(slideCount).padStart(2, '0')}
+                </span>
+                <div className="flex gap-4">
+                  {Array.from({ length: slideCount }).map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentSlide(idx)}
+                      className={`rounded-full transition-all ${
+                        idx === currentSlide
+                          ? level === 'gcse'
+                            ? 'w-5 h-5 bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]'
+                            : level === 'aslevel'
+                            ? 'w-5 h-5 bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'
+                            : 'w-5 h-5 bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]'
+                          : 'w-3 h-3 bg-gray-700 hover:bg-gray-600'
+                      }`}
+                      aria-label={`Go to slide ${idx + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Next Button */}
-            <button
-              onClick={nextSlide}
-              disabled={currentSlide === slideCount - 1}
-              className={`flex items-center gap-2 px-8 py-3 rounded-lg font-bold text-lg transition-all ${
-                currentSlide === slideCount - 1
-                  ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                  : level === 'gcse'
-                    ? 'bg-green-600 text-white hover:bg-green-500 shadow-lg shadow-green-600/20'
-                    : 'bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-600/20'
-              }`}
-            >
-              NEXT
-              <ChevronRight size={24} />
-            </button>
-
-            {/* Exit Presentation */}
-            <button
-              onClick={togglePresentation}
-              className="px-6 py-3 rounded-lg font-bold bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-all"
-              title="Exit presentation (ESC)"
-            >
-              EXIT
-            </button>
+              {/* Next Button */}
+              <button
+                onClick={nextSlide}
+                disabled={currentSlide === slideCount - 1}
+                className={`flex items-center gap-2 px-8 py-3 text-lg rounded-lg font-bold transition-all ${
+                  currentSlide === slideCount - 1
+                    ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+                    : level === 'gcse'
+                      ? 'bg-green-600 text-white hover:bg-green-500 shadow-lg shadow-green-600/20'
+                      : level === 'aslevel'
+                      ? 'bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-600/20'
+                      : 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/20'
+                }`}
+              >
+                NEXT
+                <ChevronRight size={24} />
+              </button>
           </div>
         </div>
       )}
@@ -3612,14 +3679,24 @@ function App() {
                   GCSE
                 </button>
                 <button
-                  onClick={() => setLevel('alevel')}
+                  onClick={() => setLevel('aslevel')}
                   className={`flex-1 py-2 px-4 rounded-md text-sm font-bold transition-all ${
-                    level === 'alevel'
+                    level === 'aslevel'
                       ? 'bg-red-600 text-white shadow-lg'
                       : 'text-gray-400 hover:text-white'
                   }`}
                 >
-                  A-Level
+                  AS Level
+                </button>
+                <button
+                  onClick={() => setLevel('alevel')}
+                  className={`flex-1 py-2 px-4 rounded-md text-sm font-bold transition-all ${
+                    level === 'alevel'
+                      ? 'bg-indigo-600 text-white shadow-lg'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  A Level
                 </button>
               </div>
             </div>
@@ -3634,14 +3711,16 @@ function App() {
                     currentLesson === lesson.id
                       ? level === 'gcse'
                         ? 'border-green-500 bg-green-900/10 text-white shadow-[inset_10px_0_20px_-10px_rgba(34,197,94,0.2)]'
-                        : 'border-rose-500 bg-rose-900/10 text-white shadow-[inset_10px_0_20px_-10px_rgba(244,63,94,0.2)]'
+                        : level === 'aslevel'
+                        ? 'border-rose-500 bg-rose-900/10 text-white shadow-[inset_10px_0_20px_-10px_rgba(244,63,94,0.2)]'
+                        : 'border-indigo-500 bg-indigo-900/10 text-white shadow-[inset_10px_0_20px_-10px_rgba(99,102,241,0.2)]'
                       : 'border-transparent text-gray-500 hover:bg-gray-900 hover:text-gray-300'
                   } cursor-pointer`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-sm tracking-tight">{lesson.title}</span>
                     {currentLesson === lesson.id && (
-                      <div className={`w-2 h-2 rounded-full ${level === 'gcse' ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,1)]' : 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,1)]'}`}></div>
+                      <div className={`w-2 h-2 rounded-full ${level === 'gcse' ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,1)]' : level === 'aslevel' ? 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,1)]' : 'bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,1)]'}`}></div>
                     )}
                   </div>
                   {currentLesson === lesson.id && (
@@ -3692,60 +3771,71 @@ function App() {
               {currentLesson === 1 && renderLesson1()}
               {currentLesson === 9 && renderLesson9()}
               {currentLesson === 16 && renderLesson16()}
-              {currentLesson !== 1 && currentLesson !== 9 && currentLesson !== 16 && renderPlaceholder()}
+              {currentLesson === 31 && renderALevelLesson1()}
+              {currentLesson !== 1 && currentLesson !== 9 && currentLesson !== 16 && currentLesson !== 31 && renderPlaceholder()}
             </main>
 
-            {/* Navigation Footer */}
-            <div className="h-20 border-t border-gray-800 flex items-center justify-between px-8 bg-gray-950">
-              <button
-                onClick={prevSlide}
-                disabled={currentSlide === 0}
-                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all ${
-                  currentSlide === 0
-                    ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                    : level === 'gcse'
-                      ? 'bg-green-600 text-white hover:bg-green-500 shadow-lg shadow-green-600/20'
-                      : 'bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-600/20'
-                }`}
-              >
-                <ChevronLeft size={20} />
-                PREV
-              </button>
+            {/* Navigation Footer - Standard Mode */}
+            <div className="h-20 px-8 border-t border-gray-700 bg-gray-950/80 backdrop-blur flex items-center justify-between">
+                {/* Previous Button */}
+                <button
+                  onClick={prevSlide}
+                  disabled={currentSlide === 0}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all ${
+                    currentSlide === 0
+                      ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+                      : level === 'gcse'
+                        ? 'bg-green-600 text-white hover:bg-green-500 shadow-lg shadow-green-600/20'
+                        : level === 'aslevel'
+                        ? 'bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-600/20'
+                        : 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/20'
+                  }`}
+                >
+                  <ChevronLeft size={20} />
+                  PREV
+                </button>
 
-              <div className="flex items-center gap-6">
-                <span className="text-gray-400 font-mono text-lg">
-                  {String(currentSlide + 1).padStart(2, '0')} / {String(slideCount).padStart(2, '0')}
-                </span>
-                <div className="flex gap-2">
-                  {Array.from({ length: slideCount }).map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrentSlide(idx)}
-                      className={`h-2 rounded-full transition-all ${
-                        idx === currentSlide
-                          ? level === 'gcse'
-                            ? 'w-8 bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]'
-                            : 'w-8 bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'
-                          : 'w-2 bg-gray-700 hover:bg-gray-600'
-                      }`}
-                    />
-                  ))}
+                {/* Slide Counter & Dots */}
+                <div className="flex items-center gap-6">
+                  <span className="text-gray-300 font-mono text-lg font-bold">
+                    {String(currentSlide + 1).padStart(2, '0')} / {String(slideCount).padStart(2, '0')}
+                  </span>
+                  <div className="flex gap-2">
+                    {Array.from({ length: slideCount }).map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentSlide(idx)}
+                        className={`rounded-full transition-all ${
+                          idx === currentSlide
+                            ? level === 'gcse'
+                              ? 'w-8 h-2 bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]'
+                              : level === 'aslevel'
+                              ? 'w-8 h-2 bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'
+                              : 'w-8 h-2 bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]'
+                            : 'w-2 h-2 bg-gray-700 hover:bg-gray-600'
+                        }`}
+                        aria-label={`Go to slide ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              <button
-                onClick={nextSlide}
-                disabled={currentSlide === slideCount - 1}
-                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all ${
-                  currentSlide === slideCount - 1
-                    ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                    : level === 'gcse'
-                      ? 'bg-green-600 text-white hover:bg-green-500 shadow-lg shadow-green-600/20'
-                      : 'bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-600/20'
-                }`}
-              >
-                NEXT
-                <ChevronRight size={20} />
+                {/* Next Button */}
+                <button
+                  onClick={nextSlide}
+                  disabled={currentSlide === slideCount - 1}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all ${
+                    currentSlide === slideCount - 1
+                      ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+                      : level === 'gcse'
+                        ? 'bg-green-600 text-white hover:bg-green-500 shadow-lg shadow-green-600/20'
+                        : level === 'aslevel'
+                        ? 'bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-600/20'
+                        : 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/20'
+                  }`}
+                >
+                  NEXT
+                  <ChevronRight size={20} />
               </button>
             </div>
           </div>

@@ -2,7 +2,7 @@ import React from 'react'
 import { Check, X } from 'lucide-react'
 
 interface Props {
-  level: 'gcse' | 'alevel'
+  level: 'gcse' | 'aslevel'
 }
 
 export const HypothesesComparison: React.FC<Props> = ({ level }) => {

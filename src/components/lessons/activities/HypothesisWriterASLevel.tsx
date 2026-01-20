@@ -5,7 +5,7 @@ interface Props {
   isPresenting: boolean
 }
 
-export const HypothesisWriterALevel: React.FC<Props> = ({ isPresenting }) => {
+export const HypothesisWriterASLevel: React.FC<Props> = ({ isPresenting }) => {
   const [hypothesis, setHypothesis] = useState('')
   const [isDirectional, setIsDirectional] = useState<boolean | null>(null)
   const [feedback, setFeedback] = useState<string | null>(null)

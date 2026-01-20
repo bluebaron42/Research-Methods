@@ -15,7 +15,7 @@ interface Question {
   sample: Answer[]
 }
 
-export const ExtendedExamTaskALevelLesson1: React.FC = () => {
+export const ExtendedExamTaskASLevelLesson1: React.FC = () => {
   const [expandedQuestions, setExpandedQuestions] = useState<Record<number, boolean>>({})
 
   const questions: Question[] = [

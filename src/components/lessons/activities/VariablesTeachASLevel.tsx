@@ -5,7 +5,7 @@ interface Props {
   isPresenting: boolean
 }
 
-export const VariablesTeachALevel: React.FC<Props> = ({ isPresenting }) => {
+export const VariablesTeachASLevel: React.FC<Props> = ({ isPresenting }) => {
   const [expandedSection, setExpandedSection] = useState<string | null>('iv')
 
   const textSize = isPresenting ? 'text-2xl' : 'text-lg'

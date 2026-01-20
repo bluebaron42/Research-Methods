@@ -14,7 +14,7 @@ interface Question {
   explanation: string
 }
 
-export const VariableDetectiveALevel: React.FC<Props> = ({ isPresenting }) => {
+export const VariableDetectiveASLevel: React.FC<Props> = ({ isPresenting }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({})
   const [showExplanation, setShowExplanation] = useState(false)

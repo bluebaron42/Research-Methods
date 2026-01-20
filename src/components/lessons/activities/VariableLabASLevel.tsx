@@ -13,7 +13,7 @@ interface Task {
   operationalisation: string
 }
 
-export const VariableLabALevel: React.FC<Props> = ({ isPresenting }) => {
+export const VariableLabASLevel: React.FC<Props> = ({ isPresenting }) => {
   const [currentTask, setCurrentTask] = useState(0)
   const [responses, setResponses] = useState<Record<number, Partial<Task>>>({})
 
