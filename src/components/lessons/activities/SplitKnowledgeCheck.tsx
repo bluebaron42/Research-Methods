@@ -63,77 +63,90 @@ export const SplitKnowledgeCheck: React.FC<Props> = ({ questions, title, subtitl
   }).length
 
   return (
-    <div className="w-full h-full p-8 flex flex-col overflow-auto custom-scrollbar">
-      <h2 className="text-3xl font-bold text-rose-400 mb-1">{title}</h2>
-      <p className="text-gray-400 text-lg mb-8">{subtitle}</p>
-
-      <div className="flex justify-between items-center mb-8">
-        <span className="text-gray-400 font-mono text-lg">
-          {currentQuestion + 1} / {questions.length}
-        </span>
-        <div className="flex gap-2">
-          {questions.map((_, idx) => (
-            <div
-              key={idx}
-              className={`w-3 h-3 rounded-full ${
-                selectedAnswers[questions[idx].id] !== undefined ? 'bg-green-500' : 'bg-gray-600'
-              }`}
-            />
-          ))}
+    <div className="w-full h-full p-5 flex flex-col overflow-auto custom-scrollbar">
+      {/* Header - Clean minimal */}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="text-xl font-bold text-rose-400 flex items-center gap-2">
+            <span className="w-1 h-5 bg-rose-500 rounded-full"></span>
+            {title}
+          </h2>
+          <p className="text-sm text-gray-500 mt-0.5">{subtitle}</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-gray-500 font-mono">
+            {currentQuestion + 1}/{questions.length}
+          </span>
+          <div className="flex gap-1">
+            {questions.map((_, idx) => (
+              <div
+                key={idx}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  idx === currentQuestion 
+                    ? 'bg-rose-500 scale-125' 
+                    : selectedAnswers[questions[idx].id] !== undefined 
+                      ? 'bg-green-500' 
+                      : 'bg-gray-700'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-8">
-        <p className="text-2xl text-gray-100 font-semibold">{question.question}</p>
+      {/* Question Card - Glass effect */}
+      <div className="glass-clean rounded-lg p-4 mb-4 animate-fadeIn">
+        <p className="text-lg text-gray-100 font-medium leading-relaxed">{question.question}</p>
       </div>
 
       {/* Reveal Button */}
       {!areOptionsVisible && (
         <button
           onClick={revealOptions}
-          className="w-full py-6 px-8 mb-8 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-rose-600/30 text-2xl"
+          className="w-full py-4 px-6 mb-4 bg-rose-600 hover:bg-rose-500 text-white font-medium rounded-lg transition-all shadow-lg shadow-rose-600/20 text-base animate-subtle-pulse"
         >
-          Click to Reveal Answer Options
+          Click to Reveal Options
         </button>
       )}
 
-      {/* Options */}
+      {/* Options - Clean cards with animations */}
       {areOptionsVisible && (
-      <div className="space-y-3 flex-grow mb-8">
+      <div className="space-y-2 flex-grow mb-4">
         {question.options.map((option, idx) => (
           <button
             key={idx}
             onClick={() => handleSelectAnswer(idx)}
             disabled={isAnswered}
-            className={`w-full text-left p-4 rounded-lg border-2 transition-all font-semibold text-lg ${
+            className={`w-full text-left p-3 rounded-lg border transition-all duration-300 font-medium text-base animate-slide-in-left ${
               !isAnswered
-                ? 'border-gray-600 bg-gray-800 hover:border-rose-500 hover:bg-gray-700 cursor-pointer'
+                ? 'border-gray-700/50 bg-gray-800/60 hover:border-rose-500/50 hover:bg-gray-700/60 cursor-pointer card-hover'
                 : idx === question.correct
-                  ? 'border-green-500 bg-green-900/30 text-green-100'
+                  ? 'border-green-500/50 bg-green-900/20 text-green-200'
                   : idx === selectedAnswer
-                    ? 'border-red-500 bg-red-900/30 text-red-100'
-                    : 'border-gray-600 bg-gray-800 text-gray-400'
+                    ? 'border-red-500/50 bg-red-900/20 text-red-200'
+                    : 'border-gray-700/30 bg-gray-800/40 text-gray-500'
             }`}
+            style={{ animationDelay: `${idx * 0.05}s` }}
           >
-            <div className="flex items-center justify-between">
-              <span>{option}</span>
-              {isAnswered && idx === question.correct && <CheckCircle className="text-green-500" size={24} />}
-              {isAnswered && idx === selectedAnswer && idx !== question.correct && <XCircle className="text-red-500" size={24} />}
+            <div className="flex items-center justify-between gap-3">
+              <span className="flex-1">{option}</span>
+              {isAnswered && idx === question.correct && <CheckCircle className="text-green-400 flex-shrink-0 animate-scale-up" size={20} />}
+              {isAnswered && idx === selectedAnswer && idx !== question.correct && <XCircle className="text-red-400 flex-shrink-0 animate-scale-up" size={20} />}
             </div>
           </button>
         ))}
       </div>
       )}
 
-      {/* Navigation */}
-      <div className="flex gap-4 mt-auto">
+      {/* Navigation - Minimal */}
+      <div className="flex gap-2 mt-auto">
         <button
           onClick={handlePrev}
           disabled={currentQuestion === 0}
-          className={`flex-1 py-3 px-6 rounded-lg font-bold ${
+          className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all ${
             currentQuestion === 0
-              ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-              : 'bg-gray-700 hover:bg-gray-600 text-white'
+              ? 'bg-gray-800/50 text-gray-600 cursor-not-allowed'
+              : 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300'
           }`}
         >
           ← Previous
@@ -142,22 +155,22 @@ export const SplitKnowledgeCheck: React.FC<Props> = ({ questions, title, subtitl
         <button
           onClick={handleNext}
           disabled={currentQuestion === questions.length - 1}
-          className={`flex-1 py-3 px-6 rounded-lg font-bold ${
+          className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all ${
             currentQuestion === questions.length - 1
-              ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-              : 'bg-rose-600 hover:bg-rose-500 text-white'
+              ? 'bg-gray-800/50 text-gray-600 cursor-not-allowed'
+              : 'bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-600/20'
           }`}
         >
           Next →
         </button>
       </div>
 
-      {/* Score Summary - Show only when all questions are answered */}
+      {/* Score Summary - Clean minimal */}
       {selectedAnswers[questions[questions.length - 1].id] !== undefined && (
-        <div className="mt-8 p-6 bg-gray-800 rounded-lg border border-gray-700 text-center">
-          <p className="text-gray-300 mb-2 text-lg">Your Score:</p>
-          <p className="text-4xl font-bold text-rose-400">
-            {correctCount} / {questions.length}
+        <div className="mt-4 glass-clean rounded-lg p-4 text-center animate-scale-up">
+          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Score</p>
+          <p className="text-2xl font-bold text-rose-400">
+            {correctCount}<span className="text-gray-500 text-lg">/{questions.length}</span>
           </p>
         </div>
       )}

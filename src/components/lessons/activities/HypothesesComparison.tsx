@@ -34,48 +34,51 @@ export const HypothesesComparison: React.FC<Props> = ({ level }) => {
   ]
 
   return (
-    <div className="w-full h-full p-8 flex flex-col overflow-auto custom-scrollbar">
-      <h2 className="text-3xl font-bold text-rose-400 mb-8">From Aims to Hypotheses</h2>
+    <div className="w-full h-full p-5 flex flex-col overflow-auto custom-scrollbar">
+      <h2 className="text-xl font-bold text-rose-400 mb-4 flex items-center gap-2">
+        <span className="w-1 h-5 bg-rose-500 rounded-full"></span>
+        From Aims to Hypotheses
+      </h2>
 
-      <div className="space-y-8">
+      <div className="space-y-4">
         {scenarios.map((item, idx) => (
-          <div key={idx} className="bg-gray-900 border border-gray-700 rounded-lg p-6">
-            <div className="bg-gray-800/50 p-4 rounded mb-6 border-l-4 border-amber-500">
-              <p className="text-lg font-semibold text-gray-100">{item.scenario}</p>
+          <div key={idx} className="glass-clean rounded-lg p-4 animate-slide-in-left" style={{ animationDelay: `${idx * 0.1}s` }}>
+            <div className="bg-gray-800/50 p-3 rounded mb-4 border-l-2 border-amber-500">
+              <p className="text-sm font-medium text-gray-100">{item.scenario}</p>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-2">
               {/* Aim */}
-              <div className="bg-gray-800 rounded-lg p-4 border-l-4 border-blue-500">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">A</span>
+              <div className="bg-gray-800/40 rounded-lg p-3 border-l-2 border-blue-500">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">A</span>
                   </div>
-                  <span className="font-bold text-blue-300">Aim:</span>
+                  <span className="font-bold text-blue-400 text-sm">Aim:</span>
                 </div>
-                <p className="text-gray-100 ml-10 italic">{item.examples.aim}</p>
+                <p className="text-gray-200 ml-8 italic text-sm">{item.examples.aim}</p>
               </div>
 
               {/* Directional Hypothesis */}
-              <div className="bg-gray-800 rounded-lg p-4 border-l-4 border-amber-500">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-amber-600 flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">H₁</span>
+              <div className="bg-gray-800/40 rounded-lg p-3 border-l-2 border-amber-500">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-6 h-6 rounded-full bg-amber-600 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">H₁</span>
                   </div>
-                  <span className="font-bold text-amber-300">Directional Hypothesis:</span>
+                  <span className="font-bold text-amber-400 text-sm">Directional Hypothesis:</span>
                 </div>
-                <p className="text-gray-100 ml-10 italic">{item.examples.directional}</p>
+                <p className="text-gray-200 ml-8 italic text-sm">{item.examples.directional}</p>
               </div>
 
               {/* Non-Directional Hypothesis */}
-              <div className="bg-gray-800 rounded-lg p-4 border-l-4 border-green-500">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">H₂</span>
+              <div className="bg-gray-800/40 rounded-lg p-3 border-l-2 border-green-500">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-6 h-6 rounded-full bg-green-600 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">H₂</span>
                   </div>
-                  <span className="font-bold text-green-300">Non-Directional Hypothesis:</span>
+                  <span className="font-bold text-green-400 text-sm">Non-Directional Hypothesis:</span>
                 </div>
-                <p className="text-gray-100 ml-10 italic">{item.examples.nondirectional}</p>
+                <p className="text-gray-200 ml-8 italic text-sm">{item.examples.nondirectional}</p>
               </div>
             </div>
           </div>
@@ -83,36 +86,36 @@ export const HypothesesComparison: React.FC<Props> = ({ level }) => {
       </div>
 
       {/* Summary Table */}
-      <div className="mt-8 bg-gray-900 border border-gray-700 rounded-lg overflow-hidden">
+      <div className="mt-4 glass-clean rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full text-sm">
             <thead>
-              <tr className="bg-gray-800 border-b border-gray-700">
-                <th className="text-left px-4 py-3 text-rose-400 font-bold">Aspect</th>
-                <th className="text-left px-4 py-3 text-rose-400 font-bold">Aim</th>
-                <th className="text-left px-4 py-3 text-rose-400 font-bold">Hypothesis</th>
+              <tr className="bg-gray-800/50 border-b border-gray-700/50">
+                <th className="text-left px-3 py-2 text-rose-400 font-bold">Aspect</th>
+                <th className="text-left px-3 py-2 text-rose-400 font-bold">Aim</th>
+                <th className="text-left px-3 py-2 text-rose-400 font-bold">Hypothesis</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-gray-700 hover:bg-gray-800/50">
-                <td className="px-4 py-3 font-bold text-gray-300">Specificity</td>
-                <td className="px-4 py-3 text-gray-300">General statement</td>
-                <td className="px-4 py-3 text-gray-300">Specific prediction</td>
+              <tr className="border-b border-gray-700/30 hover:bg-gray-800/30">
+                <td className="px-3 py-2 font-bold text-gray-300">Specificity</td>
+                <td className="px-3 py-2 text-gray-400">General statement</td>
+                <td className="px-3 py-2 text-gray-400">Specific prediction</td>
               </tr>
-              <tr className="border-b border-gray-700 hover:bg-gray-800/50">
-                <td className="px-4 py-3 font-bold text-gray-300">Testability</td>
-                <td className="px-4 py-3 text-gray-300">Not directly testable</td>
-                <td className="px-4 py-3 text-gray-300">Testable & falsifiable</td>
+              <tr className="border-b border-gray-700/30 hover:bg-gray-800/30">
+                <td className="px-3 py-2 font-bold text-gray-300">Testability</td>
+                <td className="px-3 py-2 text-gray-400">Not directly testable</td>
+                <td className="px-3 py-2 text-gray-400">Testable & falsifiable</td>
               </tr>
-              <tr className="border-b border-gray-700 hover:bg-gray-800/50">
-                <td className="px-4 py-3 font-bold text-gray-300">Direction</td>
-                <td className="px-4 py-3 text-gray-300">No prediction of outcome</td>
-                <td className="px-4 py-3 text-gray-300">May predict direction</td>
+              <tr className="border-b border-gray-700/30 hover:bg-gray-800/30">
+                <td className="px-3 py-2 font-bold text-gray-300">Direction</td>
+                <td className="px-3 py-2 text-gray-400">No prediction of outcome</td>
+                <td className="px-3 py-2 text-gray-400">May predict direction</td>
               </tr>
-              <tr className="hover:bg-gray-800/50">
-                <td className="px-4 py-3 font-bold text-gray-300">Example</td>
-                <td className="px-4 py-3 text-gray-300">"To investigate X"</td>
-                <td className="px-4 py-3 text-gray-300">"X will cause Y"</td>
+              <tr className="hover:bg-gray-800/30">
+                <td className="px-3 py-2 font-bold text-gray-300">Example</td>
+                <td className="px-3 py-2 text-gray-400">"To investigate X"</td>
+                <td className="px-3 py-2 text-gray-400">"X will cause Y"</td>
               </tr>
             </tbody>
           </table>

@@ -1,16 +1,13 @@
 import React, { useState } from 'react'
-import { CheckCircle, AlertCircle, Lightbulb } from 'lucide-react'
+import { Eye, EyeOff, Lightbulb } from 'lucide-react'
 
 interface Props {
   isPresenting: boolean
 }
 
 export const HypothesisWriterASLevel: React.FC<Props> = ({ isPresenting }) => {
-  const [hypothesis, setHypothesis] = useState('')
   const [isDirectional, setIsDirectional] = useState<boolean | null>(null)
-  const [feedback, setFeedback] = useState<string | null>(null)
-  const [hasVariable, setHasVariable] = useState(false)
-  const [isPredictive, setIsPredictive] = useState(false)
+  const [showHypothesis, setShowHypothesis] = useState(false)
   
   // Template options
   const [population, setPopulation] = useState('Students')
@@ -23,237 +20,121 @@ export const HypothesisWriterASLevel: React.FC<Props> = ({ isPresenting }) => {
   const condition2Options = ['who revise for 30 minutes', 'who study with distractions', 'who study continuously', 'who use notes only', 'who work alone']
   const outcomeOptions = ['exam scores', 'reaction times', 'memory recall', 'concentration levels', 'performance']
 
-  const textSize = isPresenting ? 'text-2xl' : 'text-lg'
-  const headingSize = isPresenting ? 'text-4xl' : 'text-2xl'
-  const padding = isPresenting ? 'p-12' : 'p-8'
-  const gap = isPresenting ? 'gap-6' : 'gap-4'
+  const textSize = isPresenting ? 'text-base' : 'text-sm'
+  const padding = isPresenting ? 'p-6' : 'p-5'
 
-  const analyzeHypothesis = (text: string) => {
-    // Check for variables
-    const hasVars = /\b(will|predict|expect|increase|decrease|affect|influence|difference|relationship|correlation)\b/i.test(text)
-    setHasVariable(hasVars)
-
-    // Check if predictive
-    const isPred =
-      /\b(will|predict|expect|should|result in|cause|lead to)\b/i.test(text) &&
-      text.length > 10
-    setIsPredictive(isPred)
-
-    // Check direction indicators
-    const isDir =
-      /\b(higher|lower|more|less|better|worse|increase|decrease|greater|smaller|faster|slower|improve|worsen|positive|negative)\b/i
-        .test(text) || /\bthan\b/i.test(text)
-    setIsDirectional(isDir)
-
-    // Provide feedback
-    if (text.length < 5) {
-      setFeedback('Type your hypothesis here...')
-    } else if (!hasVars) {
-      setFeedback('Your hypothesis should mention variables or relationships')
-    } else if (!isPred) {
-      setFeedback('A good hypothesis predicts what will happen between variables')
-    } else {
-      setFeedback('Great! You have a testable hypothesis')
-    }
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const text = e.target.value
-    setHypothesis(text)
-    analyzeHypothesis(text)
-  }
-
-  const clearInput = () => {
-    setHypothesis('')
-    setFeedback(null)
-    setIsDirectional(null)
-    setHasVariable(false)
-    setIsPredictive(false)
-  }
+  const generatedHypothesis = isDirectional
+    ? `"${population} ${condition1} will score higher on ${outcome} than ${population.toLowerCase()} ${condition2}"`
+    : `"There will be a difference in ${outcome} between ${population.toLowerCase()} ${condition1} and those ${condition2}"`
 
   return (
     <div className={`w-full h-full ${padding} flex flex-col overflow-auto custom-scrollbar`}>
-      <h2 className={`${headingSize} font-bold text-rose-400 mb-2`}>Hypothesis Writer</h2>
-      <p className={`${textSize} text-gray-400 mb-8`}>Write your own directional or non-directional hypothesis</p>
+      <h2 className="text-xl font-bold text-rose-400 mb-1 flex items-center gap-2">
+        <span className="w-1 h-5 bg-rose-500 rounded-full"></span>
+        Hypothesis Builder
+      </h2>
+      <p className="text-sm text-gray-500 mb-4">Build directional or non-directional hypotheses</p>
 
-      <div className={`flex gap-4 mb-8`}>
+      {/* Type Selection - Clean toggle */}
+      <div className="flex gap-2 mb-4 bg-gray-900/50 p-1 rounded-lg">
         <button
-          onClick={() => setIsDirectional(true)}
-          className={`flex-1 py-3 px-4 rounded-lg font-bold transition-all ${
+          onClick={() => { setIsDirectional(true); setShowHypothesis(false); }}
+          className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-all duration-300 ${
             isDirectional === true
-              ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30'
-              : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/20'
+              : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
           }`}
         >
           Directional →
         </button>
         <button
-          onClick={() => setIsDirectional(false)}
-          className={`flex-1 py-3 px-4 rounded-lg font-bold transition-all ${
+          onClick={() => { setIsDirectional(false); setShowHypothesis(false); }}
+          className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-all duration-300 ${
             isDirectional === false
-              ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-              : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
+              : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
           }`}
         >
           Non-Directional
         </button>
       </div>
 
-      {/* Template Builder */}
+      {/* Template Builder - Clean compact style */}
       {isDirectional !== null && (
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-8">
-          <p className={`${textSize} font-bold text-amber-400 mb-6`}>Build Your Hypothesis Template:</p>
+        <div className="bg-gray-900/40 border border-gray-700/30 rounded-lg p-4 mb-4 animate-fadeIn space-y-4">
           
-          {/* Population Options */}
-          <div className="mb-6">
-            <label className="block text-gray-300 mb-3 font-semibold">Population:</label>
-            <div className="flex flex-wrap gap-2">
-              {populationOptions.map(p => (
-                <button
-                  key={p}
-                  onClick={() => setPopulation(p)}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                    population === p
-                      ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/30'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600'
-                  }`}
-                >
-                  {p}
-                </button>
-              ))}
+          {/* Option Groups - More compact */}
+          {[
+            { label: 'Population', options: populationOptions, value: population, setter: setPopulation, color: 'rose' },
+            { label: 'Condition 1 (Group A)', options: condition1Options, value: condition1, setter: setCondition1, color: 'blue' },
+            { label: 'Condition 2 (Group B)', options: condition2Options, value: condition2, setter: setCondition2, color: 'cyan' },
+            { label: 'Outcome (DV)', options: outcomeOptions, value: outcome, setter: setOutcome, color: 'amber' }
+          ].map((group, groupIdx) => (
+            <div key={group.label}>
+              <label className="block text-xs text-gray-500 mb-1.5 uppercase tracking-wide">{group.label}</label>
+              <div className="flex flex-wrap gap-1.5">
+                {group.options.map((opt, idx) => (
+                  <button
+                    key={opt}
+                    onClick={() => { group.setter(opt); setShowHypothesis(false); }}
+                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${
+                      group.value === opt
+                        ? `bg-${group.color}-600 text-white shadow-md shadow-${group.color}-600/20`
+                        : 'bg-gray-800/80 text-gray-400 hover:text-gray-200 hover:bg-gray-700/80 border border-gray-700/50'
+                    } animate-scale-up`}
+                    style={{ animationDelay: `${idx * 0.02}s` }}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          ))}
 
-          {/* Condition 1 Options */}
-          <div className="mb-6">
-            <label className="block text-gray-300 mb-3 font-semibold">Condition 1 (Group A):</label>
-            <div className="flex flex-wrap gap-2">
-              {condition1Options.map(c => (
-                <button
-                  key={c}
-                  onClick={() => setCondition1(c)}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all text-sm ${
-                    condition1 === c
-                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600'
-                  }`}
-                >
-                  {c}
-                </button>
-              ))}
+          {/* Click to Reveal - Clean card */}
+          <button
+            onClick={() => setShowHypothesis(!showHypothesis)}
+            className="w-full glass-clean p-3 rounded-lg border-l-2 border-amber-500/60 hover:bg-gray-800/60 transition-all text-left group"
+          >
+            <div className="flex items-center justify-between mb-1.5">
+              <p className="text-xs text-gray-400 uppercase tracking-wide">Generated Hypothesis</p>
+              <div className="flex items-center gap-1.5 text-amber-400 text-xs">
+                {showHypothesis ? <EyeOff size={14} /> : <Eye size={14} className="animate-subtle-pulse" />}
+                <span>{showHypothesis ? 'Hide' : 'Reveal'}</span>
+              </div>
             </div>
-          </div>
-
-          {/* Condition 2 Options */}
-          <div className="mb-6">
-            <label className="block text-gray-300 mb-3 font-semibold">Condition 2 (Group B):</label>
-            <div className="flex flex-wrap gap-2">
-              {condition2Options.map(c => (
-                <button
-                  key={c}
-                  onClick={() => setCondition2(c)}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all text-sm ${
-                    condition2 === c
-                      ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/30'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600'
-                  }`}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Outcome Variable Options */}
-          <div className="mb-6">
-            <label className="block text-gray-300 mb-3 font-semibold">Outcome Variable (DV):</label>
-            <div className="flex flex-wrap gap-2">
-              {outcomeOptions.map(o => (
-                <button
-                  key={o}
-                  onClick={() => setOutcome(o)}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all text-sm ${
-                    outcome === o
-                      ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600'
-                  }`}
-                >
-                  {o}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-gray-800 p-4 rounded border-l-4 border-amber-500">
-            <p className="text-gray-300 text-sm font-semibold mb-2">Generated Template:</p>
-            <p className="text-gray-100 italic">
-              {isDirectional
-                ? `"${population} ${condition1} will score higher on ${outcome} than ${population.toLowerCase()} ${condition2}"`
-                : `"There will be a difference in ${outcome} between ${population.toLowerCase()} ${condition1} and those ${condition2}"`}
-            </p>
-          </div>
+            {showHypothesis ? (
+              <p className="text-sm text-gray-200 italic animate-fadeIn">{generatedHypothesis}</p>
+            ) : (
+              <div className="h-5 bg-gray-700/50 rounded animate-pulse"></div>
+            )}
+          </button>
         </div>
       )}
 
-      {/* Examples */}
+      {/* Example Format - Minimal */}
       {isDirectional !== null && (
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-8">
-          <p className={`${textSize} font-bold text-gray-300 mb-3`}>Example:</p>
-          <div className="bg-gray-800 p-4 rounded italic text-gray-300 border-l-4 border-gray-600">
-            {isDirectional
-              ? '"Students who revise for 2 hours will score higher on the exam than students who revise for 30 minutes"'
-              : '"There will be a difference in exam scores between students who revise for 2 hours and those who revise for 30 minutes"'}
-          </div>
-        </div>
-      )}
-
-      {/* Text Input */}
-      <textarea
-        value={hypothesis}
-        onChange={handleInputChange}
-        placeholder="Write your hypothesis here..."
-        className={`w-full flex-grow p-4 rounded-lg bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-rose-500 ${textSize}`}
-      />
-
-      {/* Analysis Feedback */}
-      {hypothesis && (
-        <div className={`mt-8 space-y-3`}>
-          <div className={`flex items-center gap-3 p-4 rounded-lg ${hasVariable ? 'bg-green-900/30 border border-green-600' : 'bg-gray-800 border border-gray-700'}`}>
-            {hasVariable ? <CheckCircle className="text-green-500" size={24} /> : <AlertCircle className="text-gray-500" size={24} />}
-            <p className={`${textSize} ${hasVariable ? 'text-green-200' : 'text-gray-300'}`}>Variables identified</p>
-          </div>
-
-          <div className={`flex items-center gap-3 p-4 rounded-lg ${isPredictive ? 'bg-green-900/30 border border-green-600' : 'bg-gray-800 border border-gray-700'}`}>
-            {isPredictive ? <CheckCircle className="text-green-500" size={24} /> : <AlertCircle className="text-gray-500" size={24} />}
-            <p className={`${textSize} ${isPredictive ? 'text-green-200' : 'text-gray-300'}`}>Makes a prediction</p>
-          </div>
-
-          <div className={`flex items-center gap-3 p-4 rounded-lg ${isDirectional ? 'bg-green-900/30 border border-green-600' : 'bg-blue-900/30 border border-blue-600'}`}>
-            {isDirectional ? <CheckCircle className="text-green-500" size={24} /> : <CheckCircle className="text-blue-500" size={24} />}
-            <p className={`${textSize} ${isDirectional ? 'text-green-200' : 'text-blue-200'}`}>
-              {isDirectional ? 'Directional ✓' : 'Non-Directional ✓'}
+        <div className="bg-gray-900/30 border border-gray-700/30 rounded-lg p-3 mb-4">
+          <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Formula</p>
+          <div className="bg-gray-800/50 p-2.5 rounded border-l-2 border-gray-600/50">
+            <p className="text-xs text-gray-400 italic font-mono">
+              {isDirectional
+                ? '[Population] [condition 1] will [direction] on [DV] than [population] [condition 2]'
+                : 'There will be a difference in [DV] between [population] [condition 1] and those [condition 2]'}
             </p>
           </div>
         </div>
       )}
 
-      {/* Feedback */}
-      {feedback && (
-        <div className="mt-6 p-4 bg-blue-900/30 border border-blue-600 rounded-lg flex gap-3">
-          <Lightbulb className="text-blue-400 flex-shrink-0" size={24} />
-          <p className={`${textSize} text-blue-200`}>{feedback}</p>
+      {/* Tip Box - Minimal */}
+      <div className="mt-auto">
+        <div className="glass-clean p-3 rounded-lg flex gap-2 border-l-2 border-blue-500/50">
+          <Lightbulb className="text-blue-400 flex-shrink-0 animate-subtle-pulse" size={16} />
+          <p className="text-xs text-blue-200/80">
+            <span className="font-semibold">Tip:</span> Select options above to build hypothesis combinations, then reveal.
+          </p>
         </div>
-      )}
-
-      {/* Actions */}
-      {hypothesis && (
-        <button
-          onClick={clearInput}
-          className="mt-8 w-full py-3 px-6 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg transition-all text-lg"
-        >
-          Clear & Start Over
-        </button>
-      )}
+      </div>
     </div>
   )
 }

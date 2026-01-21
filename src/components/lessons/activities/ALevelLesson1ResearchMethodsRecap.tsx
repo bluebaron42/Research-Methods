@@ -9,11 +9,10 @@ interface Props {
 export const ALevelLesson1ResearchMethodsRecap: React.FC<Props> = ({ isPresenting = false, currentSlide = 0 }) => {
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({})
   const [showQuizResults, setShowQuizResults] = useState(false)
-  const [aflAnswers, setAflAnswers] = useState<Record<string, string>>({})
-  const [aflFeedback, setAflFeedback] = useState<Record<string, string>>({})
+  const [aflRevealed, setAflRevealed] = useState<Record<string, boolean>>({})
   const [expandedStudy, setExpandedStudy] = useState<string | null>(null)
   const [critiqueAnswers, setCritiqueAnswers] = useState<Record<string, boolean>>({})
-  const [essayPlan, setEssayPlan] = useState('')
+  const [essayRevealed, setEssayRevealed] = useState<Record<string, boolean>>({})
 
   // Text scaling helpers
   const textSize = (base: string) => isPresenting ? `text-${parseInt(base.split('-')[1]) * 2}` : base
@@ -117,19 +116,6 @@ export const ALevelLesson1ResearchMethodsRecap: React.FC<Props> = ({ isPresentin
   // ============= AFL LOGIC =============
 
   const aflScenario = 'A researcher wants to test if caffeine affects attention. She gives 20 students a caffeine drink, and 20 students a placebo, then measures their reaction times on a task.'
-
-  const aflChecks = {
-    iv: { correct: 'Caffeine (present/absent)', feedback: '✓ Correct! This is what the researcher manipulates.' },
-    dv: { correct: 'Reaction time', feedback: '✓ Correct! This is what is measured.' },
-    design: { correct: 'Independent groups', feedback: '✓ Correct! Different participants in each group.' },
-    control: { correct: 'Reaction time task must be identical; same instructions', feedback: '✓ Good! Standardization reduces bias.' }
-  }
-
-  const handleAflAnswer = (key: string, answer: string) => {
-    setAflAnswers({ ...aflAnswers, [key]: answer })
-    const isCorrect = answer.toLowerCase().includes(aflChecks[key as keyof typeof aflChecks].correct.toLowerCase())
-    setAflFeedback({ ...aflFeedback, [key]: isCorrect ? '✓ Correct!' : '✗ Review and try again.' })
-  }
 
   // ============= SLIDES =============
 
@@ -241,26 +227,26 @@ export const ALevelLesson1ResearchMethodsRecap: React.FC<Props> = ({ isPresentin
       </div>
       <div className="space-y-3">
         {[
-          { key: 'iv', label: 'What is the Independent Variable?' },
-          { key: 'dv', label: 'What is the Dependent Variable?' },
-          { key: 'design', label: 'What design is this?' },
-          { key: 'control', label: 'Name one control measure needed.' }
+          { key: 'iv', label: 'What is the Independent Variable?', answer: 'Type of music (classical/no music)' },
+          { key: 'dv', label: 'What is the Dependent Variable?', answer: 'Number of words recalled in memory test' },
+          { key: 'design', label: 'What design is this?', answer: 'Independent groups design' },
+          { key: 'control', label: 'Name one control measure needed.', answer: 'Same word list, same time limit, same room conditions' }
         ].map((item) => (
-          <div key={item.key} className="bg-slate-800 rounded-lg p-3 border border-slate-700">
-            <label className={`${textSize('text-xs')} font-bold text-white block mb-2`}>{item.label}</label>
-            <input
-              type="text"
-              value={aflAnswers[item.key] || ''}
-              onChange={(e) => handleAflAnswer(item.key, e.target.value)}
-              placeholder="Type your answer..."
-              className={`w-full bg-slate-700 text-white px-3 py-2 rounded text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-            />
-            {aflFeedback[item.key] && (
-              <p className={`${textSize('text-xs')} mt-2 ${aflFeedback[item.key].startsWith('✓') ? 'text-green-400' : 'text-red-400'}`}>
-                {aflFeedback[item.key]}
-              </p>
+          <button
+            key={item.key}
+            onClick={() => setAflRevealed({ ...aflRevealed, [item.key]: !aflRevealed[item.key] })}
+            className="w-full bg-slate-800 rounded-lg p-3 border border-slate-700 hover:border-indigo-500 transition-all text-left"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className={`${textSize('text-xs')} font-bold text-white`}>{item.label}</span>
+              <span className="text-indigo-400 text-xs">{aflRevealed[item.key] ? 'Hide' : 'Reveal'}</span>
+            </div>
+            {aflRevealed[item.key] ? (
+              <p className={`${textSize('text-sm')} text-green-400`}>✓ {item.answer}</p>
+            ) : (
+              <div className="h-5 bg-slate-700 rounded animate-pulse"></div>
             )}
-          </div>
+          </button>
         ))}
       </div>
     </div>,
@@ -335,24 +321,51 @@ export const ALevelLesson1ResearchMethodsRecap: React.FC<Props> = ({ isPresentin
     <div key="slide-9" className={`flex flex-col h-full ${padding} bg-gray-900 space-y-4 animate-fadeIn overflow-y-auto`}>
       <h2 className={`${headingSize} font-black text-white mb-2`}>Essay Plan: 8-Mark Structure</h2>
       <div className="space-y-3">
-        <div className="bg-indigo-900/30 border border-indigo-500/50 rounded-lg p-4">
-          <p className={`${textSize('text-sm')} font-bold text-indigo-300 mb-2`}>❶ Define Concept (AO1 - 2 marks)</p>
-          <textarea
-            value={essayPlan}
-            onChange={(e) => setEssayPlan(e.target.value)}
-            placeholder="Define the key term or concept (e.g., 'Reliability is the consistency of a measure...')"
-            className={`w-full bg-slate-800 text-white px-3 py-2 rounded text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12`}
-          />
-        </div>
-        <div className="bg-amber-900/30 border border-amber-500/50 rounded-lg p-4">
-          <p className={`${textSize('text-sm')} font-bold text-amber-300 mb-2`}>❷ Evaluate/Evidence (AO3 - 4 marks)</p>
-          <p className={`${textSize('text-xs')} text-amber-200`}>• Strength: e.g., "Test-retest is straightforward and produces quantitative data (Matthews et al., 2012)..."</p>
-          <p className={`${textSize('text-xs')} text-amber-200`}>• Limitation: e.g., "However, it's time-consuming and may have recall bias..."</p>
-        </div>
-        <div className="bg-green-900/30 border border-green-500/50 rounded-lg p-4">
-          <p className={`${textSize('text-sm')} font-bold text-green-300 mb-2`}>❸ Apply to Context (AO2 - 2 marks)</p>
-          <p className={`${textSize('text-xs')} text-green-200`}>Link to the scenario or wider research context. e.g., "In Asch's conformity research, this method revealed..."</p>
-        </div>
+        <button
+          onClick={() => setEssayRevealed({ ...essayRevealed, ao1: !essayRevealed.ao1 })}
+          className="w-full bg-indigo-900/30 border border-indigo-500/50 rounded-lg p-4 hover:border-indigo-400 transition-all text-left"
+        >
+          <div className="flex items-center justify-between mb-2">
+            <p className={`${textSize('text-sm')} font-bold text-indigo-300`}>❶ Define Concept (AO1 - 2 marks)</p>
+            <span className="text-indigo-400 text-xs">{essayRevealed.ao1 ? 'Hide' : 'Reveal Example'}</span>
+          </div>
+          {essayRevealed.ao1 ? (
+            <p className={`${textSize('text-xs')} text-indigo-200 italic`}>"Reliability is the consistency of a measure. If a test produces similar results under consistent conditions, it is considered reliable."</p>
+          ) : (
+            <div className="h-4 bg-slate-700/50 rounded animate-pulse"></div>
+          )}
+        </button>
+        <button
+          onClick={() => setEssayRevealed({ ...essayRevealed, ao3: !essayRevealed.ao3 })}
+          className="w-full bg-amber-900/30 border border-amber-500/50 rounded-lg p-4 hover:border-amber-400 transition-all text-left"
+        >
+          <div className="flex items-center justify-between mb-2">
+            <p className={`${textSize('text-sm')} font-bold text-amber-300`}>❷ Evaluate/Evidence (AO3 - 4 marks)</p>
+            <span className="text-amber-400 text-xs">{essayRevealed.ao3 ? 'Hide' : 'Reveal Example'}</span>
+          </div>
+          {essayRevealed.ao3 ? (
+            <div className={`${textSize('text-xs')} text-amber-200 space-y-1`}>
+              <p>• Strength: "Test-retest is straightforward and produces quantitative data (Matthews et al., 2012)..."</p>
+              <p>• Limitation: "However, it's time-consuming and may have recall bias..."</p>
+            </div>
+          ) : (
+            <div className="h-8 bg-slate-700/50 rounded animate-pulse"></div>
+          )}
+        </button>
+        <button
+          onClick={() => setEssayRevealed({ ...essayRevealed, ao2: !essayRevealed.ao2 })}
+          className="w-full bg-green-900/30 border border-green-500/50 rounded-lg p-4 hover:border-green-400 transition-all text-left"
+        >
+          <div className="flex items-center justify-between mb-2">
+            <p className={`${textSize('text-sm')} font-bold text-green-300`}>❸ Apply to Context (AO2 - 2 marks)</p>
+            <span className="text-green-400 text-xs">{essayRevealed.ao2 ? 'Hide' : 'Reveal Example'}</span>
+          </div>
+          {essayRevealed.ao2 ? (
+            <p className={`${textSize('text-xs')} text-green-200 italic`}>"In Asch's conformity research, this method revealed the extent to which participants yielded to group pressure..."</p>
+          ) : (
+            <div className="h-4 bg-slate-700/50 rounded animate-pulse"></div>
+          )}
+        </button>
       </div>
     </div>
   ]
