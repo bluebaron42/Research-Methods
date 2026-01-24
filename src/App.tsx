@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, Menu, ChevronLeft, ChevronRight, Lightbulb, CheckCircle, Target, FlaskConical, Beaker, AlertTriangle, Eye, EyeOff, Zap, Brain, TrendingUp, Projector, AlertCircle } from 'lucide-react'
+import { X, Menu, ChevronLeft, ChevronRight, Lightbulb, CheckCircle, Target, FlaskConical, Beaker, AlertTriangle, Eye, EyeOff, Zap, Brain, TrendingUp, Projector, AlertCircle, ShieldAlert, Shuffle, ClipboardList, Users, Settings, MapPin, RefreshCw, Link, User, BarChart2, BarChart3, ArrowRight, List, Layers, HelpCircle, Cog, XCircle, BookOpen, Check, Scale, ArrowLeftRight, MessageCircle, ThumbsUp, ThumbsDown, RotateCcw, FileText, BarChart, Database, Calculator, Hash, ArrowUpDown } from 'lucide-react'
 import HypothesisLab from './components/lessons/activities/HypothesisLab'
 import { AimsAndHypothesesTeach } from './components/lessons/activities/AimsAndHypothesesTeach'
 import { VariablesTeachASLevel } from './components/lessons/activities/VariablesTeachASLevel'
@@ -57,6 +57,101 @@ const zoom = {
     lg: (presenting: boolean) => presenting ? 'gap-8' : 'gap-6',
     xl: (presenting: boolean) => presenting ? 'gap-12' : 'gap-8',
   },
+}
+
+// ============= LESSON TITLE SLIDE COMPONENT =============
+
+interface LessonTitleSlideProps {
+  lessonNumber: number
+  title: string
+  subtitle?: string
+  objectives: string[]
+  isPresenting?: boolean
+  level?: 'GCSE' | 'AS' | 'A2'
+}
+
+const LessonTitleSlide: React.FC<LessonTitleSlideProps> = ({ 
+  lessonNumber, 
+  title, 
+  subtitle, 
+  objectives, 
+  isPresenting = false,
+  level = 'GCSE'
+}) => {
+  const levelConfig = {
+    'GCSE': { 
+      gradient: 'from-pink-600 to-purple-600',
+      iconBg: 'bg-pink-500/20',
+      iconRing: 'ring-pink-500/30',
+      iconColor: 'text-pink-400',
+      subtitleColor: 'text-pink-300',
+      badge: 'bg-pink-600'
+    },
+    'AS': { 
+      gradient: 'from-blue-600 to-cyan-600',
+      iconBg: 'bg-blue-500/20',
+      iconRing: 'ring-blue-500/30',
+      iconColor: 'text-blue-400',
+      subtitleColor: 'text-blue-300',
+      badge: 'bg-blue-600'
+    },
+    'A2': { 
+      gradient: 'from-emerald-600 to-teal-600',
+      iconBg: 'bg-emerald-500/20',
+      iconRing: 'ring-emerald-500/30',
+      iconColor: 'text-emerald-400',
+      subtitleColor: 'text-emerald-300',
+      badge: 'bg-emerald-600'
+    }
+  }
+  
+  const config = levelConfig[level]
+
+  return (
+    <div className="flex flex-col items-center justify-center h-full text-center p-12 space-y-8 animate-fadeIn">
+      {/* Icon Circle */}
+      <div className={`${isPresenting ? 'w-28 h-28' : 'w-32 h-32'} ${config.iconBg} rounded-full flex items-center justify-center mb-4 ring-4 ${config.iconRing}`}>
+        <FlaskConical className={`${isPresenting ? 'w-14 h-14' : 'w-16 h-16'} ${config.iconColor}`} />
+      </div>
+      
+      {/* Content */}
+      <div className="space-y-4 max-w-2xl">
+        {/* Level & Lesson Badge */}
+        <h3 className={`${isPresenting ? 'text-xl' : 'text-2xl'} ${config.subtitleColor} font-medium`}>
+          {level} Research Methods • Lesson {lessonNumber}
+        </h3>
+        
+        {/* Main Title */}
+        <h1 className={`${isPresenting ? 'text-4xl' : 'text-5xl'} font-black text-white tracking-tight`}>
+          {title}
+        </h1>
+        
+        {/* Subtitle/Objective */}
+        {subtitle && (
+          <p className={`${isPresenting ? 'text-lg' : 'text-xl'} text-gray-400 leading-relaxed`}>
+            {subtitle}
+          </p>
+        )}
+        
+        {/* Learning Objectives */}
+        {objectives.length > 0 && (
+          <div className={`text-left bg-gray-800/30 rounded-xl ${isPresenting ? 'p-4 mt-4' : 'p-6 mt-6'} border border-gray-700/50`}>
+            <p className={`text-gray-500 uppercase tracking-wider font-bold ${isPresenting ? 'text-xs mb-2' : 'text-sm mb-3'}`}>
+              Today you will learn to:
+            </p>
+            <ul className={`space-y-2 ${isPresenting ? 'text-sm' : 'text-base'}`}>
+              {objectives.map((obj, idx) => (
+                <li key={idx} className="flex items-start gap-2 text-gray-300">
+                  <CheckCircle size={isPresenting ? 16 : 18} className={`${config.iconColor} mt-0.5 flex-shrink-0`} />
+                  <span>{obj}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  )
 }
 
 // ============= INTERACTIVE COMPONENTS =============
@@ -728,7 +823,7 @@ const KnowledgeCheck: React.FC<{ questions: Question[], title: string, subtitle:
 }
 
 // Split Knowledge Check Component - Two Column Layout (for mid-lesson checks)
-const SplitKnowledgeCheck: React.FC<{ questions: Question[], title: string, subtitle: string }> = ({ questions, title, subtitle }) => {
+const SplitKnowledgeCheck: React.FC<{ questions: Question[], title: string, subtitle: string, isPresenting?: boolean }> = ({ questions, title, subtitle, isPresenting = false }) => {
   const [answers, setAnswers] = useState<Record<number, number>>({})
   const [showResults, setShowResults] = useState(false)
 
@@ -741,23 +836,26 @@ const SplitKnowledgeCheck: React.FC<{ questions: Question[], title: string, subt
   )
 
   return (
-    <div className="flex flex-col h-full p-8 animate-fadeIn">
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-8'}`}>
       {/* Header */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 shadow-2xl shadow-purple-500/50 mb-4">
-          <Brain size={40} className="text-white" />
+      <div className={`text-center ${isPresenting ? 'mb-4' : 'mb-8'}`}>
+        <div className={`inline-flex items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-600 shadow-2xl shadow-purple-500/50 ${isPresenting ? 'w-16 h-16 mb-3' : 'w-20 h-20 mb-4'}`}>
+          <Brain size={isPresenting ? 32 : 40} className="text-white" />
         </div>
-        <h2 className="text-4xl font-black text-white mb-2">{title}</h2>
-        <p className="text-gray-400">{subtitle}</p>
+        <h2 className={`font-black text-white ${isPresenting ? 'text-2xl mb-1' : 'text-4xl mb-2'}`}>{title}</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>{subtitle}</p>
       </div>
 
       {/* Two Column Questions Layout */}
-      <div className="flex-grow grid grid-cols-2 gap-6 overflow-auto custom-scrollbar">
+      <div className={`flex-grow grid grid-cols-2 overflow-auto custom-scrollbar ${isPresenting ? 'gap-4' : 'gap-6'}`}>
         {/* Left Column */}
-        <div className="space-y-4 overflow-y-auto pr-2 custom-scrollbar">
+        <div className={`overflow-y-auto pr-2 custom-scrollbar ${isPresenting ? 'space-y-3' : 'space-y-4'}`}>
           {questions.slice(0, Math.ceil(questions.length / 2)).map((q) => (
-            <div key={q.id} className="bg-gray-900/80 rounded-xl border border-gray-700 p-5">
-              <h4 className="font-bold text-gray-100 mb-3">
+            <div key={q.id} className={`bg-gray-900/80 rounded-xl border border-gray-700 ${isPresenting ? 'p-3' : 'p-5'}`}>
+              {q.scenario && (
+                <p className={`text-gray-400 italic border-l-2 border-purple-500/50 pl-3 ${isPresenting ? 'text-xs mb-1' : 'text-sm mb-2'}`}>"{q.scenario}"</p>
+              )}
+              <h4 className={`font-bold text-gray-100 ${isPresenting ? 'text-sm mb-2' : 'mb-3'}`}>
                 <span className="text-purple-400 mr-2">{q.id}.</span>
                 {q.question}
               </h4>
@@ -766,7 +864,7 @@ const SplitKnowledgeCheck: React.FC<{ questions: Question[], title: string, subt
                   <button
                     key={idx}
                     onClick={() => !showResults && handleSelect(q.id, idx)}
-                    className={`rounded-lg text-left transition-all px-3 py-2 text-sm border ${
+                    className={`rounded-lg text-left transition-all border ${isPresenting ? 'px-2 py-1.5 text-xs' : 'px-3 py-2 text-sm'} ${
                       showResults
                         ? idx === q.correct
                           ? 'bg-green-900/40 border-green-500 text-green-200 font-bold'
@@ -787,10 +885,13 @@ const SplitKnowledgeCheck: React.FC<{ questions: Question[], title: string, subt
         </div>
 
         {/* Right Column */}
-        <div className="space-y-4 overflow-y-auto pl-2 custom-scrollbar">
+        <div className={`overflow-y-auto pl-2 custom-scrollbar ${isPresenting ? 'space-y-3' : 'space-y-4'}`}>
           {questions.slice(Math.ceil(questions.length / 2)).map((q) => (
-            <div key={q.id} className="bg-gray-900/80 rounded-xl border border-gray-700 p-5">
-              <h4 className="font-bold text-gray-100 mb-3">
+            <div key={q.id} className={`bg-gray-900/80 rounded-xl border border-gray-700 ${isPresenting ? 'p-3' : 'p-5'}`}>
+              {q.scenario && (
+                <p className={`text-gray-400 italic border-l-2 border-purple-500/50 pl-3 ${isPresenting ? 'text-xs mb-1' : 'text-sm mb-2'}`}>"{q.scenario}"</p>
+              )}
+              <h4 className={`font-bold text-gray-100 ${isPresenting ? 'text-sm mb-2' : 'mb-3'}`}>
                 <span className="text-purple-400 mr-2">{q.id}.</span>
                 {q.question}
               </h4>
@@ -799,7 +900,7 @@ const SplitKnowledgeCheck: React.FC<{ questions: Question[], title: string, subt
                   <button
                     key={idx}
                     onClick={() => !showResults && handleSelect(q.id, idx)}
-                    className={`rounded-lg text-left transition-all px-3 py-2 text-sm border ${
+                    className={`rounded-lg text-left transition-all border ${isPresenting ? 'px-2 py-1.5 text-xs' : 'px-3 py-2 text-sm'} ${
                       showResults
                         ? idx === q.correct
                           ? 'bg-green-900/40 border-green-500 text-green-200 font-bold'
@@ -821,21 +922,21 @@ const SplitKnowledgeCheck: React.FC<{ questions: Question[], title: string, subt
       </div>
 
       {/* Footer with Submit Button */}
-      <div className="mt-8 pt-6 border-t border-gray-700 flex items-center justify-between">
+      <div className={`border-t border-gray-700 flex items-center justify-between ${isPresenting ? 'mt-4 pt-4' : 'mt-8 pt-6'}`}>
         {!showResults ? (
           <button
             onClick={() => setShowResults(true)}
             disabled={Object.keys(answers).length < questions.length}
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 disabled:grayscale text-white rounded-xl font-bold px-8 py-3 transition-all shadow-lg"
+            className={`w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 disabled:grayscale text-white rounded-xl font-bold transition-all shadow-lg ${isPresenting ? 'px-6 py-2 text-sm' : 'px-8 py-3'}`}
           >
             Check Answers ({Object.keys(answers).length}/{questions.length})
           </button>
         ) : (
-          <div className="w-full bg-gradient-to-r from-purple-900/40 to-pink-900/40 border-2 border-purple-500/50 rounded-xl p-6 text-center">
-            <span className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 block mb-2">
+          <div className={`w-full bg-gradient-to-r from-purple-900/40 to-pink-900/40 border-2 border-purple-500/50 rounded-xl text-center ${isPresenting ? 'p-4' : 'p-6'}`}>
+            <span className={`font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 block ${isPresenting ? 'text-3xl mb-1' : 'text-5xl mb-2'}`}>
               {score} / {questions.length}
             </span>
-            <span className="text-purple-200 font-semibold">
+            <span className={`text-purple-200 font-semibold ${isPresenting ? 'text-sm' : ''}`}>
               {score === questions.length ? '🎉 Perfect Score!' : score >= questions.length * 0.75 ? '✨ Great Work!' : score >= questions.length * 0.5 ? '👍 Good Try!' : '📚 Keep Learning!'}
             </span>
           </div>
@@ -1771,81 +1872,440 @@ const HypothesisWriterGCSE: React.FC<{ isPresenting?: boolean }> = ({ isPresenti
   )
 }
 
-// Teacher Input: Hypotheses (well-presented deck slide)
-const HypothesisTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
-  const points = [
-    { title: 'Aim vs Hypothesis', desc: 'An aim is a general purpose; a hypothesis is a specific, testable prediction.' },
-    { title: 'H₀: Null Hypothesis', desc: 'Predicts no effect or no difference (any difference is due to chance).' },
-    { title: 'H₁: Alternative Hypothesis', desc: 'Predicts an effect or a difference (directional or non-directional).' },
-    { title: 'Operationalisation', desc: 'Define variables in measurable terms (e.g., words remembered, time to fall asleep).' },
-  ]
+// ============= INTERACTIVE UI COMPONENTS FOR TEACHER SLIDES =============
+
+// FlipCard - Click to reveal content on the back
+const FlipCard: React.FC<{
+  front: React.ReactNode
+  back: React.ReactNode
+  frontColor?: string
+  backColor?: string
+  isPresenting?: boolean
+  className?: string
+}> = ({ front, back, frontColor = 'from-blue-600 to-purple-600', backColor = 'from-purple-600 to-pink-600', isPresenting = false, className = '' }) => {
+  const [isFlipped, setIsFlipped] = useState(false)
 
   return (
-    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-16' : 'p-10'}`}>
-      <div className="mb-8 text-center">
-        <h2 className={`${isPresenting ? 'text-7xl' : 'text-5xl'} font-black text-white mb-3`}>Teacher Input: Hypotheses</h2>
-        <p className={`${isPresenting ? 'text-3xl' : ''} text-gray-400`}>Clear predictions make research testable and replicable.</p>
-      </div>
-      <div className={`grid grid-cols-2 max-w-6xl mx-auto ${isPresenting ? 'gap-12' : 'gap-6'}`}>
-        {points.map((p, i) => (
-          <div key={i} className={`rounded-2xl border bg-gradient-to-br from-gray-900/60 to-gray-800/40 border-gray-700 shadow-xl ${isPresenting ? 'p-10' : 'p-6'}`}>
-            <div className={`flex items-center gap-4 ${isPresenting ? 'mb-4' : 'mb-2'}`}>
-              <div className={`${isPresenting ? 'w-16 h-16' : 'w-10 h-10'} rounded-full bg-pink-500/20 flex items-center justify-center`}>
-                <Target className="text-pink-400" size={isPresenting ? 36 : 22} />
-              </div>
-              <h3 className={`${isPresenting ? 'text-4xl' : 'text-xl'} font-bold text-pink-300`}>{p.title}</h3>
-            </div>
-            <p className={`text-gray-200 leading-relaxed ${isPresenting ? 'text-2xl' : 'text-sm'}`}>{p.desc}</p>
-          </div>
-        ))}
-      </div>
-      <div className={`grid grid-cols-2 max-w-6xl mx-auto mt-8 ${isPresenting ? 'gap-12' : 'gap-6'}`}>
-        <div className={`rounded-2xl border-2 border-blue-500/40 bg-blue-950/20 ${isPresenting ? 'p-10' : 'p-6'}`}>
-          <h4 className={`${isPresenting ? 'text-3xl' : ''} text-blue-300 font-bold mb-2`}>Example H₀ (Null)</h4>
-          <p className={`${isPresenting ? 'text-3xl' : 'text-lg'} text-gray-200`}>There will be <span className="text-blue-300 font-semibold">no difference</span> in test scores between students who revise with music and those who revise in silence.</p>
+    <div 
+      className={`cursor-pointer ${className}`}
+      style={{ perspective: '1000px' }}
+      onClick={() => setIsFlipped(!isFlipped)}
+    >
+      <div 
+        className="relative w-full h-full transition-transform duration-500"
+        style={{ 
+          transformStyle: 'preserve-3d',
+          transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+        }}
+      >
+        {/* Front */}
+        <div 
+          className={`absolute inset-0 rounded-xl bg-gradient-to-br ${frontColor} ${isPresenting ? 'p-4' : 'p-6'} flex flex-col items-center justify-center text-center shadow-lg`}
+          style={{ backfaceVisibility: 'hidden' }}
+        >
+          {front}
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-white/60 mt-2`}>Click to flip →</p>
         </div>
-        <div className={`rounded-2xl border-2 border-pink-500/40 bg-pink-950/20 ${isPresenting ? 'p-10' : 'p-6'}`}>
-          <h4 className={`${isPresenting ? 'text-3xl' : ''} text-pink-300 font-bold mb-2`}>Example H₁ (Alternative)</h4>
-          <p className={`${isPresenting ? 'text-3xl' : 'text-lg'} text-gray-200`}>Students who revise in silence will score <span className="text-pink-300 font-semibold">higher</span> than students who revise with music.</p>
+        {/* Back */}
+        <div 
+          className={`absolute inset-0 rounded-xl bg-gradient-to-br ${backColor} ${isPresenting ? 'p-4' : 'p-6'} flex flex-col items-center justify-center text-center shadow-lg`}
+          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+        >
+          {back}
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-white/60 mt-2`}>← Click to flip back</p>
         </div>
       </div>
     </div>
   )
 }
 
-// Teacher Input: Variables (well-presented deck slide)
-const VariablesTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
-  const cards = [
-    { title: 'Independent Variable (IV)', color: 'blue', desc: 'The variable we manipulate (e.g., music vs silence).' },
-    { title: 'Dependent Variable (DV)', color: 'pink', desc: 'The variable we measure (e.g., test score / words remembered).' },
-    { title: 'Extraneous Variables', color: 'emerald', desc: 'Other factors that could influence the DV (e.g., prior knowledge, intelligence, sleep). Control to keep it fair.' },
-  ]
+// AnimatedToggle - Switch between two states with animation
+const AnimatedToggle: React.FC<{
+  labelLeft: string
+  labelRight: string
+  isOn: boolean
+  onToggle: () => void
+  colorOff?: string
+  colorOn?: string
+  isPresenting?: boolean
+}> = ({ labelLeft, labelRight, isOn, onToggle, colorOff = 'bg-blue-600', colorOn = 'bg-pink-600', isPresenting = false }) => {
+  return (
+    <div className={`flex items-center gap-4 ${isPresenting ? 'text-sm' : 'text-base'}`}>
+      <span className={`font-medium transition-colors ${!isOn ? 'text-white' : 'text-gray-500'}`}>{labelLeft}</span>
+      <button 
+        onClick={onToggle}
+        className={`relative w-16 h-8 rounded-full transition-colors duration-300 ${isOn ? colorOn : colorOff}`}
+      >
+        <div 
+          className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${isOn ? 'left-9' : 'left-1'}`}
+        />
+      </button>
+      <span className={`font-medium transition-colors ${isOn ? 'text-white' : 'text-gray-500'}`}>{labelRight}</span>
+    </div>
+  )
+}
 
-  const colorMap: Record<string, { border: string, bg: string, text: string }> = {
-    blue:   { border: 'border-blue-500/40',   bg: 'bg-blue-900/20',   text: 'text-blue-300' },
-    pink:   { border: 'border-pink-500/40',   bg: 'bg-pink-900/20',   text: 'text-pink-300' },
-    emerald:{ border: 'border-emerald-500/40',bg: 'bg-emerald-900/20',text: 'text-emerald-300' },
+// RevealButton - Click to progressively reveal content
+const RevealButton: React.FC<{
+  items: { label: string; content: React.ReactNode }[]
+  buttonColor?: string
+  isPresenting?: boolean
+}> = ({ items, buttonColor = 'from-emerald-600 to-teal-600', isPresenting = false }) => {
+  const [revealedIndex, setRevealedIndex] = useState(-1)
+
+  const revealNext = () => {
+    if (revealedIndex < items.length - 1) {
+      setRevealedIndex(prev => prev + 1)
+    }
   }
 
   return (
-    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-16' : 'p-10'}`}>
-      <div className="mb-8 text-center">
-        <h2 className={`${isPresenting ? 'text-7xl' : 'text-5xl'} font-black text-white mb-3`}>Teacher Input: Variables</h2>
-        <p className={`${isPresenting ? 'text-3xl' : ''} text-gray-400`}>Define and control variables to ensure a fair test.</p>
-      </div>
+    <div className="space-y-3">
+      {items.map((item, idx) => (
+        <div 
+          key={idx}
+          className={`overflow-hidden transition-all duration-500 ${idx <= revealedIndex ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+        >
+          <div className={`bg-gray-800/60 rounded-lg border border-gray-700 ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <p className={`font-bold text-emerald-300 ${isPresenting ? 'text-sm mb-1' : 'mb-2'}`}>{item.label}</p>
+            <div className={`text-gray-200 ${isPresenting ? 'text-sm' : ''}`}>{item.content}</div>
+          </div>
+        </div>
+      ))}
+      {revealedIndex < items.length - 1 && (
+        <button
+          onClick={revealNext}
+          className={`w-full bg-gradient-to-r ${buttonColor} hover:opacity-90 text-white font-bold ${isPresenting ? 'py-2 text-sm' : 'py-3'} rounded-lg transition-all shadow-lg`}
+        >
+          Reveal {items[revealedIndex + 1]?.label || 'Next'} →
+        </button>
+      )}
+      {revealedIndex === items.length - 1 && (
+        <button
+          onClick={() => setRevealedIndex(-1)}
+          className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 rounded-lg text-sm"
+        >
+          Reset All
+        </button>
+      )}
+    </div>
+  )
+}
 
-      <div className={`grid grid-cols-3 max-w-6xl mx-auto ${isPresenting ? 'gap-10' : 'gap-6'}`}>
-        {cards.map((c, i) => (
-          <div key={i} className={`rounded-2xl border-2 ${colorMap[c.color].border} ${colorMap[c.color].bg} shadow-xl ${isPresenting ? 'p-10' : 'p-6'}`}>
-            <h3 className={`${isPresenting ? 'text-4xl' : 'text-2xl'} font-bold mb-2 ${colorMap[c.color].text}`}>{c.title}</h3>
-            <p className={`text-gray-200 leading-relaxed ${isPresenting ? 'text-2xl' : ''}`}>{c.desc}</p>
+// InteractiveScale - Animated slider with visual feedback
+const InteractiveScale: React.FC<{
+  leftLabel: string
+  rightLabel: string
+  leftColor?: string
+  rightColor?: string
+  steps?: number
+  isPresenting?: boolean
+}> = ({ leftLabel, rightLabel, leftColor = 'text-blue-400', rightColor = 'text-pink-400', steps = 5, isPresenting = false }) => {
+  const [value, setValue] = useState(Math.floor(steps / 2))
+
+  return (
+    <div className={`${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl border border-gray-700`}>
+      <div className="flex justify-between mb-4">
+        <span className={`font-bold ${leftColor} ${isPresenting ? 'text-sm' : ''}`}>{leftLabel}</span>
+        <span className={`font-bold ${rightColor} ${isPresenting ? 'text-sm' : ''}`}>{rightLabel}</span>
+      </div>
+      <div className="flex gap-2">
+        {Array.from({ length: steps }).map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setValue(idx)}
+            className={`flex-1 h-12 rounded-lg transition-all duration-300 ${
+              idx === value 
+                ? 'bg-gradient-to-r from-blue-500 to-pink-500 scale-110 shadow-lg' 
+                : idx < value 
+                  ? 'bg-blue-600/50 hover:bg-blue-600/70'
+                  : 'bg-pink-600/50 hover:bg-pink-600/70'
+            }`}
+          />
+        ))}
+      </div>
+      <p className={`text-center mt-3 text-gray-400 ${isPresenting ? 'text-xs' : 'text-sm'}`}>
+        Click to adjust the balance
+      </p>
+    </div>
+  )
+}
+
+// CompareCards - Two cards that highlight differences when hovered/clicked
+const CompareCards: React.FC<{
+  leftTitle: string
+  leftItems: string[]
+  leftColor: string
+  rightTitle: string
+  rightItems: string[]
+  rightColor: string
+  isPresenting?: boolean
+}> = ({ leftTitle, leftItems, leftColor, rightTitle, rightItems, rightColor, isPresenting = false }) => {
+  const [activeCard, setActiveCard] = useState<'left' | 'right' | null>(null)
+
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      <div 
+        className={`rounded-xl border-2 transition-all duration-300 cursor-pointer ${isPresenting ? 'p-4' : 'p-6'} ${
+          activeCard === 'left' 
+            ? `${leftColor} scale-105 shadow-xl` 
+            : activeCard === 'right'
+              ? 'border-gray-700 bg-gray-900/30 opacity-50'
+              : `${leftColor} bg-opacity-20`
+        }`}
+        onClick={() => setActiveCard(activeCard === 'left' ? null : 'left')}
+      >
+        <h3 className={`font-bold mb-3 ${isPresenting ? 'text-lg' : 'text-xl'}`}>{leftTitle}</h3>
+        <ul className={`space-y-2 ${isPresenting ? 'text-sm' : ''}`}>
+          {leftItems.map((item, idx) => (
+            <li key={idx} className="flex items-start gap-2">
+              <span className="text-green-400">•</span>
+              <span className="text-gray-200">{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div 
+        className={`rounded-xl border-2 transition-all duration-300 cursor-pointer ${isPresenting ? 'p-4' : 'p-6'} ${
+          activeCard === 'right' 
+            ? `${rightColor} scale-105 shadow-xl` 
+            : activeCard === 'left'
+              ? 'border-gray-700 bg-gray-900/30 opacity-50'
+              : `${rightColor} bg-opacity-20`
+        }`}
+        onClick={() => setActiveCard(activeCard === 'right' ? null : 'right')}
+      >
+        <h3 className={`font-bold mb-3 ${isPresenting ? 'text-lg' : 'text-xl'}`}>{rightTitle}</h3>
+        <ul className={`space-y-2 ${isPresenting ? 'text-sm' : ''}`}>
+          {rightItems.map((item, idx) => (
+            <li key={idx} className="flex items-start gap-2">
+              <span className="text-green-400">•</span>
+              <span className="text-gray-200">{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+// PulseIcon - Animated icon that pulses on hover
+const PulseIcon: React.FC<{
+  icon: React.ReactNode
+  color: string
+  size?: 'sm' | 'md' | 'lg'
+}> = ({ icon, color, size = 'md' }) => {
+  const sizeClasses = {
+    sm: 'w-12 h-12',
+    md: 'w-16 h-16',
+    lg: 'w-20 h-20'
+  }
+
+  return (
+    <div className={`${sizeClasses[size]} rounded-full ${color} flex items-center justify-center transition-all hover:scale-110 hover:shadow-lg hover:shadow-current/30 cursor-pointer animate-pulse`}>
+      {icon}
+    </div>
+  )
+}
+
+// Teacher Input: Hypotheses - Staggered Reveal Style
+const HypothesisTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [revealedCards, setRevealedCards] = useState(0)
+  const [showExamples, setShowExamples] = useState(false)
+
+  const cards = [
+    { title: 'Aim vs Hypothesis', color: 'purple', icon: <Target size={isPresenting ? 32 : 24} />, content: 'An aim is a general purpose; a hypothesis is a specific, testable prediction.' },
+    { title: 'H₀: Null Hypothesis', color: 'blue', icon: <span className={`${isPresenting ? 'text-3xl' : 'text-xl'} font-bold`}>H₀</span>, content: 'Predicts no effect or no difference — any difference is due to chance.' },
+    { title: 'H₁: Alternative Hypothesis', color: 'pink', icon: <span className={`${isPresenting ? 'text-3xl' : 'text-xl'} font-bold`}>H₁</span>, content: 'Predicts an effect or difference (can be directional or non-directional).' },
+    { title: 'Operationalisation', color: 'emerald', icon: <Settings size={isPresenting ? 32 : 24} />, content: 'Define variables in measurable terms (e.g., words remembered, time to fall asleep).' },
+  ]
+
+  const colorMap: Record<string, { border: string, bg: string, text: string }> = {
+    purple: { border: 'border-purple-500/50', bg: 'bg-purple-900/30', text: 'text-purple-300' },
+    blue: { border: 'border-blue-500/50', bg: 'bg-blue-900/30', text: 'text-blue-300' },
+    pink: { border: 'border-pink-500/50', bg: 'bg-pink-900/30', text: 'text-pink-300' },
+    emerald: { border: 'border-emerald-500/50', bg: 'bg-emerald-900/30', text: 'text-emerald-300' },
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-12' : 'p-8'}`}>
+      <div className="mb-6 text-center">
+        <h2 className={`${isPresenting ? 'text-6xl' : 'text-4xl'} font-black text-white mb-2`}>Teacher Input: Hypotheses</h2>
+        <p className={`${isPresenting ? 'text-2xl' : ''} text-gray-400`}>Click to reveal each concept</p>
+      </div>
+      
+      {/* Cards Grid */}
+      <div className={`grid grid-cols-2 max-w-5xl mx-auto ${isPresenting ? 'gap-6' : 'gap-4'} mb-6 flex-1`}>
+        {cards.map((card, idx) => (
+          <div
+            key={idx}
+            onClick={() => idx === revealedCards && setRevealedCards(prev => prev + 1)}
+            className={`rounded-2xl border-2 ${colorMap[card.color].border} ${colorMap[card.color].bg} ${isPresenting ? 'p-6' : 'p-4'} transition-all duration-500 cursor-pointer ${
+              idx < revealedCards 
+                ? 'opacity-100 translate-y-0' 
+                : idx === revealedCards 
+                  ? 'opacity-100 translate-y-0 ring-2 ring-white/30 animate-pulse' 
+                  : 'opacity-30 translate-y-2'
+            }`}
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`${isPresenting ? 'w-14 h-14' : 'w-10 h-10'} rounded-full ${colorMap[card.color].bg} border ${colorMap[card.color].border} flex items-center justify-center ${colorMap[card.color].text}`}>
+                {card.icon}
+              </div>
+              <h3 className={`${isPresenting ? 'text-2xl' : 'text-lg'} font-bold ${colorMap[card.color].text}`}>{card.title}</h3>
+            </div>
+            {idx < revealedCards ? (
+              <p className={`text-gray-200 ${isPresenting ? 'text-xl' : 'text-sm'} leading-relaxed animate-fadeIn`}>{card.content}</p>
+            ) : idx === revealedCards ? (
+              <p className={`${colorMap[card.color].text} ${isPresenting ? 'text-lg' : 'text-sm'} italic`}>Click to reveal...</p>
+            ) : (
+              <p className="text-gray-600 text-sm">Locked</p>
+            )}
           </div>
         ))}
       </div>
 
-      <div className={`max-w-5xl mx-auto mt-8 rounded-2xl border border-gray-700 bg-gray-900/40 ${isPresenting ? 'p-10' : 'p-6'}`}>
-        <h4 className={`${isPresenting ? 'text-3xl' : ''} text-gray-300 font-bold mb-2`}>Top Tip</h4>
-        <p className={`${isPresenting ? 'text-2xl' : ''} text-gray-300`}>Write variables in measurable terms and link your controls to fairness (e.g., same test, same time limit, similar prior knowledge).</p>
+      {/* Progress & Examples Toggle */}
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex items-center gap-2">
+          {cards.map((_, idx) => (
+            <div key={idx} className={`${isPresenting ? 'w-4 h-4' : 'w-3 h-3'} rounded-full transition-colors ${idx < revealedCards ? 'bg-green-500' : 'bg-gray-600'}`} />
+          ))}
+          <span className={`ml-2 text-gray-400 ${isPresenting ? 'text-lg' : 'text-sm'}`}>{revealedCards}/4 revealed</span>
+        </div>
+
+        {revealedCards >= 4 && (
+          <button
+            onClick={() => setShowExamples(!showExamples)}
+            className={`${isPresenting ? 'px-6 py-3 text-lg' : 'px-4 py-2'} bg-gradient-to-r from-blue-600 to-pink-600 hover:from-blue-500 hover:to-pink-500 text-white font-bold rounded-lg transition-all`}
+          >
+            {showExamples ? 'Hide Examples' : 'Show Examples'}
+          </button>
+        )}
+
+        {revealedCards < 4 && (
+          <button
+            onClick={() => setRevealedCards(4)}
+            className={`text-gray-500 hover:text-gray-300 ${isPresenting ? 'text-base' : 'text-sm'}`}
+          >
+            Skip to all →
+          </button>
+        )}
+      </div>
+
+      {/* Examples */}
+      {showExamples && (
+        <div className={`grid grid-cols-2 max-w-5xl mx-auto ${isPresenting ? 'gap-6 mt-6' : 'gap-4 mt-4'} animate-fadeIn`}>
+          <div className={`rounded-xl border-2 border-blue-500/40 bg-blue-950/20 ${isPresenting ? 'p-5' : 'p-4'}`}>
+            <h4 className={`${isPresenting ? 'text-xl' : 'text-base'} text-blue-300 font-bold mb-2`}>Example H₀ (Null)</h4>
+            <p className={`${isPresenting ? 'text-lg' : 'text-sm'} text-gray-200`}>There will be <span className="text-blue-300 font-semibold">no difference</span> in test scores between students who revise with music and those who revise in silence.</p>
+          </div>
+          <div className={`rounded-xl border-2 border-pink-500/40 bg-pink-950/20 ${isPresenting ? 'p-5' : 'p-4'}`}>
+            <h4 className={`${isPresenting ? 'text-xl' : 'text-base'} text-pink-300 font-bold mb-2`}>Example H₁ (Alternative)</h4>
+            <p className={`${isPresenting ? 'text-lg' : 'text-sm'} text-gray-200`}>Students who revise in silence will score <span className="text-pink-300 font-semibold">higher</span> than students who revise with music.</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Teacher Input: Variables (well-presented deck slide)
+const VariablesTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [activeVariable, setActiveVariable] = useState<'iv' | 'dv' | 'ev' | null>(null)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-16' : 'p-10'}`}>
+      <div className="mb-6 text-center">
+        <h2 className={`${isPresenting ? 'text-7xl' : 'text-5xl'} font-black text-white mb-3`}>Teacher Input: Variables</h2>
+        <p className={`${isPresenting ? 'text-3xl' : ''} text-gray-400`}>Click each card to explore — watch the others fade!</p>
+      </div>
+
+      {/* Interactive Compare Cards */}
+      <div className={`grid grid-cols-3 max-w-6xl mx-auto ${isPresenting ? 'gap-8' : 'gap-4'} mb-6`}>
+        <div 
+          onClick={() => setActiveVariable(activeVariable === 'iv' ? null : 'iv')}
+          className={`rounded-2xl border-2 cursor-pointer transition-all duration-300 ${isPresenting ? 'p-8' : 'p-5'} ${
+            activeVariable === 'iv' 
+              ? 'border-blue-400 bg-blue-900/40 scale-105 shadow-xl shadow-blue-500/20' 
+              : activeVariable !== null
+                ? 'border-gray-700 bg-gray-900/20 opacity-40'
+                : 'border-blue-500/40 bg-blue-900/20 hover:scale-102 hover:border-blue-400'
+          }`}
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className={`${isPresenting ? 'w-14 h-14' : 'w-10 h-10'} rounded-full bg-blue-500/30 flex items-center justify-center`}>
+              <Settings className="text-blue-300" size={isPresenting ? 28 : 20} />
+            </div>
+            <h3 className={`${isPresenting ? 'text-3xl' : 'text-xl'} font-bold text-blue-300`}>Independent Variable (IV)</h3>
+          </div>
+          <p className={`text-gray-200 ${isPresenting ? 'text-xl' : 'text-sm'} mb-3`}>The variable we <strong className="text-blue-300">manipulate</strong></p>
+          {activeVariable === 'iv' && (
+            <div className="animate-fadeIn mt-3 pt-3 border-t border-blue-500/30">
+              <p className={`text-blue-200 ${isPresenting ? 'text-lg' : 'text-sm'}`}>Example: Music vs Silence during revision</p>
+              <p className={`text-gray-400 ${isPresenting ? 'text-base' : 'text-xs'} mt-1`}>The researcher decides what conditions participants experience</p>
+            </div>
+          )}
+        </div>
+
+        <div 
+          onClick={() => setActiveVariable(activeVariable === 'dv' ? null : 'dv')}
+          className={`rounded-2xl border-2 cursor-pointer transition-all duration-300 ${isPresenting ? 'p-8' : 'p-5'} ${
+            activeVariable === 'dv' 
+              ? 'border-pink-400 bg-pink-900/40 scale-105 shadow-xl shadow-pink-500/20' 
+              : activeVariable !== null
+                ? 'border-gray-700 bg-gray-900/20 opacity-40'
+                : 'border-pink-500/40 bg-pink-900/20 hover:scale-102 hover:border-pink-400'
+          }`}
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className={`${isPresenting ? 'w-14 h-14' : 'w-10 h-10'} rounded-full bg-pink-500/30 flex items-center justify-center`}>
+              <BarChart3 className="text-pink-300" size={isPresenting ? 28 : 20} />
+            </div>
+            <h3 className={`${isPresenting ? 'text-3xl' : 'text-xl'} font-bold text-pink-300`}>Dependent Variable (DV)</h3>
+          </div>
+          <p className={`text-gray-200 ${isPresenting ? 'text-xl' : 'text-sm'} mb-3`}>The variable we <strong className="text-pink-300">measure</strong></p>
+          {activeVariable === 'dv' && (
+            <div className="animate-fadeIn mt-3 pt-3 border-t border-pink-500/30">
+              <p className={`text-pink-200 ${isPresenting ? 'text-lg' : 'text-sm'}`}>Example: Test score / words remembered</p>
+              <p className={`text-gray-400 ${isPresenting ? 'text-base' : 'text-xs'} mt-1`}>This is the data we collect to see if the IV had an effect</p>
+            </div>
+          )}
+        </div>
+
+        <div 
+          onClick={() => setActiveVariable(activeVariable === 'ev' ? null : 'ev')}
+          className={`rounded-2xl border-2 cursor-pointer transition-all duration-300 ${isPresenting ? 'p-8' : 'p-5'} ${
+            activeVariable === 'ev' 
+              ? 'border-emerald-400 bg-emerald-900/40 scale-105 shadow-xl shadow-emerald-500/20' 
+              : activeVariable !== null
+                ? 'border-gray-700 bg-gray-900/20 opacity-40'
+                : 'border-emerald-500/40 bg-emerald-900/20 hover:scale-102 hover:border-emerald-400'
+          }`}
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className={`${isPresenting ? 'w-14 h-14' : 'w-10 h-10'} rounded-full bg-emerald-500/30 flex items-center justify-center`}>
+              <AlertTriangle className="text-emerald-300" size={isPresenting ? 28 : 20} />
+            </div>
+            <h3 className={`${isPresenting ? 'text-3xl' : 'text-xl'} font-bold text-emerald-300`}>Extraneous Variables</h3>
+          </div>
+          <p className={`text-gray-200 ${isPresenting ? 'text-xl' : 'text-sm'} mb-3`}>Variables we <strong className="text-emerald-300">control</strong></p>
+          {activeVariable === 'ev' && (
+            <div className="animate-fadeIn mt-3 pt-3 border-t border-emerald-500/30">
+              <p className={`text-emerald-200 ${isPresenting ? 'text-lg' : 'text-sm'}`}>Examples: Prior knowledge, intelligence, sleep, time of day</p>
+              <p className={`text-gray-400 ${isPresenting ? 'text-base' : 'text-xs'} mt-1`}>Must control these to keep the test FAIR!</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Interactive Tip */}
+      <div className={`max-w-5xl mx-auto rounded-2xl border border-yellow-500/30 bg-yellow-900/10 ${isPresenting ? 'p-6' : 'p-4'}`}>
+        <div className="flex items-center gap-3">
+          <Lightbulb className="text-yellow-400" size={isPresenting ? 28 : 20} />
+          <h4 className={`${isPresenting ? 'text-2xl' : 'text-lg'} text-yellow-300 font-bold`}>Top Tip</h4>
+        </div>
+        <p className={`${isPresenting ? 'text-xl' : 'text-sm'} text-gray-300 mt-2`}>Write variables in measurable terms and link your controls to fairness (e.g., same test, same time limit, similar prior knowledge).</p>
       </div>
     </div>
   )
@@ -1956,25 +2416,666 @@ const VariableDetective: React.FC<{ isPresenting?: boolean }> = ({ isPresenting 
   )
 }
 
-// Extended task card for exam-style question
-const ExtendedExamTask: React.FC = () => {
+// ============= LESSON 2 COMPONENTS: EXTRANEOUS VARIABLES =============
+
+// Teacher Input: What are Extraneous Variables - Staggered Reveal Style
+const EVTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [revealedCount, setRevealedCount] = useState(0)
+  const [showExample, setShowExample] = useState(false)
+
+  const points = [
+    { title: 'Extraneous Variable (EV)', icon: <ShieldAlert size={isPresenting ? 28 : 20} />, color: 'red', desc: 'Any variable OTHER than the IV that might affect the DV. EVs are like "noise" that can muddy your results.' },
+    { title: 'Why Control EVs?', icon: <AlertTriangle size={isPresenting ? 28 : 20} />, color: 'yellow', desc: 'If EVs are not controlled, we cannot be sure if changes in the DV were caused by the IV or by something else. This threatens validity.' },
+    { title: 'Confounding Variable', icon: <AlertCircle size={isPresenting ? 28 : 20} />, color: 'orange', desc: 'An EV that varies systematically with the IV. If not controlled, it becomes impossible to determine which variable caused the change in the DV.' },
+  ]
+
+  const colorMap: Record<string, { border: string, bg: string, text: string, iconBg: string }> = {
+    red:    { border: 'border-red-500/50',    bg: 'bg-red-900/30',    text: 'text-red-300',    iconBg: 'bg-red-500/30' },
+    yellow: { border: 'border-yellow-500/50', bg: 'bg-yellow-900/30', text: 'text-yellow-300', iconBg: 'bg-yellow-500/30' },
+    orange: { border: 'border-orange-500/50', bg: 'bg-orange-900/30', text: 'text-orange-300', iconBg: 'bg-orange-500/30' },
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-12' : 'p-8'}`}>
+      <div className="mb-6 text-center">
+        <h2 className={`${isPresenting ? 'text-6xl' : 'text-4xl'} font-black text-white mb-2`}>Teacher Input: Extraneous Variables</h2>
+        <p className={`${isPresenting ? 'text-2xl' : ''} text-gray-400`}>Controlling the "noise" in your experiment</p>
+      </div>
+
+      {/* Cards with staggered reveal */}
+      <div className={`grid grid-cols-3 max-w-6xl mx-auto ${isPresenting ? 'gap-6' : 'gap-4'} mb-6`}>
+        {points.map((p, i) => (
+          <div 
+            key={i}
+            onClick={() => i === revealedCount && setRevealedCount(prev => prev + 1)}
+            className={`rounded-2xl border-2 ${colorMap[p.color].border} ${colorMap[p.color].bg} ${isPresenting ? 'p-6' : 'p-5'} transition-all duration-500 cursor-pointer ${
+              i < revealedCount 
+                ? 'opacity-100 scale-100' 
+                : i === revealedCount 
+                  ? 'opacity-100 scale-100 ring-2 ring-white/20 animate-pulse' 
+                  : 'opacity-30 scale-95'
+            }`}
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`${isPresenting ? 'w-12 h-12' : 'w-10 h-10'} rounded-full ${colorMap[p.color].iconBg} flex items-center justify-center ${colorMap[p.color].text}`}>
+                {p.icon}
+              </div>
+              <h3 className={`${isPresenting ? 'text-2xl' : 'text-lg'} font-bold ${colorMap[p.color].text}`}>{p.title}</h3>
+            </div>
+            {i < revealedCount ? (
+              <p className={`text-gray-200 leading-relaxed ${isPresenting ? 'text-xl' : 'text-sm'} animate-fadeIn`}>{p.desc}</p>
+            ) : i === revealedCount ? (
+              <p className={`${colorMap[p.color].text} ${isPresenting ? 'text-lg' : 'text-sm'} italic`}>Click to reveal...</p>
+            ) : (
+              <p className="text-gray-600 text-sm">Locked</p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Progress indicator */}
+      <div className="flex justify-center items-center gap-3 mb-4">
+        {points.map((_, i) => (
+          <div key={i} className={`${isPresenting ? 'w-4 h-4' : 'w-3 h-3'} rounded-full transition-colors ${i < revealedCount ? 'bg-green-500' : 'bg-gray-600'}`} />
+        ))}
+        <span className={`ml-2 text-gray-400 ${isPresenting ? 'text-lg' : 'text-sm'}`}>{revealedCount}/3</span>
+        {revealedCount < 3 && (
+          <button onClick={() => setRevealedCount(3)} className="ml-4 text-gray-500 hover:text-gray-300 text-sm">Skip →</button>
+        )}
+      </div>
+
+      {/* Example - show when all revealed */}
+      {revealedCount >= 3 && (
+        <>
+          <button
+            onClick={() => setShowExample(!showExample)}
+            className={`mx-auto ${isPresenting ? 'px-6 py-3 text-lg' : 'px-4 py-2'} bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-bold rounded-lg transition-all mb-4`}
+          >
+            {showExample ? 'Hide Example' : 'Show Example'}
+          </button>
+          {showExample && (
+            <div className={`max-w-5xl mx-auto rounded-xl border border-gray-700 bg-gray-900/40 ${isPresenting ? 'p-6' : 'p-4'} animate-fadeIn`}>
+              <h4 className={`${isPresenting ? 'text-2xl' : 'text-lg'} text-red-300 font-bold mb-2`}>Example</h4>
+              <p className={`${isPresenting ? 'text-xl' : 'text-sm'} text-gray-300`}>Testing if caffeine improves reaction time, but half the participants had no sleep the night before. Was the difference due to caffeine or tiredness? <span className="text-red-300 font-semibold">Tiredness is an EV that should have been controlled.</span></p>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+
+// Teacher Input: Extraneous Variables - Clean Static Version
+const ExtraneousVariablesTeachSlideStatic: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const points = [
+    { title: 'Situational Variables', icon: <Settings size={isPresenting ? 32 : 24} />, color: 'blue', desc: 'Features of the ENVIRONMENT that could affect behaviour (noise, temperature, lighting, time of day, location).' },
+    { title: 'Participant Variables', icon: <Users size={isPresenting ? 32 : 24} />, color: 'purple', desc: 'Individual DIFFERENCES between participants (age, gender, intelligence, mood, motivation, prior experience).' },
+    { title: 'Experimenter Effects', icon: <Eye size={isPresenting ? 32 : 24} />, color: 'green', desc: 'Ways the RESEARCHER might influence participants differently (tone of voice, facial expressions, giving extra hints).' },
+  ]
+
+  const colorMap: Record<string, { border: string, bg: string, text: string, iconBg: string }> = {
+    blue:   { border: 'border-blue-500/40',   bg: 'bg-blue-900/20',   text: 'text-blue-300', iconBg: 'bg-blue-500/20' },
+    purple: { border: 'border-purple-500/40', bg: 'bg-purple-900/20', text: 'text-purple-300', iconBg: 'bg-purple-500/20' },
+    green:  { border: 'border-green-500/40',  bg: 'bg-green-900/20',  text: 'text-green-300', iconBg: 'bg-green-500/20' },
+    yellow: { border: 'border-yellow-500/40', bg: 'bg-yellow-900/20', text: 'text-yellow-300', iconBg: 'bg-yellow-500/20' },
+    orange: { border: 'border-orange-500/40', bg: 'bg-orange-900/20', text: 'text-orange-300', iconBg: 'bg-orange-500/20' },
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-16' : 'p-10'}`}>
+      <div className="mb-8 text-center">
+        <h2 className={`${isPresenting ? 'text-7xl' : 'text-5xl'} font-black text-white mb-3`}>Teacher Input: Extraneous Variables</h2>
+        <p className={`${isPresenting ? 'text-3xl' : ''} text-gray-400`}>Controlling the "noise" in your experiment</p>
+      </div>
+      <div className={`grid grid-cols-3 max-w-6xl mx-auto ${isPresenting ? 'gap-10' : 'gap-6'}`}>
+        {points.map((p, i) => (
+          <div key={i} className={`rounded-2xl border-2 ${colorMap[p.color].border} ${colorMap[p.color].bg} shadow-xl ${isPresenting ? 'p-10' : 'p-6'}`}>
+            <div className={`flex items-center gap-4 ${isPresenting ? 'mb-4' : 'mb-2'}`}>
+              <div className={`${isPresenting ? 'w-16 h-16' : 'w-10 h-10'} rounded-full ${colorMap[p.color].iconBg} flex items-center justify-center ${colorMap[p.color].text}`}>
+                {p.icon}
+              </div>
+              <h3 className={`${isPresenting ? 'text-3xl' : 'text-xl'} font-bold ${colorMap[p.color].text}`}>{p.title}</h3>
+            </div>
+            <p className={`text-gray-200 leading-relaxed ${isPresenting ? 'text-2xl' : 'text-sm'}`}>{p.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div className={`max-w-5xl mx-auto mt-8 rounded-2xl border border-gray-700 bg-gray-900/40 ${isPresenting ? 'p-10' : 'p-6'}`}>
+        <h4 className={`${isPresenting ? 'text-3xl' : ''} text-red-300 font-bold mb-2`}>Example</h4>
+        <p className={`${isPresenting ? 'text-2xl' : ''} text-gray-300`}>Testing if caffeine improves reaction time, but half the participants had no sleep the night before. Was the difference due to caffeine or tiredness? <span className="text-red-300 font-semibold">Tiredness is an EV that should have been controlled.</span></p>
+      </div>
+    </div>
+  )
+}
+
+// Teacher Input: Types of Extraneous Variables - Accordion Style
+const EVTypesTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
+
+  const types = [
+    { 
+      title: 'Situational Variables', 
+      icon: <Settings size={isPresenting ? 24 : 20} />, 
+      color: 'blue', 
+      desc: 'Features of the ENVIRONMENT that could affect behaviour.',
+      examples: 'Noise, temperature, lighting, time of day, location, room layout.',
+      solution: 'Use standardised procedures - keep conditions identical for all participants.'
+    },
+    { 
+      title: 'Participant Variables', 
+      icon: <Users size={isPresenting ? 24 : 20} />, 
+      color: 'purple', 
+      desc: 'Individual DIFFERENCES between participants.',
+      examples: 'Age, gender, intelligence, mood, motivation, prior experience, tiredness.',
+      solution: 'Use random allocation - randomly assign participants to conditions.'
+    },
+    { 
+      title: 'Experimenter Effects', 
+      icon: <Eye size={isPresenting ? 24 : 20} />, 
+      color: 'green', 
+      desc: 'Ways the RESEARCHER might influence participants differently.',
+      examples: 'Tone of voice, facial expressions, giving extra hints, expectations.',
+      solution: 'Use standardised instructions - read from a script; consider blind procedures.'
+    },
+  ]
+
+  const colorMap: Record<string, { border: string, bg: string, text: string, activeBorder: string }> = {
+    blue:   { border: 'border-blue-500/30',   bg: 'bg-blue-900/20',   text: 'text-blue-300', activeBorder: 'border-blue-400' },
+    purple: { border: 'border-purple-500/30', bg: 'bg-purple-900/20', text: 'text-purple-300', activeBorder: 'border-purple-400' },
+    green:  { border: 'border-green-500/30',  bg: 'bg-green-900/20',  text: 'text-green-300', activeBorder: 'border-green-400' },
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-12' : 'p-8'}`}>
+      <div className="mb-6 text-center">
+        <h2 className={`${isPresenting ? 'text-6xl' : 'text-4xl'} font-black text-white mb-2`}>Types of Extraneous Variables</h2>
+        <p className={`${isPresenting ? 'text-2xl' : ''} text-gray-400`}>Click each type to expand details</p>
+      </div>
+
+      {/* Accordion */}
+      <div className={`max-w-4xl mx-auto w-full space-y-3`}>
+        {types.map((t, i) => (
+          <div 
+            key={i}
+            className={`rounded-xl border-2 transition-all duration-300 overflow-hidden ${
+              expandedIndex === i 
+                ? `${colorMap[t.color].activeBorder} ${colorMap[t.color].bg}` 
+                : `${colorMap[t.color].border} bg-gray-900/40 hover:${colorMap[t.color].bg}`
+            }`}
+          >
+            {/* Header - always visible */}
+            <button
+              onClick={() => setExpandedIndex(expandedIndex === i ? null : i)}
+              className={`w-full flex items-center justify-between ${isPresenting ? 'p-5' : 'p-4'} text-left`}
+            >
+              <div className="flex items-center gap-3">
+                <div className={`${isPresenting ? 'w-12 h-12' : 'w-10 h-10'} rounded-full ${colorMap[t.color].bg} border ${colorMap[t.color].border} flex items-center justify-center ${colorMap[t.color].text}`}>
+                  {t.icon}
+                </div>
+                <h3 className={`${isPresenting ? 'text-2xl' : 'text-lg'} font-bold ${colorMap[t.color].text}`}>{t.title}</h3>
+              </div>
+              <ChevronRight 
+                className={`${colorMap[t.color].text} transition-transform duration-300 ${expandedIndex === i ? 'rotate-90' : ''}`} 
+                size={isPresenting ? 28 : 20} 
+              />
+            </button>
+
+            {/* Expandable content */}
+            <div className={`transition-all duration-300 ${expandedIndex === i ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className={`${isPresenting ? 'px-5 pb-5' : 'px-4 pb-4'} space-y-3`}>
+                <p className={`text-gray-200 ${isPresenting ? 'text-xl' : 'text-sm'}`}>{t.desc}</p>
+                
+                <div className={`${colorMap[t.color].bg} rounded-lg ${isPresenting ? 'p-4' : 'p-3'}`}>
+                  <span className={`${isPresenting ? 'text-base' : 'text-sm'} ${colorMap[t.color].text} font-semibold`}>Examples: </span>
+                  <span className={`${isPresenting ? 'text-base' : 'text-sm'} text-gray-300`}>{t.examples}</span>
+                </div>
+                
+                <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-3">
+                  <span className={`${isPresenting ? 'text-base' : 'text-sm'} text-yellow-400 font-semibold`}>🛡️ How to Control: </span>
+                  <span className={`${isPresenting ? 'text-base' : 'text-sm'} text-gray-300`}>{t.solution}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Quick expand all */}
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={() => setExpandedIndex(expandedIndex === null ? 0 : null)}
+          className={`text-gray-400 hover:text-white ${isPresenting ? 'text-lg' : 'text-sm'}`}
+        >
+          {expandedIndex !== null ? 'Collapse all' : 'Click headers to expand'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// EV Types Task - Identifying Types of EVs (ONLY use after EVTypesTeachSlide)
+const EVTypesTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [revealed, setRevealed] = useState<Record<number, boolean>>({})
+  
+  const scenarios = [
+    { id: 1, scenario: "The room where Group A is tested is much noisier than Group B's room.", type: "Situational Variable", explanation: "Features of the environment that differ between conditions." },
+    { id: 2, scenario: "Group A happens to have more intelligent participants than Group B.", type: "Participant Variable", explanation: "Individual differences between participants." },
+    { id: 3, scenario: "The researcher is friendlier to participants in the experimental condition.", type: "Experimenter Effect", explanation: "The researcher's behaviour influences participants differently." },
+    { id: 4, scenario: "Testing takes place at 9am for one group and 9pm for another.", type: "Situational Variable", explanation: "Time of day is an environmental factor affecting performance." },
+    { id: 5, scenario: "Some participants are motivated while others seem bored.", type: "Participant Variable", explanation: "Motivation is an individual difference between participants." },
+    { id: 6, scenario: "The researcher accidentally gives more hints to the control group.", type: "Experimenter Effect", explanation: "The researcher's actions differ between conditions." },
+  ]
+
+  const typeColors: Record<string, string> = {
+    'Situational Variable': 'text-blue-300 bg-blue-900/30 border-blue-500/40',
+    'Participant Variable': 'text-purple-300 bg-purple-900/30 border-purple-500/40',
+    'Experimenter Effect': 'text-green-300 bg-green-900/30 border-green-500/40',
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-12' : 'p-8'}`}>
+      <h2 className={`${isPresenting ? 'text-5xl' : 'text-3xl'} font-black text-white mb-2`}>Task: Identify the Type of EV</h2>
+      <p className={`${isPresenting ? 'text-xl' : ''} text-gray-400 mb-6`}>Classify each extraneous variable as Situational, Participant, or Experimenter Effect.</p>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {scenarios.map((s) => (
+          <div key={s.id} className={`rounded-xl border border-gray-700 bg-gray-900/60 ${isPresenting ? 'p-6' : 'p-4'}`}>
+            <p className={`${isPresenting ? 'text-xl' : ''} text-gray-200 mb-4 italic`}>"{s.scenario}"</p>
+            {revealed[s.id] ? (
+              <div className={`rounded-lg border ${typeColors[s.type]} ${isPresenting ? 'p-4' : 'p-3'} animate-fadeIn`}>
+                <span className={`font-bold ${isPresenting ? 'text-lg' : 'text-sm'}`}>{s.type}</span>
+                <p className={`${isPresenting ? 'text-base' : 'text-xs'} mt-1 opacity-80`}>{s.explanation}</p>
+              </div>
+            ) : (
+              <button
+                onClick={() => setRevealed({ ...revealed, [s.id]: true })}
+                className={`w-full py-2 rounded-lg font-bold bg-gray-800 hover:bg-gray-700 text-gray-300 transition-all ${isPresenting ? 'text-lg' : 'text-sm'}`}
+              >
+                Reveal Answer
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// EV Detective Game - Interactive Simulation
+const EVDetectiveGame: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [currentScenario, setCurrentScenario] = useState(0)
+  const [selectedEVs, setSelectedEVs] = useState<string[]>([])
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const scenarios = [
+    {
+      title: "The Memory Experiment",
+      description: "A researcher tests whether playing brain training games improves memory. 20 participants play brain games for 2 weeks, then take a memory test. A control group of 20 different participants just take the memory test without any training.",
+      possibleEVs: [
+        { id: 'age', text: 'Age differences between groups', isEV: true },
+        { id: 'time', text: 'Time of day testing occurs', isEV: true },
+        { id: 'games', text: 'The brain training games used', isEV: false },
+        { id: 'prior', text: 'Prior experience with memory tests', isEV: true },
+        { id: 'motivation', text: 'Motivation levels of participants', isEV: true },
+        { id: 'memory', text: 'The memory test given', isEV: false },
+      ],
+    },
+    {
+      title: "The Stress Study",
+      description: "Researchers want to know if exercise reduces stress. Group A exercises for 30 minutes before a stressful maths test. Group B does not exercise. Stress is measured by heart rate during the test.",
+      possibleEVs: [
+        { id: 'fitness', text: 'Baseline fitness levels', isEV: true },
+        { id: 'maths', text: 'Maths ability', isEV: true },
+        { id: 'exercise', text: 'The exercise activity', isEV: false },
+        { id: 'caffeine', text: 'Caffeine consumption that day', isEV: true },
+        { id: 'sleep', text: 'Amount of sleep night before', isEV: true },
+        { id: 'test', text: 'The maths test content', isEV: false },
+      ],
+    },
+    {
+      title: "The Reading Experiment",
+      description: "A study investigates whether reading on paper is better for comprehension than reading on screen. Students read an article either on paper or tablet, then answer questions. The paper group reads in a quiet library, the screen group reads in a computer lab.",
+      possibleEVs: [
+        { id: 'location', text: 'Different testing locations', isEV: true },
+        { id: 'noise', text: 'Background noise levels', isEV: true },
+        { id: 'format', text: 'Reading format (paper/screen)', isEV: false },
+        { id: 'familiarity', text: 'Familiarity with tablets', isEV: true },
+        { id: 'article', text: 'The article content', isEV: false },
+        { id: 'lighting', text: 'Lighting conditions', isEV: true },
+      ],
+    }
+  ]
+
+  const currentScene = scenarios[currentScenario]
+
+  const toggleEV = (id: string) => {
+    if (showFeedback) return
+    setSelectedEVs(prev => prev.includes(id) ? prev.filter(e => e !== id) : [...prev, id])
+  }
+
+  const checkAnswers = () => {
+    const correctSelections = currentScene.possibleEVs.filter(ev => ev.isEV && selectedEVs.includes(ev.id)).length
+    const wrongSelections = selectedEVs.filter(id => !currentScene.possibleEVs.find(ev => ev.id === id)?.isEV).length
+    setScore(prev => prev + Math.max(0, correctSelections - wrongSelections))
+    setShowFeedback(true)
+  }
+
+  const nextScenario = () => {
+    if (currentScenario < scenarios.length - 1) {
+      setCurrentScenario(prev => prev + 1)
+      setSelectedEVs([])
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-10' : 'p-6'}`}>
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-3">
+          <div className="bg-red-600 p-2 rounded-lg"><Eye className="w-6 h-6 text-white" /></div>
+          <div>
+            <h3 className={`${isPresenting ? 'text-3xl' : 'text-xl'} font-bold text-white`}>EV Detective</h3>
+            <p className={`${isPresenting ? 'text-lg' : 'text-sm'} text-gray-400`}>Scenario {currentScenario + 1} of {scenarios.length}</p>
+          </div>
+        </div>
+        <div className="bg-gray-800 px-4 py-2 rounded-lg">
+          <span className="text-gray-400 text-sm">Score: </span>
+          <span className="text-green-400 font-bold">{score}</span>
+        </div>
+      </div>
+
+      <div className={`bg-gray-800/50 rounded-xl mb-4 ${isPresenting ? 'p-6' : 'p-4'}`}>
+        <h4 className={`${isPresenting ? 'text-2xl' : 'text-lg'} font-bold text-white mb-2`}>{currentScene.title}</h4>
+        <p className={`${isPresenting ? 'text-xl' : ''} text-gray-300 leading-relaxed`}>{currentScene.description}</p>
+      </div>
+
+      <p className={`text-yellow-400 font-medium mb-3 ${isPresenting ? 'text-xl' : ''}`}>Select ALL the potential extraneous variables:</p>
+
+      <div className="grid grid-cols-2 gap-3 mb-4 flex-1">
+        {currentScene.possibleEVs.map((ev) => (
+          <button
+            key={ev.id}
+            onClick={() => toggleEV(ev.id)}
+            disabled={showFeedback}
+            className={`${isPresenting ? 'p-5 text-lg' : 'p-3'} rounded-xl text-left transition-all border-2 ${
+              showFeedback
+                ? ev.isEV
+                  ? 'bg-green-600/20 border-green-500 text-green-300'
+                  : selectedEVs.includes(ev.id)
+                    ? 'bg-red-600/20 border-red-500 text-red-300'
+                    : 'bg-gray-800 border-gray-700 text-gray-500'
+                : selectedEVs.includes(ev.id)
+                  ? 'bg-red-600 border-red-500 text-white'
+                  : 'bg-gray-800 border-gray-700 text-gray-300 hover:border-gray-500'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              {showFeedback && ev.isEV && <CheckCircle className="w-5 h-5 text-green-400" />}
+              {showFeedback && !ev.isEV && selectedEVs.includes(ev.id) && <AlertTriangle className="w-5 h-5 text-red-400" />}
+              <span className="font-medium">{ev.text}</span>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <div className="flex justify-center gap-4">
+        {!showFeedback ? (
+          <button onClick={checkAnswers} disabled={selectedEVs.length === 0} className="px-8 py-3 bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white font-bold rounded-lg">Check Answers</button>
+        ) : (
+          <button onClick={nextScenario} disabled={currentScenario >= scenarios.length - 1} className="px-8 py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold rounded-lg flex items-center gap-2">
+            {currentScenario < scenarios.length - 1 ? <>Next Scenario →</> : 'Complete!'}
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Teacher Input: Control Methods - Tabbed Interface
+const ControlMethodsTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [activeTab, setActiveTab] = useState(0)
+
+  const methods = [
+    { title: 'Standardised Procedures', icon: <ClipboardList size={isPresenting ? 28 : 20} />, color: 'cyan', desc: 'Keep conditions IDENTICAL for all participants. Same room, same time, same instructions read from a script.', example: 'All participants tested in the same quiet room at 10am.', controls: 'Situational Variables' },
+    { title: 'Random Allocation', icon: <Shuffle size={isPresenting ? 28 : 20} />, color: 'pink', desc: 'Assign participants to conditions using CHANCE (coin flip, random number). Spreads individual differences evenly.', example: 'Flip a coin: Heads = Group A, Tails = Group B.', controls: 'Participant Variables' },
+    { title: 'Standardised Instructions', icon: <ClipboardList size={isPresenting ? 28 : 20} />, color: 'blue', desc: 'All participants receive EXACTLY the same instructions, usually from a prepared script. Prevents experimenter effects.', example: 'Read aloud: "You have 5 minutes to complete this task."', controls: 'Experimenter Effects' },
+    { title: 'Counterbalancing', icon: <RefreshCw size={isPresenting ? 28 : 20} />, color: 'purple', desc: 'In repeated measures, half do Condition A then B, half do B then A. Controls order effects (fatigue, practice).', example: 'Group 1: A→B, Group 2: B→A', controls: 'Order Effects' },
+  ]
+
+  const colorMap: Record<string, { border: string, bg: string, text: string, tabActive: string, tabInactive: string }> = {
+    cyan:   { border: 'border-cyan-400', bg: 'bg-cyan-900/30', text: 'text-cyan-300', tabActive: 'bg-cyan-600', tabInactive: 'bg-gray-800 hover:bg-cyan-900/50' },
+    pink:   { border: 'border-pink-400', bg: 'bg-pink-900/30', text: 'text-pink-300', tabActive: 'bg-pink-600', tabInactive: 'bg-gray-800 hover:bg-pink-900/50' },
+    blue:   { border: 'border-blue-400', bg: 'bg-blue-900/30', text: 'text-blue-300', tabActive: 'bg-blue-600', tabInactive: 'bg-gray-800 hover:bg-blue-900/50' },
+    purple: { border: 'border-purple-400', bg: 'bg-purple-900/30', text: 'text-purple-300', tabActive: 'bg-purple-600', tabInactive: 'bg-gray-800 hover:bg-purple-900/50' },
+  }
+
+  const activeMethod = methods[activeTab]
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-12' : 'p-8'}`}>
+      <div className="mb-6 text-center">
+        <h2 className={`${isPresenting ? 'text-6xl' : 'text-4xl'} font-black text-white mb-2`}>Control Methods</h2>
+        <p className={`${isPresenting ? 'text-2xl' : ''} text-gray-400`}>Click each tab to explore the control methods</p>
+      </div>
+
+      {/* Tab Buttons */}
+      <div className={`flex max-w-5xl mx-auto w-full ${isPresenting ? 'gap-3 mb-6' : 'gap-2 mb-4'}`}>
+        {methods.map((m, i) => (
+          <button
+            key={i}
+            onClick={() => setActiveTab(i)}
+            className={`flex-1 flex items-center justify-center gap-2 ${isPresenting ? 'py-4 px-4' : 'py-3 px-3'} rounded-t-xl font-bold transition-all ${
+              activeTab === i 
+                ? `${colorMap[m.color].tabActive} text-white scale-105` 
+                : `${colorMap[m.color].tabInactive} ${colorMap[m.color].text}`
+            }`}
+          >
+            {m.icon}
+            <span className={isPresenting ? 'text-lg' : 'text-sm'}>{m.title.split(' ')[0]}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Content Panel */}
+      <div className={`max-w-5xl mx-auto w-full rounded-2xl border-2 ${colorMap[activeMethod.color].border} ${colorMap[activeMethod.color].bg} ${isPresenting ? 'p-8' : 'p-6'} animate-fadeIn`}>
+        <div className="flex items-center gap-4 mb-4">
+          <div className={`${isPresenting ? 'w-16 h-16' : 'w-12 h-12'} rounded-full ${colorMap[activeMethod.color].bg} border ${colorMap[activeMethod.color].border} flex items-center justify-center ${colorMap[activeMethod.color].text}`}>
+            {activeMethod.icon}
+          </div>
+          <div>
+            <h3 className={`${isPresenting ? 'text-3xl' : 'text-2xl'} font-bold ${colorMap[activeMethod.color].text}`}>{activeMethod.title}</h3>
+            <p className={`${isPresenting ? 'text-lg' : 'text-sm'} text-gray-400`}>Controls: {activeMethod.controls}</p>
+          </div>
+        </div>
+
+        <p className={`text-gray-200 ${isPresenting ? 'text-2xl mb-6' : 'text-base mb-4'} leading-relaxed`}>{activeMethod.desc}</p>
+
+        <div className={`${colorMap[activeMethod.color].bg} border ${colorMap[activeMethod.color].border} rounded-xl ${isPresenting ? 'p-5' : 'p-4'}`}>
+          <span className={`${isPresenting ? 'text-xl' : 'text-base'} ${colorMap[activeMethod.color].text} font-bold`}>📋 Example: </span>
+          <span className={`${isPresenting ? 'text-xl' : 'text-base'} text-gray-200`}>{activeMethod.example}</span>
+        </div>
+      </div>
+
+      {/* Navigation hint */}
+      <div className="flex justify-center mt-4">
+        <p className={`text-gray-500 ${isPresenting ? 'text-lg' : 'text-sm'}`}>
+          {activeTab + 1} of {methods.length} • Click tabs to navigate
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// Control Methods Match Game
+const ControlMethodsMatchGame: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [matched, setMatched] = useState<Record<number, string | null>>({})
+  const [showAnswers, setShowAnswers] = useState(false)
+
+  const problems = [
+    { id: 1, problem: "Testing room is noisy for one group but quiet for another", solution: "Standardised Procedures", color: "cyan" },
+    { id: 2, problem: "One group has mostly intelligent participants", solution: "Random Allocation", color: "pink" },
+    { id: 3, problem: "Researcher gives more hints to experimental group", solution: "Standardised Instructions", color: "blue" },
+    { id: 4, problem: "Participants get tired doing Condition A before B", solution: "Counterbalancing", color: "purple" },
+  ]
+
+  const solutions = ["Standardised Procedures", "Random Allocation", "Standardised Instructions", "Counterbalancing"]
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-10' : 'p-6'}`}>
+      <h2 className={`${isPresenting ? 'text-4xl' : 'text-2xl'} font-black text-white mb-2`}>Match the Control Method</h2>
+      <p className={`${isPresenting ? 'text-xl' : ''} text-gray-400 mb-6`}>For each problem, select the best control method.</p>
+
+      <div className="space-y-4 flex-1">
+        {problems.map((p) => (
+          <div key={p.id} className={`rounded-xl border border-gray-700 bg-gray-900/60 ${isPresenting ? 'p-5' : 'p-4'} flex items-center gap-4`}>
+            <div className="flex-1">
+              <p className={`${isPresenting ? 'text-xl' : ''} text-gray-200`}>{p.problem}</p>
+            </div>
+            <select
+              value={matched[p.id] || ''}
+              onChange={(e) => setMatched({ ...matched, [p.id]: e.target.value })}
+              disabled={showAnswers}
+              className={`${isPresenting ? 'text-lg p-3' : 'p-2'} rounded-lg bg-gray-800 border border-gray-600 text-white ${showAnswers && matched[p.id] === p.solution ? 'border-green-500 bg-green-900/30' : showAnswers && matched[p.id] ? 'border-red-500 bg-red-900/30' : ''}`}
+            >
+              <option value="">Select...</option>
+              {solutions.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
+            {showAnswers && (
+              <span className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold ${matched[p.id] === p.solution ? 'text-green-400' : 'text-red-400'}`}>
+                {matched[p.id] === p.solution ? '✓' : `✗ ${p.solution}`}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {!showAnswers && Object.keys(matched).length === problems.length && (
+        <button onClick={() => setShowAnswers(true)} className="mt-4 px-8 py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-lg mx-auto">
+          Check Answers
+        </button>
+      )}
+    </div>
+  )
+}
+
+// Control Methods Design Task
+const ControlMethodsDesignTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showSolution, setShowSolution] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-10' : 'p-6'}`}>
+      <h2 className={`${isPresenting ? 'text-4xl' : 'text-2xl'} font-black text-white mb-2`}>Design Task: Apply Control Methods</h2>
+      <p className={`${isPresenting ? 'text-xl' : ''} text-gray-400 mb-4`}>Read the scenario and suggest how to control extraneous variables.</p>
+
+      <div className={`bg-gray-800/60 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-4'} mb-4`}>
+        <h3 className={`${isPresenting ? 'text-2xl' : 'text-lg'} font-bold text-red-300 mb-2`}>Scenario</h3>
+        <p className={`${isPresenting ? 'text-xl' : ''} text-gray-200 leading-relaxed`}>
+          A psychologist wants to investigate whether watching violent video games increases aggression. They have 20 participants: 10 will play violent games for 30 minutes, 10 will play non-violent games. Aggression is measured by counting aggressive words used in a story-writing task afterwards.
+        </p>
+      </div>
+
+      <div className={`bg-gray-800/40 rounded-xl border border-gray-700 ${isPresenting ? 'p-5' : 'p-4'} mb-4`}>
+        <h4 className={`${isPresenting ? 'text-xl' : ''} font-bold text-yellow-300 mb-3`}>Your Task:</h4>
+        <ul className={`space-y-2 ${isPresenting ? 'text-lg' : ''} text-gray-300`}>
+          <li>1. Identify <span className="text-red-300 font-semibold">TWO potential extraneous variables</span></li>
+          <li>2. Explain how you would use <span className="text-cyan-300 font-semibold">standardised procedures</span></li>
+          <li>3. Explain how you would use <span className="text-pink-300 font-semibold">random allocation</span></li>
+        </ul>
+      </div>
+
+      <button onClick={() => setShowSolution(!showSolution)} className={`${isPresenting ? 'text-lg py-3' : 'py-2'} px-6 rounded-lg font-bold transition-all ${showSolution ? 'bg-gray-700 text-gray-300' : 'bg-green-600 hover:bg-green-500 text-white'}`}>
+        {showSolution ? 'Hide Model Answer' : 'Show Model Answer'}
+      </button>
+
+      {showSolution && (
+        <div className={`mt-4 bg-green-900/20 border border-green-500/30 rounded-xl ${isPresenting ? 'p-6' : 'p-4'} animate-fadeIn`}>
+          <h4 className={`${isPresenting ? 'text-xl' : ''} font-bold text-green-400 mb-3`}>Model Answer</h4>
+          <div className={`space-y-3 ${isPresenting ? 'text-lg' : 'text-sm'} text-gray-200`}>
+            <p><span className="text-red-300 font-semibold">EVs:</span> Pre-existing aggression levels, prior gaming experience, time of day, mood, tiredness.</p>
+            <p><span className="text-cyan-300 font-semibold">Standardised Procedures:</span> Test all participants in the same room, at the same time of day, with the same volume, same seating position, same duration (30 mins).</p>
+            <p><span className="text-pink-300 font-semibold">Random Allocation:</span> Use a random number generator or coin flip to assign each participant to violent or non-violent condition, spreading individual differences across both groups.</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lesson 2 Extended Exam Task
+const Lesson2ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
   const [showTips, setShowTips] = useState(false)
   
   return (
-    <div className="flex flex-col h-full p-8 animate-fadeIn">
-      <h2 className="text-4xl font-black text-white mb-2">Extended Task: Exam-Style</h2>
-      <p className="text-gray-400 mb-6">Apply what you learned about hypotheses and variables.</p>
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-10' : 'p-8'}`}>
+      <h2 className={`${isPresenting ? 'text-4xl' : 'text-3xl'} font-black text-white mb-2`}>Extended Task: Exam Practice</h2>
+      <p className={`${isPresenting ? 'text-xl' : ''} text-gray-400 mb-4`}>Apply your knowledge of extraneous variables and control methods.</p>
   
-      <div className="bg-gray-900/70 border border-gray-700 rounded-2xl p-6 mb-6">
-        <h3 className="text-2xl font-bold text-pink-300 mb-3">Scenario</h3>
-        <p className="text-gray-200 leading-relaxed">
+      <div className={`bg-gray-900/70 border border-gray-700 rounded-2xl ${isPresenting ? 'p-6' : 'p-5'} mb-4`}>
+        <h3 className={`${isPresenting ? 'text-2xl' : 'text-xl'} font-bold text-red-300 mb-3`}>Scenario</h3>
+        <p className={`${isPresenting ? 'text-xl' : ''} text-gray-200 leading-relaxed`}>
+          A psychologist wants to investigate whether watching violent video games increases aggression. They have 20 participants: 10 play violent games for 30 minutes, 10 play non-violent games. Aggression is measured by counting the number of aggressive words used in a story-writing task.
+        </p>
+      </div>
+  
+      <div className={`bg-gray-900/70 border border-gray-700 rounded-xl ${isPresenting ? 'p-5' : 'p-4'} mb-4`}>
+        <h4 className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold text-green-400 uppercase mb-3`}>Exam Questions</h4>
+        <ul className={`space-y-2 ${isPresenting ? 'text-lg' : ''} text-gray-200`}>
+          <li><span className="text-gray-500 font-mono">[1]</span> Identify ONE potential extraneous variable in this study.</li>
+          <li><span className="text-gray-500 font-mono">[2]</span> Explain how random allocation could be used in this study.</li>
+          <li><span className="text-gray-500 font-mono">[2]</span> Explain one way the researcher could use standardised procedures.</li>
+        </ul>
+      </div>
+
+      <button
+        onClick={() => setShowTips(!showTips)}
+        className={`w-full ${isPresenting ? 'py-3 text-lg' : 'py-2'} mb-4 rounded-lg font-bold transition-all bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white`}
+      >
+        {showTips ? '✕ Hide Model Answers' : '+ Show Model Answers'}
+      </button>
+
+      {showTips && (
+        <div className={`bg-green-900/30 border-2 border-green-500/30 rounded-xl ${isPresenting ? 'p-5' : 'p-4'} animate-fadeIn`}>
+          <h4 className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold text-green-300 uppercase mb-3`}>Model Answers</h4>
+          <div className={`space-y-4 ${isPresenting ? 'text-lg' : 'text-sm'} text-green-100`}>
+            <div>
+              <span className="font-semibold text-green-300">[1] EV:</span>
+              <p>Participant variables such as pre-existing levels of aggression / time of day / room temperature / prior gaming experience.</p>
+            </div>
+            <div>
+              <span className="font-semibold text-green-300">[2] Random Allocation:</span>
+              <p>Each participant could be assigned to violent or non-violent condition by flipping a coin <span className="text-gray-400">(1 mark)</span>. This ensures participant variables are evenly distributed across both conditions, preventing systematic bias <span className="text-gray-400">(1 mark)</span>.</p>
+            </div>
+            <div>
+              <span className="font-semibold text-green-300">[2] Standardised Procedures:</span>
+              <p>The researcher could ensure all participants are tested in the same room with the same lighting and temperature <span className="text-gray-400">(1 mark)</span>. This means any differences in aggression scores are more likely to be due to the type of game played rather than environmental factors <span className="text-gray-400">(1 mark)</span>.</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Extended task card for exam-style question
+const ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showTips, setShowTips] = useState(false)
+  
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-8'}`}>
+      <h2 className={`font-black text-white ${isPresenting ? 'text-2xl mb-1' : 'text-4xl mb-2'}`}>Extended Task: Exam-Style</h2>
+      <p className={`text-gray-400 ${isPresenting ? 'text-sm mb-4' : 'mb-6'}`}>Apply what you learned about hypotheses and variables.</p>
+  
+      <div className={`bg-gray-900/70 border border-gray-700 rounded-2xl ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <h3 className={`font-bold text-pink-300 ${isPresenting ? 'text-lg mb-2' : 'text-2xl mb-3'}`}>Scenario</h3>
+        <p className={`text-gray-200 leading-relaxed ${isPresenting ? 'text-sm' : ''}`}>
           A psychologist wants to investigate whether background music affects concentration during revision. She plays classical music to one group of students while they revise, and no music to another group. Both groups then complete the same memory test.
         </p>
       </div>
   
-      <div className="bg-gray-900/70 border border-gray-700 rounded-xl p-4 mb-6">
-        <h4 className="text-sm font-bold text-green-400 uppercase mb-3">Required Tasks</h4>
-        <ul className="space-y-2 text-gray-200 text-sm grid grid-cols-2 gap-4">
+      <div className={`bg-gray-900/70 border border-gray-700 rounded-xl ${isPresenting ? 'p-3 mb-4' : 'p-4 mb-6'}`}>
+        <h4 className={`font-bold text-green-400 uppercase ${isPresenting ? 'text-xs mb-2' : 'text-sm mb-3'}`}>Required Tasks</h4>
+        <ul className={`text-gray-200 grid grid-cols-2 ${isPresenting ? 'text-xs gap-2' : 'text-sm gap-4 space-y-2'}`}>
           <li>• State the IV and DV</li>
           <li>• Write null and alternative hypotheses</li>
           <li>• Identify two extraneous variables to control</li>
@@ -1986,15 +3087,15 @@ const ExtendedExamTask: React.FC = () => {
 
       <button
         onClick={() => setShowTips(!showTips)}
-        className="w-full py-3 mb-4 rounded-lg font-bold transition-all bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white"
+        className={`w-full rounded-lg font-bold transition-all bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white ${isPresenting ? 'py-2 mb-3 text-sm' : 'py-3 mb-4'}`}
       >
         {showTips ? '✕ Hide Exam Tips' : '+ Show Exam Tips'}
       </button>
 
       {showTips && (
-        <div className="bg-blue-900/30 border-2 border-blue-500/30 rounded-xl p-4 mb-4 animate-fadeIn">
-          <h4 className="text-sm font-bold text-blue-300 uppercase mb-3">Exam Tips</h4>
-          <div className="space-y-2 text-blue-100 text-sm">
+        <div className={`bg-blue-900/30 border-2 border-blue-500/30 rounded-xl animate-fadeIn ${isPresenting ? 'p-3 mb-3' : 'p-4 mb-4'}`}>
+          <h4 className={`font-bold text-blue-300 uppercase ${isPresenting ? 'text-xs mb-2' : 'text-sm mb-3'}`}>Exam Tips</h4>
+          <div className={`text-blue-100 ${isPresenting ? 'text-xs space-y-1' : 'text-sm space-y-2'}`}>
             <div className="flex gap-2">
               <span className="font-semibold text-blue-300 min-w-fit">• H₀ (Null):</span>
               <p>No effect / no difference. E.g., "There will be no difference in memory test scores..."</p>
@@ -2022,73 +3123,8468 @@ const ExtendedExamTask: React.FC = () => {
   )
 }
 
+// ============= GCSE LESSON 3: TYPES OF EXPERIMENT =============
+
+// Lab Experiment Teaching Slide
+// Laboratory Experiments - Spotlight Cards Style
+const LabExperimentTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [spotlight, setSpotlight] = useState<number | null>(null)
+
+  const sections = [
+    { 
+      id: 0,
+      title: 'What is a Lab Experiment?', 
+      icon: <Beaker size={isPresenting ? 28 : 24} />, 
+      color: 'blue',
+      content: [
+        { text: 'Conducted in a', highlight: 'controlled artificial environment' },
+        { text: 'The IV is', highlight: 'directly manipulated by the researcher' },
+        { text: 'All', highlight: 'extraneous variables are controlled' },
+        { text: 'Participants', highlight: 'know they are in a study' }
+      ]
+    },
+    { 
+      id: 1,
+      title: 'Example Study', 
+      icon: <BookOpen size={isPresenting ? 28 : 24} />, 
+      color: 'purple',
+      study: { name: 'Loftus & Palmer (1974)', desc: 'Studied how leading questions affect memory recall. Participants watched car crash videos in a lab, then were asked questions with different verbs (smashed/hit/bumped).' }
+    },
+    { 
+      id: 2,
+      title: '✓ Strengths', 
+      icon: <CheckCircle size={isPresenting ? 28 : 24} />, 
+      color: 'green',
+      content: [
+        { text: '', highlight: 'High control over extraneous variables' },
+        { text: '', highlight: 'Easy to replicate due to standardised procedures' },
+        { text: 'Can establish', highlight: 'cause and effect' }
+      ]
+    },
+    { 
+      id: 3,
+      title: '✗ Limitations', 
+      icon: <XCircle size={isPresenting ? 28 : 24} />, 
+      color: 'red',
+      content: [
+        { text: '', highlight: 'Low ecological validity - artificial setting' },
+        { text: '', highlight: 'Demand characteristics - participants may guess the aim' },
+        { text: 'Results may not', highlight: 'generalise to real life' }
+      ]
+    }
+  ]
+
+  const colorMap: Record<string, { border: string, bg: string, text: string, bgActive: string }> = {
+    blue:   { border: 'border-blue-500', bg: 'bg-blue-900/20', text: 'text-blue-300', bgActive: 'bg-blue-900/50' },
+    purple: { border: 'border-purple-500', bg: 'bg-purple-900/20', text: 'text-purple-300', bgActive: 'bg-purple-900/50' },
+    green:  { border: 'border-green-500', bg: 'bg-green-900/20', text: 'text-green-300', bgActive: 'bg-green-900/50' },
+    red:    { border: 'border-red-500', bg: 'bg-red-900/20', text: 'text-red-300', bgActive: 'bg-red-900/50' },
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-8' : 'p-8'}`}>
+      <div className="mb-4 text-center">
+        <h2 className={`${isPresenting ? 'text-5xl' : 'text-4xl'} font-black text-white mb-2`}>Laboratory Experiments</h2>
+        <p className={`${isPresenting ? 'text-xl' : 'text-base'} text-gray-400`}>Click each card to spotlight • Click again to dim</p>
+      </div>
+
+      <div className={`grid grid-cols-2 flex-1 max-w-6xl mx-auto w-full ${isPresenting ? 'gap-5' : 'gap-4'}`}>
+        {sections.map((s) => (
+          <div
+            key={s.id}
+            onClick={() => setSpotlight(spotlight === s.id ? null : s.id)}
+            className={`rounded-xl border-2 ${colorMap[s.color].border} cursor-pointer transition-all duration-300 ${isPresenting ? 'p-5' : 'p-4'} ${
+              spotlight === null 
+                ? colorMap[s.color].bg
+                : spotlight === s.id 
+                  ? `${colorMap[s.color].bgActive} scale-[1.02] shadow-lg shadow-${s.color}-500/30` 
+                  : 'bg-gray-900/50 opacity-40 scale-95'
+            }`}
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`${colorMap[s.color].text}`}>{s.icon}</div>
+              <h3 className={`${isPresenting ? 'text-2xl' : 'text-xl'} font-bold ${colorMap[s.color].text}`}>{s.title}</h3>
+            </div>
+            
+            {s.content && (
+              <ul className={`space-y-2 ${isPresenting ? 'text-lg' : 'text-sm'}`}>
+                {s.content.map((item, i) => (
+                  <li key={i} className="text-gray-200">
+                    • {item.text} <span className={`font-bold ${colorMap[s.color].text}`}>{item.highlight}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            
+            {s.study && (
+              <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-4' : 'p-3'}`}>
+                <p className={`${isPresenting ? 'text-lg' : 'text-sm'} text-gray-200`}>
+                  <span className={`font-bold ${colorMap[s.color].text}`}>{s.study.name}</span> - {s.study.desc}
+                </p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Lab Experiment AFL Questions
+const LabExperimentAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "What makes a lab experiment different from other experiments?",
+      options: ["It's conducted in a natural setting", "The IV is manipulated in a controlled artificial environment", "There is no control over variables", "Participants don't know they're being studied"],
+      correct: 1,
+      explanation: "Lab experiments are conducted in controlled artificial environments where the researcher directly manipulates the IV."
+    },
+    {
+      question: "Which is a strength of lab experiments?",
+      options: ["High ecological validity", "Natural participant behaviour", "High control over extraneous variables", "No demand characteristics"],
+      correct: 2,
+      explanation: "Lab experiments allow researchers to control extraneous variables, making it easier to establish cause and effect."
+    },
+    {
+      question: "Why might lab experiments have low ecological validity?",
+      options: ["They are too expensive", "The artificial setting doesn't reflect real life", "There are too many participants", "The IV cannot be measured"],
+      correct: 1,
+      explanation: "The artificial environment of a lab may not reflect how people behave in real-world situations."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Lab Experiments - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>
+              Score: {score}/{questions.length}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Field Experiment Teaching Slide - Spotlight Cards Style
+const FieldExperimentTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [spotlight, setSpotlight] = useState<number | null>(null)
+
+  const sections = [
+    { 
+      id: 0,
+      title: 'What is a Field Experiment?', 
+      icon: <MapPin size={isPresenting ? 28 : 24} />, 
+      color: 'emerald',
+      content: [
+        { text: 'Conducted in a', highlight: 'natural environment (school, street, workplace)' },
+        { text: 'The IV is still', highlight: 'manipulated by the researcher' },
+        { text: 'Participants may', highlight: 'not know they\'re being studied' },
+        { text: '', highlight: 'Less control over extraneous variables' }
+      ]
+    },
+    { 
+      id: 1,
+      title: 'Example Study', 
+      icon: <BookOpen size={isPresenting ? 28 : 24} />, 
+      color: 'amber',
+      study: { name: 'Piliavin et al. (1969)', desc: 'The subway study. Researchers staged someone collapsing on a New York subway to see if people would help. The IV was whether the person appeared drunk or carried a cane.' }
+    },
+    { 
+      id: 2,
+      title: '✓ Strengths', 
+      icon: <CheckCircle size={isPresenting ? 28 : 24} />, 
+      color: 'green',
+      content: [
+        { text: '', highlight: 'High ecological validity - real-world behaviour' },
+        { text: '', highlight: 'Fewer demand characteristics if participants are unaware' },
+        { text: 'Results more likely to', highlight: 'generalise' }
+      ]
+    },
+    { 
+      id: 3,
+      title: '✗ Limitations', 
+      icon: <XCircle size={isPresenting ? 28 : 24} />, 
+      color: 'red',
+      content: [
+        { text: '', highlight: 'Less control over extraneous variables' },
+        { text: '', highlight: 'Harder to replicate' },
+        { text: '', highlight: 'Ethical issues - consent may not be possible' }
+      ]
+    }
+  ]
+
+  const colorMap: Record<string, { border: string, bg: string, text: string, bgActive: string }> = {
+    emerald: { border: 'border-emerald-500', bg: 'bg-emerald-900/20', text: 'text-emerald-300', bgActive: 'bg-emerald-900/50' },
+    amber:   { border: 'border-amber-500', bg: 'bg-amber-900/20', text: 'text-amber-300', bgActive: 'bg-amber-900/50' },
+    green:   { border: 'border-green-500', bg: 'bg-green-900/20', text: 'text-green-300', bgActive: 'bg-green-900/50' },
+    red:     { border: 'border-red-500', bg: 'bg-red-900/20', text: 'text-red-300', bgActive: 'bg-red-900/50' },
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-8' : 'p-8'}`}>
+      <div className="mb-4 text-center">
+        <h2 className={`${isPresenting ? 'text-5xl' : 'text-4xl'} font-black text-white mb-2`}>Field Experiments</h2>
+        <p className={`${isPresenting ? 'text-xl' : 'text-base'} text-gray-400`}>Click each card to spotlight • Click again to dim</p>
+      </div>
+
+      <div className={`grid grid-cols-2 flex-1 max-w-6xl mx-auto w-full ${isPresenting ? 'gap-5' : 'gap-4'}`}>
+        {sections.map((s) => (
+          <div
+            key={s.id}
+            onClick={() => setSpotlight(spotlight === s.id ? null : s.id)}
+            className={`rounded-xl border-2 ${colorMap[s.color].border} cursor-pointer transition-all duration-300 ${isPresenting ? 'p-5' : 'p-4'} ${
+              spotlight === null 
+                ? colorMap[s.color].bg
+                : spotlight === s.id 
+                  ? `${colorMap[s.color].bgActive} scale-[1.02] shadow-lg` 
+                  : 'bg-gray-900/50 opacity-40 scale-95'
+            }`}
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`${colorMap[s.color].text}`}>{s.icon}</div>
+              <h3 className={`${isPresenting ? 'text-2xl' : 'text-xl'} font-bold ${colorMap[s.color].text}`}>{s.title}</h3>
+            </div>
+            
+            {s.content && (
+              <ul className={`space-y-2 ${isPresenting ? 'text-lg' : 'text-sm'}`}>
+                {s.content.map((item, i) => (
+                  <li key={i} className="text-gray-200">
+                    • {item.text} <span className={`font-bold ${colorMap[s.color].text}`}>{item.highlight}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            
+            {s.study && (
+              <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-4' : 'p-3'}`}>
+                <p className={`${isPresenting ? 'text-lg' : 'text-sm'} text-gray-200`}>
+                  <span className={`font-bold ${colorMap[s.color].text}`}>{s.study.name}</span> - {s.study.desc}
+                </p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Field Experiment AFL
+const FieldExperimentAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "What is the key feature of a field experiment?",
+      options: ["It takes place in a laboratory", "The IV is manipulated in a natural environment", "No variables are controlled", "All participants give informed consent"],
+      correct: 1,
+      explanation: "Field experiments take place in natural settings like schools or streets, but the researcher still manipulates the IV."
+    },
+    {
+      question: "Why might participants in a field experiment behave more naturally?",
+      options: ["Because the setting is more comfortable", "Because they may not know they're being studied", "Because there are more participants", "Because the experiment takes longer"],
+      correct: 1,
+      explanation: "When participants don't know they're in a study, they're less likely to change their behaviour (fewer demand characteristics)."
+    },
+    {
+      question: "Why are field experiments harder to replicate than lab experiments?",
+      options: ["They cost more money", "They have fewer participants", "There's less control over extraneous variables", "The IV is harder to measure"],
+      correct: 2,
+      explanation: "Natural settings have many uncontrollable variables, making it difficult to exactly recreate conditions."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Field Experiments - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>
+              Score: {score}/{questions.length}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Natural Experiment Teaching Slide - Spotlight Cards Style
+const NaturalExperimentTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [spotlight, setSpotlight] = useState<number | null>(null)
+
+  const sections = [
+    { 
+      id: 0,
+      title: 'What is a Natural Experiment?', 
+      icon: <Eye size={isPresenting ? 28 : 24} />, 
+      color: 'cyan',
+      content: [
+        { text: 'The IV is', highlight: 'NOT manipulated by the researcher' },
+        { text: 'The IV', highlight: 'occurs naturally (e.g., gender, age, disaster)' },
+        { text: 'Researcher simply', highlight: 'measures the effect on the DV' },
+        { text: 'Allows study of variables that', highlight: 'can\'t be ethically manipulated' }
+      ]
+    },
+    { 
+      id: 1,
+      title: 'Example Study', 
+      icon: <BookOpen size={isPresenting ? 28 : 24} />, 
+      color: 'rose',
+      study: { name: 'Hodges & Tizard (1989)', desc: 'Studied effects of early institutional care on attachment. The IV (being raised in an institution) occurred naturally - researchers couldn\'t ethically place children in institutions.' }
+    },
+    { 
+      id: 2,
+      title: '✓ Strengths', 
+      icon: <CheckCircle size={isPresenting ? 28 : 24} />, 
+      color: 'green',
+      content: [
+        { text: '', highlight: 'High ecological validity' },
+        { text: 'Can study variables', highlight: 'impossible to manipulate ethically' },
+        { text: 'Participants may be', highlight: 'unaware of being studied' }
+      ]
+    },
+    { 
+      id: 3,
+      title: '✗ Limitations', 
+      icon: <XCircle size={isPresenting ? 28 : 24} />, 
+      color: 'red',
+      content: [
+        { text: '', highlight: 'Cannot establish cause and effect' },
+        { text: 'Natural events may be', highlight: 'rare or unpredictable' },
+        { text: '', highlight: 'No control over participant allocation' }
+      ]
+    }
+  ]
+
+  const colorMap: Record<string, { border: string, bg: string, text: string, bgActive: string }> = {
+    cyan:  { border: 'border-cyan-500', bg: 'bg-cyan-900/20', text: 'text-cyan-300', bgActive: 'bg-cyan-900/50' },
+    rose:  { border: 'border-rose-500', bg: 'bg-rose-900/20', text: 'text-rose-300', bgActive: 'bg-rose-900/50' },
+    green: { border: 'border-green-500', bg: 'bg-green-900/20', text: 'text-green-300', bgActive: 'bg-green-900/50' },
+    red:   { border: 'border-red-500', bg: 'bg-red-900/20', text: 'text-red-300', bgActive: 'bg-red-900/50' },
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-8' : 'p-8'}`}>
+      <div className="mb-4 text-center">
+        <h2 className={`${isPresenting ? 'text-5xl' : 'text-4xl'} font-black text-white mb-2`}>Natural Experiments</h2>
+        <p className={`${isPresenting ? 'text-xl' : 'text-base'} text-gray-400`}>Click each card to spotlight • Click again to dim</p>
+      </div>
+
+      <div className={`grid grid-cols-2 flex-1 max-w-6xl mx-auto w-full ${isPresenting ? 'gap-5' : 'gap-4'}`}>
+        {sections.map((s) => (
+          <div
+            key={s.id}
+            onClick={() => setSpotlight(spotlight === s.id ? null : s.id)}
+            className={`rounded-xl border-2 ${colorMap[s.color].border} cursor-pointer transition-all duration-300 ${isPresenting ? 'p-5' : 'p-4'} ${
+              spotlight === null 
+                ? colorMap[s.color].bg
+                : spotlight === s.id 
+                  ? `${colorMap[s.color].bgActive} scale-[1.02] shadow-lg` 
+                  : 'bg-gray-900/50 opacity-40 scale-95'
+            }`}
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`${colorMap[s.color].text}`}>{s.icon}</div>
+              <h3 className={`${isPresenting ? 'text-2xl' : 'text-xl'} font-bold ${colorMap[s.color].text}`}>{s.title}</h3>
+            </div>
+            
+            {s.content && (
+              <ul className={`space-y-2 ${isPresenting ? 'text-lg' : 'text-sm'}`}>
+                {s.content.map((item, i) => (
+                  <li key={i} className="text-gray-200">
+                    • {item.text} <span className={`font-bold ${colorMap[s.color].text}`}>{item.highlight}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            
+            {s.study && (
+              <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-4' : 'p-3'}`}>
+                <p className={`${isPresenting ? 'text-lg' : 'text-sm'} text-gray-200`}>
+                  <span className={`font-bold ${colorMap[s.color].text}`}>{s.study.name}</span> - {s.study.desc}
+                </p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className={`rounded-xl border-2 border-yellow-500/40 bg-yellow-900/20 ${isPresenting ? 'p-4 mt-4' : 'p-3 mt-3'} max-w-6xl mx-auto w-full`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-sm'} text-yellow-200`}>
+          <span className="font-bold">⚠️ Key Distinction:</span> In natural experiments, the researcher does NOT manipulate the IV. This is what makes them different from lab and field experiments.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// Natural Experiment AFL
+const NaturalExperimentAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "What makes a natural experiment different from lab and field experiments?",
+      options: ["It takes place outdoors", "The researcher does not manipulate the IV", "It uses more participants", "It has higher reliability"],
+      correct: 1,
+      explanation: "In natural experiments, the IV occurs naturally and is not directly controlled by the researcher."
+    },
+    {
+      question: "Why are natural experiments useful for studying sensitive topics?",
+      options: ["They're cheaper to run", "They're quicker to complete", "They allow study of variables that can't ethically be manipulated", "They have fewer participants"],
+      correct: 2,
+      explanation: "Some variables (like trauma or institutional care) cannot ethically be created by researchers - natural experiments allow us to study their effects."
+    },
+    {
+      question: "Why can't natural experiments establish cause and effect?",
+      options: ["The sample size is too small", "The researcher doesn't control the IV or participant allocation", "They don't measure the DV", "They take too long"],
+      correct: 1,
+      explanation: "Without controlling the IV and how participants are allocated, we can't be certain the IV caused changes in the DV."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Natural Experiments - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>
+              Score: {score}/{questions.length}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Interactive Experiment Types Comparison Slide
+const ExperimentTypesInteractiveSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [selectedType, setSelectedType] = useState<'lab' | 'field' | 'natural' | null>(null)
+
+  const experimentTypes = {
+    lab: {
+      title: 'Lab Experiment',
+      color: 'blue',
+      icon: <Beaker size={isPresenting ? 32 : 24} />,
+      control: 'High',
+      validity: 'Low',
+      ivManipulated: 'By researcher',
+      setting: 'Artificial (lab)',
+      example: 'Loftus & Palmer - car crash videos'
+    },
+    field: {
+      title: 'Field Experiment',
+      color: 'emerald',
+      icon: <MapPin size={isPresenting ? 32 : 24} />,
+      control: 'Medium',
+      validity: 'High',
+      ivManipulated: 'By researcher',
+      setting: 'Natural (street, school)',
+      example: 'Piliavin - subway helping behaviour'
+    },
+    natural: {
+      title: 'Natural Experiment',
+      color: 'purple',
+      icon: <Eye size={isPresenting ? 32 : 24} />,
+      control: 'Low',
+      validity: 'High',
+      ivManipulated: 'By nature/circumstance',
+      setting: 'Natural',
+      example: 'Hodges & Tizard - institutional care'
+    }
+  }
+
+  const colorMap: Record<string, { border: string, bg: string, text: string, glow: string }> = {
+    blue: { border: 'border-blue-400', bg: 'bg-blue-900/40', text: 'text-blue-300', glow: 'shadow-blue-500/30' },
+    emerald: { border: 'border-emerald-400', bg: 'bg-emerald-900/40', text: 'text-emerald-300', glow: 'shadow-emerald-500/30' },
+    purple: { border: 'border-purple-400', bg: 'bg-purple-900/40', text: 'text-purple-300', glow: 'shadow-purple-500/30' }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-8' : 'p-10'}`}>
+      <div className="mb-6 text-center">
+        <h2 className={`${isPresenting ? 'text-5xl' : 'text-4xl'} font-black text-white mb-2`}>Compare Experiment Types</h2>
+        <p className={`${isPresenting ? 'text-xl' : ''} text-gray-400`}>Click each type to see details — watch them highlight!</p>
+      </div>
+
+      {/* Experiment Type Cards */}
+      <div className={`grid grid-cols-3 ${isPresenting ? 'gap-6' : 'gap-4'} mb-6`}>
+        {Object.entries(experimentTypes).map(([key, exp]) => (
+          <button
+            key={key}
+            onClick={() => setSelectedType(selectedType === key ? null : key as 'lab' | 'field' | 'natural')}
+            className={`rounded-2xl border-2 transition-all duration-300 ${isPresenting ? 'p-6' : 'p-4'} text-left ${
+              selectedType === key
+                ? `${colorMap[exp.color].border} ${colorMap[exp.color].bg} scale-105 shadow-xl ${colorMap[exp.color].glow}`
+                : selectedType !== null
+                  ? 'border-gray-700 bg-gray-900/20 opacity-40'
+                  : `border-${exp.color}-500/40 bg-${exp.color}-900/20 hover:scale-102`
+            }`}
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`${colorMap[exp.color].text}`}>{exp.icon}</div>
+              <h3 className={`${isPresenting ? 'text-2xl' : 'text-lg'} font-bold ${colorMap[exp.color].text}`}>{exp.title}</h3>
+            </div>
+            <p className={`text-gray-400 ${isPresenting ? 'text-base' : 'text-sm'}`}>Click to compare</p>
+          </button>
+        ))}
+      </div>
+
+      {/* Comparison Scales */}
+      <div className={`bg-gray-800/30 rounded-2xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-4'} mb-4`}>
+        <h3 className={`${isPresenting ? 'text-xl' : 'text-lg'} font-bold text-white mb-4`}>How do they compare?</h3>
+        
+        {/* Control Scale */}
+        <div className="mb-4">
+          <div className="flex justify-between mb-2">
+            <span className="text-red-400 font-bold">Low Control</span>
+            <span className="text-green-400 font-bold">High Control</span>
+          </div>
+          <div className="flex h-8 rounded-lg overflow-hidden">
+            <div className={`flex-1 flex items-center justify-center transition-all duration-500 ${selectedType === 'natural' ? 'bg-purple-500' : 'bg-purple-500/20'}`}>
+              <span className={`text-xs font-bold ${selectedType === 'natural' ? 'text-white' : 'text-purple-300/50'}`}>Natural</span>
+            </div>
+            <div className={`flex-1 flex items-center justify-center transition-all duration-500 ${selectedType === 'field' ? 'bg-emerald-500' : 'bg-emerald-500/20'}`}>
+              <span className={`text-xs font-bold ${selectedType === 'field' ? 'text-white' : 'text-emerald-300/50'}`}>Field</span>
+            </div>
+            <div className={`flex-1 flex items-center justify-center transition-all duration-500 ${selectedType === 'lab' ? 'bg-blue-500' : 'bg-blue-500/20'}`}>
+              <span className={`text-xs font-bold ${selectedType === 'lab' ? 'text-white' : 'text-blue-300/50'}`}>Lab</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Ecological Validity Scale */}
+        <div>
+          <div className="flex justify-between mb-2">
+            <span className="text-red-400 font-bold">Low Ecological Validity</span>
+            <span className="text-green-400 font-bold">High Ecological Validity</span>
+          </div>
+          <div className="flex h-8 rounded-lg overflow-hidden">
+            <div className={`flex-1 flex items-center justify-center transition-all duration-500 ${selectedType === 'lab' ? 'bg-blue-500' : 'bg-blue-500/20'}`}>
+              <span className={`text-xs font-bold ${selectedType === 'lab' ? 'text-white' : 'text-blue-300/50'}`}>Lab</span>
+            </div>
+            <div className={`flex-1 flex items-center justify-center transition-all duration-500 ${selectedType === 'field' ? 'bg-emerald-500' : 'bg-emerald-500/20'}`}>
+              <span className={`text-xs font-bold ${selectedType === 'field' ? 'text-white' : 'text-emerald-300/50'}`}>Field</span>
+            </div>
+            <div className={`flex-1 flex items-center justify-center transition-all duration-500 ${selectedType === 'natural' ? 'bg-purple-500' : 'bg-purple-500/20'}`}>
+              <span className={`text-xs font-bold ${selectedType === 'natural' ? 'text-white' : 'text-purple-300/50'}`}>Natural</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Selected Details */}
+      {selectedType && (
+        <div className={`rounded-2xl border-2 ${colorMap[experimentTypes[selectedType].color].border} ${colorMap[experimentTypes[selectedType].color].bg} ${isPresenting ? 'p-6' : 'p-4'} animate-fadeIn`}>
+          <div className="grid grid-cols-4 gap-4">
+            <div>
+              <p className={`text-gray-400 ${isPresenting ? 'text-base' : 'text-xs'}`}>Setting</p>
+              <p className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold ${colorMap[experimentTypes[selectedType].color].text}`}>{experimentTypes[selectedType].setting}</p>
+            </div>
+            <div>
+              <p className={`text-gray-400 ${isPresenting ? 'text-base' : 'text-xs'}`}>IV Manipulated</p>
+              <p className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold ${colorMap[experimentTypes[selectedType].color].text}`}>{experimentTypes[selectedType].ivManipulated}</p>
+            </div>
+            <div>
+              <p className={`text-gray-400 ${isPresenting ? 'text-base' : 'text-xs'}`}>Control Level</p>
+              <p className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold ${colorMap[experimentTypes[selectedType].color].text}`}>{experimentTypes[selectedType].control}</p>
+            </div>
+            <div>
+              <p className={`text-gray-400 ${isPresenting ? 'text-base' : 'text-xs'}`}>Example Study</p>
+              <p className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold ${colorMap[experimentTypes[selectedType].color].text}`}>{experimentTypes[selectedType].example}</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Experiment Types Comparison Task
+const ExperimentComparisonTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const scenarios = [
+    { scenario: "A researcher sets up a room where participants are shown images on a screen and their reaction times are measured. The researcher controls the lighting, temperature, and timing.", answer: "lab", explanation: "This is a lab experiment - controlled artificial environment with researcher manipulating the IV." },
+    { scenario: "Researchers study students' stress levels at schools that have banned mobile phones vs schools that allow them. The school policies existed before the study began.", answer: "natural", explanation: "This is a natural experiment - the IV (phone policy) occurred naturally, not manipulated by researchers." },
+    { scenario: "A psychologist has confederates ask for help on a busy street, varying whether they are dressed smartly or casually. They record how many people stop to help.", answer: "field", explanation: "This is a field experiment - natural setting (street) but the IV (clothing) is manipulated by the researcher." },
+    { scenario: "Children who experienced the 2004 tsunami are compared with children from the same area who were not present during the disaster, measuring PTSD symptoms.", answer: "natural", explanation: "This is a natural experiment - the IV (tsunami exposure) was a natural event, not created by researchers." },
+  ]
+
+  const [answers, setAnswers] = useState<Record<number, string>>({})
+  const [showResults, setShowResults] = useState(false)
+
+  const handleAnswer = (idx: number, answer: string) => {
+    setAnswers(prev => ({ ...prev, [idx]: answer }))
+  }
+
+  const checkAnswers = () => setShowResults(true)
+
+  const score = scenarios.filter((s, i) => answers[i] === s.answer).length
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Identify the Experiment Type</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Read each scenario and decide if it's a Lab, Field, or Natural experiment</p>
+      </div>
+
+      <div className="space-y-4 flex-1">
+        {scenarios.map((s, idx) => (
+          <div key={idx} className={`bg-gray-800/50 rounded-xl border ${showResults ? (answers[idx] === s.answer ? 'border-green-500' : 'border-red-500') : 'border-gray-700'} ${isPresenting ? 'p-4' : 'p-6'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-4`}>{s.scenario}</p>
+            
+            <div className="flex gap-3">
+              {['lab', 'field', 'natural'].map(type => (
+                <button
+                  key={type}
+                  onClick={() => !showResults && handleAnswer(idx, type)}
+                  className={`px-4 py-2 rounded-lg font-bold capitalize transition-all ${isPresenting ? 'text-xs' : 'text-sm'} ${
+                    showResults
+                      ? type === s.answer
+                        ? 'bg-green-600 text-white'
+                        : answers[idx] === type
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-700 text-gray-400'
+                      : answers[idx] === type
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+
+            {showResults && answers[idx] !== s.answer && (
+              <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-amber-300 mt-3`}>{s.explanation}</p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {!showResults && Object.keys(answers).length === scenarios.length && (
+        <button onClick={checkAnswers} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-4 self-center">
+          Check My Answers
+        </button>
+      )}
+
+      {showResults && (
+        <div className={`text-center mt-4 ${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl`}>
+          <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>
+            Score: {score}/{scenarios.length}
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lesson 3 Extended Exam Task
+const Lesson3ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Types of Experiment - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          A researcher wants to study the effect of sleep deprivation on memory. Evaluate whether they should use a laboratory experiment or a field experiment for this study. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">Lab +:</span> High control over EVs (temperature, noise, exact sleep deprivation time), easier to establish cause and effect, easy to replicate</p>
+            <p><span className="font-bold text-amber-300">Lab -:</span> Low ecological validity (artificial setting), demand characteristics, participants aware they're being studied</p>
+            <p><span className="font-bold text-amber-300">Field +:</span> Higher ecological validity, more natural behaviour, can study real-world sleep patterns</p>
+            <p><span className="font-bold text-amber-300">Field -:</span> Less control over EVs, harder to measure exact sleep deprivation, ethical issues (not controlling when people sleep)</p>
+            <p><span className="font-bold text-amber-300">Conclusion:</span> Lab may be better for this study due to ethical concerns about deliberately depriving people of sleep in real life</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 4: EXPERIMENTAL DESIGNS =============
+
+// Interactive Experimental Designs Comparison
+const ExperimentalDesignsInteractiveSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [selectedDesign, setSelectedDesign] = useState<'independent' | 'repeated' | 'matched' | null>(null)
+  const [showParticipants, setShowParticipants] = useState(false)
+
+  const designs = {
+    independent: {
+      name: 'Independent Groups',
+      icon: <Users size={24} />,
+      color: 'blue',
+      desc: 'Different participants in each condition',
+      participants: { condA: ['P1', 'P2', 'P3', 'P4', 'P5'], condB: ['P6', 'P7', 'P8', 'P9', 'P10'] },
+      strengths: ['No order effects', 'Quicker - each person tested once'],
+      limitations: ['Participant variables (individual differences)', 'Needs more participants']
+    },
+    repeated: {
+      name: 'Repeated Measures',
+      icon: <RefreshCw size={24} />,
+      color: 'emerald',
+      desc: 'Same participants in ALL conditions',
+      participants: { condA: ['P1', 'P2', 'P3', 'P4', 'P5'], condB: ['P1', 'P2', 'P3', 'P4', 'P5'] },
+      strengths: ['No participant variables', 'Fewer participants needed'],
+      limitations: ['Order effects (practice/fatigue)', 'Demand characteristics']
+    },
+    matched: {
+      name: 'Matched Pairs',
+      icon: <Link size={24} />,
+      color: 'purple',
+      desc: 'Matched on key variables, then split',
+      participants: { condA: ['P1a', 'P2a', 'P3a', 'P4a', 'P5a'], condB: ['P1b', 'P2b', 'P3b', 'P4b', 'P5b'] },
+      strengths: ['Reduces participant variables', 'No order effects'],
+      limitations: ['Time-consuming to match', 'Can\'t match on everything']
+    }
+  }
+
+  const colorMap: Record<string, { border: string, bg: string, text: string, solid: string }> = {
+    blue: { border: 'border-blue-400', bg: 'bg-blue-900/40', text: 'text-blue-300', solid: 'bg-blue-500' },
+    emerald: { border: 'border-emerald-400', bg: 'bg-emerald-900/40', text: 'text-emerald-300', solid: 'bg-emerald-500' },
+    purple: { border: 'border-purple-400', bg: 'bg-purple-900/40', text: 'text-purple-300', solid: 'bg-purple-500' },
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-8' : 'p-10'}`}>
+      <div className="mb-4 text-center">
+        <h2 className={`${isPresenting ? 'text-5xl' : 'text-4xl'} font-black text-white mb-2`}>Experimental Designs</h2>
+        <p className={`${isPresenting ? 'text-xl' : ''} text-gray-400`}>Click to compare how participants are allocated!</p>
+      </div>
+
+      {/* Design Selection Buttons */}
+      <div className={`grid grid-cols-3 ${isPresenting ? 'gap-4' : 'gap-3'} mb-4`}>
+        {Object.entries(designs).map(([key, design]) => (
+          <button
+            key={key}
+            onClick={() => { setSelectedDesign(key as 'independent' | 'repeated' | 'matched'); setShowParticipants(true); }}
+            className={`rounded-xl border-2 transition-all duration-300 ${isPresenting ? 'p-4' : 'p-3'} ${
+              selectedDesign === key
+                ? `${colorMap[design.color].border} ${colorMap[design.color].bg} scale-105 shadow-xl`
+                : selectedDesign !== null
+                  ? 'border-gray-700 bg-gray-900/20 opacity-50'
+                  : `border-${design.color}-500/40 bg-${design.color}-900/20 hover:scale-102`
+            }`}
+          >
+            <div className={`flex items-center justify-center gap-2 ${colorMap[design.color].text} mb-2`}>
+              {design.icon}
+              <span className={`${isPresenting ? 'text-lg' : 'text-base'} font-bold`}>{design.name}</span>
+            </div>
+            <p className={`text-gray-400 ${isPresenting ? 'text-sm' : 'text-xs'} text-center`}>{design.desc}</p>
+          </button>
+        ))}
+      </div>
+
+      {/* Visual Participant Demo */}
+      {showParticipants && selectedDesign && (
+        <div className={`bg-gray-800/30 rounded-2xl border border-gray-700 ${isPresenting ? 'p-4' : 'p-3'} mb-4 animate-fadeIn`}>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <h4 className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold text-pink-300 mb-3`}>Condition A (e.g., Music)</h4>
+              <div className="flex gap-2 flex-wrap">
+                {designs[selectedDesign].participants.condA.map((p, idx) => (
+                  <div 
+                    key={idx}
+                    className={`${isPresenting ? 'w-12 h-12' : 'w-10 h-10'} rounded-lg ${colorMap[designs[selectedDesign].color].solid} flex items-center justify-center font-bold text-white ${isPresenting ? 'text-sm' : 'text-xs'} animate-fadeIn`}
+                    style={{ animationDelay: `${idx * 100}ms` }}
+                  >
+                    {p}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold text-cyan-300 mb-3`}>Condition B (e.g., Silence)</h4>
+              <div className="flex gap-2 flex-wrap">
+                {designs[selectedDesign].participants.condB.map((p, idx) => (
+                  <div 
+                    key={idx}
+                    className={`${isPresenting ? 'w-12 h-12' : 'w-10 h-10'} rounded-lg ${
+                      selectedDesign === 'repeated' ? colorMap[designs[selectedDesign].color].solid : 'bg-gray-600'
+                    } flex items-center justify-center font-bold text-white ${isPresenting ? 'text-sm' : 'text-xs'} animate-fadeIn`}
+                    style={{ animationDelay: `${(idx + 5) * 100}ms` }}
+                  >
+                    {p}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <p className={`mt-3 ${isPresenting ? 'text-base' : 'text-sm'} text-gray-400 text-center`}>
+            {selectedDesign === 'independent' && 'Different people in each group — watch for individual differences!'}
+            {selectedDesign === 'repeated' && 'Same people do both — watch for order effects!'}
+            {selectedDesign === 'matched' && 'Pairs are matched on key variables, then split into groups.'}
+          </p>
+        </div>
+      )}
+
+      {/* Strengths & Limitations */}
+      {selectedDesign && (
+        <div className={`grid grid-cols-2 ${isPresenting ? 'gap-4' : 'gap-3'} animate-fadeIn`}>
+          <div className={`rounded-xl border-2 border-green-500/40 bg-green-900/20 ${isPresenting ? 'p-4' : 'p-3'}`}>
+            <h4 className={`${isPresenting ? 'text-lg' : 'text-base'} font-bold text-green-300 mb-2`}>✓ Strengths</h4>
+            <ul className={`${isPresenting ? 'text-base' : 'text-sm'} text-gray-200 space-y-1`}>
+              {designs[selectedDesign].strengths.map((s, i) => (
+                <li key={i}>• {s}</li>
+              ))}
+            </ul>
+          </div>
+          <div className={`rounded-xl border-2 border-red-500/40 bg-red-900/20 ${isPresenting ? 'p-4' : 'p-3'}`}>
+            <h4 className={`${isPresenting ? 'text-lg' : 'text-base'} font-bold text-red-300 mb-2`}>✗ Limitations</h4>
+            <ul className={`${isPresenting ? 'text-base' : 'text-sm'} text-gray-200 space-y-1`}>
+              {designs[selectedDesign].limitations.map((l, i) => (
+                <li key={i}>• {l}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Independent Groups Teaching Slide
+const IndependentGroupsTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [activeView, setActiveView] = useState<'definition' | 'strengths' | 'limitations'>('definition')
+
+  const content = {
+    definition: {
+      title: 'Independent Groups Design',
+      points: [
+        { text: 'Different participants', highlight: 'in each condition' },
+        { text: 'Participants only experience', highlight: 'ONE level of the IV' },
+        { text: 'Groups should be', highlight: 'randomly allocated' },
+        { text: 'Also called', highlight: '"between-subjects" design' }
+      ]
+    },
+    strengths: [
+      { text: 'No order effects', detail: 'participants only do one condition' },
+      { text: 'Less time-consuming', detail: 'for each participant' },
+      { text: 'Lower chance of demand characteristics', detail: 'participants can\'t guess the aim' }
+    ],
+    limitations: [
+      { text: 'Participant variables', detail: 'groups may differ naturally' },
+      { text: 'Need more participants', detail: 'double the sample size' },
+      { text: 'Harder to control individual differences', detail: 'random allocation doesn\'t guarantee equivalence' }
+    ],
+    example: {
+      title: 'Memory study',
+      description: 'Testing if background music affects recall',
+      details: 'Group A: Learn words with music\nGroup B: Learn words in silence\nDifferent people in each group'
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      {/* Header */}
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>Independent Groups Design</h2>
+            <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>Different participants in each condition</p>
+          </div>
+          <div className={`rounded-lg bg-blue-900/30 border border-blue-500/40 ${isPresenting ? 'px-3 py-1.5' : 'px-4 py-2'}`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-blue-300`}>
+              <span className="font-bold">Controls:</span> Participant Variables
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Toggle Buttons */}
+      <div className={`flex gap-2 ${isPresenting ? 'mb-4' : 'mb-6'}`}>
+        <button
+          onClick={() => setActiveView('definition')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-3 text-sm' : 'py-3 px-6 text-base'} rounded-lg font-bold transition-all ${
+            activeView === 'definition'
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+              : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 hover:text-gray-200'
+          }`}
+        >
+          <Users size={isPresenting ? 16 : 20} className="inline mr-2" />
+          Definition
+        </button>
+        <button
+          onClick={() => setActiveView('strengths')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-3 text-sm' : 'py-3 px-6 text-base'} rounded-lg font-bold transition-all ${
+            activeView === 'strengths'
+              ? 'bg-green-600 text-white shadow-lg shadow-green-600/30'
+              : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 hover:text-gray-200'
+          }`}
+        >
+          ✓ Strengths
+        </button>
+        <button
+          onClick={() => setActiveView('limitations')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-3 text-sm' : 'py-3 px-6 text-base'} rounded-lg font-bold transition-all ${
+            activeView === 'limitations'
+              ? 'bg-red-600 text-white shadow-lg shadow-red-600/30'
+              : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 hover:text-gray-200'
+          }`}
+        >
+          ✗ Limitations
+        </button>
+      </div>
+
+      {/* Main Content Area */}
+      <div className={`flex-1 grid grid-cols-3 ${isPresenting ? 'gap-4' : 'gap-6'}`}>
+        {/* Content Panel - 2/3 width */}
+        <div className="col-span-2">
+          {activeView === 'definition' && (
+            <div className={`h-full rounded-xl border-2 border-blue-500/40 bg-blue-900/20 ${isPresenting ? 'p-4' : 'p-6'} animate-fadeIn`}>
+              <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-blue-300 mb-4 flex items-center gap-2`}>
+                <Users size={isPresenting ? 24 : 32} />
+                What is Independent Groups?
+              </h3>
+              <ul className={`space-y-3 ${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+                {content.definition.points.map((point, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="text-blue-400 mt-1">•</span>
+                    <span>{point.text} <span className="font-bold text-blue-300">{point.highlight}</span></span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {activeView === 'strengths' && (
+            <div className={`h-full rounded-xl border-2 border-green-500/40 bg-green-900/20 ${isPresenting ? 'p-4' : 'p-6'} animate-fadeIn`}>
+              <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-green-300 mb-4`}>✓ Strengths</h3>
+              <ul className={`space-y-4 ${isPresenting ? 'text-sm' : 'text-lg'}`}>
+                {content.strengths.map((item, idx) => (
+                  <li key={idx} className="bg-green-950/30 rounded-lg p-3 border border-green-500/20">
+                    <p className="font-bold text-green-300">{item.text}</p>
+                    <p className="text-gray-300 text-sm mt-1">{item.detail}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {activeView === 'limitations' && (
+            <div className={`h-full rounded-xl border-2 border-red-500/40 bg-red-900/20 ${isPresenting ? 'p-4' : 'p-6'} animate-fadeIn`}>
+              <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-red-300 mb-4`}>✗ Limitations</h3>
+              <ul className={`space-y-4 ${isPresenting ? 'text-sm' : 'text-lg'}`}>
+                {content.limitations.map((item, idx) => (
+                  <li key={idx} className="bg-red-950/30 rounded-lg p-3 border border-red-500/20">
+                    <p className="font-bold text-red-300">{item.text}</p>
+                    <p className="text-gray-300 text-sm mt-1">{item.detail}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* Example Panel - Always Visible */}
+        <div className={`rounded-xl border-2 border-purple-500/40 bg-purple-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-purple-300 mb-3`}>📋 Example Study</h3>
+          <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-3' : 'p-4'} space-y-3`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-purple-300`}>
+              {content.example.title}
+            </p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300`}>
+              {content.example.description}
+            </p>
+            <div className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 whitespace-pre-line border-t border-purple-500/20 pt-3`}>
+              {content.example.details}
+            </div>
+          </div>
+          <div className={`mt-4 p-3 rounded-lg bg-gray-900/30 border border-gray-700`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400`}>
+              <span className="font-bold text-purple-300">Key feature:</span> Different people in each condition
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Independent Groups AFL
+const IndependentGroupsAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "In an independent groups design, each participant experiences...",
+      options: ["All conditions", "Two conditions", "One condition only", "No conditions"],
+      correct: 2,
+      explanation: "In independent groups design, each participant only takes part in ONE condition of the experiment."
+    },
+    {
+      question: "What is a key advantage of independent groups design?",
+      options: ["Needs fewer participants", "No order effects", "Eliminates all individual differences", "Participants can compare conditions"],
+      correct: 1,
+      explanation: "Since participants only do one condition, there's no chance of practice or fatigue effects from doing multiple conditions."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Independent Groups - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Repeated Measures Teaching Slide - Comparison Toggle Style
+const RepeatedMeasuresTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [activeView, setActiveView] = useState<'definition' | 'strengths' | 'limitations'>('definition')
+
+  const content = {
+    definition: {
+      title: 'Repeated Measures Design',
+      points: [
+        { text: 'Same participants', highlight: 'in ALL conditions' },
+        { text: 'Each person experiences', highlight: 'every level of the IV' },
+        { text: 'Results are compared', highlight: 'within each participant' },
+        { text: 'Also called', highlight: '"within-subjects" design' }
+      ]
+    },
+    strengths: [
+      { text: 'No participant variables', detail: 'same people in all conditions' },
+      { text: 'Fewer participants needed', detail: 'more economical' },
+      { text: 'More sensitive', detail: 'to detecting differences between conditions' }
+    ],
+    limitations: [
+      { text: 'Order effects', detail: 'practice or fatigue can affect results' },
+      { text: 'Demand characteristics', detail: 'may guess aim from doing both conditions' },
+      { text: 'More time-consuming', detail: 'for each participant' }
+    ],
+    example: {
+      title: 'Memory study',
+      description: 'Testing if background music affects recall',
+      details: 'Same participants:\nWeek 1: Learn words with music\nWeek 2: Learn words in silence\nCompare each person\'s scores'
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      {/* Header */}
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>Repeated Measures Design</h2>
+            <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>Same participants in all conditions</p>
+          </div>
+          <div className={`rounded-lg bg-emerald-900/30 border border-emerald-500/40 ${isPresenting ? 'px-3 py-1.5' : 'px-4 py-2'}`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-emerald-300`}>
+              <span className="font-bold">Controls:</span> Order Effects (via Counterbalancing)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Toggle Buttons */}
+      <div className={`flex gap-2 ${isPresenting ? 'mb-4' : 'mb-6'}`}>
+        <button
+          onClick={() => setActiveView('definition')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-3 text-sm' : 'py-3 px-6 text-base'} rounded-lg font-bold transition-all ${
+            activeView === 'definition'
+              ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
+              : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 hover:text-gray-200'
+          }`}
+        >
+          <RefreshCw size={isPresenting ? 16 : 20} className="inline mr-2" />
+          Definition
+        </button>
+        <button
+          onClick={() => setActiveView('strengths')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-3 text-sm' : 'py-3 px-6 text-base'} rounded-lg font-bold transition-all ${
+            activeView === 'strengths'
+              ? 'bg-green-600 text-white shadow-lg shadow-green-600/30'
+              : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 hover:text-gray-200'
+          }`}
+        >
+          ✓ Strengths
+        </button>
+        <button
+          onClick={() => setActiveView('limitations')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-3 text-sm' : 'py-3 px-6 text-base'} rounded-lg font-bold transition-all ${
+            activeView === 'limitations'
+              ? 'bg-red-600 text-white shadow-lg shadow-red-600/30'
+              : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 hover:text-gray-200'
+          }`}
+        >
+          ✗ Limitations
+        </button>
+      </div>
+
+      {/* Main Content Area */}
+      <div className={`flex-1 grid grid-cols-3 ${isPresenting ? 'gap-4' : 'gap-6'}`}>
+        {/* Content Panel - 2/3 width */}
+        <div className="col-span-2">
+          {activeView === 'definition' && (
+            <div className={`h-full rounded-xl border-2 border-emerald-500/40 bg-emerald-900/20 ${isPresenting ? 'p-4' : 'p-6'} animate-fadeIn`}>
+              <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-emerald-300 mb-4 flex items-center gap-2`}>
+                <RefreshCw size={isPresenting ? 24 : 32} />
+                What is Repeated Measures?
+              </h3>
+              <ul className={`space-y-3 ${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+                {content.definition.points.map((point, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="text-emerald-400 mt-1">•</span>
+                    <span>{point.text} <span className="font-bold text-emerald-300">{point.highlight}</span></span>
+                  </li>
+                ))}
+              </ul>
+              {/* Counterbalancing note inside definition */}
+              <div className={`rounded-lg border border-yellow-500/40 bg-yellow-900/20 ${isPresenting ? 'p-3 mt-4' : 'p-4 mt-6'}`}>
+                <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-yellow-200`}>
+                  <span className="font-bold">💡 Counterbalancing:</span> Half do A then B, half do B then A — balances out order effects.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeView === 'strengths' && (
+            <div className={`h-full rounded-xl border-2 border-green-500/40 bg-green-900/20 ${isPresenting ? 'p-4' : 'p-6'} animate-fadeIn`}>
+              <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-green-300 mb-4`}>✓ Strengths</h3>
+              <ul className={`space-y-4 ${isPresenting ? 'text-sm' : 'text-lg'}`}>
+                {content.strengths.map((item, idx) => (
+                  <li key={idx} className="bg-green-950/30 rounded-lg p-3 border border-green-500/20">
+                    <p className="font-bold text-green-300">{item.text}</p>
+                    <p className="text-gray-300 text-sm mt-1">{item.detail}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {activeView === 'limitations' && (
+            <div className={`h-full rounded-xl border-2 border-red-500/40 bg-red-900/20 ${isPresenting ? 'p-4' : 'p-6'} animate-fadeIn`}>
+              <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-red-300 mb-4`}>✗ Limitations</h3>
+              <ul className={`space-y-4 ${isPresenting ? 'text-sm' : 'text-lg'}`}>
+                {content.limitations.map((item, idx) => (
+                  <li key={idx} className="bg-red-950/30 rounded-lg p-3 border border-red-500/20">
+                    <p className="font-bold text-red-300">{item.text}</p>
+                    <p className="text-gray-300 text-sm mt-1">{item.detail}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* Example Panel - Always Visible */}
+        <div className={`rounded-xl border-2 border-amber-500/40 bg-amber-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-amber-300 mb-3`}>📋 Example Study</h3>
+          <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-3' : 'p-4'} space-y-3`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-amber-300`}>
+              {content.example.title}
+            </p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300`}>
+              {content.example.description}
+            </p>
+            <div className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 whitespace-pre-line border-t border-amber-500/20 pt-3`}>
+              {content.example.details}
+            </div>
+          </div>
+          <div className={`mt-4 p-3 rounded-lg bg-gray-900/30 border border-gray-700`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400`}>
+              <span className="font-bold text-amber-300">Key feature:</span> Same people do ALL conditions
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Repeated Measures AFL
+const RepeatedMeasuresAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "In a repeated measures design, how many conditions does each participant experience?",
+      options: ["One condition only", "Two conditions maximum", "All conditions", "It varies per participant"],
+      correct: 2,
+      explanation: "In repeated measures, each participant takes part in ALL conditions of the experiment."
+    },
+    {
+      question: "What is the main problem with repeated measures design?",
+      options: ["Needs too many participants", "Participant variables", "Order effects", "Cannot establish cause and effect"],
+      correct: 2,
+      explanation: "Order effects (practice making you better, or fatigue making you worse) are the main issue with repeated measures."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Repeated Measures - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Matched Pairs Teaching Slide - Comparison Toggle Style
+const MatchedPairsTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [activeView, setActiveView] = useState<'definition' | 'strengths' | 'limitations'>('definition')
+
+  const content = {
+    definition: {
+      title: 'Matched Pairs Design',
+      points: [
+        { text: 'Different participants', highlight: 'in each condition' },
+        { text: 'Participants are', highlight: 'matched on important variables' },
+        { text: 'One from each pair goes to', highlight: 'each condition' },
+        { text: 'Combines', highlight: 'benefits of both designs' }
+      ]
+    },
+    strengths: [
+      { text: 'No order effects', detail: 'different people in each condition' },
+      { text: 'Reduces participant variables', detail: 'pairs are matched on key characteristics' },
+      { text: 'Best of both worlds', detail: 'combines advantages of independent groups and repeated measures' }
+    ],
+    limitations: [
+      { text: 'Time-consuming', detail: 'to match participants before the study' },
+      { text: 'Expensive', detail: 'requires pre-testing to find matches' },
+      { text: 'Can\'t match on everything', detail: 'some variables may still differ' }
+    ],
+    example: {
+      title: 'Memory study',
+      description: 'Testing if background music affects recall',
+      details: 'Match participants on IQ and age\nPair 1: Person A → music, Person B → silence\nPair 2: Person C → music, Person D → silence\nMatched pairs, split between conditions'
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      {/* Header */}
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>Matched Pairs Design</h2>
+            <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>Matching participants on key variables</p>
+          </div>
+          <div className={`rounded-lg bg-violet-900/30 border border-violet-500/40 ${isPresenting ? 'px-3 py-1.5' : 'px-4 py-2'}`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-violet-300`}>
+              <span className="font-bold">Controls:</span> Both Participant Variables & Order Effects
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Toggle Buttons */}
+      <div className={`flex gap-2 ${isPresenting ? 'mb-4' : 'mb-6'}`}>
+        <button
+          onClick={() => setActiveView('definition')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-3 text-sm' : 'py-3 px-6 text-base'} rounded-lg font-bold transition-all ${
+            activeView === 'definition'
+              ? 'bg-violet-600 text-white shadow-lg shadow-violet-600/30'
+              : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 hover:text-gray-200'
+          }`}
+        >
+          <Link size={isPresenting ? 16 : 20} className="inline mr-2" />
+          Definition
+        </button>
+        <button
+          onClick={() => setActiveView('strengths')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-3 text-sm' : 'py-3 px-6 text-base'} rounded-lg font-bold transition-all ${
+            activeView === 'strengths'
+              ? 'bg-green-600 text-white shadow-lg shadow-green-600/30'
+              : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 hover:text-gray-200'
+          }`}
+        >
+          ✓ Strengths
+        </button>
+        <button
+          onClick={() => setActiveView('limitations')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-3 text-sm' : 'py-3 px-6 text-base'} rounded-lg font-bold transition-all ${
+            activeView === 'limitations'
+              ? 'bg-red-600 text-white shadow-lg shadow-red-600/30'
+              : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 hover:text-gray-200'
+          }`}
+        >
+          ✗ Limitations
+        </button>
+      </div>
+
+      {/* Main Content Area */}
+      <div className={`flex-1 grid grid-cols-3 ${isPresenting ? 'gap-4' : 'gap-6'}`}>
+        {/* Content Panel - 2/3 width */}
+        <div className="col-span-2">
+          {activeView === 'definition' && (
+            <div className={`h-full rounded-xl border-2 border-violet-500/40 bg-violet-900/20 ${isPresenting ? 'p-4' : 'p-6'} animate-fadeIn`}>
+              <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-violet-300 mb-4 flex items-center gap-2`}>
+                <Link size={isPresenting ? 24 : 32} />
+                What is Matched Pairs?
+              </h3>
+              <ul className={`space-y-3 ${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+                {content.definition.points.map((point, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="text-violet-400 mt-1">•</span>
+                    <span>{point.text} <span className="font-bold text-violet-300">{point.highlight}</span></span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {activeView === 'strengths' && (
+            <div className={`h-full rounded-xl border-2 border-green-500/40 bg-green-900/20 ${isPresenting ? 'p-4' : 'p-6'} animate-fadeIn`}>
+              <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-green-300 mb-4`}>✓ Strengths</h3>
+              <ul className={`space-y-4 ${isPresenting ? 'text-sm' : 'text-lg'}`}>
+                {content.strengths.map((item, idx) => (
+                  <li key={idx} className="bg-green-950/30 rounded-lg p-3 border border-green-500/20">
+                    <p className="font-bold text-green-300">{item.text}</p>
+                    <p className="text-gray-300 text-sm mt-1">{item.detail}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {activeView === 'limitations' && (
+            <div className={`h-full rounded-xl border-2 border-red-500/40 bg-red-900/20 ${isPresenting ? 'p-4' : 'p-6'} animate-fadeIn`}>
+              <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-red-300 mb-4`}>✗ Limitations</h3>
+              <ul className={`space-y-4 ${isPresenting ? 'text-sm' : 'text-lg'}`}>
+                {content.limitations.map((item, idx) => (
+                  <li key={idx} className="bg-red-950/30 rounded-lg p-3 border border-red-500/20">
+                    <p className="font-bold text-red-300">{item.text}</p>
+                    <p className="text-gray-300 text-sm mt-1">{item.detail}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* Example Panel - Always Visible */}
+        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-3`}>📋 Example Study</h3>
+          <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-3' : 'p-4'} space-y-3`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-rose-300`}>
+              {content.example.title}
+            </p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300`}>
+              {content.example.description}
+            </p>
+            <div className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 whitespace-pre-line border-t border-rose-500/20 pt-3`}>
+              {content.example.details}
+            </div>
+          </div>
+          <div className={`mt-4 p-3 rounded-lg bg-gray-900/30 border border-gray-700`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400`}>
+              <span className="font-bold text-rose-300">Key feature:</span> Matched on variables, then split
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Matched Pairs AFL
+const MatchedPairsAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "In matched pairs design, what happens after participants are matched?",
+      options: ["Both go to the same condition", "One from each pair goes to each condition", "They are randomly assigned to any condition", "They repeat both conditions"],
+      correct: 1,
+      explanation: "After matching, one person from each pair is placed in each condition, so the groups are comparable."
+    },
+    {
+      question: "What is the main advantage of matched pairs over independent groups?",
+      options: ["Needs fewer participants", "No demand characteristics", "Reduces participant variables", "Quicker to run"],
+      correct: 2,
+      explanation: "By matching participants on key variables, we reduce the impact of individual differences between groups."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Matched Pairs - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Experimental Design Choice Task
+const DesignChoiceTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const scenarios = [
+    { scenario: "A researcher wants to test if a new teaching method improves test scores. They have limited time and a small budget.", answer: "repeated", explanation: "Repeated measures needs fewer participants and is more economical." },
+    { scenario: "A psychologist is testing whether caffeine affects reaction times. They're worried participants might guess the aim if they do both conditions.", answer: "independent", explanation: "Independent groups reduces demand characteristics as participants only do one condition." },
+    { scenario: "A study on the effect of exercise on mood. The researcher wants to control for baseline fitness levels.", answer: "matched", explanation: "Matched pairs allows controlling for participant variables like fitness levels." },
+    { scenario: "Testing memory with two different word lists. The researcher is concerned about practice effects.", answer: "independent", explanation: "Independent groups eliminates order effects as each person does only one condition." },
+  ]
+
+  const [answers, setAnswers] = useState<Record<number, string>>({})
+  const [showResults, setShowResults] = useState(false)
+
+  const handleAnswer = (idx: number, answer: string) => {
+    setAnswers(prev => ({ ...prev, [idx]: answer }))
+  }
+
+  const checkAnswers = () => setShowResults(true)
+
+  const score = scenarios.filter((s, i) => answers[i] === s.answer).length
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Choose the Best Design</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Which experimental design would be most appropriate?</p>
+      </div>
+
+      <div className="space-y-4 flex-1">
+        {scenarios.map((s, idx) => (
+          <div key={idx} className={`bg-gray-800/50 rounded-xl border ${showResults ? (answers[idx] === s.answer ? 'border-green-500' : 'border-red-500') : 'border-gray-700'} ${isPresenting ? 'p-4' : 'p-6'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-4`}>{s.scenario}</p>
+            
+            <div className="flex gap-3">
+              {['independent', 'repeated', 'matched'].map(type => (
+                <button
+                  key={type}
+                  onClick={() => !showResults && handleAnswer(idx, type)}
+                  className={`px-4 py-2 rounded-lg font-bold capitalize transition-all ${isPresenting ? 'text-xs' : 'text-sm'} ${
+                    showResults
+                      ? type === s.answer
+                        ? 'bg-green-600 text-white'
+                        : answers[idx] === type
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-700 text-gray-400'
+                      : answers[idx] === type
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {type === 'independent' ? 'Independent Groups' : type === 'repeated' ? 'Repeated Measures' : 'Matched Pairs'}
+                </button>
+              ))}
+            </div>
+
+            {showResults && answers[idx] !== s.answer && (
+              <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-amber-300 mt-3`}>{s.explanation}</p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {!showResults && Object.keys(answers).length === scenarios.length && (
+        <button onClick={checkAnswers} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-4 self-center">
+          Check My Answers
+        </button>
+      )}
+
+      {showResults && (
+        <div className={`text-center mt-4 ${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl`}>
+          <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{scenarios.length}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lesson 4 Extended Exam Task
+const Lesson4ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Experimental Designs - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          A researcher wants to investigate whether caffeine improves reaction time. Explain why using a repeated measures design might be better than an independent groups design for this study. Include any limitations. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">RM advantage 1:</span> No participant variables - individual differences in baseline reaction time are controlled as same person does both conditions</p>
+            <p><span className="font-bold text-amber-300">RM advantage 2:</span> Fewer participants needed - more economical and practical</p>
+            <p><span className="font-bold text-amber-300">RM advantage 3:</span> More sensitive - easier to detect a real difference in reaction time</p>
+            <p><span className="font-bold text-amber-300">Limitation 1:</span> Order effects - practice may improve reaction time, fatigue may slow it down</p>
+            <p><span className="font-bold text-amber-300">Limitation 2:</span> Demand characteristics - participants may guess the aim and change behaviour</p>
+            <p><span className="font-bold text-amber-300">Solution:</span> Use counterbalancing - half do caffeine first, half do placebo first</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 5: SAMPLING METHODS =============
+
+// Random Sampling Teaching Slide
+const RandomSamplingTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [revealedSteps, setRevealedSteps] = useState<number[]>([])
+
+  const steps = [
+    { 
+      id: 1, 
+      title: 'What is it?', 
+      icon: <HelpCircle size={24} />, 
+      color: 'blue', 
+      content: 'Every member of the target population has an equal chance of being selected. Often uses a random number generator or names in a hat. Requires a complete list of all potential participants.' 
+    },
+    { 
+      id: 2, 
+      title: 'How does it work?', 
+      icon: <Cog size={24} />, 
+      color: 'purple', 
+      content: [
+        'Get a complete list of all members in target population',
+        'Assign each person a unique number',
+        'Use a random number generator (or names in a hat)',
+        'Select until you have your required sample size'
+      ] 
+    },
+    { 
+      id: 3, 
+      title: 'Strengths', 
+      icon: <CheckCircle size={24} />, 
+      color: 'green', 
+      content: [
+        'No researcher bias in selection',
+        'Likely to be representative of population',
+        'Results can be generalised'
+      ] 
+    },
+    { 
+      id: 4, 
+      title: 'Limitations', 
+      icon: <XCircle size={24} />, 
+      color: 'red', 
+      content: [
+        'Time-consuming - need full population list',
+        'Selected people may refuse to participate',
+        'Can be impractical for large populations'
+      ] 
+    },
+  ]
+
+  const revealNext = () => {
+    const nextStep = revealedSteps.length + 1
+    if (nextStep <= steps.length) {
+      setRevealedSteps([...revealedSteps, nextStep])
+    }
+  }
+
+  const revealAll = () => {
+    setRevealedSteps([1, 2, 3, 4])
+  }
+
+  const getColorClasses = (color: string, revealed: boolean) => {
+    if (!revealed) return 'border-gray-700 bg-gray-800/50'
+    const colors: Record<string, string> = {
+      blue: 'border-blue-500 bg-blue-900/30',
+      purple: 'border-purple-500 bg-purple-900/30',
+      green: 'border-green-500 bg-green-900/30',
+      red: 'border-red-500 bg-red-900/30'
+    }
+    return colors[color] || colors.blue
+  }
+
+  const getTextColorClass = (color: string, revealed: boolean) => {
+    if (!revealed) return 'text-gray-500'
+    const colors: Record<string, string> = {
+      blue: 'text-blue-300',
+      purple: 'text-purple-300',
+      green: 'text-green-300',
+      red: 'text-red-300'
+    }
+    return colors[color] || colors.blue
+  }
+
+  return (
+    <div className="flex flex-col h-full animate-fadeIn p-8 overflow-y-auto custom-scrollbar">
+      <div className="mb-4 text-center">
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-4xl'} font-black text-white mb-2`}>Random Sampling</h2>
+        <p className="text-gray-400">Click "Reveal Next" or click cards to reveal content step by step</p>
+      </div>
+
+      {/* Control buttons */}
+      <div className="flex justify-center gap-4 mb-6">
+        <button 
+          onClick={revealNext} 
+          disabled={revealedSteps.length >= 4}
+          className={`px-6 py-2 rounded-lg font-bold transition-all ${
+            revealedSteps.length >= 4 
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-blue-600 hover:bg-blue-700 text-white'
+          }`}
+        >
+          Reveal Next ({revealedSteps.length}/4)
+        </button>
+        <button 
+          onClick={revealAll}
+          className="px-6 py-2 rounded-lg font-bold bg-gray-700 hover:bg-gray-600 text-white transition-all"
+        >
+          Show All
+        </button>
+      </div>
+
+      {/* Steps as cards */}
+      <div className="grid grid-cols-2 gap-4 max-w-5xl mx-auto flex-1">
+        {steps.map((step) => {
+          const isRevealed = revealedSteps.includes(step.id)
+          return (
+            <div 
+              key={step.id}
+              onClick={() => !isRevealed && setRevealedSteps([...revealedSteps, step.id])}
+              className={`rounded-xl border-2 p-5 cursor-pointer transition-all duration-500 ${
+                getColorClasses(step.color, isRevealed)
+              } ${isRevealed ? 'scale-100 opacity-100' : 'scale-95 opacity-60 hover:opacity-80'}`}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <span className={getTextColorClass(step.color, isRevealed)}>
+                  {step.icon}
+                </span>
+                <h3 className={`font-bold text-lg ${getTextColorClass(step.color, isRevealed)}`}>
+                  {step.title}
+                </h3>
+              </div>
+              
+              {isRevealed ? (
+                Array.isArray(step.content) ? (
+                  <ul className="space-y-1 text-gray-200 text-sm">
+                    {step.content.map((item, i) => <li key={i}>• {item}</li>)}
+                  </ul>
+                ) : (
+                  <p className="text-gray-200 text-sm">{step.content}</p>
+                )
+              ) : (
+                <p className="text-gray-600 italic">Click to reveal...</p>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// Random Sampling AFL
+const RandomSamplingAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "What is essential for random sampling?",
+      options: ["A large budget", "Every person having an equal chance of selection", "Volunteers", "A specific age group"],
+      correct: 1,
+      explanation: "Random sampling means everyone in the target population has an equal chance of being selected."
+    },
+    {
+      question: "What is a limitation of random sampling?",
+      options: ["It's biased", "It needs a complete list of the population", "It's too simple", "It only works with small samples"],
+      correct: 1,
+      explanation: "You need a complete list of everyone in the target population, which can be difficult to obtain."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Random Sampling - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Opportunity Sampling Teaching Slide
+const OpportunitySamplingTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [revealedSteps, setRevealedSteps] = useState<number[]>([])
+
+  const steps = [
+    { 
+      id: 1, 
+      title: 'What is it?', 
+      icon: <HelpCircle size={24} />, 
+      color: 'amber', 
+      content: 'Selecting participants who are available at the time. Often convenient - whoever is around. Also called "convenience sampling".' 
+    },
+    { 
+      id: 2, 
+      title: 'How does it work?', 
+      icon: <Cog size={24} />, 
+      color: 'orange', 
+      content: [
+        'Go to a location where people are available',
+        'Ask whoever is there and willing to participate',
+        'Continue until you have enough participants',
+        'No need for a sampling frame or list'
+      ] 
+    },
+    { 
+      id: 3, 
+      title: 'Strengths', 
+      icon: <CheckCircle size={24} />, 
+      color: 'green', 
+      content: [
+        'Quick and easy',
+        'Cheap - minimal resources needed',
+        'Practical for student research'
+      ] 
+    },
+    { 
+      id: 4, 
+      title: 'Limitations', 
+      icon: <XCircle size={24} />, 
+      color: 'red', 
+      content: [
+        'Biased - only certain types of people may be available',
+        'Not representative',
+        'Cannot generalise results'
+      ] 
+    },
+  ]
+
+  const revealNext = () => {
+    const nextStep = revealedSteps.length + 1
+    if (nextStep <= steps.length) {
+      setRevealedSteps([...revealedSteps, nextStep])
+    }
+  }
+
+  const revealAll = () => {
+    setRevealedSteps([1, 2, 3, 4])
+  }
+
+  const getColorClasses = (color: string, revealed: boolean) => {
+    if (!revealed) return 'border-gray-700 bg-gray-800/50'
+    const colors: Record<string, string> = {
+      amber: 'border-amber-500 bg-amber-900/30',
+      orange: 'border-orange-500 bg-orange-900/30',
+      green: 'border-green-500 bg-green-900/30',
+      red: 'border-red-500 bg-red-900/30'
+    }
+    return colors[color] || colors.amber
+  }
+
+  const getTextColorClass = (color: string, revealed: boolean) => {
+    if (!revealed) return 'text-gray-500'
+    const colors: Record<string, string> = {
+      amber: 'text-amber-300',
+      orange: 'text-orange-300',
+      green: 'text-green-300',
+      red: 'text-red-300'
+    }
+    return colors[color] || colors.amber
+  }
+
+  return (
+    <div className="flex flex-col h-full animate-fadeIn p-8 overflow-y-auto custom-scrollbar">
+      <div className="mb-4 text-center">
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-4xl'} font-black text-white mb-2`}>Opportunity Sampling</h2>
+        <p className="text-gray-400">Click "Reveal Next" or click cards to reveal content step by step</p>
+      </div>
+
+      {/* Control buttons */}
+      <div className="flex justify-center gap-4 mb-6">
+        <button 
+          onClick={revealNext} 
+          disabled={revealedSteps.length >= 4}
+          className={`px-6 py-2 rounded-lg font-bold transition-all ${
+            revealedSteps.length >= 4 
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-amber-600 hover:bg-amber-700 text-white'
+          }`}
+        >
+          Reveal Next ({revealedSteps.length}/4)
+        </button>
+        <button 
+          onClick={revealAll}
+          className="px-6 py-2 rounded-lg font-bold bg-gray-700 hover:bg-gray-600 text-white transition-all"
+        >
+          Show All
+        </button>
+      </div>
+
+      {/* Steps as cards */}
+      <div className="grid grid-cols-2 gap-4 max-w-5xl mx-auto flex-1">
+        {steps.map((step) => {
+          const isRevealed = revealedSteps.includes(step.id)
+          return (
+            <div 
+              key={step.id}
+              onClick={() => !isRevealed && setRevealedSteps([...revealedSteps, step.id])}
+              className={`rounded-xl border-2 p-5 cursor-pointer transition-all duration-500 ${
+                getColorClasses(step.color, isRevealed)
+              } ${isRevealed ? 'scale-100 opacity-100' : 'scale-95 opacity-60 hover:opacity-80'}`}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <span className={getTextColorClass(step.color, isRevealed)}>
+                  {step.icon}
+                </span>
+                <h3 className={`font-bold text-lg ${getTextColorClass(step.color, isRevealed)}`}>
+                  {step.title}
+                </h3>
+              </div>
+              
+              {isRevealed ? (
+                Array.isArray(step.content) ? (
+                  <ul className="space-y-1 text-gray-200 text-sm">
+                    {step.content.map((item, i) => <li key={i}>• {item}</li>)}
+                  </ul>
+                ) : (
+                  <p className="text-gray-200 text-sm">{step.content}</p>
+                )
+              ) : (
+                <p className="text-gray-600 italic">Click to reveal...</p>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// Opportunity Sampling AFL
+const OpportunitySamplingAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "Why is opportunity sampling popular with student researchers?",
+      options: ["It's more scientific", "It's quick and easy", "It produces the best results", "It requires special equipment"],
+      correct: 1,
+      explanation: "Opportunity sampling is quick, easy, and practical - perfect for students with limited time and resources."
+    },
+    {
+      question: "What is the main problem with opportunity sampling?",
+      options: ["It takes too long", "It's too expensive", "The sample may not be representative", "It needs too many participants"],
+      correct: 2,
+      explanation: "The sample only includes available people, who may not represent the wider population."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Opportunity Sampling - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Systematic Sampling Teaching Slide
+const SystematicSamplingTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [revealedSteps, setRevealedSteps] = useState<number[]>([])
+
+  const steps = [
+    { 
+      id: 1, 
+      title: 'What is it?', 
+      icon: <HelpCircle size={24} />, 
+      color: 'cyan', 
+      content: 'Select every nth person from a list. First person selected randomly. Then follow the fixed interval throughout the list.' 
+    },
+    { 
+      id: 2, 
+      title: 'How does it work?', 
+      icon: <Cog size={24} />, 
+      color: 'teal', 
+      content: [
+        'Get a complete list of target population',
+        'Calculate the interval (population ÷ sample size needed)',
+        'Randomly select your starting point',
+        'Select every nth person from that point'
+      ] 
+    },
+    { 
+      id: 3, 
+      title: 'Strengths', 
+      icon: <CheckCircle size={24} />, 
+      color: 'green', 
+      content: [
+        'Objective - less researcher bias',
+        'Fairly representative',
+        'Easier than random sampling'
+      ] 
+    },
+    { 
+      id: 4, 
+      title: 'Limitations', 
+      icon: <XCircle size={24} />, 
+      color: 'red', 
+      content: [
+        'Still needs complete list of population',
+        'Can miss patterns if list is ordered',
+        'Selected people may refuse'
+      ] 
+    },
+  ]
+
+  const revealNext = () => {
+    const nextStep = revealedSteps.length + 1
+    if (nextStep <= steps.length) {
+      setRevealedSteps([...revealedSteps, nextStep])
+    }
+  }
+
+  const revealAll = () => {
+    setRevealedSteps([1, 2, 3, 4])
+  }
+
+  const getColorClasses = (color: string, revealed: boolean) => {
+    if (!revealed) return 'border-gray-700 bg-gray-800/50'
+    const colors: Record<string, string> = {
+      cyan: 'border-cyan-500 bg-cyan-900/30',
+      teal: 'border-teal-500 bg-teal-900/30',
+      green: 'border-green-500 bg-green-900/30',
+      red: 'border-red-500 bg-red-900/30'
+    }
+    return colors[color] || colors.cyan
+  }
+
+  const getTextColorClass = (color: string, revealed: boolean) => {
+    if (!revealed) return 'text-gray-500'
+    const colors: Record<string, string> = {
+      cyan: 'text-cyan-300',
+      teal: 'text-teal-300',
+      green: 'text-green-300',
+      red: 'text-red-300'
+    }
+    return colors[color] || colors.cyan
+  }
+
+  return (
+    <div className="flex flex-col h-full animate-fadeIn p-8 overflow-y-auto custom-scrollbar">
+      <div className="mb-4 text-center">
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-4xl'} font-black text-white mb-2`}>Systematic Sampling</h2>
+        <p className="text-gray-400">Click "Reveal Next" or click cards to reveal content step by step</p>
+      </div>
+
+      {/* Control buttons */}
+      <div className="flex justify-center gap-4 mb-6">
+        <button 
+          onClick={revealNext} 
+          disabled={revealedSteps.length >= 4}
+          className={`px-6 py-2 rounded-lg font-bold transition-all ${
+            revealedSteps.length >= 4 
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-cyan-600 hover:bg-cyan-700 text-white'
+          }`}
+        >
+          Reveal Next ({revealedSteps.length}/4)
+        </button>
+        <button 
+          onClick={revealAll}
+          className="px-6 py-2 rounded-lg font-bold bg-gray-700 hover:bg-gray-600 text-white transition-all"
+        >
+          Show All
+        </button>
+      </div>
+
+      {/* Steps as cards */}
+      <div className="grid grid-cols-2 gap-4 max-w-5xl mx-auto flex-1">
+        {steps.map((step) => {
+          const isRevealed = revealedSteps.includes(step.id)
+          return (
+            <div 
+              key={step.id}
+              onClick={() => !isRevealed && setRevealedSteps([...revealedSteps, step.id])}
+              className={`rounded-xl border-2 p-5 cursor-pointer transition-all duration-500 ${
+                getColorClasses(step.color, isRevealed)
+              } ${isRevealed ? 'scale-100 opacity-100' : 'scale-95 opacity-60 hover:opacity-80'}`}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <span className={getTextColorClass(step.color, isRevealed)}>
+                  {step.icon}
+                </span>
+                <h3 className={`font-bold text-lg ${getTextColorClass(step.color, isRevealed)}`}>
+                  {step.title}
+                </h3>
+              </div>
+              
+              {isRevealed ? (
+                Array.isArray(step.content) ? (
+                  <ul className="space-y-1 text-gray-200 text-sm">
+                    {step.content.map((item, i) => <li key={i}>• {item}</li>)}
+                  </ul>
+                ) : (
+                  <p className="text-gray-200 text-sm">{step.content}</p>
+                )
+              ) : (
+                <p className="text-gray-600 italic">Click to reveal...</p>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// Systematic Sampling AFL
+const SystematicSamplingAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "In systematic sampling, what does 'every nth person' mean?",
+      options: ["Everyone with a certain name", "Every person from a specific group", "Selecting at regular intervals (e.g., every 5th person)", "Only people who volunteer"],
+      correct: 2,
+      explanation: "Systematic sampling selects people at fixed intervals, like every 5th or 10th person on a list."
+    },
+    {
+      question: "How should the first person be selected in systematic sampling?",
+      options: ["The researcher chooses", "Alphabetically first", "Randomly", "Whoever volunteers first"],
+      correct: 2,
+      explanation: "The first person should be selected randomly, then the fixed interval is followed."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Systematic Sampling - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Stratified Sampling Teaching Slide
+const StratifiedSamplingTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [revealedSteps, setRevealedSteps] = useState<number[]>([])
+
+  const steps = [
+    { 
+      id: 1, 
+      title: 'What is it?', 
+      icon: <HelpCircle size={24} />, 
+      color: 'purple', 
+      content: 'Population divided into subgroups (strata). Participants selected from each subgroup in proportion to the population. Within each stratum, selection is random.' 
+    },
+    { 
+      id: 2, 
+      title: 'How does it work?', 
+      icon: <Cog size={24} />, 
+      color: 'violet', 
+      content: [
+        'Identify the key subgroups (strata) in your population',
+        'Calculate the proportion of each subgroup',
+        'Select participants from each stratum to match proportions',
+        'Use random selection within each stratum'
+      ] 
+    },
+    { 
+      id: 3, 
+      title: 'Strengths', 
+      icon: <CheckCircle size={24} />, 
+      color: 'green', 
+      content: [
+        'Highly representative',
+        'Ensures all subgroups included',
+        'Results can be generalised confidently'
+      ] 
+    },
+    { 
+      id: 4, 
+      title: 'Limitations', 
+      icon: <XCircle size={24} />, 
+      color: 'red', 
+      content: [
+        'Time-consuming',
+        'Need to identify strata in advance',
+        'Requires detailed population data'
+      ] 
+    },
+  ]
+
+  const revealNext = () => {
+    const nextStep = revealedSteps.length + 1
+    if (nextStep <= steps.length) {
+      setRevealedSteps([...revealedSteps, nextStep])
+    }
+  }
+
+  const revealAll = () => {
+    setRevealedSteps([1, 2, 3, 4])
+  }
+
+  const getColorClasses = (color: string, revealed: boolean) => {
+    if (!revealed) return 'border-gray-700 bg-gray-800/50'
+    const colors: Record<string, string> = {
+      purple: 'border-purple-500 bg-purple-900/30',
+      violet: 'border-violet-500 bg-violet-900/30',
+      green: 'border-green-500 bg-green-900/30',
+      red: 'border-red-500 bg-red-900/30'
+    }
+    return colors[color] || colors.purple
+  }
+
+  const getTextColorClass = (color: string, revealed: boolean) => {
+    if (!revealed) return 'text-gray-500'
+    const colors: Record<string, string> = {
+      purple: 'text-purple-300',
+      violet: 'text-violet-300',
+      green: 'text-green-300',
+      red: 'text-red-300'
+    }
+    return colors[color] || colors.purple
+  }
+
+  return (
+    <div className="flex flex-col h-full animate-fadeIn p-8 overflow-y-auto custom-scrollbar">
+      <div className="mb-4 text-center">
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-4xl'} font-black text-white mb-2`}>Stratified Sampling</h2>
+        <p className="text-gray-400">Click "Reveal Next" or click cards to reveal content step by step</p>
+      </div>
+
+      {/* Control buttons */}
+      <div className="flex justify-center gap-4 mb-6">
+        <button 
+          onClick={revealNext} 
+          disabled={revealedSteps.length >= 4}
+          className={`px-6 py-2 rounded-lg font-bold transition-all ${
+            revealedSteps.length >= 4 
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-purple-600 hover:bg-purple-700 text-white'
+          }`}
+        >
+          Reveal Next ({revealedSteps.length}/4)
+        </button>
+        <button 
+          onClick={revealAll}
+          className="px-6 py-2 rounded-lg font-bold bg-gray-700 hover:bg-gray-600 text-white transition-all"
+        >
+          Show All
+        </button>
+      </div>
+
+      {/* Steps as cards */}
+      <div className="grid grid-cols-2 gap-4 max-w-5xl mx-auto flex-1">
+        {steps.map((step) => {
+          const isRevealed = revealedSteps.includes(step.id)
+          return (
+            <div 
+              key={step.id}
+              onClick={() => !isRevealed && setRevealedSteps([...revealedSteps, step.id])}
+              className={`rounded-xl border-2 p-5 cursor-pointer transition-all duration-500 ${
+                getColorClasses(step.color, isRevealed)
+              } ${isRevealed ? 'scale-100 opacity-100' : 'scale-95 opacity-60 hover:opacity-80'}`}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <span className={getTextColorClass(step.color, isRevealed)}>
+                  {step.icon}
+                </span>
+                <h3 className={`font-bold text-lg ${getTextColorClass(step.color, isRevealed)}`}>
+                  {step.title}
+                </h3>
+              </div>
+              
+              {isRevealed ? (
+                Array.isArray(step.content) ? (
+                  <ul className="space-y-1 text-gray-200 text-sm">
+                    {step.content.map((item, i) => <li key={i}>• {item}</li>)}
+                  </ul>
+                ) : (
+                  <p className="text-gray-200 text-sm">{step.content}</p>
+                )
+              ) : (
+                <p className="text-gray-600 italic">Click to reveal...</p>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// Stratified Sampling AFL
+const StratifiedSamplingAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "What are 'strata' in stratified sampling?",
+      options: ["Different experiments", "Subgroups within the population", "Research methods", "Types of hypotheses"],
+      correct: 1,
+      explanation: "Strata are subgroups within the target population (e.g., age groups, genders)."
+    },
+    {
+      question: "Why is stratified sampling considered highly representative?",
+      options: ["It uses the biggest sample", "It matches population proportions", "It's the quickest method", "It only uses volunteers"],
+      correct: 1,
+      explanation: "By matching the proportions of subgroups in the sample to the population, it accurately represents everyone."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Stratified Sampling - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Interactive Sampling Methods Comparison
+const SamplingMethodsInteractiveSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [selectedMethod, setSelectedMethod] = useState<string | null>(null)
+  const [animating, setAnimating] = useState(false)
+
+  const methods = [
+    { id: 'random', name: 'Random', icon: <Shuffle size={20} />, color: 'blue', shortDesc: 'Equal chance for all' },
+    { id: 'opportunity', name: 'Opportunity', icon: <Users size={20} />, color: 'amber', shortDesc: 'Whoever is available' },
+    { id: 'systematic', name: 'Systematic', icon: <List size={20} />, color: 'emerald', shortDesc: 'Every nth person' },
+    { id: 'stratified', name: 'Stratified', icon: <Layers size={20} />, color: 'purple', shortDesc: 'Proportional groups' },
+  ]
+
+  const methodDetails: Record<string, { bias: string, representative: string, effort: string, example: string }> = {
+    random: { bias: 'None', representative: 'High', effort: 'High', example: 'Random number generator selects from list' },
+    opportunity: { bias: 'High', representative: 'Low', effort: 'Low', example: 'Asking people in a shopping centre' },
+    systematic: { bias: 'Low', representative: 'Medium', effort: 'Medium', example: 'Every 10th person on a register' },
+    stratified: { bias: 'None', representative: 'Very High', effort: 'Very High', example: 'Matching sample to population percentages' },
+  }
+
+  const colorMap: Record<string, { border: string, bg: string, text: string }> = {
+    blue: { border: 'border-blue-400', bg: 'bg-blue-900/40', text: 'text-blue-300' },
+    amber: { border: 'border-amber-400', bg: 'bg-amber-900/40', text: 'text-amber-300' },
+    emerald: { border: 'border-emerald-400', bg: 'bg-emerald-900/40', text: 'text-emerald-300' },
+    purple: { border: 'border-purple-400', bg: 'bg-purple-900/40', text: 'text-purple-300' },
+  }
+
+  const simulateSampling = (method: string) => {
+    setSelectedMethod(method)
+    setAnimating(true)
+    setTimeout(() => setAnimating(false), 1500)
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-8' : 'p-10'}`}>
+      <div className="mb-6 text-center">
+        <h2 className={`${isPresenting ? 'text-5xl' : 'text-4xl'} font-black text-white mb-2`}>Sampling Methods</h2>
+        <p className={`${isPresenting ? 'text-xl' : ''} text-gray-400`}>Click to see how each method works!</p>
+      </div>
+
+      {/* Method Buttons */}
+      <div className={`grid grid-cols-4 ${isPresenting ? 'gap-4' : 'gap-3'} mb-6`}>
+        {methods.map(m => (
+          <button
+            key={m.id}
+            onClick={() => simulateSampling(m.id)}
+            className={`rounded-xl border-2 transition-all duration-300 ${isPresenting ? 'p-4' : 'p-3'} ${
+              selectedMethod === m.id
+                ? `${colorMap[m.color].border} ${colorMap[m.color].bg} scale-105 shadow-xl`
+                : `border-${m.color}-500/40 bg-${m.color}-900/20 hover:scale-102`
+            }`}
+          >
+            <div className={`flex items-center justify-center gap-2 ${colorMap[m.color].text} mb-2`}>
+              {m.icon}
+              <span className={`${isPresenting ? 'text-xl' : 'text-lg'} font-bold`}>{m.name}</span>
+            </div>
+            <p className={`text-gray-400 ${isPresenting ? 'text-sm' : 'text-xs'}`}>{m.shortDesc}</p>
+          </button>
+        ))}
+      </div>
+
+      {/* Visual Demo */}
+      <div className={`bg-gray-800/30 rounded-2xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-4'} mb-4`}>
+        <h3 className={`${isPresenting ? 'text-lg' : 'text-base'} font-bold text-white mb-4`}>Population Sample (click a method to see selection)</h3>
+        <div className="grid grid-cols-10 gap-2">
+          {Array.from({ length: 20 }).map((_, idx) => {
+            const isSelected = selectedMethod === 'random' 
+              ? [2, 5, 8, 13, 17].includes(idx)
+              : selectedMethod === 'opportunity'
+                ? [0, 1, 2, 3, 4].includes(idx)
+                : selectedMethod === 'systematic'
+                  ? [0, 5, 10, 15].includes(idx)
+                  : selectedMethod === 'stratified'
+                    ? [0, 5, 10, 12, 15, 18].includes(idx)
+                    : false
+
+            const personColor = idx < 5 ? 'text-blue-400' : idx < 10 ? 'text-pink-400' : idx < 15 ? 'text-emerald-400' : 'text-purple-400'
+
+            return (
+              <div 
+                key={idx}
+                className={`aspect-square rounded-lg flex items-center justify-center transition-all duration-300 ${
+                  isSelected && animating
+                    ? 'bg-yellow-500/30 border-2 border-yellow-400 scale-110'
+                    : isSelected
+                      ? 'bg-green-500/30 border-2 border-green-400'
+                      : 'bg-gray-700/50 border border-gray-600'
+                }`}
+              >
+                <User size={isPresenting ? 24 : 16} className={isSelected ? 'text-white' : personColor} />
+              </div>
+            )
+          })}
+        </div>
+        {selectedMethod && (
+          <p className={`mt-3 ${isPresenting ? 'text-base' : 'text-sm'} text-gray-400`}>
+            {selectedMethod === 'random' && '5 randomly selected (any could be chosen)'}
+            {selectedMethod === 'opportunity' && '5 selected - whoever was available first'}
+            {selectedMethod === 'systematic' && '4 selected - every 5th person'}
+            {selectedMethod === 'stratified' && '6 selected - proportional from each color group'}
+          </p>
+        )}
+      </div>
+
+      {/* Details Panel */}
+      {selectedMethod && methodDetails[selectedMethod] && (
+        <div className={`rounded-2xl border-2 ${colorMap[methods.find(m => m.id === selectedMethod)?.color || 'blue'].border} ${colorMap[methods.find(m => m.id === selectedMethod)?.color || 'blue'].bg} ${isPresenting ? 'p-4' : 'p-3'} animate-fadeIn`}>
+          <div className="grid grid-cols-4 gap-4">
+            <div>
+              <p className={`text-gray-400 ${isPresenting ? 'text-sm' : 'text-xs'}`}>Researcher Bias</p>
+              <p className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold text-white`}>{methodDetails[selectedMethod].bias}</p>
+            </div>
+            <div>
+              <p className={`text-gray-400 ${isPresenting ? 'text-sm' : 'text-xs'}`}>Representative?</p>
+              <p className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold text-white`}>{methodDetails[selectedMethod].representative}</p>
+            </div>
+            <div>
+              <p className={`text-gray-400 ${isPresenting ? 'text-sm' : 'text-xs'}`}>Effort Required</p>
+              <p className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold text-white`}>{methodDetails[selectedMethod].effort}</p>
+            </div>
+            <div>
+              <p className={`text-gray-400 ${isPresenting ? 'text-sm' : 'text-xs'}`}>Example</p>
+              <p className={`${isPresenting ? 'text-lg' : 'text-sm'} font-bold text-white`}>{methodDetails[selectedMethod].example}</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Sampling Methods Comparison Task
+const SamplingComparisonTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const scenarios = [
+    { scenario: "A researcher uses a random number generator to select 50 employees from a company list of 500.", answer: "random", explanation: "This is random sampling - every employee has an equal chance via random selection." },
+    { scenario: "A student asks people in the library if they'd like to participate in their study.", answer: "opportunity", explanation: "This is opportunity sampling - selecting whoever is available and willing." },
+    { scenario: "A hospital selects every 20th patient from the admissions list for a survey.", answer: "systematic", explanation: "This is systematic sampling - selecting at fixed intervals from a list." },
+    { scenario: "A researcher ensures their sample of 100 includes 30 teenagers, 50 adults, and 20 elderly people, matching the town's demographics.", answer: "stratified", explanation: "This is stratified sampling - proportional representation of subgroups." },
+  ]
+
+  const [answers, setAnswers] = useState<Record<number, string>>({})
+  const [showResults, setShowResults] = useState(false)
+
+  const handleAnswer = (idx: number, answer: string) => {
+    setAnswers(prev => ({ ...prev, [idx]: answer }))
+  }
+
+  const checkAnswers = () => setShowResults(true)
+
+  const score = scenarios.filter((s, i) => answers[i] === s.answer).length
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Identify the Sampling Method</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Which sampling method is being used?</p>
+      </div>
+
+      <div className="space-y-4 flex-1">
+        {scenarios.map((s, idx) => (
+          <div key={idx} className={`bg-gray-800/50 rounded-xl border ${showResults ? (answers[idx] === s.answer ? 'border-green-500' : 'border-red-500') : 'border-gray-700'} ${isPresenting ? 'p-4' : 'p-6'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-4`}>{s.scenario}</p>
+            
+            <div className="flex flex-wrap gap-2">
+              {['random', 'opportunity', 'systematic', 'stratified'].map(type => (
+                <button
+                  key={type}
+                  onClick={() => !showResults && handleAnswer(idx, type)}
+                  className={`px-3 py-2 rounded-lg font-bold capitalize transition-all ${isPresenting ? 'text-xs' : 'text-sm'} ${
+                    showResults
+                      ? type === s.answer
+                        ? 'bg-green-600 text-white'
+                        : answers[idx] === type
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-700 text-gray-400'
+                      : answers[idx] === type
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+
+            {showResults && answers[idx] !== s.answer && (
+              <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-amber-300 mt-3`}>{s.explanation}</p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {!showResults && Object.keys(answers).length === scenarios.length && (
+        <button onClick={checkAnswers} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-4 self-center">
+          Check My Answers
+        </button>
+      )}
+
+      {showResults && (
+        <div className={`text-center mt-4 ${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl`}>
+          <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{scenarios.length}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lesson 5 Extended Exam Task
+const Lesson5ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Sampling Methods - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          A researcher wants to study attitudes towards social media among Year 11 students. Evaluate whether opportunity sampling or stratified sampling would be more appropriate. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">Opportunity +:</span> Quick and easy to gather data, practical for student research, cheap</p>
+            <p><span className="font-bold text-amber-300">Opportunity -:</span> May be biased (only certain students available), not representative, cannot generalise</p>
+            <p><span className="font-bold text-amber-300">Stratified +:</span> Representative of different subgroups (gender, ethnicity), can generalise findings, ensures all groups included</p>
+            <p><span className="font-bold text-amber-300">Stratified -:</span> Time-consuming, need to identify strata in advance, requires detailed data about Year 11 population</p>
+            <p><span className="font-bold text-amber-300">Conclusion:</span> Stratified better for generalisability but opportunity more practical given time/resource constraints</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 6: ETHICAL CONSIDERATIONS =============
+
+// Interactive Ethics Checklist Slide
+const EthicsInteractiveSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [checkedItems, setCheckedItems] = useState<string[]>([])
+
+  const ethicsChecklist = [
+    { id: 'consent', label: 'Informed Consent', desc: 'Participants agree to take part and understand what\'s involved', icon: <CheckCircle size={20} />, color: 'blue' },
+    { id: 'deception', label: 'No Unnecessary Deception', desc: 'Only deceive if absolutely essential, reveal in debriefing', icon: <AlertTriangle size={20} />, color: 'amber' },
+    { id: 'harm', label: 'Protection from Harm', desc: 'No physical or psychological harm beyond everyday life', icon: <ShieldAlert size={20} />, color: 'rose' },
+    { id: 'withdraw', label: 'Right to Withdraw', desc: 'Can leave at any time and remove their data', icon: <Eye size={20} />, color: 'emerald' },
+    { id: 'confidential', label: 'Confidentiality', desc: 'Personal data protected, participants not identifiable', icon: <EyeOff size={20} />, color: 'cyan' },
+    { id: 'debrief', label: 'Debriefing', desc: 'True purpose explained after study, questions answered', icon: <Lightbulb size={20} />, color: 'violet' },
+  ]
+
+  const colorMap: Record<string, { border: string, bg: string, text: string, checked: string }> = {
+    blue: { border: 'border-blue-500/40', bg: 'bg-blue-900/20', text: 'text-blue-300', checked: 'bg-blue-500' },
+    amber: { border: 'border-amber-500/40', bg: 'bg-amber-900/20', text: 'text-amber-300', checked: 'bg-amber-500' },
+    rose: { border: 'border-rose-500/40', bg: 'bg-rose-900/20', text: 'text-rose-300', checked: 'bg-rose-500' },
+    emerald: { border: 'border-emerald-500/40', bg: 'bg-emerald-900/20', text: 'text-emerald-300', checked: 'bg-emerald-500' },
+    cyan: { border: 'border-cyan-500/40', bg: 'bg-cyan-900/20', text: 'text-cyan-300', checked: 'bg-cyan-500' },
+    violet: { border: 'border-violet-500/40', bg: 'bg-violet-900/20', text: 'text-violet-300', checked: 'bg-violet-500' },
+  }
+
+  const toggleItem = (id: string) => {
+    setCheckedItems(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    )
+  }
+
+  const allChecked = checkedItems.length === ethicsChecklist.length
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-8' : 'p-10'}`}>
+      <div className="mb-6 text-center">
+        <h2 className={`${isPresenting ? 'text-5xl' : 'text-4xl'} font-black text-white mb-2`}>Ethics Checklist</h2>
+        <p className={`${isPresenting ? 'text-xl' : ''} text-gray-400`}>Click each guideline to check it off — aim for 100%!</p>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="mb-6">
+        <div className="flex justify-between mb-2">
+          <span className="text-gray-400">Ethics compliance</span>
+          <span className={`font-bold ${allChecked ? 'text-green-400' : 'text-gray-400'}`}>
+            {Math.round((checkedItems.length / ethicsChecklist.length) * 100)}%
+          </span>
+        </div>
+        <div className="h-4 bg-gray-700 rounded-full overflow-hidden">
+          <div 
+            className={`h-full transition-all duration-500 ${allChecked ? 'bg-green-500' : 'bg-gradient-to-r from-blue-500 to-purple-500'}`}
+            style={{ width: `${(checkedItems.length / ethicsChecklist.length) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Checklist Items */}
+      <div className={`grid grid-cols-2 ${isPresenting ? 'gap-4' : 'gap-3'}`}>
+        {ethicsChecklist.map(item => {
+          const isChecked = checkedItems.includes(item.id)
+          return (
+            <button
+              key={item.id}
+              onClick={() => toggleItem(item.id)}
+              className={`rounded-xl border-2 transition-all duration-300 ${isPresenting ? 'p-4' : 'p-3'} text-left ${
+                isChecked
+                  ? `${colorMap[item.color].border} ${colorMap[item.color].bg} scale-102`
+                  : 'border-gray-700 bg-gray-800/30 hover:border-gray-600'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className={`${isPresenting ? 'w-8 h-8' : 'w-6 h-6'} rounded-lg flex items-center justify-center transition-all ${
+                  isChecked ? `${colorMap[item.color].checked}` : 'bg-gray-700'
+                }`}>
+                  {isChecked ? (
+                    <CheckCircle size={isPresenting ? 20 : 16} className="text-white" />
+                  ) : (
+                    <div className={`${isPresenting ? 'w-4 h-4' : 'w-3 h-3'} rounded border-2 border-gray-500`} />
+                  )}
+                </div>
+                <div className={`${colorMap[item.color].text}`}>{item.icon}</div>
+                <h3 className={`${isPresenting ? 'text-lg' : 'text-base'} font-bold ${isChecked ? colorMap[item.color].text : 'text-gray-300'}`}>
+                  {item.label}
+                </h3>
+              </div>
+              <p className={`mt-2 ${isPresenting ? 'text-sm' : 'text-xs'} ${isChecked ? 'text-gray-200' : 'text-gray-500'}`}>
+                {item.desc}
+              </p>
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Completion Message */}
+      {allChecked && (
+        <div className={`mt-6 rounded-xl border-2 border-green-500/40 bg-green-900/20 ${isPresenting ? 'p-4' : 'p-3'} animate-fadeIn text-center`}>
+          <p className={`${isPresenting ? 'text-xl' : 'text-lg'} font-bold text-green-300`}>
+            ✓ All ethical guidelines checked! Your study is ready for ethics committee approval.
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Informed Consent Teaching Slide
+const InformedConsentTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [checkedItems, setCheckedItems] = useState<number[]>([])
+
+  const ethicalPrinciples = [
+    {
+      id: 1,
+      title: 'Informed Consent',
+      description: 'Participants must agree to take part and understand what they\'re agreeing to. They must be told what the study involves.',
+      example: 'For children, parental consent is required'
+    },
+    {
+      id: 2,
+      title: 'Deception',
+      description: 'Misleading participants about the study should be avoided where possible. Sometimes necessary to prevent demand characteristics.',
+      example: 'Any deception must be revealed in debriefing'
+    },
+    {
+      id: 3,
+      title: 'Protection from Harm',
+      description: 'No physical harm or psychological distress. Risk should be no greater than everyday life.',
+      example: 'Support must be provided if participants become upset'
+    },
+    {
+      id: 4,
+      title: 'Right to Withdraw',
+      description: 'Participants can leave at any time and can withdraw their data afterwards. They should not be pressured to continue.',
+      example: 'Payment should not affect this right'
+    }
+  ]
+
+  const toggleCheck = (id: number) => {
+    setCheckedItems(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    )
+  }
+
+  const progress = (checkedItems.length / ethicalPrinciples.length) * 100
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-8'}`}>
+      <div className="mb-4 text-center">
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-4xl'} font-black text-white`}>Ethical Considerations</h2>
+        <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-400`}>Check off each principle as you understand it</p>
+      </div>
+
+      {/* Progress bar */}
+      <div className="max-w-3xl mx-auto w-full mb-6">
+        <div className="flex justify-between text-sm text-gray-400 mb-1">
+          <span>Progress</span>
+          <span>{checkedItems.length}/{ethicalPrinciples.length} complete</span>
+        </div>
+        <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-full bg-green-500 transition-all duration-500" style={{ width: `${progress}%` }} />
+        </div>
+      </div>
+
+      {/* Checklist items */}
+      <div className={`space-y-3 max-w-3xl mx-auto w-full ${isPresenting ? '' : 'flex-1'}`}>
+        {ethicalPrinciples.map((item) => (
+          <div
+            key={item.id}
+            onClick={() => toggleCheck(item.id)}
+            className={`rounded-xl border-2 ${isPresenting ? 'p-3' : 'p-4'} cursor-pointer transition-all ${
+              checkedItems.includes(item.id)
+                ? 'border-green-500 bg-green-900/30'
+                : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
+            }`}
+          >
+            <div className="flex items-start gap-4">
+              {/* Checkbox */}
+              <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center mt-1 flex-shrink-0 ${
+                checkedItems.includes(item.id) ? 'bg-green-500 border-green-500' : 'border-gray-500'
+              }`}>
+                {checkedItems.includes(item.id) && <Check size={16} className="text-white" />}
+              </div>
+
+              <div className="flex-1">
+                <h3 className={`font-bold ${isPresenting ? 'text-base' : 'text-lg'} ${
+                  checkedItems.includes(item.id) ? 'text-green-300' : 'text-gray-200'
+                }`}>
+                  {item.title}
+                </h3>
+                <p className={`text-gray-300 ${isPresenting ? 'text-xs' : 'text-sm'} mt-1`}>{item.description}</p>
+                {item.example && (
+                  <p className={`text-gray-500 ${isPresenting ? 'text-xs' : 'text-xs'} mt-2 italic`}>Example: {item.example}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Completion message */}
+      {checkedItems.length === ethicalPrinciples.length && (
+        <div className="mt-6 text-center animate-fadeIn">
+          <p className="text-green-400 font-bold text-xl">✓ All principles reviewed!</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Ethics Part 2 Teaching Slide
+const EthicsTeachSlide2: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [checkedItems, setCheckedItems] = useState<number[]>([])
+
+  const ethicalPrinciples = [
+    {
+      id: 1,
+      title: 'Confidentiality',
+      description: 'Personal data must be protected and participants should not be identifiable. Often use numbers instead of names.',
+      example: 'Data must be stored securely'
+    },
+    {
+      id: 2,
+      title: 'Debriefing',
+      description: 'Occurs after the study. Explains the true purpose and reveals any deception used.',
+      example: 'Participants have the opportunity to ask questions'
+    },
+    {
+      id: 3,
+      title: 'BPS Guidelines',
+      description: 'The British Psychological Society (BPS) publishes ethical guidelines that all UK psychologists must follow. These ensure research is conducted responsibly and participants\' wellbeing is protected.',
+      example: 'Studies must be approved by an ethics committee before they can begin'
+    }
+  ]
+
+  const toggleCheck = (id: number) => {
+    setCheckedItems(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    )
+  }
+
+  const progress = (checkedItems.length / ethicalPrinciples.length) * 100
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-8'}`}>
+      <div className="mb-4 text-center">
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-4xl'} font-black text-white`}>More Ethical Guidelines</h2>
+        <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-400`}>Check off each principle as you understand it</p>
+      </div>
+
+      {/* Progress bar */}
+      <div className="max-w-3xl mx-auto w-full mb-6">
+        <div className="flex justify-between text-sm text-gray-400 mb-1">
+          <span>Progress</span>
+          <span>{checkedItems.length}/{ethicalPrinciples.length} complete</span>
+        </div>
+        <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-full bg-green-500 transition-all duration-500" style={{ width: `${progress}%` }} />
+        </div>
+      </div>
+
+      {/* Checklist items */}
+      <div className={`space-y-3 max-w-3xl mx-auto w-full ${isPresenting ? '' : 'flex-1'}`}>
+        {ethicalPrinciples.map((item) => (
+          <div
+            key={item.id}
+            onClick={() => toggleCheck(item.id)}
+            className={`rounded-xl border-2 ${isPresenting ? 'p-3' : 'p-4'} cursor-pointer transition-all ${
+              checkedItems.includes(item.id)
+                ? 'border-green-500 bg-green-900/30'
+                : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
+            }`}
+          >
+            <div className="flex items-start gap-4">
+              {/* Checkbox */}
+              <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center mt-1 flex-shrink-0 ${
+                checkedItems.includes(item.id) ? 'bg-green-500 border-green-500' : 'border-gray-500'
+              }`}>
+                {checkedItems.includes(item.id) && <Check size={16} className="text-white" />}
+              </div>
+
+              <div className="flex-1">
+                <h3 className={`font-bold ${isPresenting ? 'text-base' : 'text-lg'} ${
+                  checkedItems.includes(item.id) ? 'text-green-300' : 'text-gray-200'
+                }`}>
+                  {item.title}
+                </h3>
+                <p className={`text-gray-300 ${isPresenting ? 'text-xs' : 'text-sm'} mt-1`}>{item.description}</p>
+                {item.example && (
+                  <p className={`text-gray-500 ${isPresenting ? 'text-xs' : 'text-xs'} mt-2 italic`}>Example: {item.example}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Completion message */}
+      {checkedItems.length === ethicalPrinciples.length && (
+        <div className="mt-6 text-center animate-fadeIn">
+          <p className="text-green-400 font-bold text-xl">✓ All principles reviewed!</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Ethics AFL
+const EthicsAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions: Question[] = [
+    {
+      id: 1,
+      scenario: "A researcher doesn't tell participants the real aim of the study to prevent them changing their behaviour.",
+      question: "Which ethical issue does this raise?",
+      options: ["Right to withdraw", "Deception", "Confidentiality"],
+      correct: 1
+    },
+    {
+      id: 2,
+      scenario: "A participant feels upset during a study about childhood memories.",
+      question: "Which ethical guideline is most relevant?",
+      options: ["Informed consent", "Protection from harm", "Debriefing"],
+      correct: 1
+    },
+    {
+      id: 3,
+      scenario: "After the study, participants are told the true purpose and given the chance to ask questions.",
+      question: "This is called...",
+      options: ["Informed consent", "Debriefing", "Confidentiality"],
+      correct: 1
+    },
+    {
+      id: 4,
+      scenario: "Participant data is stored with ID numbers instead of names.",
+      question: "This helps maintain...",
+      options: ["Validity", "Confidentiality", "Reliability"],
+      correct: 1
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Ethics - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          {questions[currentQ].scenario && (
+            <div className={`bg-blue-900/30 rounded-lg ${isPresenting ? 'p-3 mb-4' : 'p-4 mb-6'} border border-blue-500/30`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-blue-200 italic`}>{questions[currentQ].scenario}</p>
+            </div>
+          )}
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Ethics Design Task
+const EthicsDesignTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const scenarios = [
+    { 
+      scenario: "A study on stress involves participants solving impossible puzzles while being timed.", 
+      issues: ["protection", "deception"], 
+      explanation: "This may cause psychological distress (protection) and participants weren't told puzzles were impossible (deception)." 
+    },
+    { 
+      scenario: "A researcher secretly observes people's behaviour in a shopping centre.", 
+      issues: ["consent", "privacy"], 
+      explanation: "Participants didn't give informed consent and their privacy wasn't respected." 
+    },
+    { 
+      scenario: "After a memory study, participants are sent home without any explanation of what the study was about.", 
+      issues: ["debriefing"], 
+      explanation: "No debriefing was provided - participants should be told the purpose afterwards." 
+    },
+  ]
+
+  const [selectedIssues, setSelectedIssues] = useState<Record<number, string[]>>({})
+  const [showResults, setShowResults] = useState(false)
+
+  const allIssues = ['consent', 'deception', 'protection', 'withdraw', 'confidentiality', 'debriefing', 'privacy']
+
+  const toggleIssue = (scenarioIdx: number, issue: string) => {
+    if (showResults) return
+    setSelectedIssues(prev => {
+      const current = prev[scenarioIdx] || []
+      if (current.includes(issue)) {
+        return { ...prev, [scenarioIdx]: current.filter(i => i !== issue) }
+      } else {
+        return { ...prev, [scenarioIdx]: [...current, issue] }
+      }
+    })
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Identify Ethical Issues</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Select all the ethical issues in each scenario</p>
+      </div>
+
+      <div className="space-y-6 flex-1">
+        {scenarios.map((s, idx) => (
+          <div key={idx} className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-4' : 'p-6'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-4`}>{s.scenario}</p>
+            
+            <div className="flex flex-wrap gap-2">
+              {allIssues.map(issue => (
+                <button
+                  key={issue}
+                  onClick={() => toggleIssue(idx, issue)}
+                  className={`px-3 py-1 rounded-lg capitalize transition-all ${isPresenting ? 'text-xs' : 'text-sm'} ${
+                    showResults
+                      ? s.issues.includes(issue)
+                        ? 'bg-green-600 text-white'
+                        : (selectedIssues[idx] || []).includes(issue)
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-700 text-gray-400'
+                      : (selectedIssues[idx] || []).includes(issue)
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {issue}
+                </button>
+              ))}
+            </div>
+
+            {showResults && (
+              <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-amber-300 mt-3`}>{s.explanation}</p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {!showResults && (
+        <button onClick={() => setShowResults(true)} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-4 self-center">
+          Check My Answers
+        </button>
+      )}
+    </div>
+  )
+}
+
+// Lesson 6 Extended Exam Task
+const Lesson6ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Ethical Considerations - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          A researcher wants to study whether people are more likely to help someone who appears distressed. They plan to have an actor pretend to be upset in a public place and observe how people respond. Discuss the ethical issues the researcher should consider. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">Informed consent:</span> People don't know they're being observed - cannot give consent</p>
+            <p><span className="font-bold text-amber-300">Deception:</span> The distress is fake - people are being misled</p>
+            <p><span className="font-bold text-amber-300">Right to withdraw:</span> People can't withdraw if they don't know they're in a study</p>
+            <p><span className="font-bold text-amber-300">Protection from harm:</span> Observers may feel distressed seeing someone upset; may feel guilty later if they didn't help</p>
+            <p><span className="font-bold text-amber-300">Debriefing:</span> Difficult to debrief everyone who witnessed the scene</p>
+            <p><span className="font-bold text-amber-300">Privacy:</span> Observing people in public without their knowledge</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 7: SELF-REPORT METHODS =============
+
+// Questionnaires Teaching Slide
+const QuestionnairesTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [activeType, setActiveType] = useState<'open' | 'closed'>('open')
+
+  const types = {
+    open: {
+      title: 'Open Questions',
+      color: 'purple',
+      icon: '📝',
+      description: 'Questions where participants write their own answers in their own words',
+      examples: ['What do you think about...?', 'Describe how you feel when...', 'Explain your experience of...'],
+      strengths: ['Rich qualitative data', 'Unexpected insights', 'Participant\'s own perspective', 'Detailed responses'],
+      limitations: ['Time-consuming to analyze', 'Hard to compare answers', 'May lack detail', 'Difficult to quantify']
+    },
+    closed: {
+      title: 'Closed Questions',
+      color: 'blue',
+      icon: '☑️',
+      description: 'Questions with fixed response options (yes/no, rating scales, multiple choice)',
+      examples: ['Rate your satisfaction 1-5', 'Yes/No: Do you enjoy psychology?', 'Select all that apply...'],
+      strengths: ['Easy to analyze', 'Quantitative data', 'Easy to compare', 'Quick to answer'],
+      limitations: ['Limited responses', 'May not capture true feelings', 'Leading options', 'Less depth']
+    }
+  }
+
+  const current = types[activeType]
+  const colorClasses = {
+    purple: { border: 'border-purple-500', bg: 'bg-purple-500', bgFaded: 'bg-purple-900/30', text: 'text-purple-300', textBright: 'text-purple-200' },
+    blue: { border: 'border-blue-500', bg: 'bg-blue-500', bgFaded: 'bg-blue-900/30', text: 'text-blue-300', textBright: 'text-blue-200' }
+  }
+  const colors = colorClasses[current.color as keyof typeof colorClasses]
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      {/* Header */}
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2 flex items-center gap-3`}>
+          <ClipboardList size={isPresenting ? 28 : 40} className="text-blue-400" />
+          Questionnaires: Question Types
+        </h2>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>Compare open and closed questions in self-report research</p>
+      </div>
+
+      {/* Toggle Buttons */}
+      <div className={`flex gap-2 ${isPresenting ? 'mb-4' : 'mb-6'}`}>
+        <button
+          onClick={() => setActiveType('open')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-4' : 'py-3 px-6'} rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+            activeType === 'open'
+              ? 'bg-purple-600 text-white border-2 border-purple-400 shadow-lg shadow-purple-500/30'
+              : 'bg-gray-800/50 text-gray-400 border-2 border-gray-700 hover:border-purple-500/50 hover:text-purple-300'
+          }`}
+        >
+          <span className={isPresenting ? 'text-lg' : 'text-xl'}>📝</span>
+          <span className={isPresenting ? 'text-sm' : 'text-base'}>Open Questions</span>
+        </button>
+        <button
+          onClick={() => setActiveType('closed')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-4' : 'py-3 px-6'} rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+            activeType === 'closed'
+              ? 'bg-blue-600 text-white border-2 border-blue-400 shadow-lg shadow-blue-500/30'
+              : 'bg-gray-800/50 text-gray-400 border-2 border-gray-700 hover:border-blue-500/50 hover:text-blue-300'
+          }`}
+        >
+          <span className={isPresenting ? 'text-lg' : 'text-xl'}>☑️</span>
+          <span className={isPresenting ? 'text-sm' : 'text-base'}>Closed Questions</span>
+        </button>
+      </div>
+
+      {/* Content Panel */}
+      <div className={`rounded-xl border-2 ${colors.border}/40 ${colors.bgFaded} ${isPresenting ? 'p-4' : 'p-6'} mb-4`}>
+        {/* Title and Description */}
+        <div className={`flex items-center gap-3 ${isPresenting ? 'mb-3' : 'mb-4'}`}>
+          <span className={isPresenting ? 'text-2xl' : 'text-4xl'}>{current.icon}</span>
+          <div>
+            <h3 className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold ${colors.text}`}>{current.title}</h3>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300`}>{current.description}</p>
+          </div>
+        </div>
+
+        {/* Examples */}
+        <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-3 mb-3' : 'p-4 mb-4'}`}>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} font-bold ${colors.textBright} mb-2`}>📋 Example Questions:</p>
+          <div className="flex flex-wrap gap-2">
+            {current.examples.map((ex, i) => (
+              <span key={i} className={`${isPresenting ? 'text-xs px-2 py-1' : 'text-sm px-3 py-1'} bg-gray-800 rounded-full text-gray-200 border border-gray-700`}>
+                "{ex}"
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Strengths and Limitations */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className={`rounded-lg border border-green-500/40 bg-green-900/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <h4 className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-green-300 mb-2 flex items-center gap-2`}>
+              <CheckCircle size={isPresenting ? 16 : 20} /> Strengths
+            </h4>
+            <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+              {current.strengths.map((s, i) => (
+                <li key={i}>• <span className="text-green-300">{s}</span></li>
+              ))}
+            </ul>
+          </div>
+          <div className={`rounded-lg border border-red-500/40 bg-red-900/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <h4 className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-red-300 mb-2 flex items-center gap-2`}>
+              <XCircle size={isPresenting ? 16 : 20} /> Limitations
+            </h4>
+            <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+              {current.limitations.map((l, i) => (
+                <li key={i}>• <span className="text-red-300">{l}</span></li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Comparison Summary */}
+      <div className={`rounded-xl border-2 border-amber-500/40 bg-amber-900/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+        <h4 className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-amber-300 mb-2 flex items-center gap-2`}>
+          <Scale size={isPresenting ? 16 : 20} /> Key Difference
+        </h4>
+        <div className="flex items-center gap-4">
+          <div className={`flex-1 text-center ${isPresenting ? 'p-2' : 'p-3'} bg-purple-900/30 rounded-lg border border-purple-500/30`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-purple-300 font-bold`}>Open = Qualitative</p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-xs'} text-gray-400`}>Words & feelings</p>
+          </div>
+          <ArrowLeftRight size={isPresenting ? 20 : 24} className="text-amber-400" />
+          <div className={`flex-1 text-center ${isPresenting ? 'p-2' : 'p-3'} bg-blue-900/30 rounded-lg border border-blue-500/30`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-blue-300 font-bold`}>Closed = Quantitative</p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-xs'} text-gray-400`}>Numbers & stats</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Questionnaires AFL
+const QuestionnairesAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "What is a strength of using questionnaires?",
+      options: ["You can ask follow-up questions", "They collect data from large samples quickly", "Response rates are always high", "They eliminate social desirability"],
+      correct: 1,
+      explanation: "Questionnaires can gather data from many people efficiently and cheaply."
+    },
+    {
+      question: "'Rate your happiness from 1-10' is an example of...",
+      options: ["An open question", "A closed question", "A leading question", "An ambiguous question"],
+      correct: 1,
+      explanation: "This is a closed question because it has fixed response options (1-10 scale)."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Questionnaires - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Interviews Teaching Slide
+const InterviewsTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [activeType, setActiveType] = useState<'structured' | 'unstructured'>('structured')
+
+  const types = {
+    structured: {
+      title: 'Structured Interviews',
+      color: 'cyan',
+      icon: '📋',
+      description: 'Same questions asked to all participants in the same order - like a verbal questionnaire',
+      features: ['Pre-determined questions', 'Fixed order', 'Standardized procedure', 'Researcher follows a script'],
+      strengths: ['Easy to replicate', 'Easy to compare responses', 'High reliability', 'Quick to train interviewers'],
+      limitations: ['Less flexible', 'Cannot follow up interesting answers', 'May miss unexpected insights', 'Feels artificial']
+    },
+    unstructured: {
+      title: 'Unstructured Interviews',
+      color: 'pink',
+      icon: '💬',
+      description: 'More like a natural conversation - questions develop based on participant responses',
+      features: ['Open-ended questions', 'Flexible approach', 'Follows participant\'s lead', 'No fixed order'],
+      strengths: ['Rich, detailed data', 'Can probe deeper', 'Natural conversation', 'High validity'],
+      limitations: ['Hard to compare responses', 'Hard to replicate', 'Time-consuming', 'Interviewer bias risk']
+    }
+  }
+
+  const current = types[activeType]
+  const colorClasses = {
+    cyan: { border: 'border-cyan-500', bg: 'bg-cyan-500', bgFaded: 'bg-cyan-900/30', text: 'text-cyan-300', textBright: 'text-cyan-200' },
+    pink: { border: 'border-pink-500', bg: 'bg-pink-500', bgFaded: 'bg-pink-900/30', text: 'text-pink-300', textBright: 'text-pink-200' }
+  }
+  const colors = colorClasses[current.color as keyof typeof colorClasses]
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      {/* Header */}
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2 flex items-center gap-3`}>
+          <MessageCircle size={isPresenting ? 28 : 40} className="text-cyan-400" />
+          Interviews: Types Compared
+        </h2>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>Compare structured and unstructured interview approaches</p>
+      </div>
+
+      {/* Toggle Buttons */}
+      <div className={`flex gap-2 ${isPresenting ? 'mb-4' : 'mb-6'}`}>
+        <button
+          onClick={() => setActiveType('structured')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-4' : 'py-3 px-6'} rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+            activeType === 'structured'
+              ? 'bg-cyan-600 text-white border-2 border-cyan-400 shadow-lg shadow-cyan-500/30'
+              : 'bg-gray-800/50 text-gray-400 border-2 border-gray-700 hover:border-cyan-500/50 hover:text-cyan-300'
+          }`}
+        >
+          <span className={isPresenting ? 'text-lg' : 'text-xl'}>📋</span>
+          <span className={isPresenting ? 'text-sm' : 'text-base'}>Structured</span>
+        </button>
+        <button
+          onClick={() => setActiveType('unstructured')}
+          className={`flex-1 ${isPresenting ? 'py-2 px-4' : 'py-3 px-6'} rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+            activeType === 'unstructured'
+              ? 'bg-pink-600 text-white border-2 border-pink-400 shadow-lg shadow-pink-500/30'
+              : 'bg-gray-800/50 text-gray-400 border-2 border-gray-700 hover:border-pink-500/50 hover:text-pink-300'
+          }`}
+        >
+          <span className={isPresenting ? 'text-lg' : 'text-xl'}>💬</span>
+          <span className={isPresenting ? 'text-sm' : 'text-base'}>Unstructured</span>
+        </button>
+      </div>
+
+      {/* Content Panel */}
+      <div className={`rounded-xl border-2 ${colors.border}/40 ${colors.bgFaded} ${isPresenting ? 'p-4' : 'p-6'} mb-4`}>
+        {/* Title and Description */}
+        <div className={`flex items-center gap-3 ${isPresenting ? 'mb-3' : 'mb-4'}`}>
+          <span className={isPresenting ? 'text-2xl' : 'text-4xl'}>{current.icon}</span>
+          <div>
+            <h3 className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold ${colors.text}`}>{current.title}</h3>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300`}>{current.description}</p>
+          </div>
+        </div>
+
+        {/* Key Features */}
+        <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-3 mb-3' : 'p-4 mb-4'}`}>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} font-bold ${colors.textBright} mb-2`}>🔑 Key Features:</p>
+          <div className="flex flex-wrap gap-2">
+            {current.features.map((f, i) => (
+              <span key={i} className={`${isPresenting ? 'text-xs px-2 py-1' : 'text-sm px-3 py-1'} ${colors.bgFaded} rounded-full text-gray-200 border ${colors.border}/30`}>
+                {f}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Strengths and Limitations */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className={`rounded-lg border border-green-500/40 bg-green-900/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <h4 className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-green-300 mb-2 flex items-center gap-2`}>
+              <CheckCircle size={isPresenting ? 16 : 20} /> Strengths
+            </h4>
+            <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+              {current.strengths.map((s, i) => (
+                <li key={i}>• <span className="text-green-300">{s}</span></li>
+              ))}
+            </ul>
+          </div>
+          <div className={`rounded-lg border border-red-500/40 bg-red-900/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <h4 className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-red-300 mb-2 flex items-center gap-2`}>
+              <XCircle size={isPresenting ? 16 : 20} /> Limitations
+            </h4>
+            <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+              {current.limitations.map((l, i) => (
+                <li key={i}>• <span className="text-red-300">{l}</span></li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Comparison Summary */}
+      <div className={`rounded-xl border-2 border-amber-500/40 bg-amber-900/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+        <h4 className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-amber-300 mb-2 flex items-center gap-2`}>
+          <Scale size={isPresenting ? 16 : 20} /> Key Difference
+        </h4>
+        <div className="flex items-center gap-4">
+          <div className={`flex-1 text-center ${isPresenting ? 'p-2' : 'p-3'} bg-cyan-900/30 rounded-lg border border-cyan-500/30`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-cyan-300 font-bold`}>Structured = Reliable</p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-xs'} text-gray-400`}>Consistent & comparable</p>
+          </div>
+          <ArrowLeftRight size={isPresenting ? 20 : 24} className="text-amber-400" />
+          <div className={`flex-1 text-center ${isPresenting ? 'p-2' : 'p-3'} bg-pink-900/30 rounded-lg border border-pink-500/30`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-pink-300 font-bold`}>Unstructured = Valid</p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-xs'} text-gray-400`}>Rich & meaningful</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Interviews AFL
+const InterviewsAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "Which type of interview uses the same questions for all participants?",
+      options: ["Structured", "Unstructured", "Semi-structured", "Informal"],
+      correct: 0,
+      explanation: "Structured interviews use predetermined questions asked in the same order for all participants."
+    },
+    {
+      question: "What is an advantage of unstructured interviews?",
+      options: ["Easy to replicate", "Quick to conduct", "Can explore unexpected topics", "Data is easy to analyse"],
+      correct: 2,
+      explanation: "Unstructured interviews are flexible and allow the interviewer to explore interesting responses in depth."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Interviews - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Self-Report Design Task
+const SelfReportDesignTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const scenarios = [
+    { scenario: "A researcher needs to gather data from 500 people about their TV watching habits.", answer: "questionnaire", explanation: "Questionnaires are best for large samples - they're quick, cheap, and standardised." },
+    { scenario: "A psychologist wants to understand in depth why someone developed a phobia.", answer: "interview", explanation: "An interview allows detailed follow-up questions and exploration of personal experiences." },
+    { scenario: "A study needs comparable data from many participants about their sleep patterns.", answer: "questionnaire", explanation: "Questionnaires with closed questions provide standardised, comparable data." },
+    { scenario: "A researcher wants to explore what it's like to live with depression.", answer: "interview", explanation: "An interview (probably unstructured) allows rich exploration of personal experiences." },
+  ]
+
+  const [answers, setAnswers] = useState<Record<number, string>>({})
+  const [showResults, setShowResults] = useState(false)
+
+  const handleAnswer = (idx: number, answer: string) => {
+    setAnswers(prev => ({ ...prev, [idx]: answer }))
+  }
+
+  const checkAnswers = () => setShowResults(true)
+
+  const score = scenarios.filter((s, i) => answers[i] === s.answer).length
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Choose the Best Method</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Questionnaire or Interview?</p>
+      </div>
+
+      <div className="space-y-4 flex-1">
+        {scenarios.map((s, idx) => (
+          <div key={idx} className={`bg-gray-800/50 rounded-xl border ${showResults ? (answers[idx] === s.answer ? 'border-green-500' : 'border-red-500') : 'border-gray-700'} ${isPresenting ? 'p-4' : 'p-6'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-4`}>{s.scenario}</p>
+            
+            <div className="flex gap-3">
+              {['questionnaire', 'interview'].map(type => (
+                <button
+                  key={type}
+                  onClick={() => !showResults && handleAnswer(idx, type)}
+                  className={`px-4 py-2 rounded-lg font-bold capitalize transition-all ${isPresenting ? 'text-xs' : 'text-sm'} ${
+                    showResults
+                      ? type === s.answer
+                        ? 'bg-green-600 text-white'
+                        : answers[idx] === type
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-700 text-gray-400'
+                      : answers[idx] === type
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+
+            {showResults && answers[idx] !== s.answer && (
+              <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-amber-300 mt-3`}>{s.explanation}</p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {!showResults && Object.keys(answers).length === scenarios.length && (
+        <button onClick={checkAnswers} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-4 self-center">
+          Check My Answers
+        </button>
+      )}
+
+      {showResults && (
+        <div className={`text-center mt-4 ${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl`}>
+          <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{scenarios.length}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lesson 7 Extended Exam Task
+const Lesson7ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Self-Report Methods - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          A researcher wants to investigate people's experiences of exam stress. Evaluate whether they should use questionnaires or interviews for this study. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">Questionnaire +:</span> Large sample quickly, standardised, comparable data, can be anonymous (honest answers)</p>
+            <p><span className="font-bold text-amber-300">Questionnaire -:</span> May lack depth, social desirability, can't follow up interesting responses</p>
+            <p><span className="font-bold text-amber-300">Interview +:</span> Rich detailed data, can clarify questions, can explore experiences in depth</p>
+            <p><span className="font-bold text-amber-300">Interview -:</span> Time-consuming, interviewer bias, social desirability, small samples</p>
+            <p><span className="font-bold text-amber-300">Conclusion:</span> Depends on aim - questionnaires for breadth/comparison, interviews for depth/understanding</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 8: OBSERVATIONS =============
+
+// Observations Teaching Slide - Dual Toggle System
+const ObservationsTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [participation, setParticipation] = useState<'participant' | 'non-participant'>('participant')
+  const [disclosure, setDisclosure] = useState<'overt' | 'covert'>('overt')
+
+  const participationTypes = {
+    participant: {
+      title: 'Participant Observation',
+      desc: 'Researcher joins in with the group being studied',
+      strengths: ['Insider perspective', 'Rich, detailed data', 'Natural behaviour observed'],
+      limitations: ['Researcher bias possible', 'Time-consuming', 'Ethical issues may arise']
+    },
+    'non-participant': {
+      title: 'Non-Participant Observation',
+      desc: 'Researcher remains separate, watching from outside',
+      strengths: ['More objective viewpoint', 'Less researcher influence', 'Easier to record data'],
+      limitations: ['May miss insider understanding', 'Behaviour may change if noticed']
+    }
+  }
+
+  const disclosureTypes = {
+    overt: {
+      title: 'Overt Observation',
+      desc: 'Participants know they are being observed',
+      strengths: ['Ethical - informed consent', 'Easier access to setting', 'Can ask follow-up questions'],
+      limitations: ['Demand characteristics', 'Changed behaviour', 'Social desirability bias']
+    },
+    covert: {
+      title: 'Covert Observation',
+      desc: 'Participants do NOT know they are being observed',
+      strengths: ['Natural behaviour captured', 'No demand characteristics', 'Higher validity'],
+      limitations: ['Ethical issues - no consent', 'Cannot ask questions', 'Limited access to some settings']
+    }
+  }
+
+  const combinationExamples = {
+    'participant-overt': {
+      title: 'Participant + Overt',
+      description: 'Researcher openly joins the group',
+      example: 'Joining a sports team and telling them you\'re researching team dynamics',
+      color: 'emerald'
+    },
+    'participant-covert': {
+      title: 'Participant + Covert',
+      description: 'Researcher secretly joins the group',
+      example: 'Rosenhan\'s study - researchers faked symptoms to secretly join psychiatric wards',
+      color: 'rose'
+    },
+    'non-participant-overt': {
+      title: 'Non-Participant + Overt',
+      description: 'Researcher openly watches from outside',
+      example: 'Observing a classroom through a window with the teacher\'s knowledge',
+      color: 'blue'
+    },
+    'non-participant-covert': {
+      title: 'Non-Participant + Covert',
+      description: 'Researcher secretly watches',
+      example: 'Using hidden cameras or one-way mirrors to observe shoppers',
+      color: 'violet'
+    }
+  }
+
+  const currentCombo = combinationExamples[`${participation}-${disclosure}` as keyof typeof combinationExamples]
+  const currentParticipation = participationTypes[participation]
+  const currentDisclosure = disclosureTypes[disclosure]
+
+  const colorClasses = {
+    emerald: 'border-emerald-500/60 bg-emerald-900/30',
+    rose: 'border-rose-500/60 bg-rose-900/30',
+    blue: 'border-blue-500/60 bg-blue-900/30',
+    violet: 'border-violet-500/60 bg-violet-900/30'
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-4' : 'p-8'}`}>
+      {/* Header */}
+      <div className={isPresenting ? 'mb-3' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-1`}>Types of Observation</h2>
+        <p className={`${isPresenting ? 'text-xs' : 'text-base'} text-gray-400`}>Toggle to explore different observation combinations</p>
+      </div>
+
+      {/* Toggle Rows */}
+      <div className={`${isPresenting ? 'space-y-2 mb-3' : 'space-y-3 mb-5'}`}>
+        {/* Participation Toggle */}
+        <div className="flex items-center gap-3">
+          <span className={`${isPresenting ? 'text-xs' : 'text-sm'} text-amber-300 font-semibold w-24`}>Participation:</span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setParticipation('participant')}
+              className={`${isPresenting ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'} rounded-lg font-bold transition-all flex items-center gap-2 ${
+                participation === 'participant'
+                  ? 'bg-amber-500 text-gray-900 shadow-lg shadow-amber-500/30'
+                  : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700 border border-gray-600'
+              }`}
+            >
+              👤 Participant
+            </button>
+            <button
+              onClick={() => setParticipation('non-participant')}
+              className={`${isPresenting ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'} rounded-lg font-bold transition-all flex items-center gap-2 ${
+                participation === 'non-participant'
+                  ? 'bg-amber-500 text-gray-900 shadow-lg shadow-amber-500/30'
+                  : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700 border border-gray-600'
+              }`}
+            >
+              👁 Non-Participant
+            </button>
+          </div>
+        </div>
+
+        {/* Disclosure Toggle */}
+        <div className="flex items-center gap-3">
+          <span className={`${isPresenting ? 'text-xs' : 'text-sm'} text-violet-300 font-semibold w-24`}>Disclosure:</span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setDisclosure('overt')}
+              className={`${isPresenting ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'} rounded-lg font-bold transition-all flex items-center gap-2 ${
+                disclosure === 'overt'
+                  ? 'bg-violet-500 text-white shadow-lg shadow-violet-500/30'
+                  : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700 border border-gray-600'
+              }`}
+            >
+              🔓 Overt
+            </button>
+            <button
+              onClick={() => setDisclosure('covert')}
+              className={`${isPresenting ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'} rounded-lg font-bold transition-all flex items-center gap-2 ${
+                disclosure === 'covert'
+                  ? 'bg-violet-500 text-white shadow-lg shadow-violet-500/30'
+                  : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700 border border-gray-600'
+              }`}
+            >
+              🔒 Covert
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Two Content Panels Side by Side */}
+      <div className={`grid grid-cols-2 ${isPresenting ? 'gap-3 mb-3' : 'gap-4 mb-5'}`}>
+        {/* Participation Panel */}
+        <div className={`rounded-xl border-2 border-amber-500/40 bg-amber-900/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+          <h3 className={`${isPresenting ? 'text-sm' : 'text-lg'} font-bold text-amber-300 mb-2 flex items-center gap-2`}>
+            <User size={isPresenting ? 16 : 20} />
+            {currentParticipation.title}
+          </h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300 mb-3`}>{currentParticipation.desc}</p>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <p className={`${isPresenting ? 'text-xs' : 'text-xs'} font-bold text-green-400 mb-1`}>✓ Strengths</p>
+              <ul className={`${isPresenting ? 'text-xs' : 'text-xs'} text-gray-300 space-y-0.5`}>
+                {currentParticipation.strengths.map((s, i) => (
+                  <li key={i}>• {s}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className={`${isPresenting ? 'text-xs' : 'text-xs'} font-bold text-red-400 mb-1`}>✗ Limitations</p>
+              <ul className={`${isPresenting ? 'text-xs' : 'text-xs'} text-gray-300 space-y-0.5`}>
+                {currentParticipation.limitations.map((l, i) => (
+                  <li key={i}>• {l}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Disclosure Panel */}
+        <div className={`rounded-xl border-2 border-violet-500/40 bg-violet-900/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+          <h3 className={`${isPresenting ? 'text-sm' : 'text-lg'} font-bold text-violet-300 mb-2 flex items-center gap-2`}>
+            {disclosure === 'overt' ? <Eye size={isPresenting ? 16 : 20} /> : <EyeOff size={isPresenting ? 16 : 20} />}
+            {currentDisclosure.title}
+          </h3>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300 mb-3`}>{currentDisclosure.desc}</p>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <p className={`${isPresenting ? 'text-xs' : 'text-xs'} font-bold text-green-400 mb-1`}>✓ Strengths</p>
+              <ul className={`${isPresenting ? 'text-xs' : 'text-xs'} text-gray-300 space-y-0.5`}>
+                {currentDisclosure.strengths.map((s, i) => (
+                  <li key={i}>• {s}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className={`${isPresenting ? 'text-xs' : 'text-xs'} font-bold text-red-400 mb-1`}>✗ Limitations</p>
+              <ul className={`${isPresenting ? 'text-xs' : 'text-xs'} text-gray-300 space-y-0.5`}>
+                {currentDisclosure.limitations.map((l, i) => (
+                  <li key={i}>• {l}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Combination Panel */}
+      <div className={`rounded-xl border-2 ${colorClasses[currentCombo.color as keyof typeof colorClasses]} ${isPresenting ? 'p-4' : 'p-5'}`}>
+        <div className="flex items-center gap-3 mb-2">
+          <Lightbulb size={isPresenting ? 20 : 24} className="text-yellow-400" />
+          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white`}>
+            Combined Observation Type: <span className={`${
+              currentCombo.color === 'emerald' ? 'text-emerald-300' :
+              currentCombo.color === 'rose' ? 'text-rose-300' :
+              currentCombo.color === 'blue' ? 'text-blue-300' : 'text-violet-300'
+            }`}>{currentCombo.title}</span>
+          </h3>
+        </div>
+        <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-2`}>
+          <span className="font-bold">Definition:</span> {currentCombo.description}
+        </p>
+        <div className={`bg-gray-800/50 rounded-lg ${isPresenting ? 'p-2' : 'p-3'}`}>
+          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300`}>
+            <span className="font-bold text-cyan-300">📚 Real Example:</span> {currentCombo.example}
+          </p>
+        </div>
+      </div>
+
+      {/* Quick Reference Grid - Naturalistic vs Controlled */}
+      <div className={`mt-auto pt-4`}>
+        <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-500 text-center`}>
+          💡 Remember: Observations can also be <span className="text-emerald-400 font-semibold">Naturalistic</span> (natural setting) or <span className="text-blue-400 font-semibold">Controlled</span> (lab setting)
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// Observations AFL
+const ObservationsAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "In a naturalistic observation, the researcher...",
+      options: ["Sets up an artificial situation", "Observes behaviour in a natural setting", "Always tells participants they're being watched", "Manipulates the IV"],
+      correct: 1,
+      explanation: "Naturalistic observations occur in the participant's natural environment without researcher interference."
+    },
+    {
+      question: "A covert observation is one where...",
+      options: ["The observer joins the group", "Participants know they're being observed", "Participants don't know they're being observed", "It takes place in a lab"],
+      correct: 2,
+      explanation: "Covert means hidden or secret - participants are unaware of being observed."
+    },
+    {
+      question: "What is a strength of controlled observations?",
+      options: ["High ecological validity", "Natural behaviour", "Can be replicated easily", "No ethical issues"],
+      correct: 2,
+      explanation: "Controlled observations allow standardisation, making them easier to replicate."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Observations - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Observation Design Task
+const ObservationDesignTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const scenarios = [
+    { scenario: "Watching children play in a playground without them knowing.", type: "covert", setting: "naturalistic" },
+    { scenario: "A researcher joins a football team to study group dynamics, telling them they're a researcher.", type: "overt", setting: "participant" },
+    { scenario: "Recording how students behave in a lab task where they can see a hidden camera.", type: "overt", setting: "controlled" },
+    { scenario: "Observing shoppers in a mall from a hidden camera.", type: "covert", setting: "naturalistic" },
+  ]
+
+  const [answers, setAnswers] = useState<Record<number, { type?: string; setting?: string }>>({})
+  const [showResults, setShowResults] = useState(false)
+
+  const score = scenarios.filter((s, i) => 
+    answers[i]?.type === s.type && answers[i]?.setting === s.setting
+  ).length
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Classify the Observations</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Is it covert/overt AND naturalistic/controlled/participant?</p>
+      </div>
+
+      <div className="space-y-4 flex-1">
+        {scenarios.map((s, idx) => (
+          <div key={idx} className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-4' : 'p-6'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-4`}>{s.scenario}</p>
+            
+            <div className="flex flex-wrap gap-4">
+              <div>
+                <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 mb-2`}>Type:</p>
+                <div className="flex gap-2">
+                  {['covert', 'overt'].map(type => (
+                    <button
+                      key={type}
+                      onClick={() => !showResults && setAnswers(prev => ({ ...prev, [idx]: { ...prev[idx], type } }))}
+                      className={`px-3 py-1 rounded-lg capitalize ${isPresenting ? 'text-xs' : 'text-sm'} ${
+                        showResults
+                          ? type === s.type
+                            ? 'bg-green-600 text-white'
+                            : answers[idx]?.type === type
+                            ? 'bg-red-600 text-white'
+                            : 'bg-gray-700 text-gray-400'
+                          : answers[idx]?.type === type
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 mb-2`}>Setting:</p>
+                <div className="flex gap-2">
+                  {['naturalistic', 'controlled', 'participant'].map(setting => (
+                    <button
+                      key={setting}
+                      onClick={() => !showResults && setAnswers(prev => ({ ...prev, [idx]: { ...prev[idx], setting } }))}
+                      className={`px-3 py-1 rounded-lg capitalize ${isPresenting ? 'text-xs' : 'text-sm'} ${
+                        showResults
+                          ? setting === s.setting
+                            ? 'bg-green-600 text-white'
+                            : answers[idx]?.setting === setting
+                            ? 'bg-red-600 text-white'
+                            : 'bg-gray-700 text-gray-400'
+                          : answers[idx]?.setting === setting
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      }`}
+                    >
+                      {setting}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {!showResults && (
+        <button onClick={() => setShowResults(true)} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-4 self-center">
+          Check My Answers
+        </button>
+      )}
+
+      {showResults && (
+        <div className={`text-center mt-4 ${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl`}>
+          <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{scenarios.length}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lesson 8 Extended Exam Task
+const Lesson8ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Observations - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          A researcher wants to study aggressive behaviour in children. Discuss whether they should use naturalistic or controlled observation. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">Naturalistic +:</span> High ecological validity, natural behaviour, real aggression triggers</p>
+            <p><span className="font-bold text-amber-300">Naturalistic -:</span> Hard to control EVs, rare events may not happen, ethical issues with observing aggression</p>
+            <p><span className="font-bold text-amber-300">Controlled +:</span> Can create situations to observe aggression, control EVs, easier to replicate</p>
+            <p><span className="font-bold text-amber-300">Controlled -:</span> Artificial, demand characteristics, ethically problematic to deliberately trigger aggression</p>
+            <p><span className="font-bold text-amber-300">Conclusion:</span> Both have ethical issues; may need to use existing video data or natural observation without intervention</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 9: CORRELATIONS =============
+
+// Lesson 9 Extended Exam Task (Correlations)
+const Lesson9ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Correlations - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          A researcher finds a positive correlation between hours spent on social media and levels of anxiety. Evaluate what conclusions can be drawn from this finding. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">Correlation finding:</span> Shows that as social media use increases, anxiety levels also increase (positive correlation)</p>
+            <p><span className="font-bold text-amber-300">Correlation ≠ Causation:</span> Cannot conclude that social media CAUSES anxiety from this data alone</p>
+            <p><span className="font-bold text-amber-300">Direction problem:</span> Could be that anxious people use more social media (anxiety→social media) rather than the other way around</p>
+            <p><span className="font-bold text-amber-300">Third variable:</span> Other factors (loneliness, sleep problems, personality) could cause BOTH high social media use AND anxiety</p>
+            <p><span className="font-bold text-amber-300">Experiment needed:</span> To establish causation, would need to manipulate social media use (IV) and measure effect on anxiety (DV)</p>
+            <p><span className="font-bold text-amber-300">Conclusion:</span> Can only conclude there is a relationship/pattern; cannot determine cause and effect</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 10: CORRELATIONS =============
+
+// Correlations Teaching Slide
+const CorrelationsTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [activeCard, setActiveCard] = useState(0)
+
+  const cards = [
+    {
+      title: 'What is a Correlation?',
+      color: 'blue',
+      icon: '🔗',
+      visual: (
+        <div className="flex items-center justify-center gap-4 my-4">
+          <div className="w-16 h-16 rounded-full bg-blue-500/30 border-2 border-blue-400 flex items-center justify-center text-2xl font-bold text-blue-300">X</div>
+          <div className="text-4xl text-blue-400">↔</div>
+          <div className="w-16 h-16 rounded-full bg-blue-500/30 border-2 border-blue-400 flex items-center justify-center text-2xl font-bold text-blue-300">Y</div>
+        </div>
+      ),
+      points: [
+        { text: 'A technique to show relationships between two variables', highlight: 'relationships' },
+        { text: 'Variables are called co-variables (NOT IV/DV!)', highlight: 'co-variables' },
+        { text: 'Shows strength and direction of relationship', highlight: 'strength and direction' },
+        { text: 'Uses quantitative data (numbers)', highlight: 'quantitative data' },
+      ],
+      extra: 'Displayed on scatter diagrams - each dot represents one participant!'
+    },
+    {
+      title: 'Positive Correlation',
+      color: 'green',
+      icon: '📈',
+      visual: (
+        <div className="flex items-center justify-center my-4">
+          <div className="relative w-32 h-32 border-l-4 border-b-4 border-green-400">
+            <div className="absolute bottom-2 left-2 w-3 h-3 rounded-full bg-green-400"></div>
+            <div className="absolute bottom-6 left-6 w-3 h-3 rounded-full bg-green-400"></div>
+            <div className="absolute bottom-10 left-10 w-3 h-3 rounded-full bg-green-400"></div>
+            <div className="absolute bottom-14 left-14 w-3 h-3 rounded-full bg-green-400"></div>
+            <div className="absolute bottom-[4.5rem] left-[4.5rem] w-3 h-3 rounded-full bg-green-400"></div>
+            <div className="absolute bottom-0 left-0 w-full h-full">
+              <svg className="w-full h-full" viewBox="0 0 100 100">
+                <line x1="10" y1="90" x2="90" y2="10" stroke="#4ade80" strokeWidth="2" strokeDasharray="5,5" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      ),
+      points: [
+        { text: 'As one variable increases...', highlight: 'increases' },
+        { text: '...the other also INCREASES', highlight: 'INCREASES' },
+        { text: 'Both go in the SAME direction', highlight: 'SAME direction' },
+      ],
+      examples: [
+        { pair: 'Hours studying ↑ = Grades ↑', emoji: '📚' },
+        { pair: 'Height ↑ = Weight ↑', emoji: '📏' },
+        { pair: 'Practice ↑ = Skill ↑', emoji: '🎯' },
+      ]
+    },
+    {
+      title: 'Negative Correlation',
+      color: 'red',
+      icon: '📉',
+      visual: (
+        <div className="flex items-center justify-center my-4">
+          <div className="relative w-32 h-32 border-l-4 border-b-4 border-red-400">
+            <div className="absolute bottom-[4.5rem] left-2 w-3 h-3 rounded-full bg-red-400"></div>
+            <div className="absolute bottom-14 left-6 w-3 h-3 rounded-full bg-red-400"></div>
+            <div className="absolute bottom-10 left-10 w-3 h-3 rounded-full bg-red-400"></div>
+            <div className="absolute bottom-6 left-14 w-3 h-3 rounded-full bg-red-400"></div>
+            <div className="absolute bottom-2 left-[4.5rem] w-3 h-3 rounded-full bg-red-400"></div>
+            <div className="absolute bottom-0 left-0 w-full h-full">
+              <svg className="w-full h-full" viewBox="0 0 100 100">
+                <line x1="10" y1="10" x2="90" y2="90" stroke="#f87171" strokeWidth="2" strokeDasharray="5,5" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      ),
+      points: [
+        { text: 'As one variable increases...', highlight: 'increases' },
+        { text: '...the other DECREASES', highlight: 'DECREASES' },
+        { text: 'They go in OPPOSITE directions', highlight: 'OPPOSITE directions' },
+      ],
+      examples: [
+        { pair: 'Exercise ↑ = Stress ↓', emoji: '🏃' },
+        { pair: 'Sleep quality ↑ = Anxiety ↓', emoji: '😴' },
+        { pair: 'Screen time ↑ = Sleep ↓', emoji: '📱' },
+      ]
+    },
+    {
+      title: 'No Correlation (Zero)',
+      color: 'gray',
+      icon: '⚫',
+      visual: (
+        <div className="flex items-center justify-center my-4">
+          <div className="relative w-32 h-32 border-l-4 border-b-4 border-gray-400">
+            <div className="absolute bottom-4 left-4 w-3 h-3 rounded-full bg-gray-400"></div>
+            <div className="absolute bottom-16 left-8 w-3 h-3 rounded-full bg-gray-400"></div>
+            <div className="absolute bottom-8 left-16 w-3 h-3 rounded-full bg-gray-400"></div>
+            <div className="absolute bottom-20 left-20 w-3 h-3 rounded-full bg-gray-400"></div>
+            <div className="absolute bottom-6 left-24 w-3 h-3 rounded-full bg-gray-400"></div>
+            <div className="absolute bottom-14 left-12 w-3 h-3 rounded-full bg-gray-400"></div>
+            <div className="absolute bottom-24 left-6 w-3 h-3 rounded-full bg-gray-400"></div>
+          </div>
+        </div>
+      ),
+      points: [
+        { text: 'No clear pattern between variables', highlight: 'No clear pattern' },
+        { text: 'Changes in one don\'t predict the other', highlight: 'don\'t predict' },
+        { text: 'Dots are scattered randomly', highlight: 'scattered randomly' },
+      ],
+      examples: [
+        { pair: 'Shoe size & IQ', emoji: '👟' },
+        { pair: 'Hair colour & Maths ability', emoji: '💇' },
+        { pair: 'Birthday month & Height', emoji: '🎂' },
+      ]
+    },
+  ]
+
+  const currentCard = cards[activeCard]
+  const colorClasses: Record<string, { border: string; bg: string; text: string; btn: string }> = {
+    blue: { border: 'border-blue-500', bg: 'bg-blue-900/30', text: 'text-blue-300', btn: 'bg-blue-600 hover:bg-blue-500' },
+    green: { border: 'border-green-500', bg: 'bg-green-900/30', text: 'text-green-300', btn: 'bg-green-600 hover:bg-green-500' },
+    red: { border: 'border-red-500', bg: 'bg-red-900/30', text: 'text-red-300', btn: 'bg-red-600 hover:bg-red-500' },
+    gray: { border: 'border-gray-500', bg: 'bg-gray-800/50', text: 'text-gray-300', btn: 'bg-gray-600 hover:bg-gray-500' },
+  }
+  const colors = colorClasses[currentCard.color]
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-4' : 'p-8'}`}>
+      {/* Header */}
+      <div className={isPresenting ? 'mb-3' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-1`}>Correlations</h2>
+        <p className={`${isPresenting ? 'text-xs' : 'text-base'} text-gray-400`}>Understanding relationships between variables</p>
+      </div>
+
+      {/* Navigation dots */}
+      <div className="flex justify-center gap-3 mb-4">
+        {cards.map((card, i) => (
+          <button
+            key={i}
+            onClick={() => setActiveCard(i)}
+            className={`transition-all duration-300 ${activeCard === i
+              ? `w-8 h-3 rounded-full ${colorClasses[card.color].btn}`
+              : 'w-3 h-3 rounded-full bg-gray-600 hover:bg-gray-500'
+            }`}
+            title={card.title}
+          />
+        ))}
+      </div>
+
+      {/* Main carousel area */}
+      <div className="flex-1 flex items-center justify-center gap-4">
+        {/* Left arrow */}
+        <button
+          onClick={() => setActiveCard(Math.max(0, activeCard - 1))}
+          disabled={activeCard === 0}
+          className={`${isPresenting ? 'p-2' : 'p-4'} rounded-full transition-all ${activeCard === 0
+            ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+            : 'bg-gray-700 hover:bg-gray-600 text-white'
+          }`}
+        >
+          <ChevronLeft size={isPresenting ? 24 : 32} />
+        </button>
+
+        {/* Card */}
+        <div className={`flex-1 max-w-2xl rounded-2xl border-2 ${colors.border} ${colors.bg} ${isPresenting ? 'p-4' : 'p-6'} transition-all duration-500`}>
+          {/* Card header */}
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <span className={`${isPresenting ? 'text-3xl' : 'text-4xl'}`}>{currentCard.icon}</span>
+            <h3 className={`${isPresenting ? 'text-xl' : 'text-3xl'} font-bold ${colors.text}`}>{currentCard.title}</h3>
+          </div>
+
+          {/* Visual */}
+          {currentCard.visual}
+
+          {/* Points */}
+          <ul className={`space-y-2 ${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200 mb-4`}>
+            {currentCard.points.map((point, i) => (
+              <li key={i} className="flex items-start gap-2">
+                <span className={`${colors.text} font-bold`}>•</span>
+                <span>
+                  {point.text.split(point.highlight).map((part, j, arr) => (
+                    <span key={j}>
+                      {part}
+                      {j < arr.length - 1 && <span className={`font-bold ${colors.text}`}>{point.highlight}</span>}
+                    </span>
+                  ))}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          {/* Examples (for correlation types) */}
+          {currentCard.examples && (
+            <div className={`${colors.bg} rounded-xl ${isPresenting ? 'p-3' : 'p-4'} border ${colors.border}/30`}>
+              <p className={`${isPresenting ? 'text-xs' : 'text-sm'} ${colors.text} font-bold mb-2`}>Examples:</p>
+              <div className="flex flex-wrap gap-2">
+                {currentCard.examples.map((ex, i) => (
+                  <span key={i} className={`${isPresenting ? 'text-xs px-2 py-1' : 'text-sm px-3 py-1'} bg-gray-800/50 rounded-full text-gray-200`}>
+                    {ex.emoji} {ex.pair}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Extra info (for first card) */}
+          {currentCard.extra && (
+            <div className={`mt-4 ${isPresenting ? 'p-3' : 'p-4'} rounded-xl bg-purple-900/30 border border-purple-500/30`}>
+              <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-purple-300`}>
+                <span className="font-bold">💡 Remember:</span> {currentCard.extra}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Right arrow */}
+        <button
+          onClick={() => setActiveCard(Math.min(cards.length - 1, activeCard + 1))}
+          disabled={activeCard === cards.length - 1}
+          className={`${isPresenting ? 'p-2' : 'p-4'} rounded-full transition-all ${activeCard === cards.length - 1
+            ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+            : 'bg-gray-700 hover:bg-gray-600 text-white'
+          }`}
+        >
+          <ChevronRight size={isPresenting ? 24 : 32} />
+        </button>
+      </div>
+
+      {/* Card counter */}
+      <div className="text-center mt-4">
+        <span className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-500`}>
+          {activeCard + 1} / {cards.length}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+// Correlations Evaluation Teaching Slide
+const CorrelationsEvalTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [revealedStrengths, setRevealedStrengths] = useState<number[]>([])
+  const [revealedLimitations, setRevealedLimitations] = useState<number[]>([])
+
+  const strengths = [
+    { text: 'Good starting point for research', detail: 'Helps identify relationships worth investigating further' },
+    { text: 'Can identify patterns between variables', detail: 'Shows how two co-variables relate to each other' },
+    { text: 'Can lead to new experiments', detail: 'Once a relationship is found, we can design experiments to test causation' },
+    { text: 'Can study complex relationships', detail: 'Including curvilinear relationships that change direction' },
+  ]
+
+  const limitations = [
+    { text: 'Cannot show cause and effect', detail: 'We only know variables are related, not which causes which' },
+    { text: "Don't know direction of causation", detail: 'Does A cause B, or does B cause A?' },
+    { text: 'Third variable problem', detail: 'A hidden variable might be causing changes in both' },
+    { text: 'Intervening variables may be overlooked', detail: 'Other factors could explain the relationship' },
+  ]
+
+  const revealNextStrength = () => {
+    const nextIndex = revealedStrengths.length
+    if (nextIndex < strengths.length) {
+      setRevealedStrengths([...revealedStrengths, nextIndex])
+    }
+  }
+
+  const revealNextLimitation = () => {
+    const nextIndex = revealedLimitations.length
+    if (nextIndex < limitations.length) {
+      setRevealedLimitations([...revealedLimitations, nextIndex])
+    }
+  }
+
+  const revealAll = () => {
+    setRevealedStrengths(strengths.map((_, i) => i))
+    setRevealedLimitations(limitations.map((_, i) => i))
+  }
+
+  const resetAll = () => {
+    setRevealedStrengths([])
+    setRevealedLimitations([])
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-4' : 'p-8'}`}>
+      {/* Header */}
+      <div className={isPresenting ? 'mb-3' : 'mb-6'}>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-1`}>Evaluating Correlations</h2>
+            <p className={`${isPresenting ? 'text-xs' : 'text-base'} text-gray-400`}>Strengths and limitations</p>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={revealAll}
+              className={`${isPresenting ? 'px-2 py-1 text-xs' : 'px-3 py-2 text-sm'} bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-all`}
+            >
+              Reveal All
+            </button>
+            <button
+              onClick={resetAll}
+              className={`${isPresenting ? 'px-2 py-1 text-xs' : 'px-3 py-2 text-sm'} bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-all`}
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Two-column layout */}
+      <div className={`grid grid-cols-2 ${isPresenting ? 'gap-4' : 'gap-6'} flex-1`}>
+        {/* Strengths Panel */}
+        <div className={`rounded-2xl border-2 border-green-500/50 bg-green-900/20 ${isPresenting ? 'p-4' : 'p-6'} flex flex-col`}>
+          <div className="flex items-center gap-3 mb-4">
+            <div className={`${isPresenting ? 'w-10 h-10' : 'w-12 h-12'} rounded-full bg-green-500/30 flex items-center justify-center`}>
+              <ThumbsUp className={`${isPresenting ? 'w-5 h-5' : 'w-6 h-6'} text-green-400`} />
+            </div>
+            <h3 className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-green-300`}>Strengths</h3>
+            <span className={`ml-auto ${isPresenting ? 'text-xs' : 'text-sm'} text-green-400 bg-green-900/50 px-2 py-1 rounded-full`}>
+              {revealedStrengths.length}/{strengths.length}
+            </span>
+          </div>
+
+          <div className={`space-y-3 flex-1 ${isPresenting ? 'min-h-[180px]' : 'min-h-[240px]'}`}>
+            {strengths.map((strength, index) => (
+              <div
+                key={index}
+                className={`rounded-xl border transition-all duration-500 ${
+                  revealedStrengths.includes(index)
+                    ? 'border-green-500/50 bg-green-800/30 opacity-100 translate-y-0'
+                    : 'border-gray-700 bg-gray-800/30 opacity-40 translate-y-2'
+                } ${isPresenting ? 'p-3' : 'p-4'}`}
+              >
+                {revealedStrengths.includes(index) ? (
+                  <>
+                    <p className={`${isPresenting ? 'text-sm' : 'text-base'} font-semibold text-green-300 flex items-start gap-2`}>
+                      <CheckCircle size={isPresenting ? 16 : 20} className="text-green-400 mt-0.5 flex-shrink-0" />
+                      {strength.text}
+                    </p>
+                    <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 mt-1 ml-6`}>{strength.detail}</p>
+                  </>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <div className={`${isPresenting ? 'w-4 h-4' : 'w-5 h-5'} rounded-full border-2 border-gray-600`}></div>
+                    <span className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-500`}>Click to reveal...</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={revealNextStrength}
+            disabled={revealedStrengths.length >= strengths.length}
+            className={`mt-4 w-full ${isPresenting ? 'py-2 text-sm' : 'py-3 text-base'} rounded-xl font-bold transition-all ${
+              revealedStrengths.length >= strengths.length
+                ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                : 'bg-green-600 hover:bg-green-500 text-white hover:scale-[1.02]'
+            }`}
+          >
+            {revealedStrengths.length >= strengths.length ? '✓ All Revealed' : `Reveal Next Strength →`}
+          </button>
+        </div>
+
+        {/* Limitations Panel */}
+        <div className={`rounded-2xl border-2 border-red-500/50 bg-red-900/20 ${isPresenting ? 'p-4' : 'p-6'} flex flex-col`}>
+          <div className="flex items-center gap-3 mb-4">
+            <div className={`${isPresenting ? 'w-10 h-10' : 'w-12 h-12'} rounded-full bg-red-500/30 flex items-center justify-center`}>
+              <ThumbsDown className={`${isPresenting ? 'w-5 h-5' : 'w-6 h-6'} text-red-400`} />
+            </div>
+            <h3 className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-red-300`}>Limitations</h3>
+            <span className={`ml-auto ${isPresenting ? 'text-xs' : 'text-sm'} text-red-400 bg-red-900/50 px-2 py-1 rounded-full`}>
+              {revealedLimitations.length}/{limitations.length}
+            </span>
+          </div>
+
+          <div className={`space-y-3 flex-1 ${isPresenting ? 'min-h-[180px]' : 'min-h-[240px]'}`}>
+            {limitations.map((limitation, index) => (
+              <div
+                key={index}
+                className={`rounded-xl border transition-all duration-500 ${
+                  revealedLimitations.includes(index)
+                    ? 'border-red-500/50 bg-red-800/30 opacity-100 translate-y-0'
+                    : 'border-gray-700 bg-gray-800/30 opacity-40 translate-y-2'
+                } ${isPresenting ? 'p-3' : 'p-4'}`}
+              >
+                {revealedLimitations.includes(index) ? (
+                  <>
+                    <p className={`${isPresenting ? 'text-sm' : 'text-base'} font-semibold text-red-300 flex items-start gap-2`}>
+                      <XCircle size={isPresenting ? 16 : 20} className="text-red-400 mt-0.5 flex-shrink-0" />
+                      {limitation.text}
+                    </p>
+                    <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 mt-1 ml-6`}>{limitation.detail}</p>
+                  </>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <div className={`${isPresenting ? 'w-4 h-4' : 'w-5 h-5'} rounded-full border-2 border-gray-600`}></div>
+                    <span className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-500`}>Click to reveal...</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={revealNextLimitation}
+            disabled={revealedLimitations.length >= limitations.length}
+            className={`mt-4 w-full ${isPresenting ? 'py-2 text-sm' : 'py-3 text-base'} rounded-xl font-bold transition-all ${
+              revealedLimitations.length >= limitations.length
+                ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                : 'bg-red-600 hover:bg-red-500 text-white hover:scale-[1.02]'
+            }`}
+          >
+            {revealedLimitations.length >= limitations.length ? '✓ All Revealed' : `Reveal Next Limitation →`}
+          </button>
+        </div>
+      </div>
+
+      {/* Key Warning Banner */}
+      <div className={`mt-4 rounded-xl border-2 border-amber-500/50 bg-amber-900/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
+        <div className="flex items-start gap-3">
+          <AlertTriangle className={`${isPresenting ? 'w-6 h-6' : 'w-8 h-8'} text-amber-400 flex-shrink-0`} />
+          <div>
+            <h4 className={`${isPresenting ? 'text-sm' : 'text-lg'} font-bold text-amber-300 mb-1`}>⚠️ Key Warning: Correlation ≠ Causation</h4>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+              Just because two things are related doesn't mean one causes the other! 
+              <span className="text-amber-300 font-semibold"> Example:</span> Ice cream sales and drowning rates are positively correlated. 
+              Does ice cream cause drowning? No! <span className="font-bold text-amber-300">Hot weather</span> (third variable) causes both.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Correlations AFL
+const CorrelationsAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "As the number of hours revising increases, exam scores also increase. This is a...",
+      options: ["Negative correlation", "Positive correlation", "Zero correlation", "Causal relationship"],
+      correct: 1,
+      explanation: "When both variables increase together, it's a positive correlation."
+    },
+    {
+      question: "A correlation cannot tell us...",
+      options: ["If two variables are related", "The direction of the relationship", "Which variable causes the other", "The strength of the relationship"],
+      correct: 2,
+      explanation: "Correlations only show relationships, not cause and effect."
+    },
+    {
+      question: "What graph is used to display correlational data?",
+      options: ["Bar chart", "Pie chart", "Scatter diagram", "Line graph"],
+      correct: 2,
+      explanation: "Scatter diagrams show the relationship between two co-variables."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Correlations - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Correlation Identification Task
+const CorrelationIdentifyTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const scenarios = [
+    { scenario: "As temperature increases, ice cream sales increase", answer: "positive" },
+    { scenario: "As age increases, reaction time gets slower (higher)", answer: "positive" },
+    { scenario: "As hours of sleep increase, tiredness decreases", answer: "negative" },
+    { scenario: "As screen time increases, amount of exercise decreases", answer: "negative" },
+    { scenario: "Height and intelligence show no clear pattern", answer: "zero" },
+    { scenario: "As stress increases, immune system function decreases", answer: "negative" },
+  ]
+
+  const [answers, setAnswers] = useState<Record<number, string>>({})
+  const [showResults, setShowResults] = useState(false)
+
+  const score = scenarios.filter((s, i) => answers[i] === s.answer).length
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Identify the Correlation Type</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Positive, Negative, or Zero?</p>
+      </div>
+
+      <div className="space-y-3 flex-1">
+        {scenarios.map((s, idx) => (
+          <div key={idx} className={`bg-gray-800/50 rounded-xl border ${showResults ? (answers[idx] === s.answer ? 'border-green-500' : 'border-red-500') : 'border-gray-700'} ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-3`}>{s.scenario}</p>
+            
+            <div className="flex gap-2">
+              {['positive', 'negative', 'zero'].map(type => (
+                <button
+                  key={type}
+                  onClick={() => !showResults && setAnswers(prev => ({ ...prev, [idx]: type }))}
+                  className={`px-3 py-1 rounded-lg font-bold capitalize ${isPresenting ? 'text-xs' : 'text-sm'} ${
+                    showResults
+                      ? type === s.answer
+                        ? 'bg-green-600 text-white'
+                        : answers[idx] === type
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-700 text-gray-400'
+                      : answers[idx] === type
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {!showResults && Object.keys(answers).length === scenarios.length && (
+        <button onClick={() => setShowResults(true)} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-4 self-center">
+          Check My Answers
+        </button>
+      )}
+
+      {showResults && (
+        <div className={`text-center mt-4 ${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl`}>
+          <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{scenarios.length}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lesson 10 Extended Exam Task
+const Lesson10ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Correlations - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          A researcher finds a positive correlation between stress levels and illness. Evaluate whether we can conclude that stress causes illness. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">Correlation ≠ Causation:</span> Cannot determine cause and effect from correlation alone</p>
+            <p><span className="font-bold text-amber-300">Direction problem:</span> Could be stress→illness OR illness→stress (being ill is stressful)</p>
+            <p><span className="font-bold text-amber-300">Third variable:</span> Lifestyle factors (sleep, diet, smoking) could cause both stress AND illness</p>
+            <p><span className="font-bold text-amber-300">Need experiment:</span> To show causation would need to manipulate stress (IV) and measure illness (DV)</p>
+            <p><span className="font-bold text-amber-300">Conclusion:</span> Shows relationship only; cannot conclude stress causes illness without experimental evidence</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 11: CASE STUDIES =============
+
+// Case Studies Teaching Slide - Card Stack Style
+const CaseStudiesTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [currentCard, setCurrentCard] = useState(0)
+  const [flippedCards, setFlippedCards] = useState<number[]>([])
+
+  const cards = [
+    { 
+      id: 0,
+      type: 'definition',
+      front: { title: 'What is a Case Study?', prompt: 'Click to learn...', icon: '🔍' },
+      back: { 
+        content: [
+          { text: 'In-depth', highlight: true, suffix: ' study of one case' },
+          { text: 'Individual, group, or event', highlight: true, prefix: 'Can be an ' },
+          { text: 'Unusual', highlight: true, prefix: 'Often involves ', suffix: ' or rare cases' },
+          { text: 'Multiple methods', highlight: true, prefix: 'Uses ', suffix: ' (interviews, observations, tests)' }
+        ]
+      },
+      colors: { gradient: 'from-blue-600 to-cyan-600', border: 'border-blue-500', bg: 'bg-blue-900/30', text: 'text-blue-300' }
+    },
+    {
+      id: 1, 
+      type: 'example',
+      front: { title: 'Famous Example: HM', prompt: 'Who was Henry Molaison?', icon: '🧠' },
+      back: { 
+        content: 'HM (Henry Molaison) had his hippocampus removed to treat epilepsy. He lost the ability to form new long-term memories. Studied for over 50 years until his death in 2008. Revealed crucial insights about how memory works and the role of the hippocampus.'
+      },
+      colors: { gradient: 'from-purple-600 to-pink-600', border: 'border-purple-500', bg: 'bg-purple-900/30', text: 'text-purple-300' }
+    },
+    {
+      id: 2,
+      type: 'example',
+      front: { title: 'Famous Example: Phineas Gage', prompt: 'What happened to him?', icon: '💥' },
+      back: { 
+        content: 'Phineas Gage survived an iron rod passing through his skull in 1848. His personality dramatically changed after the accident - became impulsive and unreliable. Case study showed the frontal lobe\'s role in personality and decision-making.'
+      },
+      colors: { gradient: 'from-purple-600 to-indigo-600', border: 'border-purple-500', bg: 'bg-purple-900/30', text: 'text-purple-300' }
+    },
+    {
+      id: 3,
+      type: 'strengths',
+      front: { title: 'Strengths', prompt: 'Why use case studies?', icon: '✓' },
+      back: { 
+        content: [
+          { text: 'Rich, detailed data', highlight: true, suffix: ' about the individual' },
+          { text: 'Rare cases', highlight: true, prefix: 'Study ', suffix: ' not otherwise possible' },
+          { text: 'Generate new theories', highlight: true, prefix: 'Can ', suffix: ' and hypotheses' },
+          { text: 'Real-world insights', highlight: true, suffix: ' in natural settings' }
+        ]
+      },
+      colors: { gradient: 'from-green-600 to-emerald-600', border: 'border-green-500', bg: 'bg-green-900/30', text: 'text-green-300' }
+    },
+    {
+      id: 4,
+      type: 'limitations',
+      front: { title: 'Limitations', prompt: 'What are the problems?', icon: '✗' },
+      back: { 
+        content: [
+          { text: 'Cannot generalise', highlight: true, suffix: ' findings to others' },
+          { text: 'Researcher bias', highlight: true, suffix: ' in interpretation' },
+          { text: 'Time consuming', highlight: true, suffix: ' and resource intensive' },
+          { text: 'No cause and effect', highlight: true, prefix: 'Cannot establish ' }
+        ]
+      },
+      colors: { gradient: 'from-red-600 to-orange-600', border: 'border-red-500', bg: 'bg-red-900/30', text: 'text-red-300' }
+    }
+  ]
+
+  const flipCard = () => {
+    if (!flippedCards.includes(currentCard)) {
+      setFlippedCards([...flippedCards, currentCard])
+    }
+  }
+
+  const nextCard = () => {
+    setCurrentCard(Math.min(cards.length - 1, currentCard + 1))
+  }
+
+  const prevCard = () => {
+    setCurrentCard(Math.max(0, currentCard - 1))
+  }
+
+  const currentCardData = cards[currentCard]
+
+  const renderBackContent = (back: typeof currentCardData.back) => {
+    if (Array.isArray(back.content)) {
+      return (
+        <ul className="space-y-3 text-left">
+          {back.content.map((item, idx) => (
+            <li key={idx} className="flex items-start gap-2">
+              <span className="text-white/60">•</span>
+              <span className="text-gray-200">
+                {item.prefix && <span>{item.prefix}</span>}
+                <span className={`font-bold ${currentCardData.colors.text}`}>{item.text}</span>
+                {item.suffix && <span>{item.suffix}</span>}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    return <p className="text-gray-200 leading-relaxed">{back.content}</p>
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-4' : 'p-8'}`}>
+      <div className="text-center mb-4">
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-4xl'} font-black text-white mb-2`}>Case Studies</h2>
+        <p className="text-gray-400">Click cards to flip • Use arrows to navigate</p>
+      </div>
+
+      {/* Progress dots */}
+      <div className="flex justify-center gap-2 mb-6">
+        {cards.map((card, idx) => (
+          <button
+            key={card.id}
+            onClick={() => setCurrentCard(idx)}
+            className={`w-3 h-3 rounded-full transition-all ${
+              idx === currentCard 
+                ? 'bg-white scale-125' 
+                : flippedCards.includes(idx)
+                  ? 'bg-green-500/70'
+                  : 'bg-gray-600 hover:bg-gray-500'
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Stack visualization */}
+      <div className="relative flex-1 flex items-center justify-center" style={{ perspective: '1000px' }}>
+        {/* Background stacked cards effect */}
+        {cards.length > currentCard + 2 && (
+          <div className={`absolute w-[340px] ${isPresenting ? 'h-52' : 'h-64'} bg-gray-800 rounded-2xl opacity-20 transform translate-x-4 translate-y-4`} />
+        )}
+        {cards.length > currentCard + 1 && (
+          <div className={`absolute w-[340px] ${isPresenting ? 'h-52' : 'h-64'} bg-gray-700 rounded-2xl opacity-40 transform translate-x-2 translate-y-2`} />
+        )}
+        
+        {/* Main card - flippable */}
+        <div 
+          onClick={flipCard}
+          className={`w-[340px] ${isPresenting ? 'h-52' : 'h-64'} cursor-pointer`}
+          style={{ perspective: '1000px' }}
+        >
+          <div 
+            className="relative w-full h-full transition-transform duration-500"
+            style={{ 
+              transformStyle: 'preserve-3d',
+              transform: flippedCards.includes(currentCard) ? 'rotateY(180deg)' : 'rotateY(0deg)'
+            }}
+          >
+            {/* Front */}
+            <div 
+              className={`absolute inset-0 rounded-2xl p-6 flex flex-col justify-center items-center bg-gradient-to-br ${currentCardData.colors.gradient} shadow-2xl`}
+              style={{ backfaceVisibility: 'hidden' }}
+            >
+              <span className={`${isPresenting ? 'text-4xl' : 'text-5xl'} mb-4`}>{currentCardData.front.icon}</span>
+              <h3 className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white text-center`}>
+                {currentCardData.front.title}
+              </h3>
+              <p className={`text-white/80 mt-3 ${isPresenting ? 'text-sm' : 'text-base'}`}>
+                {currentCardData.front.prompt}
+              </p>
+              <div className="absolute bottom-4 text-white/50 text-sm flex items-center gap-1">
+                <RotateCcw size={14} />
+                <span>Click to flip</span>
+              </div>
+            </div>
+            
+            {/* Back */}
+            <div 
+              className={`absolute inset-0 rounded-2xl ${isPresenting ? 'p-4' : 'p-6'} ${currentCardData.colors.bg} border-2 ${currentCardData.colors.border} shadow-2xl overflow-y-auto custom-scrollbar`}
+              style={{ 
+                backfaceVisibility: 'hidden',
+                transform: 'rotateY(180deg)'
+              }}
+            >
+              <h4 className={`${isPresenting ? 'text-lg' : 'text-xl'} font-bold ${currentCardData.colors.text} mb-4 text-center`}>
+                {currentCardData.front.title}
+              </h4>
+              <div className={isPresenting ? 'text-sm' : 'text-base'}>
+                {renderBackContent(currentCardData.back)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <div className="flex justify-center items-center gap-6 mt-6">
+        <button 
+          onClick={prevCard} 
+          disabled={currentCard === 0}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
+            currentCard === 0 
+              ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-700 text-white hover:bg-gray-600'
+          }`}
+        >
+          <ChevronLeft size={20} />
+          Previous
+        </button>
+        
+        <div className="flex items-center gap-2 text-gray-300">
+          <span className="text-xl font-bold text-white">{currentCard + 1}</span>
+          <span>/</span>
+          <span>{cards.length}</span>
+        </div>
+        
+        <button 
+          onClick={nextCard} 
+          disabled={currentCard === cards.length - 1}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
+            currentCard === cards.length - 1 
+              ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed' 
+              : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-500 hover:to-purple-500'
+          }`}
+        >
+          Next
+          <ChevronRight size={20} />
+        </button>
+      </div>
+
+      {/* Completion message */}
+      {flippedCards.length === cards.length && (
+        <div className="text-center mt-4 text-green-400 animate-pulse">
+          ✓ All cards explored! Great job!
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Case Studies AFL
+const CaseStudiesAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "A case study typically involves...",
+      options: ["Testing hundreds of people", "In-depth study of one case", "Only using questionnaires", "Random sampling"],
+      correct: 1,
+      explanation: "Case studies are detailed investigations of a single individual, group, or event."
+    },
+    {
+      question: "What is a strength of case studies?",
+      options: ["Easy to generalise", "Quick to conduct", "Rich, detailed data", "No researcher bias"],
+      correct: 2,
+      explanation: "Case studies provide detailed, in-depth information about the case being studied."
+    },
+    {
+      question: "Why are case studies difficult to generalise from?",
+      options: ["They use numbers", "They study unusual/unique cases", "They're too long", "They cost too much"],
+      correct: 1,
+      explanation: "Because case studies often involve unusual cases, findings may not apply to the general population."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Case Studies - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Case Study Application Task
+const CaseStudyTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const scenarios = [
+    { scenario: "A researcher wants to study how one person recovered from a rare brain injury", suitable: true, explanation: "Case study is ideal for rare, unique cases" },
+    { scenario: "A researcher wants to know if coffee affects reaction time across the population", suitable: false, explanation: "Need an experiment with many participants to generalise" },
+    { scenario: "A psychologist wants to understand in detail how one child developed a phobia", suitable: true, explanation: "Case study provides rich detail about individual experiences" },
+    { scenario: "A researcher wants to compare memory performance between two groups", suitable: false, explanation: "Needs experimental comparison, not in-depth individual study" },
+  ]
+
+  const [answers, setAnswers] = useState<Record<number, boolean | null>>({})
+  const [showResults, setShowResults] = useState(false)
+
+  const score = scenarios.filter((s, i) => answers[i] === s.suitable).length
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Is a Case Study Suitable?</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Decide if a case study would be appropriate</p>
+      </div>
+
+      <div className="space-y-4 flex-1">
+        {scenarios.map((s, idx) => (
+          <div key={idx} className={`bg-gray-800/50 rounded-xl border ${showResults ? (answers[idx] === s.suitable ? 'border-green-500' : 'border-red-500') : 'border-gray-700'} ${isPresenting ? 'p-4' : 'p-6'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-4`}>{s.scenario}</p>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={() => !showResults && setAnswers(prev => ({ ...prev, [idx]: true }))}
+                className={`px-4 py-2 rounded-lg font-bold ${isPresenting ? 'text-xs' : 'text-sm'} ${
+                  showResults
+                    ? s.suitable === true
+                      ? 'bg-green-600 text-white'
+                      : answers[idx] === true
+                      ? 'bg-red-600 text-white'
+                      : 'bg-gray-700 text-gray-400'
+                    : answers[idx] === true
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                }`}
+              >
+                ✓ Yes, Case Study
+              </button>
+              <button
+                onClick={() => !showResults && setAnswers(prev => ({ ...prev, [idx]: false }))}
+                className={`px-4 py-2 rounded-lg font-bold ${isPresenting ? 'text-xs' : 'text-sm'} ${
+                  showResults
+                    ? s.suitable === false
+                      ? 'bg-green-600 text-white'
+                      : answers[idx] === false
+                      ? 'bg-red-600 text-white'
+                      : 'bg-gray-700 text-gray-400'
+                    : answers[idx] === false
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                }`}
+              >
+                ✗ No, Different Method
+              </button>
+            </div>
+
+            {showResults && (
+              <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-amber-300 mt-3`}>{s.explanation}</p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {!showResults && Object.keys(answers).length === scenarios.length && (
+        <button onClick={() => setShowResults(true)} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-4 self-center">
+          Check My Answers
+        </button>
+      )}
+
+      {showResults && (
+        <div className={`text-center mt-4 ${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl`}>
+          <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{scenarios.length}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lesson 11 Extended Exam Task
+const Lesson11ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Case Studies - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          Evaluate the use of case studies in psychological research. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">Strength 1:</span> Rich, detailed qualitative data about the individual</p>
+            <p><span className="font-bold text-amber-300">Strength 2:</span> Can study rare/unique cases (e.g., HM's memory loss)</p>
+            <p><span className="font-bold text-amber-300">Strength 3:</span> Can generate new theories and research directions</p>
+            <p><span className="font-bold text-amber-300">Weakness 1:</span> Cannot generalise findings to wider population</p>
+            <p><span className="font-bold text-amber-300">Weakness 2:</span> Researcher bias - subjective interpretation</p>
+            <p><span className="font-bold text-amber-300">Weakness 3:</span> Time-consuming to conduct; ethical issues with unique cases</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 12: RELIABILITY & VALIDITY =============
+
+// Reliability Teaching Slide
+const ReliabilityTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [expandedSection, setExpandedSection] = useState<string | null>('definition')
+
+  const sections = [
+    {
+      id: 'definition',
+      title: '📖 What is Reliability?',
+      color: 'blue',
+      content: {
+        main: 'Reliability = Consistency. Will you get the same results if you repeat the study?',
+        points: [
+          'A measure of consistency in results',
+          'Same results when measurement is repeated',
+          'Like weighing scales giving the same weight each time'
+        ]
+      }
+    },
+    {
+      id: 'internal',
+      title: '🔬 Internal Reliability',
+      color: 'purple',
+      content: {
+        definition: 'Consistency WITHIN the study itself',
+        example: 'All items in a questionnaire measure the same thing',
+        test: 'Split-half method - compare first half of test with second half',
+        improvement: 'Ensure all questions/items relate to the same construct'
+      }
+    },
+    {
+      id: 'external',
+      title: '🌍 External Reliability',
+      color: 'emerald',
+      content: {
+        definition: 'Consistency ACROSS repeated studies',
+        example: 'Get the same results when you repeat the study',
+        test: 'Test-retest method - do the study twice with same participants',
+        improvement: 'Standardise procedures, use clear operationalised variables'
+      }
+    },
+    {
+      id: 'inter-rater',
+      title: '👥 Inter-Rater Reliability',
+      color: 'amber',
+      content: {
+        definition: 'Consistency between different researchers/observers',
+        example: 'Two observers watching the same behavior and recording the same things',
+        test: 'Compare observations from multiple raters - calculate correlation',
+        improvement: 'Train observers, use clear behavioral categories, pilot test'
+      }
+    },
+    {
+      id: 'methods',
+      title: '⚖️ Reliable vs Less Reliable Methods',
+      color: 'rose',
+      content: {
+        moreReliable: ['Lab experiments (controlled)', 'Closed questions', 'Structured interviews', 'Standardised procedures'],
+        lessReliable: ['Unstructured interviews', 'Case studies', 'Open questions', 'Naturalistic observations']
+      }
+    }
+  ]
+
+  const toggleSection = (id: string) => {
+    setExpandedSection(expandedSection === id ? null : id)
+  }
+
+  const getColorClasses = (color: string, isExpanded: boolean) => {
+    const colors: Record<string, { bg: string; border: string; text: string; headerBg: string }> = {
+      blue: { bg: 'bg-blue-900/30', border: 'border-blue-500/50', text: 'text-blue-300', headerBg: 'bg-blue-900/50' },
+      purple: { bg: 'bg-purple-900/30', border: 'border-purple-500/50', text: 'text-purple-300', headerBg: 'bg-purple-900/50' },
+      emerald: { bg: 'bg-emerald-900/30', border: 'border-emerald-500/50', text: 'text-emerald-300', headerBg: 'bg-emerald-900/50' },
+      amber: { bg: 'bg-amber-900/30', border: 'border-amber-500/50', text: 'text-amber-300', headerBg: 'bg-amber-900/50' },
+      rose: { bg: 'bg-rose-900/30', border: 'border-rose-500/50', text: 'text-rose-300', headerBg: 'bg-rose-900/50' }
+    }
+    return colors[color] || colors.blue
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-8'}`}>
+      <div className="text-center mb-6">
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-4xl'} font-black text-white mb-2`}>Reliability</h2>
+        <p className="text-gray-400">Click sections to expand/collapse</p>
+      </div>
+
+      <div className="space-y-3 max-w-4xl mx-auto w-full">
+        {sections.map((section) => {
+          const colorClasses = getColorClasses(section.color, expandedSection === section.id)
+          return (
+            <div key={section.id} className={`rounded-xl border-2 ${colorClasses.border} overflow-hidden transition-all duration-300`}>
+              {/* Header - always visible, clickable */}
+              <div
+                onClick={() => toggleSection(section.id)}
+                className={`${isPresenting ? 'p-3' : 'p-4'} cursor-pointer flex items-center justify-between transition-colors ${
+                  expandedSection === section.id ? colorClasses.headerBg : 'bg-gray-800/80 hover:bg-gray-700/80'
+                }`}
+              >
+                <h3 className={`font-bold ${isPresenting ? 'text-base' : 'text-lg'} ${
+                  expandedSection === section.id ? colorClasses.text : 'text-gray-300'
+                }`}>
+                  {section.title}
+                </h3>
+                <ChevronRight className={`${colorClasses.text} transform transition-transform duration-300 ${
+                  expandedSection === section.id ? 'rotate-90' : ''
+                }`} size={isPresenting ? 20 : 24} />
+              </div>
+
+              {/* Expandable content */}
+              {expandedSection === section.id && (
+                <div className={`${isPresenting ? 'p-4' : 'p-5'} ${colorClasses.bg} border-t ${colorClasses.border} animate-fadeIn`}>
+                  {section.id === 'definition' && 'main' in section.content && (
+                    <div className="space-y-3">
+                      <p className={`${isPresenting ? 'text-base' : 'text-lg'} font-semibold ${colorClasses.text}`}>
+                        {section.content.main}
+                      </p>
+                      <ul className={`space-y-2 ${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>
+                        {section.content.points?.map((point, idx) => (
+                          <li key={idx}>• {point}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {(section.id === 'internal' || section.id === 'external' || section.id === 'inter-rater') && 'definition' in section.content && (
+                    <div className="space-y-3">
+                      <div className={`${isPresenting ? 'p-3' : 'p-4'} bg-gray-800/50 rounded-lg`}>
+                        <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 uppercase tracking-wide mb-1`}>Definition</p>
+                        <p className={`${isPresenting ? 'text-sm' : 'text-base'} font-semibold ${colorClasses.text}`}>{section.content.definition}</p>
+                      </div>
+                      <div className={`${isPresenting ? 'p-3' : 'p-4'} bg-gray-800/50 rounded-lg`}>
+                        <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 uppercase tracking-wide mb-1`}>Example</p>
+                        <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{section.content.example}</p>
+                      </div>
+                      <div className={`${isPresenting ? 'p-3' : 'p-4'} bg-gray-800/50 rounded-lg`}>
+                        <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 uppercase tracking-wide mb-1`}>How to Assess</p>
+                        <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{section.content.test}</p>
+                      </div>
+                      {'improvement' in section.content && (
+                        <div className={`${isPresenting ? 'p-3' : 'p-4'} bg-gray-800/50 rounded-lg`}>
+                          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 uppercase tracking-wide mb-1`}>How to Improve</p>
+                          <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-green-300`}>{section.content.improvement}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {section.id === 'methods' && 'moreReliable' in section.content && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className={`${isPresenting ? 'p-3' : 'p-4'} bg-green-900/30 rounded-lg border border-green-500/30`}>
+                        <p className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-green-300 mb-2`}>✓ More Reliable</p>
+                        <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+                          {section.content.moreReliable?.map((item, idx) => (
+                            <li key={idx}>• {item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className={`${isPresenting ? 'p-3' : 'p-4'} bg-red-900/30 rounded-lg border border-red-500/30`}>
+                        <p className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-red-300 mb-2`}>✗ Less Reliable</p>
+                        <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+                          {section.content.lessReliable?.map((item, idx) => (
+                            <li key={idx}>• {item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// Reliability AFL
+const ReliabilityAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "Reliability refers to...",
+      options: ["Whether results are true", "Consistency of measurement", "How many participants there are", "The type of data collected"],
+      correct: 1,
+      explanation: "Reliability means getting consistent results when a measurement is repeated."
+    },
+    {
+      question: "Test-retest reliability involves...",
+      options: ["Two observers comparing notes", "Doing the same test twice and comparing", "Testing two groups", "Testing validity"],
+      correct: 1,
+      explanation: "Test-retest involves giving the same test twice and checking if answers are consistent."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Reliability - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Validity Teaching Slide
+const ValidityTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [expandedSection, setExpandedSection] = useState<string | null>('definition')
+
+  const sections = [
+    {
+      id: 'definition',
+      title: '🎯 What is Validity?',
+      color: 'emerald',
+      content: {
+        main: 'Validity = Does it measure what it claims to measure?',
+        points: [
+          'Whether results are "true" and meaningful',
+          'Does the study represent real life?',
+          'Are we actually measuring what we think we are?'
+        ]
+      }
+    },
+    {
+      id: 'internal',
+      title: '🔒 Internal Validity',
+      color: 'blue',
+      content: {
+        definition: 'Confidence that the IV caused the change in DV, not confounding variables',
+        example: 'In a memory experiment, ensuring lighting, time of day, and noise are controlled',
+        assess: 'Check for extraneous variables, demand characteristics, and experimenter effects',
+        improvement: 'Control extraneous variables, use standardised procedures, single/double blind techniques'
+      }
+    },
+    {
+      id: 'external',
+      title: '🌐 External Validity',
+      color: 'purple',
+      content: {
+        definition: 'Can results be generalised beyond the specific study?',
+        example: 'Can findings from a university sample apply to the general population?',
+        assess: 'Consider sample representativeness, setting, and historical context',
+        improvement: 'Use diverse/representative samples, replicate in different settings'
+      }
+    },
+    {
+      id: 'ecological',
+      title: '🌳 Ecological Validity',
+      color: 'teal',
+      content: {
+        definition: 'Real-world applicability - does the study reflect natural behaviour?',
+        example: 'Lab memory tests with word lists vs. remembering shopping items at home',
+        assess: 'Is the task/setting artificial? Would people behave this way in real life?',
+        improvement: 'Use naturalistic settings, real-world tasks, field experiments'
+      }
+    },
+    {
+      id: 'population',
+      title: '👥 Population Validity',
+      color: 'amber',
+      content: {
+        definition: 'Can results be generalised to the target population?',
+        example: 'Research on university students may not apply to elderly or children',
+        assess: 'How representative is the sample? Consider age, gender, culture, education',
+        improvement: 'Use random/stratified sampling, recruit diverse participants'
+      }
+    },
+    {
+      id: 'threats',
+      title: '⚠️ Threats to Validity',
+      color: 'rose',
+      content: {
+        threats: [
+          { name: 'Extraneous Variables', desc: 'Uncontrolled factors affecting DV' },
+          { name: 'Demand Characteristics', desc: 'Participants guess the aim and change behaviour' },
+          { name: 'Investigator Effects', desc: 'Researcher unconsciously influences results' },
+          { name: 'Artificial Tasks', desc: 'Tasks don\'t reflect real-world behaviour' },
+          { name: 'Social Desirability', desc: 'Participants give "acceptable" rather than true answers' },
+          { name: 'Sampling Bias', desc: 'Sample doesn\'t represent target population' }
+        ]
+      }
+    }
+  ]
+
+  const toggleSection = (id: string) => {
+    setExpandedSection(expandedSection === id ? null : id)
+  }
+
+  const getColorClasses = (color: string) => {
+    const colors: Record<string, { bg: string; border: string; text: string; headerBg: string }> = {
+      emerald: { bg: 'bg-emerald-900/30', border: 'border-emerald-500/50', text: 'text-emerald-300', headerBg: 'bg-emerald-900/50' },
+      blue: { bg: 'bg-blue-900/30', border: 'border-blue-500/50', text: 'text-blue-300', headerBg: 'bg-blue-900/50' },
+      purple: { bg: 'bg-purple-900/30', border: 'border-purple-500/50', text: 'text-purple-300', headerBg: 'bg-purple-900/50' },
+      teal: { bg: 'bg-teal-900/30', border: 'border-teal-500/50', text: 'text-teal-300', headerBg: 'bg-teal-900/50' },
+      amber: { bg: 'bg-amber-900/30', border: 'border-amber-500/50', text: 'text-amber-300', headerBg: 'bg-amber-900/50' },
+      rose: { bg: 'bg-rose-900/30', border: 'border-rose-500/50', text: 'text-rose-300', headerBg: 'bg-rose-900/50' }
+    }
+    return colors[color] || colors.emerald
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-8'}`}>
+      <div className="text-center mb-6">
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-4xl'} font-black text-white mb-2`}>Validity</h2>
+        <p className="text-gray-400">Click sections to expand/collapse</p>
+      </div>
+
+      <div className="space-y-3 max-w-4xl mx-auto w-full">
+        {sections.map((section) => {
+          const colorClasses = getColorClasses(section.color)
+          return (
+            <div key={section.id} className={`rounded-xl border-2 ${colorClasses.border} overflow-hidden transition-all duration-300`}>
+              {/* Header - always visible, clickable */}
+              <div
+                onClick={() => toggleSection(section.id)}
+                className={`${isPresenting ? 'p-3' : 'p-4'} cursor-pointer flex items-center justify-between transition-colors ${
+                  expandedSection === section.id ? colorClasses.headerBg : 'bg-gray-800/80 hover:bg-gray-700/80'
+                }`}
+              >
+                <h3 className={`font-bold ${isPresenting ? 'text-base' : 'text-lg'} ${
+                  expandedSection === section.id ? colorClasses.text : 'text-gray-300'
+                }`}>
+                  {section.title}
+                </h3>
+                <ChevronRight className={`${colorClasses.text} transform transition-transform duration-300 ${
+                  expandedSection === section.id ? 'rotate-90' : ''
+                }`} size={isPresenting ? 20 : 24} />
+              </div>
+
+              {/* Expandable content */}
+              {expandedSection === section.id && (
+                <div className={`${isPresenting ? 'p-4' : 'p-5'} ${colorClasses.bg} border-t ${colorClasses.border} animate-fadeIn`}>
+                  {section.id === 'definition' && 'main' in section.content && (
+                    <div className="space-y-3">
+                      <p className={`${isPresenting ? 'text-base' : 'text-lg'} font-semibold ${colorClasses.text}`}>
+                        {section.content.main}
+                      </p>
+                      <ul className={`space-y-2 ${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>
+                        {section.content.points?.map((point, idx) => (
+                          <li key={idx}>• {point}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {(section.id === 'internal' || section.id === 'external' || section.id === 'ecological' || section.id === 'population') && 'definition' in section.content && (
+                    <div className="space-y-3">
+                      <div className={`${isPresenting ? 'p-3' : 'p-4'} bg-gray-800/50 rounded-lg`}>
+                        <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 uppercase tracking-wide mb-1`}>Definition</p>
+                        <p className={`${isPresenting ? 'text-sm' : 'text-base'} font-semibold ${colorClasses.text}`}>{section.content.definition}</p>
+                      </div>
+                      <div className={`${isPresenting ? 'p-3' : 'p-4'} bg-gray-800/50 rounded-lg`}>
+                        <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 uppercase tracking-wide mb-1`}>Example</p>
+                        <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{section.content.example}</p>
+                      </div>
+                      {'assess' in section.content && (
+                        <div className={`${isPresenting ? 'p-3' : 'p-4'} bg-gray-800/50 rounded-lg`}>
+                          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 uppercase tracking-wide mb-1`}>How to Assess</p>
+                          <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{section.content.assess}</p>
+                        </div>
+                      )}
+                      {'improvement' in section.content && (
+                        <div className={`${isPresenting ? 'p-3' : 'p-4'} bg-gray-800/50 rounded-lg`}>
+                          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 uppercase tracking-wide mb-1`}>How to Improve</p>
+                          <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-green-300`}>{section.content.improvement}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {section.id === 'threats' && 'threats' in section.content && (
+                    <div className="grid grid-cols-2 gap-3">
+                      {section.content.threats?.map((threat, idx) => (
+                        <div key={idx} className={`${isPresenting ? 'p-3' : 'p-4'} bg-red-900/20 rounded-lg border border-red-500/30`}>
+                          <p className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-red-300`}>{threat.name}</p>
+                          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300 mt-1`}>{threat.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// Validity AFL
+const ValidityAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "Ecological validity refers to...",
+      options: ["How natural/real-life the findings are", "How consistent results are", "How ethical the study is", "How many participants there are"],
+      correct: 0,
+      explanation: "Ecological validity is about whether findings can be generalised to real-life settings."
+    },
+    {
+      question: "What threatens internal validity?",
+      options: ["Using a large sample", "Extraneous variables affecting the DV", "Having clear instructions", "Using standardised procedures"],
+      correct: 1,
+      explanation: "If EVs affect the DV, we can't be sure the IV caused the change - threatening internal validity."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Validity - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Reliability vs Validity Task
+const ReliabilityValidityTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const scenarios = [
+    { scenario: "A questionnaire gives the same answers when repeated", concept: "reliability" },
+    { scenario: "A lab experiment doesn't reflect real-life behaviour", concept: "validity" },
+    { scenario: "Two observers record different behaviours", concept: "reliability" },
+    { scenario: "Extraneous variables affected the results", concept: "validity" },
+    { scenario: "A test measures what it claims to measure", concept: "validity" },
+    { scenario: "An unstructured interview gives different results each time", concept: "reliability" },
+  ]
+
+  const [answers, setAnswers] = useState<Record<number, string>>({})
+  const [showResults, setShowResults] = useState(false)
+
+  const score = scenarios.filter((s, i) => answers[i] === s.concept).length
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Reliability or Validity?</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Classify each scenario</p>
+      </div>
+
+      <div className="space-y-3 flex-1">
+        {scenarios.map((s, idx) => (
+          <div key={idx} className={`bg-gray-800/50 rounded-xl border ${showResults ? (answers[idx] === s.concept ? 'border-green-500' : 'border-red-500') : 'border-gray-700'} ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-3`}>{s.scenario}</p>
+            
+            <div className="flex gap-2">
+              {['reliability', 'validity'].map(concept => (
+                <button
+                  key={concept}
+                  onClick={() => !showResults && setAnswers(prev => ({ ...prev, [idx]: concept }))}
+                  className={`px-3 py-1 rounded-lg font-bold capitalize ${isPresenting ? 'text-xs' : 'text-sm'} ${
+                    showResults
+                      ? concept === s.concept
+                        ? 'bg-green-600 text-white'
+                        : answers[idx] === concept
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-700 text-gray-400'
+                      : answers[idx] === concept
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {concept}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {!showResults && Object.keys(answers).length === scenarios.length && (
+        <button onClick={() => setShowResults(true)} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-4 self-center">
+          Check My Answers
+        </button>
+      )}
+
+      {showResults && (
+        <div className={`text-center mt-4 ${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl`}>
+          <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{scenarios.length}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lesson 12 Extended Exam Task
+const Lesson12ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Reliability & Validity - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          Explain the difference between reliability and validity. Use examples to illustrate your answer. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">Reliability:</span> Consistency of measurement; same results when repeated</p>
+            <p><span className="font-bold text-amber-300">Example:</span> Test-retest - questionnaire gives same answers; inter-observer reliability</p>
+            <p><span className="font-bold text-amber-300">Validity:</span> Whether it measures what it claims to; whether results are "true"</p>
+            <p><span className="font-bold text-amber-300">Types:</span> Internal (IV caused DV change) and ecological (applies to real life)</p>
+            <p><span className="font-bold text-amber-300">Example:</span> Lab experiments may lack ecological validity; EVs threaten internal validity</p>
+            <p><span className="font-bold text-amber-300">Link:</span> Reliability is part of validity - consistent measures are more likely to be valid</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 13: DATA TYPES =============
+
+// Quantitative vs Qualitative Teaching Slide
+const DataTypesTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [focusedSide, setFocusedSide] = useState<'qualitative' | 'quantitative' | null>(null)
+
+  const qualitative = {
+    title: 'Qualitative Data',
+    color: 'purple',
+    icon: <FileText className={isPresenting ? 'w-8 h-8' : 'w-12 h-12'} />,
+    tagline: 'Words, descriptions, feelings',
+    examples: ['Interview transcripts', 'Open question responses', 'Diary entries', 'Observation notes'],
+    strengths: ['Rich detail', 'Participant perspective', 'Unexpected findings'],
+    limitations: ['Hard to analyse', 'Subjective', 'Time-consuming'],
+    collectMethods: ['Interviews', 'Open questions', 'Observations']
+  }
+
+  const quantitative = {
+    title: 'Quantitative Data',
+    color: 'blue',
+    icon: <BarChart className={isPresenting ? 'w-8 h-8' : 'w-12 h-12'} />,
+    tagline: 'Numbers, measurements, statistics',
+    examples: ['Test scores', 'Reaction times', 'Rating scales', 'Counts/frequencies'],
+    strengths: ['Easy to analyse', 'Objective', 'Can compare groups'],
+    limitations: ['May oversimplify', 'Miss depth', 'Lacks context'],
+    collectMethods: ['Experiments', 'Closed questions', 'Standardised tests']
+  }
+
+  const renderSide = (data: typeof qualitative, side: 'qualitative' | 'quantitative') => {
+    const isFocused = focusedSide === side
+    const isUnfocused = focusedSide !== null && focusedSide !== side
+    const colorClasses = {
+      purple: {
+        bg: 'bg-purple-900/20',
+        bgFocused: 'bg-purple-900/40',
+        border: 'border-purple-500/40',
+        text: 'text-purple-300',
+        icon: 'text-purple-400'
+      },
+      blue: {
+        bg: 'bg-blue-900/20',
+        bgFocused: 'bg-blue-900/40',
+        border: 'border-blue-500/40',
+        text: 'text-blue-300',
+        icon: 'text-blue-400'
+      }
+    }
+    const colors = colorClasses[data.color as keyof typeof colorClasses]
+
+    return (
+      <div
+        onMouseEnter={() => setFocusedSide(side)}
+        onMouseLeave={() => setFocusedSide(null)}
+        onClick={() => setFocusedSide(focusedSide === side ? null : side)}
+        className={`relative overflow-hidden rounded-xl border-2 ${colors.border} cursor-pointer transition-all duration-500 ease-out ${
+          isFocused ? `flex-[2] ${colors.bgFocused} shadow-2xl scale-[1.02]` :
+          isUnfocused ? `flex-[0.6] ${colors.bg} opacity-60 scale-[0.98]` :
+          `flex-1 ${colors.bg} hover:shadow-lg`
+        } ${isPresenting ? 'p-4' : 'p-6'}`}
+      >
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className={`${colors.icon} transition-transform duration-300 ${isFocused ? 'scale-110' : ''}`}>
+            {data.icon}
+          </div>
+          <div>
+            <h3 className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold ${colors.text}`}>{data.title}</h3>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 italic`}>{data.tagline}</p>
+          </div>
+        </div>
+
+        {/* Content - shows more when focused */}
+        <div className={`space-y-4 transition-all duration-300 ${isUnfocused ? 'opacity-70' : ''}`}>
+          {/* Examples */}
+          <div>
+            <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} font-semibold ${colors.text} mb-2`}>Examples:</h4>
+            <div className="flex flex-wrap gap-2">
+              {data.examples.map((ex, i) => (
+                <span key={i} className={`${isPresenting ? 'text-xs px-2 py-1' : 'text-sm px-3 py-1'} bg-gray-800/60 rounded-full text-gray-200`}>
+                  {ex}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Strengths & Limitations - expanded when focused */}
+          <div className={`grid ${isFocused ? 'grid-cols-2' : 'grid-cols-1'} gap-3 transition-all duration-300`}>
+            <div>
+              <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} font-semibold text-green-400 mb-2`}>✓ Strengths</h4>
+              <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+                {data.strengths.map((s, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {(isFocused || !isUnfocused) && (
+              <div className={`transition-all duration-300 ${isFocused ? 'opacity-100' : 'opacity-80'}`}>
+                <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} font-semibold text-red-400 mb-2`}>✗ Limitations</h4>
+                <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+                  {data.limitations.map((l, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <XCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+                      <span>{l}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* Collection Methods - only when focused */}
+          {isFocused && (
+            <div className="animate-fadeIn">
+              <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} font-semibold ${colors.text} mb-2`}>Collection Methods:</h4>
+              <div className="flex flex-wrap gap-2">
+                {data.collectMethods.map((m, i) => (
+                  <span key={i} className={`${isPresenting ? 'text-xs px-2 py-1' : 'text-sm px-3 py-1.5'} bg-gray-700/80 rounded-lg text-white font-medium border border-gray-600`}>
+                    {m}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Focus indicator */}
+        {isFocused && (
+          <div className={`absolute top-2 right-2 ${isPresenting ? 'text-xs' : 'text-sm'} ${colors.text} opacity-60`}>
+            <Eye className="w-4 h-4" />
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-4' : 'p-6'}`}>
+      {/* Header */}
+      <div className={`text-center ${isPresenting ? 'mb-3' : 'mb-6'}`}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-1`}>Types of Data</h2>
+        <p className={`${isPresenting ? 'text-xs' : 'text-base'} text-gray-400`}>Hover or click each side to explore</p>
+      </div>
+
+      {/* Split Screen */}
+      <div className="flex gap-3 flex-1 min-h-0">
+        {renderSide(qualitative, 'qualitative')}
+        
+        {/* Divider */}
+        <div className="w-1 bg-gradient-to-b from-purple-500/50 via-gray-600 to-blue-500/50 rounded-full flex-shrink-0" />
+        
+        {renderSide(quantitative, 'quantitative')}
+      </div>
+
+      {/* Footer hint */}
+      <div className={`text-center ${isPresenting ? 'mt-2' : 'mt-4'} text-gray-500 ${isPresenting ? 'text-xs' : 'text-sm'}`}>
+        {focusedSide ? `Viewing ${focusedSide} data details` : 'Click a side to lock focus'}
+      </div>
+    </div>
+  )
+}
+
+// Primary vs Secondary Teaching Slide
+const PrimarySecondaryTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [focusedSide, setFocusedSide] = useState<'primary' | 'secondary' | null>(null)
+
+  const primary = {
+    title: 'Primary Data',
+    color: 'green',
+    icon: <Database className={isPresenting ? 'w-8 h-8' : 'w-12 h-12'} />,
+    tagline: 'First-hand, original data YOU collect',
+    examples: ['Your experiment results', 'Survey responses', 'Interview transcripts', 'Observation records'],
+    strengths: ['Specific to your aims', 'Up-to-date', 'You know how it was collected'],
+    limitations: ['Time-consuming', 'Expensive', 'May have small sample'],
+    whenToUse: ['Need specific data', 'Topic is new/unique', 'Need current information']
+  }
+
+  const secondary = {
+    title: 'Secondary Data',
+    color: 'amber',
+    icon: <BookOpen className={isPresenting ? 'w-8 h-8' : 'w-12 h-12'} />,
+    tagline: 'Data collected by SOMEONE ELSE',
+    examples: ['Government statistics', 'Previous research', 'Medical records', 'Published datasets'],
+    strengths: ['Already exists', 'Often large samples', 'Quick and cheap'],
+    limitations: ['May not fit your aims', 'May be outdated', "Don't know collection method"],
+    whenToUse: ['Need large samples', 'Historical data needed', 'Limited time/budget']
+  }
+
+  const renderSide = (data: typeof primary, side: 'primary' | 'secondary') => {
+    const isFocused = focusedSide === side
+    const isUnfocused = focusedSide !== null && focusedSide !== side
+    const colorClasses = {
+      green: {
+        bg: 'bg-green-900/20',
+        bgFocused: 'bg-green-900/40',
+        border: 'border-green-500/40',
+        text: 'text-green-300',
+        icon: 'text-green-400'
+      },
+      amber: {
+        bg: 'bg-amber-900/20',
+        bgFocused: 'bg-amber-900/40',
+        border: 'border-amber-500/40',
+        text: 'text-amber-300',
+        icon: 'text-amber-400'
+      }
+    }
+    const colors = colorClasses[data.color as keyof typeof colorClasses]
+
+    return (
+      <div
+        onMouseEnter={() => setFocusedSide(side)}
+        onMouseLeave={() => setFocusedSide(null)}
+        onClick={() => setFocusedSide(focusedSide === side ? null : side)}
+        className={`relative overflow-hidden rounded-xl border-2 ${colors.border} cursor-pointer transition-all duration-500 ease-out ${
+          isFocused ? `flex-[2] ${colors.bgFocused} shadow-2xl scale-[1.02]` :
+          isUnfocused ? `flex-[0.6] ${colors.bg} opacity-60 scale-[0.98]` :
+          `flex-1 ${colors.bg} hover:shadow-lg`
+        } ${isPresenting ? 'p-4' : 'p-6'}`}
+      >
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className={`${colors.icon} transition-transform duration-300 ${isFocused ? 'scale-110' : ''}`}>
+            {data.icon}
+          </div>
+          <div>
+            <h3 className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold ${colors.text}`}>{data.title}</h3>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 italic`}>{data.tagline}</p>
+          </div>
+        </div>
+
+        {/* Content - shows more when focused */}
+        <div className={`space-y-4 transition-all duration-300 ${isUnfocused ? 'opacity-70' : ''}`}>
+          {/* Examples */}
+          <div>
+            <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} font-semibold ${colors.text} mb-2`}>Examples:</h4>
+            <div className="flex flex-wrap gap-2">
+              {data.examples.map((ex, i) => (
+                <span key={i} className={`${isPresenting ? 'text-xs px-2 py-1' : 'text-sm px-3 py-1'} bg-gray-800/60 rounded-full text-gray-200`}>
+                  {ex}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Strengths & Limitations - expanded when focused */}
+          <div className={`grid ${isFocused ? 'grid-cols-2' : 'grid-cols-1'} gap-3 transition-all duration-300`}>
+            <div>
+              <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} font-semibold text-green-400 mb-2`}>✓ Strengths</h4>
+              <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+                {data.strengths.map((s, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {(isFocused || !isUnfocused) && (
+              <div className={`transition-all duration-300 ${isFocused ? 'opacity-100' : 'opacity-80'}`}>
+                <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} font-semibold text-red-400 mb-2`}>✗ Limitations</h4>
+                <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+                  {data.limitations.map((l, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <XCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+                      <span>{l}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* When to Use - only when focused */}
+          {isFocused && (
+            <div className="animate-fadeIn">
+              <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} font-semibold ${colors.text} mb-2`}>When to Use:</h4>
+              <div className="flex flex-wrap gap-2">
+                {data.whenToUse.map((w, i) => (
+                  <span key={i} className={`${isPresenting ? 'text-xs px-2 py-1' : 'text-sm px-3 py-1.5'} bg-gray-700/80 rounded-lg text-white font-medium border border-gray-600`}>
+                    {w}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Focus indicator */}
+        {isFocused && (
+          <div className={`absolute top-2 right-2 ${isPresenting ? 'text-xs' : 'text-sm'} ${colors.text} opacity-60`}>
+            <Eye className="w-4 h-4" />
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-4' : 'p-6'}`}>
+      {/* Header */}
+      <div className={`text-center ${isPresenting ? 'mb-3' : 'mb-6'}`}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-1`}>Primary vs Secondary Data</h2>
+        <p className={`${isPresenting ? 'text-xs' : 'text-base'} text-gray-400`}>Where does the data come from? Hover or click to explore</p>
+      </div>
+
+      {/* Split Screen */}
+      <div className="flex gap-3 flex-1 min-h-0">
+        {renderSide(primary, 'primary')}
+        
+        {/* Divider */}
+        <div className="w-1 bg-gradient-to-b from-green-500/50 via-gray-600 to-amber-500/50 rounded-full flex-shrink-0" />
+        
+        {renderSide(secondary, 'secondary')}
+      </div>
+
+      {/* Footer hint */}
+      <div className={`text-center ${isPresenting ? 'mt-2' : 'mt-4'} text-gray-500 ${isPresenting ? 'text-xs' : 'text-sm'}`}>
+        {focusedSide ? `Viewing ${focusedSide} data details` : 'Click a side to lock focus'}
+      </div>
+    </div>
+  )
+}
+
+// Data Types AFL
+const DataTypesAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "Test scores from an experiment are an example of...",
+      options: ["Qualitative data", "Quantitative data", "Secondary data", "Primary data only"],
+      correct: 1,
+      explanation: "Test scores are numbers, so they are quantitative data."
+    },
+    {
+      question: "Primary data is...",
+      options: ["Data from government statistics", "Data collected by the researcher themselves", "Data from textbooks", "Data from other studies"],
+      correct: 1,
+      explanation: "Primary data is collected first-hand by the researcher for their specific study."
+    },
+    {
+      question: "A strength of qualitative data is...",
+      options: ["Easy to analyse", "Rich detail and high validity", "Can calculate averages", "Less bias"],
+      correct: 1,
+      explanation: "Qualitative data provides rich, detailed information with high validity."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Data Types - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-left transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Data Types Classification Task
+const DataTypesTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const items = [
+    { item: "Interview transcript from your study", types: ["qualitative", "primary"] },
+    { item: "Government crime statistics", types: ["quantitative", "secondary"] },
+    { item: "Reaction times you measured in a lab", types: ["quantitative", "primary"] },
+    { item: "Diary entries from participants", types: ["qualitative", "primary"] },
+    { item: "Ratings on a 1-10 scale", types: ["quantitative", "primary"] },
+    { item: "Published research findings", types: ["quantitative", "secondary"] },
+  ]
+
+  const [answers, setAnswers] = useState<Record<number, { qt?: string; ps?: string }>>({})
+  const [showResults, setShowResults] = useState(false)
+
+  const score = items.filter((item, i) => 
+    answers[i]?.qt === item.types[0] && answers[i]?.ps === item.types[1]
+  ).length
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Classify the Data</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Quantitative/Qualitative AND Primary/Secondary</p>
+      </div>
+
+      <div className="space-y-3 flex-1">
+        {items.map((item, idx) => (
+          <div key={idx} className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-3`}>{item.item}</p>
+            
+            <div className="flex flex-wrap gap-4">
+              <div className="flex gap-2">
+                {['quantitative', 'qualitative'].map(type => (
+                  <button
+                    key={type}
+                    onClick={() => !showResults && setAnswers(prev => ({ ...prev, [idx]: { ...prev[idx], qt: type } }))}
+                    className={`px-2 py-1 rounded text-xs capitalize ${
+                      showResults
+                        ? type === item.types[0]
+                          ? 'bg-green-600 text-white'
+                          : answers[idx]?.qt === type
+                          ? 'bg-red-600 text-white'
+                          : 'bg-gray-700 text-gray-400'
+                        : answers[idx]?.qt === type
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    {type.slice(0, 5)}
+                  </button>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                {['primary', 'secondary'].map(type => (
+                  <button
+                    key={type}
+                    onClick={() => !showResults && setAnswers(prev => ({ ...prev, [idx]: { ...prev[idx], ps: type } }))}
+                    className={`px-2 py-1 rounded text-xs capitalize ${
+                      showResults
+                        ? type === item.types[1]
+                          ? 'bg-green-600 text-white'
+                          : answers[idx]?.ps === type
+                          ? 'bg-red-600 text-white'
+                          : 'bg-gray-700 text-gray-400'
+                        : answers[idx]?.ps === type
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {!showResults && (
+        <button onClick={() => setShowResults(true)} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-4 self-center">
+          Check My Answers
+        </button>
+      )}
+
+      {showResults && (
+        <div className={`text-center mt-4 ${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl`}>
+          <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{items.length}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lesson 13 Extended Exam Task
+const Lesson13ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Data Types - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          Compare quantitative and qualitative data. Evaluate the strengths and weaknesses of each type. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">Quantitative:</span> Numerical data (scores, counts, measurements)</p>
+            <p><span className="font-bold text-amber-300">Quant +:</span> Easy to analyse, calculate averages, less bias, can compare groups</p>
+            <p><span className="font-bold text-amber-300">Quant -:</span> Lacks depth/detail, may not reflect real experiences</p>
+            <p><span className="font-bold text-amber-300">Qualitative:</span> Data in words (descriptions, transcripts)</p>
+            <p><span className="font-bold text-amber-300">Qual +:</span> Rich detail, high validity, insight into thoughts/feelings</p>
+            <p><span className="font-bold text-amber-300">Qual -:</span> Difficult to analyse, open to researcher bias</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 14: DESCRIPTIVE STATISTICS =============
+
+// Descriptive Statistics Teaching Slide
+const DescriptiveStatsTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [currentStep, setCurrentStep] = useState(0)
+
+  const stats = [
+    {
+      id: 0,
+      name: 'Mean',
+      subtitle: '(Average)',
+      icon: <Calculator className={isPresenting ? 'w-5 h-5' : 'w-6 h-6'} />,
+      colorBorder: 'border-blue-500',
+      colorBg: 'bg-blue-900/30',
+      colorText: 'text-blue-300',
+      colorMuted: 'text-blue-200',
+      formula: 'Add all scores, divide by number of scores',
+      example: { data: '10, 8, 12, 15, 5 = 50', calculation: '50 ÷ 5', answer: 'Mean = 10' },
+      strength: 'Uses all data',
+      limitation: 'Affected by extreme scores'
+    },
+    {
+      id: 1,
+      name: 'Median',
+      subtitle: '(Middle)',
+      icon: <ArrowUpDown className={isPresenting ? 'w-5 h-5' : 'w-6 h-6'} />,
+      colorBorder: 'border-purple-500',
+      colorBg: 'bg-purple-900/30',
+      colorText: 'text-purple-300',
+      colorMuted: 'text-purple-200',
+      formula: 'Put in order, find the middle value',
+      example: { data: '5, 8, 10, 12, 15', calculation: 'Middle value', answer: 'Median = 10' },
+      strength: 'Not affected by extremes',
+      limitation: "Doesn't use all data"
+    },
+    {
+      id: 2,
+      name: 'Mode',
+      subtitle: '(Most Common)',
+      icon: <Hash className={isPresenting ? 'w-5 h-5' : 'w-6 h-6'} />,
+      colorBorder: 'border-green-500',
+      colorBg: 'bg-green-900/30',
+      colorText: 'text-green-300',
+      colorMuted: 'text-green-200',
+      formula: 'The most frequent value',
+      example: { data: '5, 8, 8, 8, 10, 12', calculation: '8 appears 3 times', answer: 'Mode = 8' },
+      strength: 'Easy to find',
+      limitation: 'Can be unrepresentative'
+    },
+    {
+      id: 3,
+      name: 'Range',
+      subtitle: '(Spread)',
+      icon: <ArrowLeftRight className={isPresenting ? 'w-5 h-5' : 'w-6 h-6'} />,
+      colorBorder: 'border-amber-500',
+      colorBg: 'bg-amber-900/30',
+      colorText: 'text-amber-300',
+      colorMuted: 'text-amber-200',
+      formula: 'Highest − Lowest',
+      example: { data: '5, 8, 10, 12, 15', calculation: '15 − 5', answer: 'Range = 10' },
+      strength: 'Easy to calculate',
+      limitation: 'Affected by extremes'
+    }
+  ]
+
+  const nextStep = () => setCurrentStep(Math.min(stats.length, currentStep + 1))
+  const prevStep = () => setCurrentStep(Math.max(0, currentStep - 1))
+  const showAll = () => setCurrentStep(stats.length)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-4' : 'p-6'}`}>
+      <div className={isPresenting ? 'mb-3' : 'mb-4'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white text-center mb-1`}>Descriptive Statistics</h2>
+        <p className={`${isPresenting ? 'text-xs' : 'text-base'} text-gray-400 text-center`}>Measures of Central Tendency & Spread</p>
+      </div>
+
+      {/* Progress bar */}
+      <div className="flex justify-center items-center gap-2 mb-4">
+        {stats.map((s, i) => (
+          <div 
+            key={i} 
+            className={`${isPresenting ? 'w-6 h-6 text-xs' : 'w-8 h-8 text-sm'} rounded-full flex items-center justify-center font-bold transition-all duration-300 ${
+              i < currentStep 
+                ? `${s.colorBg} ${s.colorBorder} border-2 text-white` 
+                : 'bg-gray-700 text-gray-500 border-2 border-gray-600'
+            }`}
+          >
+            {i + 1}
+          </div>
+        ))}
+      </div>
+
+      {/* Stats grid - only show revealed ones */}
+      <div className={`grid grid-cols-2 ${isPresenting ? 'gap-3' : 'gap-4'} max-w-5xl mx-auto flex-1`}>
+        {stats.map((stat, i) => (
+          <div 
+            key={stat.id}
+            className={`rounded-xl border-2 ${isPresenting ? 'p-3' : 'p-4'} transition-all duration-500 ${
+              i < currentStep 
+                ? `${stat.colorBorder} ${stat.colorBg} opacity-100 scale-100` 
+                : 'border-gray-700 bg-gray-800/30 opacity-40 scale-95'
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <span className={i < currentStep ? stat.colorText : 'text-gray-600'}>{stat.icon}</span>
+              <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold ${i < currentStep ? stat.colorText : 'text-gray-600'}`}>
+                {stat.name} <span className="font-normal text-gray-400">{stat.subtitle}</span>
+              </h3>
+            </div>
+            
+            {i < currentStep ? (
+              <div className="animate-fadeIn space-y-2">
+                <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>{stat.formula}</p>
+                <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-2' : 'p-3'} font-mono`}>
+                  <p className={`${isPresenting ? 'text-xs' : 'text-sm'} ${stat.colorMuted}`}>{stat.example.data}</p>
+                  <p className={`${isPresenting ? 'text-xs' : 'text-sm'} ${stat.colorMuted}`}>
+                    {stat.example.calculation} = <span className="font-bold">{stat.example.answer}</span>
+                  </p>
+                </div>
+                <div className={`flex flex-col ${isPresenting ? 'gap-0.5 text-xs' : 'gap-1 text-sm'}`}>
+                  <span className="text-green-300">✓ {stat.strength}</span>
+                  <span className="text-red-300">✗ {stat.limitation}</span>
+                </div>
+              </div>
+            ) : (
+              <div className={`${isPresenting ? 'h-24' : 'h-32'} flex items-center justify-center`}>
+                <span className="text-gray-600 text-sm">Click "Reveal Next" to show</span>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Navigation */}
+      <div className="flex justify-center gap-3 mt-4">
+        <button 
+          onClick={prevStep} 
+          disabled={currentStep === 0}
+          className={`${isPresenting ? 'px-3 py-1.5 text-sm' : 'px-4 py-2'} rounded-lg font-semibold transition-all ${
+            currentStep === 0 
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-gray-600 hover:bg-gray-500 text-white'
+          }`}
+        >
+          ← Back
+        </button>
+        <button 
+          onClick={nextStep} 
+          disabled={currentStep >= stats.length}
+          className={`${isPresenting ? 'px-3 py-1.5 text-sm' : 'px-4 py-2'} rounded-lg font-semibold transition-all ${
+            currentStep >= stats.length 
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-blue-600 hover:bg-blue-500 text-white'
+          }`}
+        >
+          Reveal Next →
+        </button>
+        <button 
+          onClick={showAll}
+          className={`${isPresenting ? 'px-3 py-1.5 text-sm' : 'px-4 py-2'} rounded-lg font-semibold transition-all ${
+            currentStep >= stats.length 
+              ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+              : 'bg-purple-600 hover:bg-purple-500 text-white'
+          }`}
+          disabled={currentStep >= stats.length}
+        >
+          Show All
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// Descriptive Statistics AFL
+const DescriptiveStatsAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "For the data: 3, 5, 7, 9, 11 - what is the mean?",
+      options: ["5", "7", "9", "35"],
+      correct: 1,
+      explanation: "3+5+7+9+11 = 35, divided by 5 = 7"
+    },
+    {
+      question: "For the data: 2, 4, 4, 6, 8, 10 - what is the median?",
+      options: ["4", "5", "6", "4 and 6"],
+      correct: 1,
+      explanation: "Middle two values are 4 and 6. (4+6)÷2 = 5"
+    },
+    {
+      question: "What measure of spread is calculated by: Highest - Lowest?",
+      options: ["Mean", "Median", "Mode", "Range"],
+      correct: 3,
+      explanation: "The range is calculated by subtracting the lowest from the highest score."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Statistics - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-2 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-center transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Statistics Calculation Task
+const StatsCalculationTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const data = [4, 6, 6, 8, 10, 12, 14]
+  const [answers, setAnswers] = useState({ mean: '', median: '', mode: '', range: '' })
+  const [showResults, setShowResults] = useState(false)
+
+  const correct = { mean: '8.57', median: '8', mode: '6', range: '10' }
+
+  const checkAnswer = (key: string, userAns: string) => {
+    if (key === 'mean') return userAns === '8.57' || userAns === '8.6' || userAns === '60/7'
+    return userAns === correct[key as keyof typeof correct]
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Calculate the Statistics</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>For the data set below</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-xl border border-blue-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white text-center font-mono`}>
+          {data.join(', ')}
+        </p>
+      </div>
+
+      <div className={`grid grid-cols-2 gap-4`}>
+        {[
+          { key: 'mean', label: 'Mean', hint: 'Add all ÷ count' },
+          { key: 'median', label: 'Median', hint: 'Middle value' },
+          { key: 'mode', label: 'Mode', hint: 'Most common' },
+          { key: 'range', label: 'Range', hint: 'Highest - Lowest' },
+        ].map(({ key, label, hint }) => (
+          <div key={key} className={`bg-gray-800/50 rounded-xl border ${showResults ? (checkAnswer(key, answers[key as keyof typeof answers]) ? 'border-green-500' : 'border-red-500') : 'border-gray-700'} ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-white mb-1`}>{label}</p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 mb-2`}>{hint}</p>
+            <input
+              type="text"
+              value={answers[key as keyof typeof answers]}
+              onChange={(e) => !showResults && setAnswers(prev => ({ ...prev, [key]: e.target.value }))}
+              className={`w-full bg-gray-900/50 border border-gray-600 rounded-lg text-white ${isPresenting ? 'p-2 text-sm' : 'p-3'}`}
+              placeholder="?"
+            />
+            {showResults && (
+              <p className={`${isPresenting ? 'text-xs' : 'text-sm'} mt-2 ${checkAnswer(key, answers[key as keyof typeof answers]) ? 'text-green-400' : 'text-red-400'}`}>
+                {checkAnswer(key, answers[key as keyof typeof answers]) ? '✓ Correct!' : `✗ Answer: ${correct[key as keyof typeof correct]}`}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {!showResults && (
+        <button onClick={() => setShowResults(true)} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-6 self-center">
+          Check My Answers
+        </button>
+      )}
+    </div>
+  )
+}
+
+// Lesson 14 Extended Exam Task
+const Lesson14ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Descriptive Statistics - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          Evaluate the use of the mean as a measure of central tendency. Compare it to the median and mode. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">Mean +:</span> Most sensitive, uses all data in calculation</p>
+            <p><span className="font-bold text-amber-300">Mean -:</span> Can be distorted by extreme scores (outliers)</p>
+            <p><span className="font-bold text-amber-300">Median +:</span> Not affected by extreme scores</p>
+            <p><span className="font-bold text-amber-300">Median -:</span> Less sensitive, doesn't use all values</p>
+            <p><span className="font-bold text-amber-300">Mode +:</span> Easy to calculate, useful for categories</p>
+            <p><span className="font-bold text-amber-300">Mode -:</span> Can be unrepresentative; may have multiple modes</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 15: GRAPHS & DISPLAY =============
+
+// Graphs Teaching Slide
+const GraphsTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [selectedGraph, setSelectedGraph] = useState<string | null>(null)
+
+  const graphTypes = [
+    {
+      id: 'bar',
+      name: 'Bar Chart',
+      icon: <BarChart2 size={isPresenting ? 28 : 36} />,
+      color: 'blue',
+      useFor: 'Comparing discrete categories',
+      example: 'Comparing mean scores between experimental conditions (e.g., memory recall with vs without music)',
+      tips: [
+        'Gaps between bars (discrete data)',
+        'Categories on X-axis',
+        'Frequency or mean on Y-axis',
+        'Clear labels for each category'
+      ],
+      mistakes: [
+        'No gaps between bars (that\'s a histogram!)',
+        'Missing axis labels or title',
+        'Using for continuous data',
+        'Inconsistent bar widths'
+      ],
+      keyFeature: 'Each bar represents a separate, distinct category'
+    },
+    {
+      id: 'histogram',
+      name: 'Histogram',
+      icon: <BarChart3 size={isPresenting ? 28 : 36} />,
+      color: 'purple',
+      useFor: 'Showing distribution of continuous data',
+      example: 'Distribution of reaction times in milliseconds (0-100ms, 100-200ms, etc.)',
+      tips: [
+        'NO gaps between bars (continuous data)',
+        'Continuous variable on X-axis',
+        'Frequency on Y-axis',
+        'Shows shape of distribution'
+      ],
+      mistakes: [
+        'Putting gaps between bars',
+        'Using for categorical data',
+        'Unequal interval widths',
+        'Confusing with bar charts'
+      ],
+      keyFeature: 'Bars touch because the data is continuous with no breaks'
+    },
+    {
+      id: 'scatter',
+      name: 'Scattergram',
+      icon: <TrendingUp size={isPresenting ? 28 : 36} />,
+      color: 'green',
+      useFor: 'Showing correlations between two variables',
+      example: 'Relationship between hours of revision and exam score',
+      tips: [
+        'Each dot = one participant',
+        'Can add line of best fit',
+        'Shows direction & strength of relationship',
+        'Both axes are continuous variables'
+      ],
+      mistakes: [
+        'Connecting the dots with lines',
+        'Using for comparing groups',
+        'Forgetting to label both axes clearly',
+        'Not identifying the correlation type'
+      ],
+      keyFeature: 'Individual data points show the relationship pattern'
+    },
+    {
+      id: 'table',
+      name: 'Data Table',
+      icon: <Database size={isPresenting ? 28 : 36} />,
+      color: 'amber',
+      useFor: 'Organising raw data or summary statistics',
+      example: 'Summary table showing mean, median, mode and range for each condition',
+      tips: [
+        'Clear column and row headings',
+        'Include units of measurement',
+        'Round to appropriate decimal places',
+        'Use a clear, descriptive title'
+      ],
+      mistakes: [
+        'Missing or unclear headings',
+        'Inconsistent decimal places',
+        'No title explaining what data shows',
+        'Cramming too much data in one table'
+      ],
+      keyFeature: 'Precise numerical data in an organised format'
+    }
+  ]
+
+  const colorClasses: Record<string, { border: string; bg: string; text: string; bgLight: string }> = {
+    blue: { border: 'border-blue-500', bg: 'bg-blue-900/20', text: 'text-blue-300', bgLight: 'bg-blue-500/20' },
+    purple: { border: 'border-purple-500', bg: 'bg-purple-900/20', text: 'text-purple-300', bgLight: 'bg-purple-500/20' },
+    green: { border: 'border-green-500', bg: 'bg-green-900/20', text: 'text-green-300', bgLight: 'bg-green-500/20' },
+    amber: { border: 'border-amber-500', bg: 'bg-amber-900/20', text: 'text-amber-300', bgLight: 'bg-amber-500/20' }
+  }
+
+  const selectedGraphData = graphTypes.find(g => g.id === selectedGraph)
+
+  // Simple SVG visual representations for each graph type
+  const renderGraphVisual = (type: string, isLarge: boolean = false) => {
+    const size = isLarge ? { w: 200, h: 120 } : { w: 80, h: 50 }
+    
+    switch (type) {
+      case 'bar':
+        return (
+          <svg viewBox="0 0 100 60" className={isLarge ? 'w-48 h-28' : 'w-20 h-12'}>
+            <rect x="10" y="35" width="15" height="20" fill="#3b82f6" rx="2" />
+            <rect x="30" y="15" width="15" height="40" fill="#3b82f6" rx="2" />
+            <rect x="50" y="25" width="15" height="30" fill="#3b82f6" rx="2" />
+            <rect x="70" y="10" width="15" height="45" fill="#3b82f6" rx="2" />
+            <line x1="5" y1="55" x2="95" y2="55" stroke="#6b7280" strokeWidth="1" />
+            <line x1="5" y1="5" x2="5" y2="55" stroke="#6b7280" strokeWidth="1" />
+          </svg>
+        )
+      case 'histogram':
+        return (
+          <svg viewBox="0 0 100 60" className={isLarge ? 'w-48 h-28' : 'w-20 h-12'}>
+            <rect x="10" y="40" width="16" height="15" fill="#a855f7" />
+            <rect x="26" y="25" width="16" height="30" fill="#a855f7" />
+            <rect x="42" y="10" width="16" height="45" fill="#a855f7" />
+            <rect x="58" y="20" width="16" height="35" fill="#a855f7" />
+            <rect x="74" y="35" width="16" height="20" fill="#a855f7" />
+            <line x1="5" y1="55" x2="95" y2="55" stroke="#6b7280" strokeWidth="1" />
+            <line x1="5" y1="5" x2="5" y2="55" stroke="#6b7280" strokeWidth="1" />
+          </svg>
+        )
+      case 'scatter':
+        return (
+          <svg viewBox="0 0 100 60" className={isLarge ? 'w-48 h-28' : 'w-20 h-12'}>
+            <circle cx="15" cy="45" r="3" fill="#22c55e" />
+            <circle cx="25" cy="38" r="3" fill="#22c55e" />
+            <circle cx="35" cy="35" r="3" fill="#22c55e" />
+            <circle cx="45" cy="28" r="3" fill="#22c55e" />
+            <circle cx="55" cy="25" r="3" fill="#22c55e" />
+            <circle cx="65" cy="18" r="3" fill="#22c55e" />
+            <circle cx="75" cy="15" r="3" fill="#22c55e" />
+            <circle cx="85" cy="10" r="3" fill="#22c55e" />
+            <line x1="10" y1="50" x2="90" y2="8" stroke="#22c55e" strokeWidth="1" strokeDasharray="3,3" opacity="0.5" />
+            <line x1="5" y1="55" x2="95" y2="55" stroke="#6b7280" strokeWidth="1" />
+            <line x1="5" y1="5" x2="5" y2="55" stroke="#6b7280" strokeWidth="1" />
+          </svg>
+        )
+      case 'table':
+        return (
+          <svg viewBox="0 0 100 60" className={isLarge ? 'w-48 h-28' : 'w-20 h-12'}>
+            <rect x="10" y="5" width="80" height="50" fill="none" stroke="#f59e0b" strokeWidth="1" />
+            <line x1="10" y1="18" x2="90" y2="18" stroke="#f59e0b" strokeWidth="1" />
+            <line x1="10" y1="31" x2="90" y2="31" stroke="#f59e0b" strokeWidth="0.5" />
+            <line x1="10" y1="44" x2="90" y2="44" stroke="#f59e0b" strokeWidth="0.5" />
+            <line x1="40" y1="5" x2="40" y2="55" stroke="#f59e0b" strokeWidth="0.5" />
+            <line x1="65" y1="5" x2="65" y2="55" stroke="#f59e0b" strokeWidth="0.5" />
+            <rect x="12" y="7" width="25" height="9" fill="#f59e0b" opacity="0.3" />
+          </svg>
+        )
+      default:
+        return null
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-4' : 'p-8'}`}>
+      <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white text-center mb-1`}>Types of Graphs & Tables</h2>
+      <p className="text-gray-400 text-center mb-4">Click any graph type to learn more</p>
+
+      {selectedGraph && selectedGraphData ? (
+        // ZOOMED VIEW - show full details of selected graph
+        <div className="flex-1 flex flex-col animate-fadeIn">
+          <button 
+            onClick={() => setSelectedGraph(null)}
+            className="self-start mb-3 text-gray-400 hover:text-white flex items-center gap-2 transition-colors"
+          >
+            <ChevronLeft size={20} />
+            Back to gallery
+          </button>
+          
+          <div className={`flex-1 rounded-2xl border-2 ${colorClasses[selectedGraphData.color].border} ${colorClasses[selectedGraphData.color].bg} p-6 overflow-y-auto`}>
+            {/* Header with icon and name */}
+            <div className="flex items-center gap-4 mb-6">
+              <div className={`p-4 rounded-xl ${colorClasses[selectedGraphData.color].bgLight}`}>
+                <span className={colorClasses[selectedGraphData.color].text}>{selectedGraphData.icon}</span>
+              </div>
+              <div>
+                <h3 className={`${isPresenting ? 'text-2xl' : 'text-3xl'} font-black ${colorClasses[selectedGraphData.color].text}`}>
+                  {selectedGraphData.name}
+                </h3>
+                <p className="text-gray-400 text-sm">{selectedGraphData.keyFeature}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-6">
+              {/* Left column - Visual and When to Use */}
+              <div className="space-y-4">
+                {/* Large visual representation */}
+                <div className="bg-gray-900/50 rounded-xl p-6 flex flex-col items-center">
+                  <p className="text-gray-500 text-xs uppercase tracking-wider mb-3">Visual Example</p>
+                  {renderGraphVisual(selectedGraphData.id, true)}
+                </div>
+
+                {/* When to use */}
+                <div className="bg-gray-900/50 rounded-xl p-4">
+                  <h4 className={`font-bold ${colorClasses[selectedGraphData.color].text} mb-2 flex items-center gap-2`}>
+                    <Target size={18} />
+                    When to Use
+                  </h4>
+                  <p className="text-gray-200 text-sm">{selectedGraphData.useFor}</p>
+                </div>
+
+                {/* Example */}
+                <div className="bg-gray-900/50 rounded-xl p-4">
+                  <h4 className={`font-bold ${colorClasses[selectedGraphData.color].text} mb-2 flex items-center gap-2`}>
+                    <Lightbulb size={18} />
+                    Example
+                  </h4>
+                  <p className="text-gray-200 text-sm italic">"{selectedGraphData.example}"</p>
+                </div>
+              </div>
+
+              {/* Right column - Tips and Mistakes */}
+              <div className="space-y-4">
+                {/* Key tips */}
+                <div className="bg-gray-900/50 rounded-xl p-4">
+                  <h4 className="font-bold text-green-400 mb-3 flex items-center gap-2">
+                    <CheckCircle size={18} />
+                    Key Features & Tips
+                  </h4>
+                  <ul className="space-y-2">
+                    {selectedGraphData.tips.map((tip, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-sm text-gray-200">
+                        <span className="text-green-400 mt-0.5">✓</span>
+                        {tip}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Common mistakes */}
+                <div className="bg-red-900/20 border border-red-500/30 rounded-xl p-4">
+                  <h4 className="font-bold text-red-400 mb-3 flex items-center gap-2">
+                    <AlertTriangle size={18} />
+                    Common Mistakes to Avoid
+                  </h4>
+                  <ul className="space-y-2">
+                    {selectedGraphData.mistakes.map((mistake, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-sm text-gray-300">
+                        <span className="text-red-400 mt-0.5">✗</span>
+                        {mistake}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        // GALLERY VIEW - show all graphs as clickable cards
+        <div className={`grid grid-cols-2 ${isPresenting ? 'gap-3' : 'gap-4'} max-w-4xl mx-auto flex-1`}>
+          {graphTypes.map((g) => (
+            <div
+              key={g.id}
+              onClick={() => setSelectedGraph(g.id)}
+              className={`rounded-xl border-2 ${colorClasses[g.color].border}/50 ${colorClasses[g.color].bg} ${isPresenting ? 'p-4' : 'p-6'} cursor-pointer hover:scale-[1.02] hover:border-opacity-100 transition-all duration-200 flex flex-col`}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <span className={colorClasses[g.color].text}>{g.icon}</span>
+                <h3 className={`${isPresenting ? 'text-lg' : 'text-xl'} font-bold ${colorClasses[g.color].text}`}>{g.name}</h3>
+              </div>
+              
+              {/* Simple visual preview */}
+              <div className="flex justify-center my-3">
+                {renderGraphVisual(g.id)}
+              </div>
+              
+              <p className={`text-gray-400 ${isPresenting ? 'text-xs' : 'text-sm'} text-center mt-auto`}>{g.useFor}</p>
+              
+              <p className={`${colorClasses[g.color].text} text-xs text-center mt-2 opacity-70`}>
+                Click to learn more →
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Distribution Teaching Slide
+const DistributionTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [selectedDistribution, setSelectedDistribution] = useState<'normal' | 'positive' | 'negative'>('normal')
+
+  const distributions = {
+    normal: {
+      title: 'Normal Distribution',
+      color: 'emerald',
+      borderColor: 'border-emerald-500/40',
+      bgColor: 'bg-emerald-900/20',
+      textColor: 'text-emerald-300',
+      description: 'Bell-shaped curve, symmetrical around the mean',
+      features: ['Mean = Median = Mode', 'Most scores cluster near the middle', '68% of scores within 1 SD of mean', 'Symmetrical on both sides'],
+      example: 'IQ scores in the population (mean = 100)',
+      visualBars: [5, 10, 20, 35, 50, 65, 80, 90, 95, 90, 80, 65, 50, 35, 20, 10, 5]
+    },
+    positive: {
+      title: 'Positive Skew',
+      color: 'blue',
+      borderColor: 'border-blue-500/40',
+      bgColor: 'bg-blue-900/20',
+      textColor: 'text-blue-300',
+      description: 'Tail extends to the right (towards high values)',
+      features: ['Mode < Median < Mean', 'Most scores at the low end', 'Few extreme high values', 'Mean pulled towards the tail'],
+      example: 'Income distribution – most earn less, few earn millions',
+      visualBars: [95, 85, 70, 55, 40, 30, 22, 16, 12, 9, 7, 5, 4, 3, 2, 2, 1]
+    },
+    negative: {
+      title: 'Negative Skew',
+      color: 'purple',
+      borderColor: 'border-violet-500/40',
+      bgColor: 'bg-violet-900/20',
+      textColor: 'text-violet-300',
+      description: 'Tail extends to the left (towards low values)',
+      features: ['Mean < Median < Mode', 'Most scores at the high end', 'Few extreme low values', 'Mean pulled towards the tail'],
+      example: 'Age at death in developed countries – most die old',
+      visualBars: [1, 2, 2, 3, 4, 5, 7, 9, 12, 16, 22, 30, 40, 55, 70, 85, 95]
+    }
+  }
+
+  const current = distributions[selectedDistribution]
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>Distribution Types</h2>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>How scores are spread across a dataset</p>
+      </div>
+
+      {/* Toggle Buttons */}
+      <div className={`flex justify-center ${isPresenting ? 'gap-2 mb-4' : 'gap-3 mb-6'}`}>
+        {(['normal', 'positive', 'negative'] as const).map((type) => {
+          const dist = distributions[type]
+          const isActive = selectedDistribution === type
+          return (
+            <button
+              key={type}
+              onClick={() => setSelectedDistribution(type)}
+              className={`${isPresenting ? 'px-4 py-2 text-sm' : 'px-6 py-3 text-base'} font-bold rounded-xl transition-all duration-300 ${
+                isActive
+                  ? `${dist.bgColor} ${dist.borderColor} border-2 ${dist.textColor} shadow-lg scale-105`
+                  : 'bg-gray-800/50 border-2 border-gray-700 text-gray-400 hover:border-gray-500'
+              }`}
+            >
+              {dist.title}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Main Content */}
+      <div className={`flex-1 grid grid-cols-2 ${isPresenting ? 'gap-4' : 'gap-6'}`}>
+        {/* Visual Representation */}
+        <div className={`rounded-xl border-2 ${current.borderColor} ${current.bgColor} ${isPresenting ? 'p-4' : 'p-6'} flex flex-col`}>
+          <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold ${current.textColor} mb-4`}>Visual Shape</h3>
+          
+          {/* Bar Chart Visualization */}
+          <div className="flex-1 flex items-end justify-center gap-1">
+            {current.visualBars.map((height, idx) => (
+              <div
+                key={idx}
+                className={`${current.bgColor.replace('/20', '/60')} rounded-t transition-all duration-500`}
+                style={{ 
+                  height: `${height}%`, 
+                  width: isPresenting ? '12px' : '18px',
+                  minHeight: '4px'
+                }}
+              />
+            ))}
+          </div>
+          
+          {/* Mean/Median/Mode Indicators */}
+          <div className={`mt-4 flex justify-around ${isPresenting ? 'text-xs' : 'text-sm'}`}>
+            {selectedDistribution === 'normal' ? (
+              <span className={`${current.textColor} font-bold`}>Mean = Median = Mode (center)</span>
+            ) : selectedDistribution === 'positive' ? (
+              <>
+                <span className="text-green-400">Mode</span>
+                <span className="text-yellow-400">← Median</span>
+                <span className="text-red-400">← Mean</span>
+              </>
+            ) : (
+              <>
+                <span className="text-red-400">Mean →</span>
+                <span className="text-yellow-400">Median →</span>
+                <span className="text-green-400">Mode</span>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Description and Features */}
+        <div className={`rounded-xl border-2 ${current.borderColor} ${current.bgColor} ${isPresenting ? 'p-4' : 'p-6'} flex flex-col`}>
+          <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold ${current.textColor} mb-2`}>{current.title}</h3>
+          <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-300 mb-4`}>{current.description}</p>
+          
+          <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-3' : 'p-4'} mb-4`}>
+            <h4 className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-white mb-2`}>Key Features:</h4>
+            <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+              {current.features.map((feature, idx) => (
+                <li key={idx}>• {feature}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className={`mt-auto bg-gray-900/50 rounded-lg ${isPresenting ? 'p-3' : 'p-4'} border-l-4 ${current.borderColor.replace('/40', '')}`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} ${current.textColor} font-semibold`}>Real-World Example:</p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>{current.example}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Graphs AFL
+const GraphsAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "Which graph would you use to show correlation between two variables?",
+      options: ["Bar chart", "Histogram", "Scatter diagram", "Pie chart"],
+      correct: 2,
+      explanation: "Scatter diagrams show the relationship between two co-variables."
+    },
+    {
+      question: "In a normal distribution, the mean, median and mode are...",
+      options: ["All different", "All the same", "Only two are the same", "Not comparable"],
+      correct: 1,
+      explanation: "In a perfectly normal distribution, all three measures of central tendency are equal."
+    },
+    {
+      question: "Bar charts differ from histograms because bar charts...",
+      options: ["Are always taller", "Have gaps between bars", "Show continuous data", "Use lines instead of bars"],
+      correct: 1,
+      explanation: "Bar charts have gaps because they show discrete/categorical data, while histograms show continuous data."
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Graphs - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-2 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-center transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : selected === idx
+                    ? 'bg-blue-600/30 border-2 border-blue-500 text-white'
+                    : 'bg-gray-700/50 border border-gray-600 text-gray-200 hover:bg-gray-700'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+
+          {showFeedback && (
+            <div className={`mt-6 p-4 rounded-lg ${selected === questions[currentQ].correct ? 'bg-green-900/30 border border-green-600' : 'bg-amber-900/30 border border-amber-600'}`}>
+              <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200`}>{questions[currentQ].explanation}</p>
+            </div>
+          )}
+        </div>
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question →
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className="text-center">
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Graph Selection Task
+const GraphSelectionTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const scenarios = [
+    { scenario: "Comparing mean scores between two experimental conditions", graph: "bar" },
+    { scenario: "Showing the relationship between age and memory score", graph: "scatter" },
+    { scenario: "Displaying the distribution of reaction times", graph: "histogram" },
+    { scenario: "Comparing frequency of different personality types", graph: "bar" },
+    { scenario: "Showing if hours of sleep correlates with test performance", graph: "scatter" },
+  ]
+
+  const [answers, setAnswers] = useState<Record<number, string>>({})
+  const [showResults, setShowResults] = useState(false)
+
+  const score = scenarios.filter((s, i) => answers[i] === s.graph).length
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Choose the Right Graph</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Which graph would be most appropriate?</p>
+      </div>
+
+      <div className="space-y-3 flex-1">
+        {scenarios.map((s, idx) => (
+          <div key={idx} className={`bg-gray-800/50 rounded-xl border ${showResults ? (answers[idx] === s.graph ? 'border-green-500' : 'border-red-500') : 'border-gray-700'} ${isPresenting ? 'p-3' : 'p-4'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-3`}>{s.scenario}</p>
+            
+            <div className="flex gap-2">
+              {['bar', 'histogram', 'scatter'].map(graph => (
+                <button
+                  key={graph}
+                  onClick={() => !showResults && setAnswers(prev => ({ ...prev, [idx]: graph }))}
+                  className={`px-3 py-1 rounded-lg font-bold capitalize ${isPresenting ? 'text-xs' : 'text-sm'} ${
+                    showResults
+                      ? graph === s.graph
+                        ? 'bg-green-600 text-white'
+                        : answers[idx] === graph
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-700 text-gray-400'
+                      : answers[idx] === graph
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {graph === 'bar' ? 'Bar Chart' : graph === 'histogram' ? 'Histogram' : 'Scatter'}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {!showResults && Object.keys(answers).length === scenarios.length && (
+        <button onClick={() => setShowResults(true)} className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-4 self-center">
+          Check My Answers
+        </button>
+      )}
+
+      {showResults && (
+        <div className={`text-center mt-4 ${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl`}>
+          <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Score: {score}/{scenarios.length}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============= GCSE LESSON 15: COMPUTATION & ARITHMETIC =============
+
+// Maths Teaching Slide
+const MathsTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-8'}>
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>Mathematical Skills</h2>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>Essential calculations for psychology</p>
+      </div>
+
+      <div className={`grid grid-cols-2 ${isPresenting ? 'gap-4' : 'gap-6'}`}>
+        <div className={`rounded-xl border-2 border-blue-500/40 bg-blue-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-blue-300 mb-4`}>Percentages</h3>
+          <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-2`}>Part ÷ Whole × 100</p>
+          <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-2' : 'p-3'} font-mono`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-blue-200`}>18 out of 30 participants agreed</p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-blue-200`}>18 ÷ 30 × 100 = <span className="font-bold">60%</span></p>
+          </div>
+        </div>
+
+        <div className={`rounded-xl border-2 border-purple-500/40 bg-purple-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-purple-300 mb-4`}>Fractions & Decimals</h3>
+          <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-2`}>Converting between forms</p>
+          <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-2' : 'p-3'} font-mono`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-purple-200`}>3/4 = 0.75 = 75%</p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-purple-200`}>0.6 = 6/10 = 3/5</p>
+          </div>
+        </div>
+      </div>
+
+      <div className={`grid grid-cols-2 ${isPresenting ? 'gap-4 mt-4' : 'gap-6 mt-6'}`}>
+        <div className={`rounded-xl border-2 border-green-500/40 bg-green-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-green-300 mb-4`}>Ratios</h3>
+          <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-2`}>Comparing quantities</p>
+          <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-2' : 'p-3'} font-mono`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-green-200`}>12 males : 18 females</p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-green-200`}>Simplify: <span className="font-bold">2:3</span></p>
+          </div>
+        </div>
+
+        <div className={`rounded-xl border-2 border-amber-500/40 bg-amber-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-amber-300 mb-4`}>Significant Figures</h3>
+          <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-2`}>Appropriate precision</p>
+          <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-2' : 'p-3'} font-mono`}>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-amber-200`}>Calculator: 67.428571...</p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-amber-200`}>3 s.f.: <span className="font-bold">67.4</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Maths AFL
+const MathsAFL: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const questions = [
+    {
+      question: "15 out of 25 participants showed improvement. What percentage is this?",
+      options: ["40%", "50%", "60%", "75%"],
+      correct: 2,
+      explanation: "15 ÷ 25 × 100 = 60%"
+    },
+    {
+      question: "Express 0.35 as a fraction in simplest form:",
+      options: ["35/100", "7/20", "1/3", "35/10"],
+      correct: 1,
+      explanation: "0.35 = 35/100 = 7/20 (divide both by 5)"
+    },
+    {
+      question: "In a study, there are 8 males and 12 females. What is this ratio in simplest form?",
+      options: ["8:12", "4:6", "2:3", "1:2"],
+      correct: 2,
+      explanation: "8:12 → divide both by 4 → 2:3"
+    },
+    {
+      question: "Round 45.6789 to 2 significant figures:",
+      options: ["45.68", "46", "45.7", "45"],
+      correct: 1,
+      explanation: "First 2 significant figures are 4 and 5. The next digit (6) rounds 5 up to 6, so 46"
+    }
+  ]
+
+  const [currentQ, setCurrentQ] = useState(0)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [score, setScore] = useState(0)
+
+  const handleSelect = (idx: number) => {
+    if (showFeedback) return
+    setSelected(idx)
+    setShowFeedback(true)
+    if (idx === questions[currentQ].correct) setScore(s => s + 1)
+  }
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(q => q + 1)
+      setSelected(null)
+      setShowFeedback(false)
+    }
+  }
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Check Your Understanding</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Maths Skills - Question {currentQ + 1} of {questions.length}</p>
+      </div>
+
+      <div className={`flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full`}>
+        <div className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-6' : 'p-8'} mb-6`}>
+          <p className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold text-white mb-6`}>{questions[currentQ].question}</p>
+          
+          <div className="grid grid-cols-2 gap-3">
+            {questions[currentQ].options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`p-4 rounded-lg text-center transition-all ${isPresenting ? 'text-sm' : 'text-base'} ${
+                  showFeedback
+                    ? idx === questions[currentQ].correct
+                      ? 'bg-green-600/30 border-2 border-green-500 text-green-200'
+                      : idx === selected
+                      ? 'bg-red-600/30 border-2 border-red-500 text-red-200'
+                      : 'bg-gray-700/30 border border-gray-600 text-gray-400'
+                    : 'bg-gray-700/50 border border-gray-600 text-white hover:bg-gray-600/50 hover:border-gray-500'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {showFeedback && (
+          <div className={`bg-blue-900/30 rounded-xl border border-blue-500/30 ${isPresenting ? 'p-4' : 'p-6'} mb-4`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-blue-200`}>
+              <span className="font-bold">Explanation:</span> {questions[currentQ].explanation}
+            </p>
+          </div>
+        )}
+
+        {showFeedback && currentQ < questions.length - 1 && (
+          <button onClick={nextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg self-center">
+            Next Question
+          </button>
+        )}
+
+        {showFeedback && currentQ === questions.length - 1 && (
+          <div className={`text-center ${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl`}>
+            <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>Quiz Complete! Score: {score}/{questions.length}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Maths Calculation Task
+const MathsCalculationTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [answers, setAnswers] = useState<{[key: number]: string}>({})
+  const [showResults, setShowResults] = useState(false)
+
+  const problems = [
+    {
+      question: "A study has 45 participants. 27 show improvement. What percentage improved?",
+      answer: "60%",
+      hint: "Divide 27 by 45, then multiply by 100"
+    },
+    {
+      question: "Convert 7/8 to a decimal:",
+      answer: "0.875",
+      hint: "Divide 7 by 8"
+    },
+    {
+      question: "In a classroom study, there were 15 boys and 10 girls. Express this as a simplified ratio:",
+      answer: "3:2",
+      hint: "Find the highest common factor (5)"
+    },
+    {
+      question: "The mean score was 78.4567. Round to 2 decimal places:",
+      answer: "78.46",
+      hint: "Look at the third decimal place to round"
+    },
+    {
+      question: "If 35% of 80 participants were female, how many females were there?",
+      answer: "28",
+      hint: "0.35 × 80 = ?"
+    }
+  ]
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Calculation Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Work through these mathematical problems</p>
+      </div>
+
+      <div className="space-y-4">
+        {problems.map((problem, idx) => (
+          <div key={idx} className={`bg-gray-800/50 rounded-xl border border-gray-700 ${isPresenting ? 'p-4' : 'p-5'}`}>
+            <p className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-white mb-2`}>{idx + 1}. {problem.question}</p>
+            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 mb-2`}>Hint: {problem.hint}</p>
+            <input
+              type="text"
+              placeholder="Your answer..."
+              value={answers[idx] || ''}
+              onChange={(e) => setAnswers({...answers, [idx]: e.target.value})}
+              className={`w-full bg-gray-900/50 border border-gray-600 rounded-lg text-white placeholder-gray-500 ${isPresenting ? 'p-2 text-sm' : 'p-3'}`}
+            />
+            {showResults && (
+              <p className={`mt-2 ${isPresenting ? 'text-sm' : 'text-base'} ${
+                answers[idx]?.toLowerCase().trim() === problem.answer.toLowerCase() 
+                  ? 'text-green-400' 
+                  : 'text-amber-400'
+              }`}>
+                {answers[idx]?.toLowerCase().trim() === problem.answer.toLowerCase() 
+                  ? '✓ Correct!' 
+                  : `Answer: ${problem.answer}`}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {Object.keys(answers).length >= problems.length && !showResults && (
+        <button 
+          onClick={() => setShowResults(true)} 
+          className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg mt-4 self-center"
+        >
+          Check My Answers
+        </button>
+      )}
+
+      {showResults && (
+        <div className={`text-center mt-4 ${isPresenting ? 'p-4' : 'p-6'} bg-gray-800/50 rounded-xl`}>
+          <p className={`${isPresenting ? 'text-xl' : 'text-2xl'} font-bold text-white`}>
+            Score: {problems.filter((p, idx) => answers[idx]?.toLowerCase().trim() === p.answer.toLowerCase()).length}/{problems.length}
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lesson 15 Extended Exam Task
+const Lesson15ExtendedExamTask: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [showMarkScheme, setShowMarkScheme] = useState(false)
+
+  return (
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-2xl' : 'text-4xl'} font-black text-white mb-2`}>Extended Exam Practice</h2>
+        <p className={`text-gray-400 ${isPresenting ? 'text-sm' : ''}`}>Mathematical Skills - 6 Mark Question</p>
+      </div>
+
+      <div className={`bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30 ${isPresenting ? 'p-4 mb-4' : 'p-6 mb-6'}`}>
+        <p className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-2`}>Question:</p>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-200`}>
+          In a psychology experiment, 42 out of 70 participants showed a change in behaviour after watching a violent video. Express this as: (a) a percentage, (b) a decimal, and (c) a simplified fraction. Show your working. [6 marks]
+        </p>
+      </div>
+
+      <button 
+        onClick={() => setShowMarkScheme(!showMarkScheme)}
+        className={`mt-4 bg-amber-600 hover:bg-amber-700 text-white font-bold ${isPresenting ? 'py-2 px-4 text-sm' : 'py-3 px-6'} rounded-lg self-center`}
+      >
+        {showMarkScheme ? 'Hide' : 'Show'} Mark Scheme
+      </button>
+
+      {showMarkScheme && (
+        <div className={`mt-4 bg-amber-900/20 rounded-xl border border-amber-500/30 ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <h3 className={`${isPresenting ? 'text-base' : 'text-lg'} font-bold text-amber-300 mb-3`}>Mark Scheme Points:</h3>
+          <div className={`space-y-2 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
+            <p><span className="font-bold text-amber-300">(a) Percentage:</span> 42 ÷ 70 × 100 = 60%</p>
+            <p><span className="font-bold text-amber-300">(b) Decimal:</span> 42 ÷ 70 = 0.6</p>
+            <p><span className="font-bold text-amber-300">(c) Fraction:</span> 42/70 → both divide by 14 → 3/5</p>
+            <p><span className="font-bold text-amber-300">Working marks:</span> Method shown for each calculation</p>
+            <p><span className="font-bold text-amber-300">Accuracy marks:</span> Correct answers with correct notation</p>
+            <p><span className="font-bold text-amber-300">Simplification:</span> Fraction must be in lowest terms (3/5 not 6/10)</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ============= AS LEVEL LESSON 1: UNIFIED VISUAL DESIGN =============
 
 // Scientific Approach: Unified Teacher Input Slide
 const ScientificApproachTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [currentStep, setCurrentStep] = useState(0)
+
+  const steps = [
+    { id: 0, title: 'Observation', icon: <Eye size={isPresenting ? 20 : 28} />, color: 'blue', bgColor: 'bg-blue-900/30', borderColor: 'border-blue-500/50', textColor: 'text-blue-300', content: 'Notice something interesting in the world that needs explaining' },
+    { id: 1, title: 'Hypothesis', icon: <Lightbulb size={isPresenting ? 20 : 28} />, color: 'yellow', bgColor: 'bg-yellow-900/30', borderColor: 'border-yellow-500/50', textColor: 'text-yellow-300', content: 'Form a testable prediction based on theory' },
+    { id: 2, title: 'Design Study', icon: <ClipboardList size={isPresenting ? 20 : 28} />, color: 'purple', bgColor: 'bg-purple-900/30', borderColor: 'border-purple-500/50', textColor: 'text-purple-300', content: 'Plan methodology, controls, and procedures' },
+    { id: 3, title: 'Collect Data', icon: <Database size={isPresenting ? 20 : 28} />, color: 'green', bgColor: 'bg-green-900/30', borderColor: 'border-green-500/50', textColor: 'text-green-300', content: 'Run the experiment, gather measurements' },
+    { id: 4, title: 'Analyse', icon: <BarChart size={isPresenting ? 20 : 28} />, color: 'orange', bgColor: 'bg-orange-900/30', borderColor: 'border-orange-500/50', textColor: 'text-orange-300', content: 'Use statistics to interpret the results' },
+    { id: 5, title: 'Conclusion', icon: <CheckCircle size={isPresenting ? 20 : 28} />, color: 'emerald', bgColor: 'bg-emerald-900/30', borderColor: 'border-emerald-500/50', textColor: 'text-emerald-300', content: 'Support or reject the hypothesis' },
+    { id: 6, title: 'Replication', icon: <RefreshCw size={isPresenting ? 20 : 28} />, color: 'pink', bgColor: 'bg-pink-900/30', borderColor: 'border-pink-500/50', textColor: 'text-pink-300', content: 'Others repeat to verify findings' }
+  ]
+
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1)
+    }
+  }
+
+  const handlePrev = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
+  const handleReset = () => {
+    setCurrentStep(0)
+  }
+
   return (
     <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
-      <div className={isPresenting ? 'mb-4' : 'mb-8'}>
-        <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>The Scientific Approach</h2>
-        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>What defines science and how psychologists approach research</p>
+      <div className={isPresenting ? 'mb-4' : 'mb-6'}>
+        <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>The Scientific Method</h2>
+        <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>A systematic approach to knowledge through empirical investigation</p>
       </div>
 
-      {/* Core Features Grid */}
-      <div className={`grid grid-cols-3 ${isPresenting ? 'gap-3 mb-4' : 'gap-4 mb-8'}`}>
-        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
-          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-2 flex items-center gap-2`}>
-            <TrendingUp size={isPresenting ? 20 : 24} />
-            Replicability
-          </h3>
-          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 leading-relaxed`}>
-            Results can be repeated under the same conditions by different researchers. Builds confidence that findings are reliable, not due to chance.
-          </p>
+      {/* Step Flow Visualization */}
+      <div className={`flex-1 flex flex-col ${isPresenting ? 'gap-3' : 'gap-4'}`}>
+        {/* Progress Bar */}
+        <div className="flex items-center justify-center gap-1 mb-2">
+          {steps.map((step, idx) => (
+            <div key={step.id} className="flex items-center">
+              <div className={`${isPresenting ? 'w-6 h-6 text-xs' : 'w-8 h-8 text-sm'} rounded-full flex items-center justify-center font-bold transition-all duration-500 ${
+                idx <= currentStep 
+                  ? `${step.bgColor} ${step.borderColor} border-2 ${step.textColor}` 
+                  : 'bg-gray-800 border-2 border-gray-700 text-gray-500'
+              }`}>
+                {idx + 1}
+              </div>
+              {idx < steps.length - 1 && (
+                <div className={`${isPresenting ? 'w-6' : 'w-10'} h-1 ${idx < currentStep ? 'bg-gradient-to-r from-blue-500 to-emerald-500' : 'bg-gray-700'} transition-all duration-500`} />
+              )}
+            </div>
+          ))}
         </div>
 
-        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
-          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-2 flex items-center gap-2`}>
-            <Target size={isPresenting ? 20 : 24} />
-            Objectivity
-          </h3>
-          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 leading-relaxed`}>
-            Measurements free from bias using standardised procedures and controlled conditions. Ensures findings reflect reality, not researcher expectations.
-          </p>
+        {/* Steps Display */}
+        <div className={`grid grid-cols-7 ${isPresenting ? 'gap-2' : 'gap-3'} flex-1`}>
+          {steps.map((step, idx) => {
+            const isActive = idx === currentStep
+            const isReached = idx <= currentStep
+            
+            return (
+              <div
+                key={step.id}
+                onClick={() => setCurrentStep(idx)}
+                className={`rounded-xl border-2 ${isPresenting ? 'p-2' : 'p-3'} flex flex-col items-center text-center transition-all duration-500 cursor-pointer ${
+                  isActive 
+                    ? `${step.bgColor} ${step.borderColor} scale-105 shadow-lg shadow-${step.color}-500/20` 
+                    : isReached 
+                      ? `${step.bgColor} ${step.borderColor} opacity-80`
+                      : 'bg-gray-900/30 border-gray-700/50 opacity-40'
+                }`}
+              >
+                <div className={`${isPresenting ? 'mb-1' : 'mb-2'} ${isReached ? step.textColor : 'text-gray-500'} transition-colors duration-500`}>
+                  {step.icon}
+                </div>
+                <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} font-bold ${isReached ? step.textColor : 'text-gray-500'} mb-1 transition-colors duration-500`}>
+                  {step.title}
+                </h4>
+                <p className={`${isPresenting ? 'text-[10px]' : 'text-xs'} ${isReached ? 'text-gray-300' : 'text-gray-600'} leading-tight transition-colors duration-500`}>
+                  {step.content}
+                </p>
+              </div>
+            )
+          })}
         </div>
 
-        <div className={`rounded-xl border-2 border-rose-500/40 bg-rose-900/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
-          <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-rose-300 mb-2 flex items-center gap-2`}>
-            <Zap size={isPresenting ? 20 : 24} />
-            Falsifiability
-          </h3>
-          <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 leading-relaxed`}>
-            Theories must be testable and potentially provable false. If we cannot disprove it, it gains credibility. Core principle of Karl Popper.
-          </p>
-        </div>
-      </div>
-
-      {/* Nomothetic vs Ideographic Section */}
-      <div className={`rounded-xl border border-gray-700 bg-gray-900/40 ${isPresenting ? 'p-4' : 'p-6'}`}>
-        <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold text-white mb-4`}>Two Approaches to Psychology</h3>
-        <div className={`grid grid-cols-2 ${isPresenting ? 'gap-3' : 'gap-4'}`}>
-          <div className={`rounded-lg border border-blue-500/30 bg-blue-950/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
-            <h4 className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-blue-300 mb-2`}>Nomothetic</h4>
-            <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
-              <li>• Seeks <span className="font-semibold">universal laws</span></li>
-              <li>• Applies to all similar people</li>
-              <li>• Uses quantitative data</li>
-              <li>• Laboratory-based</li>
-              <li>• <span className="text-blue-300">Scientific</span> approach</li>
-            </ul>
+        {/* Current Step Detail */}
+        <div className={`rounded-xl border-2 ${steps[currentStep].borderColor} ${steps[currentStep].bgColor} ${isPresenting ? 'p-4' : 'p-6'}`}>
+          <div className="flex items-center gap-3 mb-3">
+            <div className={`${steps[currentStep].textColor}`}>{steps[currentStep].icon}</div>
+            <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold ${steps[currentStep].textColor}`}>
+              Step {currentStep + 1}: {steps[currentStep].title}
+            </h3>
           </div>
-          <div className={`rounded-lg border border-amber-500/30 bg-amber-950/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
-            <h4 className={`${isPresenting ? 'text-sm' : 'text-base'} font-bold text-amber-300 mb-2`}>Ideographic</h4>
-            <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
-              <li>• Focuses on <span className="font-semibold">individual uniqueness</span></li>
-              <li>• Specific to each person</li>
-              <li>• Uses qualitative data</li>
-              <li>• Real-world settings</li>
-              <li>• <span className="text-amber-300">Humanistic</span> approach</li>
-            </ul>
+          <p className={`${isPresenting ? 'text-sm' : 'text-base'} text-gray-200 mb-4`}>{steps[currentStep].content}</p>
+          
+          {/* Navigation Buttons */}
+          <div className="flex justify-between items-center">
+            <button
+              onClick={handlePrev}
+              disabled={currentStep === 0}
+              className={`${isPresenting ? 'px-3 py-1 text-sm' : 'px-4 py-2'} rounded-lg font-bold transition-all ${
+                currentStep === 0 
+                  ? 'bg-gray-800 text-gray-600 cursor-not-allowed' 
+                  : 'bg-gray-700 text-white hover:bg-gray-600'
+              }`}
+            >
+              ← Previous
+            </button>
+            
+            <button
+              onClick={handleReset}
+              className={`${isPresenting ? 'px-3 py-1 text-sm' : 'px-4 py-2'} rounded-lg font-bold bg-gray-700 text-white hover:bg-gray-600 transition-all`}
+            >
+              Reset
+            </button>
+            
+            <button
+              onClick={handleNext}
+              disabled={currentStep === steps.length - 1}
+              className={`${isPresenting ? 'px-3 py-1 text-sm' : 'px-4 py-2'} rounded-lg font-bold transition-all ${
+                currentStep === steps.length - 1 
+                  ? 'bg-emerald-800 text-emerald-300 cursor-not-allowed' 
+                  : `${steps[currentStep].bgColor} ${steps[currentStep].textColor} hover:opacity-80`
+              }`}
+            >
+              {currentStep === steps.length - 1 ? '✓ Complete' : 'Next →'}
+            </button>
           </div>
         </div>
       </div>
@@ -2488,56 +11984,175 @@ const HypothesisDesignTeachPart2: React.FC<{ isPresenting?: boolean }> = ({ isPr
 
 // Falsification Teach Slide (AS Level)
 const FalsificationTeachSlide: React.FC<{ isPresenting?: boolean }> = ({ isPresenting = false }) => {
+  const [revealedCards, setRevealedCards] = useState<Set<number>>(new Set())
+
+  const cards = [
+    {
+      id: 1,
+      frontTitle: 'What is Falsification?',
+      frontIcon: <HelpCircle size={isPresenting ? 32 : 48} />,
+      frontColor: 'rose',
+      backContent: {
+        title: 'The Principle',
+        description: 'A theory is only scientific if it can be tested and potentially proven false. We should actively try to disprove theories—if we cannot, they gain credibility.',
+        example: '"All swans are white" is falsifiable—finding one black swan disproves it.',
+        keyPoint: 'Proposed by Karl Popper (1934)'
+      }
+    },
+    {
+      id: 2,
+      frontTitle: 'Why Does It Matter?',
+      frontIcon: <AlertCircle size={isPresenting ? 32 : 48} />,
+      frontColor: 'blue',
+      backContent: {
+        title: 'Distinguishing Science',
+        description: 'Falsifiability distinguishes science from pseudoscience. Unfalsifiable claims cannot be tested and are not scientific.',
+        example: '"Some people have psychic powers but it only works when skeptics aren\'t watching" — unfalsifiable!',
+        keyPoint: 'Good science invites challenges'
+      }
+    },
+    {
+      id: 3,
+      frontTitle: 'Scientific Claims ✓',
+      frontIcon: <CheckCircle size={isPresenting ? 32 : 48} />,
+      frontColor: 'emerald',
+      backContent: {
+        title: 'Falsifiable Examples',
+        description: 'These statements can be tested and potentially disproven through research:',
+        examples: [
+          'High caffeine intake impairs sleep quality',
+          'Working memory capacity is 7±2 items',
+          'Stress increases cortisol levels',
+          'CBT reduces anxiety symptoms'
+        ]
+      }
+    },
+    {
+      id: 4,
+      frontTitle: 'Non-Scientific Claims ✗',
+      frontIcon: <XCircle size={isPresenting ? 32 : 48} />,
+      frontColor: 'red',
+      backContent: {
+        title: 'Unfalsifiable Examples',
+        description: 'These cannot be tested scientifically—they evade disproof:',
+        examples: [
+          'Everything happens for a reason',
+          'The unconscious explains any behavior',
+          'Some dreams predict the future',
+          'True happiness comes from within'
+        ]
+      }
+    }
+  ]
+
+  const toggleCard = (id: number) => {
+    setRevealedCards(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
+
+  const revealAll = () => {
+    setRevealedCards(new Set(cards.map(c => c.id)))
+  }
+
+  const hideAll = () => {
+    setRevealedCards(new Set())
+  }
+
+  const colorClasses: Record<string, { border: string; bg: string; text: string }> = {
+    rose: { border: 'border-rose-500/50', bg: 'bg-rose-900/30', text: 'text-rose-300' },
+    blue: { border: 'border-blue-500/50', bg: 'bg-blue-900/30', text: 'text-blue-300' },
+    emerald: { border: 'border-emerald-500/50', bg: 'bg-emerald-900/30', text: 'text-emerald-300' },
+    red: { border: 'border-red-500/50', bg: 'bg-red-900/30', text: 'text-red-300' }
+  }
+
   return (
-    <div className={`flex flex-col h-full animate-fadeIn ${isPresenting ? 'p-6' : 'p-10'}`}>
-      <div className={`${isPresenting ? 'mb-4' : 'mb-8'} text-center`}>
-        <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>Teacher Input: Falsification</h2>
-        <p className={`${isPresenting ? 'text-sm' : ''} text-gray-400`}>Karl Popper's criterion for scientific validity</p>
-      </div>
-
-      <div className={`grid grid-cols-2 max-w-6xl mx-auto ${isPresenting ? 'gap-3' : 'gap-6'}`}>
-        <div className={`rounded-lg border-2 border-rose-500/40 bg-rose-950/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
-          <h3 className={`${isPresenting ? 'text-base' : 'text-2xl'} text-rose-300 font-bold mb-2`}>The Principle</h3>
-          <p className={`${isPresenting ? 'text-xs' : 'text-lg'} text-gray-200 leading-relaxed mb-3`}>
-            A theory is only scientific if it can be tested and potentially proven false. We should actively try to <span className="text-rose-300 font-semibold">disprove</span> theories—if we cannot, they gain credibility.
-          </p>
-          <div className={`${isPresenting ? 'p-2' : 'p-4'} bg-gray-900/50 rounded-lg border-l-4 border-rose-500`}>
-            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 italic`}>
-              "All swans are white" is falsifiable—finding one black swan disproves it.
-            </p>
-          </div>
+    <div className={`flex flex-col h-full animate-fadeIn overflow-y-auto custom-scrollbar ${isPresenting ? 'p-6' : 'p-10'}`}>
+      <div className={`${isPresenting ? 'mb-4' : 'mb-6'} flex justify-between items-start`}>
+        <div>
+          <h2 className={`${isPresenting ? 'text-3xl' : 'text-5xl'} font-black text-white mb-2`}>Falsification</h2>
+          <p className={`${isPresenting ? 'text-sm' : 'text-lg'} text-gray-400`}>Karl Popper's criterion for scientific validity</p>
         </div>
-
-        <div className={`rounded-lg border-2 border-blue-500/40 bg-blue-950/20 ${isPresenting ? 'p-4' : 'p-6'}`}>
-          <h3 className={`${isPresenting ? 'text-base' : 'text-2xl'} text-blue-300 font-bold mb-2`}>Why It Matters</h3>
-          <p className={`${isPresenting ? 'text-xs' : 'text-lg'} text-gray-200 leading-relaxed mb-3`}>
-            Falsifiability distinguishes science from pseudoscience. Unfalsifiable claims (e.g., "some people have psychic powers") cannot be tested and are not scientific.
-          </p>
-          <div className={`${isPresenting ? 'p-2' : 'p-4'} bg-gray-900/50 rounded-lg border-l-4 border-blue-500`}>
-            <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 italic`}>
-              Good science invites challenges. Bad science evades them.
-            </p>
-          </div>
+        <div className="flex gap-2">
+          <button
+            onClick={revealAll}
+            className={`${isPresenting ? 'px-3 py-1 text-xs' : 'px-4 py-2 text-sm'} rounded-lg font-bold bg-emerald-700 text-emerald-100 hover:bg-emerald-600 transition-all`}
+          >
+            Reveal All
+          </button>
+          <button
+            onClick={hideAll}
+            className={`${isPresenting ? 'px-3 py-1 text-xs' : 'px-4 py-2 text-sm'} rounded-lg font-bold bg-gray-700 text-gray-100 hover:bg-gray-600 transition-all`}
+          >
+            Hide All
+          </button>
         </div>
       </div>
 
-      <div className={`max-w-6xl mx-auto grid grid-cols-2 ${isPresenting ? 'gap-3 mt-3' : 'gap-6 mt-6'}`}>
-        <div className={`rounded-lg border border-emerald-500/30 bg-emerald-950/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
-          <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} text-emerald-400 font-bold mb-2`}>✓ Falsifiable (Scientific)</h4>
-          <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
-            <li>• "High caffeine intake impairs sleep quality."</li>
-            <li>• "Working memory capacity is 7±2 items."</li>
-            <li>• "Stress increases cortisol levels."</li>
-          </ul>
-        </div>
-        <div className={`rounded-lg border border-red-500/30 bg-red-950/20 ${isPresenting ? 'p-3' : 'p-4'}`}>
-          <h4 className={`${isPresenting ? 'text-xs' : 'text-sm'} text-red-400 font-bold mb-2`}>✗ Unfalsifiable (Non-scientific)</h4>
-          <ul className={`space-y-1 ${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200`}>
-            <li>• "Everything happens for a reason."</li>
-            <li>• "Freud's unconscious can explain any behavior."</li>
-            <li>• "Some dreams predict the future."</li>
-          </ul>
-        </div>
+      {/* Cards Grid */}
+      <div className={`grid grid-cols-2 ${isPresenting ? 'gap-3' : 'gap-4'} flex-1`}>
+        {cards.map((card) => {
+          const isRevealed = revealedCards.has(card.id)
+          const colors = colorClasses[card.frontColor]
+          
+          return (
+            <div
+              key={card.id}
+              onClick={() => toggleCard(card.id)}
+              className={`rounded-xl border-2 ${colors.border} ${colors.bg} ${isPresenting ? 'p-4' : 'p-6'} cursor-pointer transition-all duration-500 hover:scale-[1.02] ${
+                isRevealed ? 'shadow-lg' : ''
+              }`}
+            >
+              {!isRevealed ? (
+                /* Front of Card */
+                <div className="h-full flex flex-col items-center justify-center text-center">
+                  <div className={`${colors.text} mb-3`}>{card.frontIcon}</div>
+                  <h3 className={`${isPresenting ? 'text-lg' : 'text-2xl'} font-bold ${colors.text}`}>{card.frontTitle}</h3>
+                  <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-400 mt-2`}>Click to reveal</p>
+                </div>
+              ) : (
+                /* Back of Card */
+                <div className="h-full flex flex-col">
+                  <h3 className={`${isPresenting ? 'text-base' : 'text-xl'} font-bold ${colors.text} mb-2`}>{card.backContent.title}</h3>
+                  <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 mb-3`}>{card.backContent.description}</p>
+                  
+                  {card.backContent.example && (
+                    <div className={`bg-gray-900/50 rounded-lg ${isPresenting ? 'p-2' : 'p-3'} border-l-4 ${colors.border.replace('/50', '')} mb-2`}>
+                      <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 italic`}>{card.backContent.example}</p>
+                    </div>
+                  )}
+                  
+                  {card.backContent.examples && (
+                    <ul className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-200 space-y-1 mb-2`}>
+                      {card.backContent.examples.map((ex, idx) => (
+                        <li key={idx}>• {ex}</li>
+                      ))}
+                    </ul>
+                  )}
+                  
+                  {card.backContent.keyPoint && (
+                    <p className={`${isPresenting ? 'text-xs' : 'text-sm'} ${colors.text} font-semibold mt-auto`}>
+                      {card.backContent.keyPoint}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Bottom Tip */}
+      <div className={`${isPresenting ? 'mt-3 p-3' : 'mt-4 p-4'} rounded-lg bg-gray-800/50 border border-gray-700`}>
+        <p className={`${isPresenting ? 'text-xs' : 'text-sm'} text-gray-300 text-center`}>
+          <span className="font-bold text-rose-300">Exam Tip:</span> When evaluating theories, ask "What would disprove this?" If nothing could, it's not scientific.
+        </p>
       </div>
     </div>
   )
@@ -2885,17 +12500,17 @@ const getActiveLessons = (currentLevel: 'gcse' | 'aslevel' | 'alevel') => {
 
 // Slide counts per lesson
 const lessonSlideCounts: Record<number, number> = {
-  // GCSE (15 lessons)
-  1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10, 7: 10, 8: 10, 9: 10, 10: 10, 11: 10, 12: 10, 13: 10, 14: 10, 15: 10,
+  // GCSE (15 lessons) - all have title slide added (+1)
+  1: 11, 2: 10, 3: 10, 4: 10, 5: 12, 6: 7, 7: 8, 8: 6, 9: 7, 10: 6, 11: 8, 12: 7, 13: 6, 14: 7, 15: 6,
   // AS Level (15 lessons)
-  16: 10, 17: 10, 18: 10, 19: 10, 20: 10, 21: 10, 22: 10, 23: 10, 24: 10, 25: 10, 26: 10, 27: 10, 28: 10, 29: 10, 30: 10,
+  16: 10, 17: 10, 18: 10, 19: 9, 20: 11, 21: 11, 22: 10, 23: 9, 24: 9, 25: 8, 26: 8, 27: 8, 28: 8, 29: 8, 30: 8,
   // A Level (12 lessons)
   31: 9, 32: 10, 33: 10, 34: 10, 35: 10, 36: 10, 37: 10, 38: 10, 39: 10, 40: 10, 41: 10, 42: 10
 }
 
 // Utility: build slides with teacher-first ordering per cycle
 const buildSlides = (cyclePrefixes: string[], includeExtended = true) => {
-  const slides: string[] = ['donow']
+  const slides: string[] = ['title', 'donow']
   for (const prefix of cyclePrefixes) {
     slides.push(`${prefix}_teach`, `${prefix}_sim`, `${prefix}_afl`, `${prefix}_task`)
   }
@@ -2903,11 +12518,51 @@ const buildSlides = (cyclePrefixes: string[], includeExtended = true) => {
   return slides
 }
 
-// Lesson 1 slides data (GCSE)
+// Lesson 1 slides data (GCSE) - Hypotheses and Variables
 const lesson1Slides = buildSlides(['hypo', 'variables'])
 
-// Lesson 9 slides data (AS Level Lesson 1: The Scientific Approach) - 9 focused slides
-const lesson9Slides = ['donow', 'science_teach', 'science_sim', 'science_afl', 'hypothesis_teach', 'hypothesis_sim', 'falsification_teach', 'falsification_afl', 'extended']
+// Lesson 2 slides data (GCSE) - Extraneous Variables
+const lesson2Slides = ['title', 'donow', 'ev_teach', 'evtypes_teach', 'evtypes_afl', 'evtypes_task', 'control_teach', 'control_afl', 'control_task', 'extended']
+
+// Lesson 3 slides data (GCSE) - Types of Experiment
+const lesson3Slides = ['title', 'donow', 'lab_teach', 'lab_afl', 'field_teach', 'field_afl', 'natural_teach', 'natural_afl', 'comparison_task', 'extended']
+
+// Lesson 4 slides data (GCSE) - Experimental Designs
+const lesson4Slides = ['title', 'donow', 'ig_teach', 'ig_afl', 'rm_teach', 'rm_afl', 'mp_teach', 'mp_afl', 'design_task', 'extended']
+
+// Lesson 5 slides data (GCSE) - Sampling Methods
+const lesson5Slides = ['title', 'donow', 'random_teach', 'random_afl', 'opportunity_teach', 'opportunity_afl', 'systematic_teach', 'systematic_afl', 'stratified_teach', 'stratified_afl', 'sampling_task', 'extended']
+
+// Lesson 6 slides data (GCSE) - Ethical Considerations
+const lesson6Slides = ['title', 'donow', 'ethics_teach', 'ethics_teach2', 'ethics_afl', 'ethics_task', 'extended']
+
+// Lesson 7 slides data (GCSE) - Self-Report Methods
+const lesson7Slides = ['title', 'donow', 'questionnaire_teach', 'questionnaire_afl', 'interview_teach', 'interview_afl', 'selfreport_task', 'extended']
+
+// Lesson 8 slides data (GCSE) - Observation Studies
+const lesson8Slides = ['title', 'donow', 'observation_teach', 'observation_afl', 'observation_task', 'extended']
+
+// Lesson 9 slides data (GCSE) - Correlations
+const lesson9Slides = ['title', 'donow', 'correlation_teach', 'correlation_afl', 'correlation_eval', 'correlation_task', 'extended']
+
+// Lesson 10 slides data (GCSE) - Case Studies
+const lesson10Slides = ['title', 'donow', 'case_teach', 'case_afl', 'case_task', 'extended']
+
+// Lesson 11 slides data (GCSE) - Reliability & Validity
+const lesson11Slides = ['title', 'donow', 'reliability_teach', 'reliability_afl', 'validity_teach', 'validity_afl', 'rel_val_task', 'extended']
+
+// Lesson 12 slides data (GCSE) - Types of Data
+const lesson12Slides = ['title', 'donow', 'quant_qual_teach', 'prim_sec_teach', 'data_afl', 'data_task', 'extended']
+
+// Lesson 13 slides data (GCSE) - Descriptive Statistics
+const lesson13Slides = ['title', 'donow', 'stats_teach', 'stats_afl', 'stats_task', 'extended']
+
+// Lesson 14 slides data (GCSE) - Graphs & Display
+// Lesson 14 slides data (GCSE) - Graphs & Display
+const lesson14Slides = ['title', 'donow', 'graphs_teach', 'distribution_teach', 'graphs_afl', 'graphs_task', 'extended']
+
+// Lesson 15 slides data (GCSE) - Computation & Arithmetic
+const lesson15Slides = ['title', 'donow', 'maths_teach', 'maths_afl', 'maths_task', 'extended']
 
 // Lesson 16 slides data (AS Level Lesson 1: Experimental Method)
 const lesson16Slides: Array<'donow' | 'hypo_teach' | 'hypo_sim' | 'hypo_afl' | 'hypo_task' | 'variables_teach' | 'variables_sim' | 'variables_afl' | 'variables_task' | 'extended'> = [
@@ -2922,6 +12577,48 @@ const lesson16Slides: Array<'donow' | 'hypo_teach' | 'hypo_sim' | 'hypo_afl' | '
   'variables_task',
   'extended'
 ]
+
+// Lesson 17 slides data (AS Level Lesson 2: Control of Variables)
+const lesson17Slides = ['title', 'donow', 'ev_teach', 'cv_teach', 'demand_teach', 'inv_teach', 'control_teach', 'control_afl', 'control_task', 'extended']
+
+// Lesson 18 slides data (AS Level Lesson 3: Experimental Design)
+const lesson18Slides = ['title', 'donow', 'ig_teach', 'ig_afl', 'rm_teach', 'rm_afl', 'mp_teach', 'mp_afl', 'design_task', 'extended']
+
+// Lesson 19 slides data (AS Level Lesson 4: Types of Experiment)
+const lesson19Slides = ['title', 'donow', 'lab_teach', 'field_teach', 'natural_teach', 'quasi_teach', 'types_afl', 'types_task', 'extended']
+
+// Lesson 20 slides data (AS Level Lesson 5: Sampling)
+const lesson20Slides = ['title', 'donow', 'pop_teach', 'random_teach', 'systematic_teach', 'stratified_teach', 'opportunity_teach', 'volunteer_teach', 'sampling_afl', 'sampling_task', 'extended']
+
+// Lesson 21 slides data (AS Level Lesson 6: Ethical Issues)
+const lesson21Slides = ['title', 'donow', 'ethics_intro', 'consent_teach', 'deception_teach', 'protection_teach', 'privacy_teach', 'dealing_teach', 'ethics_afl', 'ethics_task', 'extended']
+
+// Lesson 22 slides data (AS Level Lesson 7: Observational Techniques)
+const lesson22Slides = ['title', 'donow', 'obs_types_teach', 'covert_teach', 'participant_teach', 'design_teach', 'reliability_teach', 'obs_afl', 'obs_task', 'extended']
+
+// Lesson 23 slides data (AS Level Lesson 8: Self-Report Methods)
+const lesson23Slides = ['title', 'donow', 'questionnaire_teach', 'questions_teach', 'interview_teach', 'design_teach', 'selfreport_afl', 'selfreport_task', 'extended']
+
+// Lesson 24 slides data (AS Level Lesson 9: Correlations)
+const lesson24Slides = ['title', 'donow', 'correlation_intro', 'types_teach', 'coefficient_teach', 'difference_teach', 'correlation_afl', 'correlation_task', 'extended']
+
+// Lesson 25 slides data (AS Level Lesson 10: Kinds of Data)
+const lesson25Slides = ['title', 'donow', 'quant_qual_teach', 'primary_secondary_teach', 'meta_teach', 'data_afl', 'data_task', 'extended']
+
+// Lesson 26 slides data (AS Level Lesson 11: Descriptive Statistics)
+const lesson26Slides = ['title', 'donow', 'central_teach', 'dispersion_teach', 'choosing_teach', 'stats_afl', 'stats_task', 'extended']
+
+// Lesson 27 slides data (AS Level Lesson 12: Data Presentation)
+const lesson27Slides = ['title', 'donow', 'tables_teach', 'graphs_teach', 'distributions_teach', 'graphs_afl', 'graphs_task', 'extended']
+
+// Lesson 28 slides data (AS Level Lesson 13: Mathematical Skills)
+const lesson28Slides = ['title', 'donow', 'arithmetic_teach', 'percentages_teach', 'fractions_teach', 'maths_afl', 'maths_task', 'extended']
+
+// Lesson 29 slides data (AS Level Lesson 14: Statistical Testing)
+const lesson29Slides = ['title', 'donow', 'probability_teach', 'signtest_teach', 'critical_teach', 'stats_afl', 'stats_task', 'extended']
+
+// Lesson 30 slides data (AS Level Lesson 15: Peer Review & Economy)
+const lesson30Slides = ['title', 'donow', 'peerreview_teach', 'peerreview_eval_teach', 'economy_teach', 'peer_afl', 'peer_task', 'extended']
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -3059,6 +12756,23 @@ function App() {
   const renderLesson1 = () => {
     const slideType = lesson1Slides[currentSlide]
 
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={1}
+          title="Hypotheses and Variables"
+          subtitle="Formulating testable predictions"
+          objectives={[
+            "Define and distinguish between IV and DV",
+            "Write operationalised hypotheses",
+            "Understand null vs alternative hypotheses"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
     if (slideType === 'donow') {
       const doNowQuestions: Question[] = [
         {
@@ -3129,7 +12843,7 @@ function App() {
         }
       ]
 
-      return <SplitKnowledgeCheck questions={questions} title="Quick Check: Hypotheses & Variables" subtitle="Identify IV, DV & Extraneous Variables" />
+      return <SplitKnowledgeCheck questions={questions} title="Quick Check: Hypotheses & Variables" subtitle="Identify IV, DV & Extraneous Variables" isPresenting={isPresenting} />
     }
 
     if (slideType === 'hypo_task') {
@@ -3172,7 +12886,7 @@ function App() {
         }
       ]
 
-      return <SplitKnowledgeCheck questions={questions} title="Quick Quiz: Variables" subtitle="IV vs DV vs Extraneous" />
+      return <SplitKnowledgeCheck questions={questions} title="Quick Quiz: Variables" subtitle="IV vs DV vs Extraneous" isPresenting={isPresenting} />
     }
 
     if (slideType === 'variables_task') {
@@ -3180,140 +12894,1231 @@ function App() {
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTask />
+      return <ExtendedExamTask isPresenting={isPresenting} />
     }
 
     return <div>Loading...</div>
   }
 
-  // Render Lesson 9 content (AS Level Lesson 1: The Scientific Approach)
-  const renderLesson9 = () => {
-    const slideType = lesson9Slides[currentSlide]
+  // Render Lesson 2 content (GCSE: Extraneous Variables)
+  const renderLesson2 = () => {
+    const slideType = lesson2Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={2}
+          title="Extraneous Variables"
+          subtitle="Controlling unwanted variables"
+          objectives={[
+            "Identify extraneous variables in studies",
+            "Explain how EVs can confound results",
+            "Describe control methods: standardisation & randomisation"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
 
     if (slideType === 'donow') {
       const doNowQuestions: Question[] = [
         {
           id: 1,
-          question: "What does 'empiricism' mean in science?",
-          options: [
-            'Knowledge from intuition',
-            'Knowledge from direct observation and measurement',
-            'Knowledge from tradition',
-            'Knowledge from authority'
-          ],
+          question: "The variable the experimenter CHANGES is called the...",
+          options: ["Dependent Variable", "Independent Variable", "Extraneous Variable"],
           correct: 1
         },
         {
           id: 2,
-          question: 'Which is a feature of a falsifiable theory?',
-          options: [
-            'It can explain any outcome',
-            'It cannot be tested',
-            'It can potentially be proven false',
-            'It is always true'
-          ],
-          correct: 2
+          question: "The variable the experimenter MEASURES is the...",
+          options: ["Independent Variable", "Dependent Variable", "Control Variable"],
+          correct: 1
         },
         {
           id: 3,
-          question: 'The nomothetic approach seeks to establish:',
-          options: ['Individual case studies', 'Universal laws applicable to all', 'Personal narratives', 'Subjective experiences'],
+          question: "Making a variable measurable (e.g. 'performance' → 'score out of 10') is called...",
+          options: ["Hypothesising", "Operationalisation", "Standardisation"],
           correct: 1
         },
         {
           id: 4,
-          question: 'Replicability means:',
-          options: [
-            'Using complex procedures',
-            'Repeating an experiment and getting the same results',
-            'Recruiting more participants',
-            'Publishing results'
-          ],
+          question: "What does a NULL hypothesis predict?",
+          options: ["A significant difference", "No significant difference", "A positive relationship"],
           correct: 1
         },
         {
           id: 5,
-          question: 'Karl Popper argued that good science should:',
-          options: [
-            'Prove theories correct',
-            'Avoid testing theories',
-            'Attempt to disprove theories',
-            'Rely on anecdotal evidence'
-          ],
-          correct: 2
+          question: "An alternative hypothesis predicts...",
+          options: ["No effect", "A measurable difference or relationship", "Random results"],
+          correct: 1
         }
       ]
 
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
 
-    if (slideType === 'science_teach') {
-      return <ScientificApproachTeachSlide isPresenting={isPresenting} />
+    if (slideType === 'ev_teach') {
+      return <EVTeachSlide isPresenting={isPresenting} />
     }
 
-    if (slideType === 'science_sim') {
-      return <ScientificFeaturesInteractive isPresenting={isPresenting} />
+    if (slideType === 'evtypes_teach') {
+      return <EVTypesTeachSlide isPresenting={isPresenting} />
     }
 
-    if (slideType === 'science_afl') {
+    if (slideType === 'evtypes_afl') {
       const questions: Question[] = [
         {
           id: 1,
-          question: 'Why is objectivity important in psychological research?',
-          options: [
-            'It makes research faster',
-            'It prevents researcher bias from affecting results',
-            'It reduces the need for participants',
-            'It makes results more subjective'
-          ],
+          scenario: "The room where Group A is tested is much noisier than Group B's room.",
+          question: "What TYPE of extraneous variable is this?",
+          options: ["Situational Variable", "Participant Variable", "Experimenter Effect"],
+          correct: 0
+        },
+        {
+          id: 2,
+          scenario: "Group A happens to have more intelligent participants than Group B.",
+          question: "What TYPE of extraneous variable is this?",
+          options: ["Situational Variable", "Participant Variable", "Experimenter Effect"],
+          correct: 1
+        },
+        {
+          id: 3,
+          scenario: "The researcher is friendlier to participants in the experimental condition.",
+          question: "What TYPE of extraneous variable is this?",
+          options: ["Situational Variable", "Participant Variable", "Experimenter Effect"],
+          correct: 2
+        }
+      ]
+
+      return <SplitKnowledgeCheck questions={questions} title="Quick Check: EV Types" subtitle="Identify the type of extraneous variable" isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'evtypes_task') {
+      return <EVTypesTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'control_teach') {
+      return <ControlMethodsTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'control_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          scenario: "Participants in Condition A are tested in a noisy room while Condition B is tested in quiet.",
+          question: "Which control method would help?",
+          options: ["Random Allocation", "Standardised Procedures", "Counterbalancing"],
           correct: 1
         },
         {
           id: 2,
-          question: 'Which feature involves repeating an experiment to get consistent results?',
-          options: ['Falsifiability', 'Objectivity', 'Replicability', 'Empiricism'],
-          correct: 2
+          scenario: "One group has mostly high-ability students while the other has mostly low-ability students.",
+          question: "Which control method would help?",
+          options: ["Random Allocation", "Standardised Procedures", "Using a script"],
+          correct: 0
         },
         {
           id: 3,
-          question: 'A theory that cannot be tested is:',
-          options: ['Scientific', 'Falsifiable', 'Unfalsifiable', 'Replicable'],
+          scenario: "The researcher smiles more at participants in the experimental condition.",
+          question: "Which control method would help?",
+          options: ["Random Allocation", "Counterbalancing", "Standardised Instructions"],
           correct: 2
         },
         {
           id: 4,
-          question: 'What does replicability demonstrate?',
-          options: [
-            'Results are due to chance',
-            'Results are consistent across repeated trials',
-            'Results are biased',
-            'Results cannot be measured'
-          ],
-          correct: 1
+          scenario: "In a repeated measures design, participants always do Condition A first and get tired before Condition B.",
+          question: "Which control method would help?",
+          options: ["Random Allocation", "Standardised Procedures", "Counterbalancing"],
+          correct: 2
         }
       ]
 
-      return <SplitKnowledgeCheck questions={questions} title="Quick Check: Scientific Features" subtitle="Test your understanding" />
+      return <SplitKnowledgeCheck questions={questions} title="Quick Check: Control Methods" subtitle="Match the correct control method" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'hypothesis_teach') {
-      return <HypothesisDesignTeachPart1 isPresenting={isPresenting} />
-    }
-
-    if (slideType === 'hypothesis_sim') {
-      return <HypothesisWriterASLevel isPresenting={isPresenting} />
-    }
-
-    if (slideType === 'falsification_teach') {
-      return <FalsificationTeachSlide isPresenting={isPresenting} />
-    }
-
-    if (slideType === 'falsification_afl') {
-      return <FalsifiabilityChecker isPresenting={isPresenting} />
+    if (slideType === 'control_task') {
+      return <ControlMethodsDesignTask isPresenting={isPresenting} />
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTaskASLevel />
+      return <Lesson2ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 3 content (GCSE: Types of Experiment)
+  const renderLesson3 = () => {
+    const slideType = lesson3Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={3}
+          title="Types of Experiment"
+          subtitle="Lab, field and natural experiments"
+          objectives={[
+            "Describe lab, field and natural experiments",
+            "Evaluate strengths and limitations of each",
+            "Choose appropriate experiment types for scenarios"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "What is an extraneous variable?",
+          options: ["The variable you measure", "The variable you change", "An unwanted variable that could affect results"],
+          correct: 2
+        },
+        {
+          id: 2,
+          question: "Which type of EV relates to the research environment?",
+          options: ["Participant Variable", "Situational Variable", "Experimenter Effect"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Random allocation helps control...",
+          options: ["Situational variables", "Participant variables", "Demand characteristics"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "Standardised procedures help ensure...",
+          options: ["More participants sign up", "All participants experience the same conditions", "Results are unexpected"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "When half the participants do Condition A first and half do B first, this is called...",
+          options: ["Random allocation", "Counterbalancing", "Standardisation"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'lab_teach') {
+      return <LabExperimentTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'lab_afl') {
+      return <LabExperimentAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'field_teach') {
+      return <FieldExperimentTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'field_afl') {
+      return <FieldExperimentAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'natural_teach') {
+      return <NaturalExperimentTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'natural_afl') {
+      return <NaturalExperimentAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'comparison_task') {
+      return <ExperimentComparisonTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson3ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 4 content (GCSE: Experimental Designs)
+  const renderLesson4 = () => {
+    const slideType = lesson4Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={4}
+          title="Experimental Designs"
+          subtitle="How participants are allocated"
+          objectives={[
+            "Explain independent groups, repeated measures & matched pairs",
+            "Evaluate strengths and weaknesses of each design",
+            "Understand counterbalancing"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "In a lab experiment, the IV is...",
+          options: ["Naturally occurring", "Manipulated by the researcher", "Not controlled"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Which experiment type has the highest ecological validity?",
+          options: ["Lab experiment", "Field experiment", "Natural experiment"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "In a natural experiment, the IV...",
+          options: ["Is manipulated by the researcher", "Occurs naturally", "Is the same as the DV"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "A strength of lab experiments is...",
+          options: ["High ecological validity", "High control over variables", "Natural behaviour"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Field experiments take place in...",
+          options: ["A controlled laboratory", "A natural environment", "A virtual setting"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'ig_teach') {
+      return <IndependentGroupsTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'ig_afl') {
+      return <IndependentGroupsAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'rm_teach') {
+      return <RepeatedMeasuresTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'rm_afl') {
+      return <RepeatedMeasuresAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'mp_teach') {
+      return <MatchedPairsTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'mp_afl') {
+      return <MatchedPairsAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'design_task') {
+      return <DesignChoiceTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson4ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 5 content (GCSE: Sampling Methods)
+  const renderLesson5 = () => {
+    const slideType = lesson5Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={5}
+          title="Sampling Methods"
+          subtitle="Selecting participants"
+          objectives={[
+            "Describe random, opportunity, systematic & stratified sampling",
+            "Evaluate strengths and limitations of each method",
+            "Understand representative samples"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "In independent groups design, participants experience...",
+          options: ["All conditions", "One condition only", "Two conditions"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "What is the main problem with repeated measures?",
+          options: ["Participant variables", "Order effects", "Too expensive"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Matched pairs design involves...",
+          options: ["Same person doing all conditions", "Matching participants on key variables", "Randomly selecting anyone"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "Counterbalancing helps control...",
+          options: ["Participant variables", "Order effects", "Experimenter effects"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Which design needs the most participants?",
+          options: ["Repeated measures", "Independent groups", "Matched pairs"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'random_teach') {
+      return <RandomSamplingTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'random_afl') {
+      return <RandomSamplingAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'opportunity_teach') {
+      return <OpportunitySamplingTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'opportunity_afl') {
+      return <OpportunitySamplingAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'systematic_teach') {
+      return <SystematicSamplingTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'systematic_afl') {
+      return <SystematicSamplingAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'stratified_teach') {
+      return <StratifiedSamplingTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'stratified_afl') {
+      return <StratifiedSamplingAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'sampling_task') {
+      return <SamplingComparisonTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson5ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 6 content (GCSE: Ethical Considerations)
+  const renderLesson6 = () => {
+    const slideType = lesson6Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={6}
+          title="Ethical Considerations"
+          subtitle="Conducting research responsibly"
+          objectives={[
+            "Explain key ethical issues: consent, deception, harm, privacy",
+            "Describe BPS guidelines and their purpose",
+            "Apply ethical principles to research scenarios"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "Random sampling means...",
+          options: ["Selecting the first people you find", "Everyone has an equal chance of selection", "Selecting every 10th person"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Which sampling method is quickest and easiest?",
+          options: ["Random", "Stratified", "Opportunity"],
+          correct: 2
+        },
+        {
+          id: 3,
+          question: "Stratified sampling ensures...",
+          options: ["The cheapest method", "Proportional representation of subgroups", "The fastest data collection"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "A limitation of opportunity sampling is...",
+          options: ["It takes too long", "The sample may not be representative", "It needs too many resources"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "In systematic sampling, the first person is selected...",
+          options: ["By the researcher's choice", "Alphabetically", "Randomly"],
+          correct: 2
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'ethics_teach') {
+      return <InformedConsentTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'ethics_teach2') {
+      return <EthicsTeachSlide2 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'ethics_afl') {
+      return <EthicsAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'ethics_task') {
+      return <EthicsDesignTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson6ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 7 content (Self-Report Methods)
+  const renderLesson7 = () => {
+    const slideType = lesson7Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={7}
+          title="Self-Report Methods"
+          subtitle="Questionnaires and interviews"
+          objectives={[
+            "Distinguish open and closed questions",
+            "Compare structured, semi-structured & unstructured interviews",
+            "Evaluate strengths and limitations of self-report methods"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "BPS guidelines state participants must give...",
+          options: ["Informed consent", "Their phone number", "A blood sample"],
+          correct: 0
+        },
+        {
+          id: 2,
+          question: "Debriefing happens...",
+          options: ["Before the study", "During the study", "After the study"],
+          correct: 2
+        },
+        {
+          id: 3,
+          question: "Participants should always be able to...",
+          options: ["Win a prize", "Withdraw at any time", "Meet the researcher's boss"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "Keeping participant data anonymous protects...",
+          options: ["The researcher", "Confidentiality", "Equipment"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Protection from harm means...",
+          options: ["No physical or psychological risk beyond everyday life", "Free safety equipment", "Insurance coverage"],
+          correct: 0
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'questionnaire_teach') {
+      return <QuestionnairesTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'questionnaire_afl') {
+      return <QuestionnairesAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'interview_teach') {
+      return <InterviewsTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'interview_afl') {
+      return <InterviewsAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'selfreport_task') {
+      return <SelfReportDesignTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson7ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 8 content (Observations)
+  const renderLesson8 = () => {
+    const slideType = lesson8Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={8}
+          title="Observation Studies"
+          subtitle="Watching and recording behaviour"
+          objectives={[
+            "Distinguish naturalistic and controlled observations",
+            "Explain covert vs overt and participant vs non-participant",
+            "Understand behavioural categories and inter-observer reliability"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "Questionnaires collect data using...",
+          options: ["Interviews", "Written questions", "Blood tests"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "'Rate from 1-10' is an example of...",
+          options: ["Open question", "Closed question", "Leading question"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Which interview type has no predetermined questions?",
+          options: ["Structured", "Unstructured", "Semi-structured"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "A strength of questionnaires is...",
+          options: ["Can gather lots of data quickly", "High response rate", "No social desirability"],
+          correct: 0
+        },
+        {
+          id: 5,
+          question: "Interviewer bias means...",
+          options: ["The interviewer is unfair", "The interviewer influences responses", "The interviewer forgets questions"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'observation_teach') {
+      return <ObservationsTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'observation_afl') {
+      return <ObservationsAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'observation_task') {
+      return <ObservationDesignTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson8ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 9 content (GCSE: Correlations)
+  const renderLesson9 = () => {
+    const slideType = lesson9Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={9}
+          title="Correlations"
+          subtitle="Relationships between variables"
+          objectives={[
+            "Understand positive, negative and zero correlations",
+            "Interpret scatter diagrams",
+            "Explain why correlation ≠ causation"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "A naturalistic observation takes place in...",
+          options: ["A laboratory", "A real-life setting", "An interview room"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Covert observation means...",
+          options: ["Participants know they're being watched", "Participants don't know they're being watched", "The observer participates"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Inter-observer reliability checks if...",
+          options: ["Participants are reliable", "Two observers record similar data", "Equipment works properly"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "A limitation of covert observation is...",
+          options: ["Low ecological validity", "Ethical concerns about consent", "Too expensive"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Behavioural categories help observers to...",
+          options: ["Recruit participants", "Record behaviour systematically", "Design experiments"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'correlation_teach') {
+      return <CorrelationsTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'correlation_afl') {
+      return <CorrelationsAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'correlation_eval') {
+      return <CorrelationsEvalTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'correlation_task') {
+      return <CorrelationIdentifyTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson9ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 10 content (GCSE: Case Studies)
+  const renderLesson10 = () => {
+    const slideType = lesson10Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={10}
+          title="Case Studies"
+          subtitle="In-depth investigation of individuals"
+          objectives={[
+            "Define case studies and their features",
+            "Explain when case studies are appropriate",
+            "Evaluate strengths and limitations of case studies"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "A positive correlation means...",
+          options: ["Both variables increase together", "One increases, other decreases", "No relationship"],
+          correct: 0
+        },
+        {
+          id: 2,
+          question: "Correlations are displayed using a...",
+          options: ["Bar chart", "Scatter diagram", "Pie chart"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "A correlation CANNOT tell us...",
+          options: ["If variables are related", "Cause and effect", "Direction of relationship"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "Variables in a correlation are called...",
+          options: ["IV and DV", "Co-variables", "Control variables"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "If more exercise = less stress, this is a...",
+          options: ["Positive correlation", "Negative correlation", "Zero correlation"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'case_teach') {
+      return <CaseStudiesTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'case_afl') {
+      return <CaseStudiesAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'case_task') {
+      return <CaseStudyTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson10ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 11 content (GCSE: Reliability & Validity)
+  const renderLesson11 = () => {
+    const slideType = lesson11Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={11}
+          title="Reliability & Validity"
+          subtitle="Consistency and accuracy in research"
+          objectives={[
+            "Define reliability and how to test it",
+            "Explain internal and ecological validity",
+            "Identify threats to reliability and validity"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "Case studies involve...",
+          options: ["Large samples", "In-depth study of one individual/group", "Only quantitative data"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "A strength of case studies is...",
+          options: ["Easy to generalise", "Rich, detailed data", "High reliability"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "HM and Phineas Gage are examples of...",
+          options: ["Experiments", "Case studies", "Surveys"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "A limitation of case studies is...",
+          options: ["Too much data", "Cannot generalise findings", "Too many participants"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Case studies often use...",
+          options: ["Only experiments", "Multiple methods", "Only questionnaires"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'reliability_teach') {
+      return <ReliabilityTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'reliability_afl') {
+      return <ReliabilityAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'validity_teach') {
+      return <ValidityTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'validity_afl') {
+      return <ValidityAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'rel_val_task') {
+      return <ReliabilityValidityTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson11ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 12 content (GCSE: Types of Data)
+  const renderLesson12 = () => {
+    const slideType = lesson12Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={12}
+          title="Types of Data"
+          subtitle="Quantitative, qualitative, primary & secondary"
+          objectives={[
+            "Distinguish quantitative and qualitative data",
+            "Explain primary vs secondary data",
+            "Evaluate strengths and limitations of each type"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "Reliability refers to...",
+          options: ["Whether results are true", "Consistency of measurement", "The sample size"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Test-retest is used to check...",
+          options: ["Validity", "Reliability", "Ethics"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Ecological validity means...",
+          options: ["Results apply to real life", "Results are consistent", "Results are ethical"],
+          correct: 0
+        },
+        {
+          id: 4,
+          question: "What threatens internal validity?",
+          options: ["Large samples", "Extraneous variables", "Good controls"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Inter-observer reliability involves...",
+          options: ["Testing twice", "Two observers comparing", "Asking participants"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'quant_qual_teach') {
+      return <DataTypesTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'prim_sec_teach') {
+      return <PrimarySecondaryTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'data_afl') {
+      return <DataTypesAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'data_task') {
+      return <DataTypesTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson12ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 13 content (GCSE: Descriptive Statistics)
+  const renderLesson13 = () => {
+    const slideType = lesson13Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={13}
+          title="Descriptive Statistics"
+          subtitle="Mean, median, mode and range"
+          objectives={[
+            "Calculate mean, median, mode and range",
+            "Understand when to use each measure",
+            "Evaluate strengths and limitations of each"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "Quantitative data is...",
+          options: ["Data in words", "Data in numbers", "Data from interviews"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Primary data is...",
+          options: ["Collected by the researcher", "From government statistics", "From other studies"],
+          correct: 0
+        },
+        {
+          id: 3,
+          question: "A strength of qualitative data is...",
+          options: ["Easy to analyse", "Rich detail", "Less bias"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "Secondary data comes from...",
+          options: ["Your own experiment", "Someone else's research", "Observations only"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Test scores are an example of...",
+          options: ["Qualitative data", "Quantitative data", "Secondary data"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'stats_teach') {
+      return <DescriptiveStatsTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'stats_afl') {
+      return <DescriptiveStatsAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'stats_task') {
+      return <StatsCalculationTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson13ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 14 content (GCSE: Graphs & Display)
+  const renderLesson14 = () => {
+    const slideType = lesson14Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={14}
+          title="Graphs & Display"
+          subtitle="Presenting data visually"
+          objectives={[
+            "Choose appropriate graphs for different data types",
+            "Interpret bar charts, histograms and scatter diagrams",
+            "Understand normal distribution"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "The mean is calculated by...",
+          options: ["Finding the middle value", "Adding all and dividing by count", "Finding most common"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "The median is...",
+          options: ["The average", "The middle value", "The most common"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "The range measures...",
+          options: ["Central tendency", "Spread of data", "Most frequent value"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "Which is NOT affected by extreme scores?",
+          options: ["Mean", "Median", "Range"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Mode means...",
+          options: ["Average", "Middle", "Most common"],
+          correct: 2
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'graphs_teach') {
+      return <GraphsTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'distribution_teach') {
+      return <DistributionTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'graphs_afl') {
+      return <GraphsAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'graphs_task') {
+      return <GraphSelectionTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson14ExtendedExamTask isPresenting={isPresenting} />
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // Render Lesson 15 content (GCSE: Computation & Arithmetic)
+  const renderLesson15 = () => {
+    const slideType = lesson15Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={15}
+          title="Computation & Arithmetic"
+          subtitle="Mathematical skills for psychology"
+          objectives={[
+            "Work with decimals, fractions and percentages",
+            "Calculate ratios and significant figures",
+            "Apply mathematical skills to psychological data"
+          ]}
+          isPresenting={isPresenting}
+          level="GCSE"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "Which graph has gaps between bars?",
+          options: ["Histogram", "Bar chart", "Line graph"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Scatter diagrams show...",
+          options: ["Categories", "Correlations", "Frequencies"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "In a normal distribution, most scores are...",
+          options: ["At the extremes", "In the middle", "Evenly spread"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "Histograms are used for...",
+          options: ["Categorical data", "Continuous data", "Qualitative data"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "A bell-shaped curve is called...",
+          options: ["Skewed distribution", "Normal distribution", "Bimodal distribution"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'maths_teach') {
+      return <MathsTeachSlide isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'maths_afl') {
+      return <MathsAFL isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'maths_task') {
+      return <MathsCalculationTask isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <Lesson15ExtendedExamTask isPresenting={isPresenting} />
     }
 
     return <div>Loading...</div>
@@ -3516,6 +14321,3703 @@ function App() {
     return <div>Loading...</div>
   }
 
+  // ============= AS LEVEL LESSON 17: CONTROL OF VARIABLES =============
+  const renderLesson17 = () => {
+    const slideType = lesson17Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={2}
+          title="Control of Variables"
+          subtitle="Extraneous, Confounding & Control Methods"
+          objectives={[
+            "Distinguish extraneous and confounding variables",
+            "Explain demand characteristics and investigator effects",
+            "Apply randomisation and standardisation to control variables"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "What is the IV in an experiment?",
+          options: ["The variable that is measured", "The variable that is manipulated", "The variable that stays constant", "The confounding variable"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Which type of hypothesis predicts a specific direction of effect?",
+          options: ["Null hypothesis", "Non-directional hypothesis", "Directional hypothesis", "Alternative hypothesis"],
+          correct: 2
+        },
+        {
+          id: 3,
+          question: "Operationalising 'stress' could mean:",
+          options: ["Asking if someone feels stressed", "Measuring heart rate in bpm", "Saying someone is anxious", "Using intuition"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "The DV in a memory study might be:",
+          options: ["Whether music is playing", "The number of words recalled", "The age of participants", "The room temperature"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "An aim differs from a hypothesis because:",
+          options: ["Aims are more specific", "Hypotheses are general statements", "Aims are general; hypotheses are specific and testable", "They are identical"],
+          correct: 2
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'ev_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Extraneous Variables (EVs)</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200 mb-4">
+                An <span className="text-rose-400 font-bold">extraneous variable</span> is any variable, other than the IV, that might affect the DV.
+              </p>
+              <p className="text-gray-300">These should be controlled or removed so the researcher can be confident that changes in the DV are caused by the IV alone.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-amber-500/30">
+                <h3 className="text-xl font-bold text-amber-400 mb-3">🎯 Nuisance Variables</h3>
+                <p className="text-gray-300 mb-3">EVs that are straightforward to control (e.g., age, lighting).</p>
+                <p className="text-gray-400 text-sm">They 'muddy the waters' but don't vary systematically with the IV. They make it harder to detect results but aren't true confounding variables.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-xl font-bold text-red-400 mb-3">⚠️ Confounding Variables</h3>
+                <p className="text-gray-300 mb-3">EVs that change <span className="font-bold">systematically</span> with the IV.</p>
+                <p className="text-gray-400 text-sm">Example: If extroverts are in the experimental group and introverts in the control group, personality confounds the IV effect.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'cv_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Confounding Variables Explained</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <div className="flex items-start gap-4">
+                <div className="text-4xl">🔬</div>
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-2">The Key Difference</h3>
+                  <p className="text-gray-300">Confounding variables change <span className="text-rose-400 font-bold">systematically</span> with the IV, making it impossible to determine which variable caused the effect on the DV.</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+              <h3 className="text-xl font-bold text-amber-400 mb-4">Example: 'Speedy-uppy' Drink Study</h3>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">💊</span>
+                  <p className="text-gray-300"><span className="font-bold text-white">Group A:</span> Drinks 'Speedy-uppy' - all happen to be extroverts</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">💧</span>
+                  <p className="text-gray-300"><span className="font-bold text-white">Group B:</span> Drinks water - all happen to be introverts</p>
+                </div>
+                <div className="mt-4 p-4 bg-red-900/30 rounded-lg border border-red-500/50">
+                  <p className="text-red-300">❌ If Group A talks more, we can't tell if it's the drink or personality causing it. Personality is a <span className="font-bold">confounding variable</span>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'demand_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Demand Characteristics</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                <span className="text-rose-400 font-bold">Demand characteristics</span> are cues from the researcher or research situation that may reveal the purpose of the investigation, causing participants to change their natural behaviour.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-xl font-bold text-green-400 mb-3">😊 The 'Please-U' Effect</h3>
+                <p className="text-gray-300">Participants work out the hypothesis and act to <span className="font-bold">support</span> it.</p>
+                <p className="text-gray-400 text-sm mt-2">They want to be 'good participants' and help the researcher.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-xl font-bold text-red-400 mb-3">😤 The 'Screw-U' Effect</h3>
+                <p className="text-gray-300">Participants deliberately <span className="font-bold">underperform</span> to sabotage results.</p>
+                <p className="text-gray-400 text-sm mt-2">They may resent being studied or want to spoil the experiment.</p>
+              </div>
+            </div>
+            <div className="mt-6 p-4 bg-amber-900/30 rounded-lg border border-amber-500/50">
+              <p className="text-amber-300">⚠️ In either case, behaviour is no longer natural - reducing the validity of the findings.</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'inv_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Investigator Effects</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                <span className="text-rose-400 font-bold">Investigator effects</span> refer to any effect of the investigator's behaviour (conscious or unconscious) on the research outcome.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
+                <h3 className="text-lg font-bold text-purple-400 mb-3">Types of Investigator Effects</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">Leading questions</span> in interviews</li>
+                  <li>• <span className="font-bold">Differential treatment</span> (smiling more at some participants)</li>
+                  <li>• <span className="font-bold">Expectancy effects</span> (unconsciously influencing responses)</li>
+                  <li>• <span className="font-bold">Physical characteristics</span> (age, gender affecting responses)</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
+                <h3 className="text-lg font-bold text-cyan-400 mb-3">From Design to Interaction</h3>
+                <p className="text-gray-300 mb-3">Investigator effects can occur at any stage:</p>
+                <ul className="space-y-2 text-gray-300 text-sm">
+                  <li>📋 Study design choices</li>
+                  <li>👥 Participant selection</li>
+                  <li>🗣️ During testing/interaction</li>
+                  <li>📊 Data interpretation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'control_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Control Methods: Randomisation & Standardisation</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/30">
+                <h3 className="text-xl font-bold text-blue-400 mb-4">🎲 Randomisation</h3>
+                <p className="text-gray-300 mb-4">Using chance to control for bias when designing materials and deciding order of conditions.</p>
+                <div className="space-y-3 text-sm">
+                  <div className="p-3 bg-gray-700/50 rounded-lg">
+                    <p className="text-gray-300"><span className="font-bold text-white">Word lists:</span> Order randomly generated (not chosen by experimenter)</p>
+                  </div>
+                  <div className="p-3 bg-gray-700/50 rounded-lg">
+                    <p className="text-gray-300"><span className="font-bold text-white">Conditions:</span> Order randomised when participants do all conditions</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-green-500/30">
+                <h3 className="text-xl font-bold text-green-400 mb-4">📋 Standardisation</h3>
+                <p className="text-gray-300 mb-4">Ensuring all participants are subject to the same environment, information and experience.</p>
+                <div className="space-y-3 text-sm">
+                  <div className="p-3 bg-gray-700/50 rounded-lg">
+                    <p className="text-gray-300"><span className="font-bold text-white">Procedures:</span> List of exactly what will be done</p>
+                  </div>
+                  <div className="p-3 bg-gray-700/50 rounded-lg">
+                    <p className="text-gray-300"><span className="font-bold text-white">Instructions:</span> Read from a script to each participant</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 p-4 bg-rose-900/30 rounded-lg border border-rose-500/50">
+              <p className="text-rose-300">✓ These methods ensure non-standardised changes don't become extraneous variables.</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'control_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "A confounding variable differs from an extraneous variable because it:",
+          options: ["Is easier to control", "Changes systematically with the IV", "Only affects the DV", "Is always a participant variable"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "The 'please-U' effect is an example of:",
+          options: ["Investigator effects", "Demand characteristics", "Confounding variables", "Randomisation"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "To control for order effects, a researcher should use:",
+          options: ["Standardised instructions", "Random allocation", "Randomisation of condition order", "A single-blind procedure"],
+          correct: 2
+        },
+        {
+          id: 4,
+          question: "Investigator effects can include:",
+          options: ["Participants guessing the aim", "The researcher smiling more at certain participants", "Participants trying to sabotage results", "Using a control group"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Control of Variables" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'control_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Control of Variables</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-white mb-3">Scenario: Music & Running Performance</h3>
+              <p className="text-gray-300">A psychologist wants to see if listening to music affects running performance. He asks members of a local running club to run 400 metres as fast as they can without music. He then asks them to do the same again, but this time listening to music.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
+                  <p className="text-gray-300">Identify the independent variable and dependent variable in this study.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
+                  <p className="text-gray-300">Identify one extraneous variable and explain why it is extraneous.</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain how demand characteristics might affect this study.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 4 (3 marks)</p>
+                  <p className="text-gray-300">Suggest how the researcher could use standardisation to improve this study.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (4 marks)</p>
+                  <p className="text-gray-300">Explain what is meant by 'extraneous variable' and 'confounding variable'.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
+                  <p className="text-gray-300">Explain how demand characteristics can affect the validity of an experiment.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (2 marks)</p>
+                  <p className="text-gray-300">Outline one way in which randomisation is used in psychological research.</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+              <h3 className="text-lg font-bold text-gray-400 mb-2">Key Terms to Include:</h3>
+              <div className="flex flex-wrap gap-2">
+                {['Extraneous variable', 'Confounding variable', 'Demand characteristics', 'Investigator effects', 'Randomisation', 'Standardisation'].map(term => (
+                  <span key={term} className="px-3 py-1 bg-rose-600/20 text-rose-300 rounded-full text-sm">{term}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 18: EXPERIMENTAL DESIGN =============
+  const renderLesson18 = () => {
+    const slideType = lesson18Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={3}
+          title="Experimental Design"
+          subtitle="Independent Groups, Repeated Measures & Matched Pairs"
+          objectives={[
+            "Describe and evaluate independent groups design",
+            "Describe and evaluate repeated measures design",
+            "Describe and evaluate matched pairs design",
+            "Apply random allocation and counterbalancing"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "An extraneous variable that changes systematically with the IV is called a:",
+          options: ["Nuisance variable", "Confounding variable", "Demand characteristic", "Controlled variable"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Participants trying to work out the aim and 'help' the researcher is the:",
+          options: ["Screw-U effect", "Please-U effect", "Hawthorne effect", "Investigator effect"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Using chance to decide the order of word lists is called:",
+          options: ["Standardisation", "Counterbalancing", "Randomisation", "Operationalisation"],
+          correct: 2
+        },
+        {
+          id: 4,
+          question: "Reading the same instructions to all participants is an example of:",
+          options: ["Randomisation", "Operationalisation", "Standardisation", "Replication"],
+          correct: 2
+        },
+        {
+          id: 5,
+          question: "The researcher's behaviour affecting results is called:",
+          options: ["Demand characteristics", "Investigator effects", "Confounding variables", "Order effects"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'ig_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Independent Groups Design</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                Participants are allocated to <span className="text-rose-400 font-bold">different groups</span> where each group represents one experimental condition.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6 mb-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">No order effects</span> - participants only do the task once</li>
+                  <li>• <span className="font-bold">Less likely to guess aim</span> - see only one condition</li>
+                  <li>• <span className="font-bold">No practice/fatigue</span> effects</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">Participant variables</span> - individual differences between groups</li>
+                  <li>• <span className="font-bold">Less economical</span> - need twice as many participants</li>
+                </ul>
+              </div>
+            </div>
+            <div className="bg-blue-900/30 rounded-lg p-4 border border-blue-500/50">
+              <p className="text-blue-300"><span className="font-bold">Solution:</span> Use <span className="text-blue-400 font-bold">random allocation</span> to assign participants to groups - each participant has equal chance of being in either condition.</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'ig_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "In an independent groups design:",
+          options: ["All participants do all conditions", "Different participants are in each condition", "Participants are matched on key variables", "The researcher compares before and after scores"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "The main problem with independent groups design is:",
+          options: ["Order effects", "Participant variables", "Demand characteristics", "Time consumption"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Independent Groups" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'rm_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Repeated Measures Design</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                <span className="text-rose-400 font-bold">All participants</span> take part in <span className="text-rose-400 font-bold">all conditions</span> of the experiment.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6 mb-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">Controls participant variables</span> - same person in both conditions</li>
+                  <li>• <span className="font-bold">Fewer participants needed</span> - half the number for same data</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">Order effects</span> - practice, fatigue, boredom</li>
+                  <li>• <span className="font-bold">Demand characteristics</span> - more likely to guess aim</li>
+                </ul>
+              </div>
+            </div>
+            <div className="bg-purple-900/30 rounded-lg p-4 border border-purple-500/50">
+              <p className="text-purple-300"><span className="font-bold">Solution:</span> Use <span className="text-purple-400 font-bold">counterbalancing</span> - half participants do A then B, half do B then A.</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'rm_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "Repeated measures design controls for:",
+          options: ["Order effects", "Participant variables", "Demand characteristics", "Investigator effects"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Counterbalancing is used to control for:",
+          options: ["Participant variables", "Order effects", "Sampling bias", "Extraneous variables"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Repeated Measures" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'mp_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Matched Pairs Design</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                Pairs of participants are <span className="text-rose-400 font-bold">matched</span> on key variables, then one member goes to each condition.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6 mb-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">No order effects</span> - each participant does one condition</li>
+                  <li>• <span className="font-bold">Fewer demand characteristics</span></li>
+                  <li>• <span className="font-bold">Reduces participant variables</span> - matched on key characteristics</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">Never perfectly matched</span> - important differences may remain</li>
+                  <li>• <span className="font-bold">Time-consuming & expensive</span> - need pre-testing</li>
+                </ul>
+              </div>
+            </div>
+            <div className="bg-cyan-900/30 rounded-lg p-4 border border-cyan-500/50">
+              <p className="text-cyan-300"><span className="font-bold">Example:</span> In a memory study, participants matched on IQ before being assigned to music vs silence conditions.</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'mp_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "In matched pairs design, participants are matched on:",
+          options: ["Age only", "Variables that might affect the DV", "Random characteristics", "The IV"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "A limitation of matched pairs is:",
+          options: ["Order effects", "Demand characteristics", "Impossible to match perfectly", "Needs fewer participants"],
+          correct: 2
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Matched Pairs" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'design_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Experimental Design</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-white mb-3">Scenario: Conformity Study</h3>
+              <p className="text-gray-300">A psychologist wants to investigate whether people are more likely to conform in a difficult task than an easy task. She has recruited 20 participants.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
+                  <p className="text-gray-300">Explain how she could use an independent groups design for this study.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (4 marks)</p>
+                  <p className="text-gray-300">Explain one strength and one limitation of using independent groups.</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain how she could use a repeated measures design for this study.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 4 (3 marks)</p>
+                  <p className="text-gray-300">Explain how counterbalancing could be used to control for order effects.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
+                  <p className="text-gray-300">Explain one difference between a repeated measures design and a matched pairs design.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">Explain why random allocation is used in an independent groups design.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain how counterbalancing is used to control for order effects.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 19: TYPES OF EXPERIMENT =============
+  const renderLesson19 = () => {
+    const slideType = lesson19Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={4}
+          title="Types of Experiment"
+          subtitle="Laboratory, Field, Natural & Quasi-experiments"
+          objectives={[
+            "Describe and evaluate laboratory experiments",
+            "Describe and evaluate field experiments",
+            "Describe and evaluate natural experiments",
+            "Describe and evaluate quasi-experiments"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "In an independent groups design:",
+          options: ["All participants do all conditions", "Different participants in each condition", "Participants are matched in pairs", "Order effects are a problem"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Random allocation is used to:",
+          options: ["Control order effects", "Control participant variables", "Increase sample size", "Reduce demand characteristics"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Counterbalancing is used with:",
+          options: ["Independent groups", "Matched pairs", "Repeated measures", "Natural experiments"],
+          correct: 2
+        },
+        {
+          id: 4,
+          question: "A repeated measures design needs:",
+          options: ["More participants than independent groups", "Fewer participants than independent groups", "The same number as independent groups", "Matched participants"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Order effects include:",
+          options: ["Participant variables", "Practice and fatigue", "Investigator effects", "Demand characteristics only"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'lab_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Laboratory Experiments</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                Conducted in a <span className="text-rose-400 font-bold">highly controlled environment</span>. The researcher manipulates the IV and measures the DV whilst maintaining strict control of extraneous variables.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">High control</span> - confident IV caused DV change (internal validity)</li>
+                  <li>• <span className="font-bold">Replication</span> - can repeat to check findings</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">Low ecological validity</span> - artificial setting</li>
+                  <li>• <span className="font-bold">Demand characteristics</span> - know being tested</li>
+                  <li>• <span className="font-bold">Low mundane realism</span> - artificial tasks</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'field_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Field Experiments</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                The IV is manipulated in a <span className="text-rose-400 font-bold">natural, everyday setting</span>. The researcher goes to the participants' usual environment.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">Higher mundane realism</span> - natural environment</li>
+                  <li>• <span className="font-bold">Higher external validity</span> - more generalisable</li>
+                  <li>• <span className="font-bold">Less demand characteristics</span> - may be unaware of study</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">Loss of control</span> - harder to establish cause and effect</li>
+                  <li>• <span className="font-bold">Difficult to replicate</span></li>
+                  <li>• <span className="font-bold">Ethical issues</span> - consent/privacy</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'natural_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Natural Experiments</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                The researcher takes advantage of a <span className="text-rose-400 font-bold">pre-existing independent variable</span>. The IV would have changed even if the experimenter wasn't interested.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">Unique opportunities</span> - research otherwise impossible</li>
+                  <li>• <span className="font-bold">High external validity</span> - real-world issues</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">Rare events</span> - may happen infrequently</li>
+                  <li>• <span className="font-bold">No random allocation</span> - less confident about causation</li>
+                  <li>• <span className="font-bold">Confounding variables</span> - many group differences</li>
+                </ul>
+              </div>
+            </div>
+            <div className="mt-4 bg-cyan-900/30 rounded-lg p-4 border border-cyan-500/50">
+              <p className="text-cyan-300"><span className="font-bold">Example:</span> Romanian orphan studies - IV was adoption before/after 6 months (not manipulated by researcher).</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'quasi_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Quasi-Experiments</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                The IV is based on an <span className="text-rose-400 font-bold">existing difference between people</span> (e.g., age, gender, diagnosis). No one manipulates this variable - it simply exists.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">Controlled conditions</span> - often lab-based</li>
+                  <li>• <span className="font-bold">Allows study of variables</span> that can't be manipulated</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• <span className="font-bold">No random allocation</span> - groups pre-existing</li>
+                  <li>• <span className="font-bold">Confounding variables</span> possible</li>
+                </ul>
+              </div>
+            </div>
+            <div className="mt-4 bg-purple-900/30 rounded-lg p-4 border border-purple-500/50">
+              <p className="text-purple-300"><span className="font-bold">Example:</span> Comparing anxiety levels of phobic vs non-phobic patients. The IV (having a phobia) is a pre-existing characteristic.</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'types_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "A key strength of laboratory experiments is:",
+          options: ["High ecological validity", "High control over variables", "Natural setting", "No demand characteristics"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "In a natural experiment, the IV:",
+          options: ["Is manipulated by the researcher", "Occurs naturally without researcher manipulation", "Is always age or gender", "Is the same as the DV"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "A quasi-experiment differs from a natural experiment because:",
+          options: ["The IV is manipulated", "The IV is a pre-existing personal characteristic", "It always takes place in a lab", "There is no DV"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Types of Experiment" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'types_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Types of Experiment</h2>
+            <div className="space-y-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+                <h3 className="text-lg font-bold text-amber-400 mb-3">Scenario 1</h3>
+                <p className="text-gray-300 mb-4">A psychologist investigates the effect of age on memory. He tests two groups: one aged 20–30 and one aged 60–70. Each participant is given a memory test.</p>
+                <p className="text-gray-400">Identify the type of experiment and explain one strength and one limitation.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+                <h3 className="text-lg font-bold text-amber-400 mb-3">Scenario 2</h3>
+                <p className="text-gray-300 mb-4">A researcher investigates noise on concentration. One classroom is next to a building site (noisy), another is on the quiet side of school. Students in both classes solve a puzzle.</p>
+                <p className="text-gray-400">Identify the type of experiment and explain one strength and one limitation.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
+                  <p className="text-gray-300">Outline one difference between a natural experiment and a quasi-experiment.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (4 marks)</p>
+                  <p className="text-gray-300">Explain one strength and one limitation of a laboratory experiment.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain why field experiments may have higher external validity than laboratory experiments.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 20: SAMPLING =============
+  const renderLesson20 = () => {
+    const slideType = lesson20Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={5}
+          title="Sampling"
+          subtitle="Populations, Techniques & Bias"
+          objectives={[
+            "Explain the difference between population and sample",
+            "Describe and evaluate five sampling techniques",
+            "Discuss implications including bias and generalisation"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "A laboratory experiment takes place in:",
+          options: ["A natural setting", "A highly controlled environment", "The field", "Any location"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "A natural experiment has an IV that:",
+          options: ["Is manipulated by the researcher", "Occurs naturally", "Is always a demographic characteristic", "Cannot be measured"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Quasi-experiments differ from true experiments because:",
+          options: ["They have no DV", "Participants cannot be randomly allocated", "They only occur in labs", "They use no control group"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "A strength of field experiments is:",
+          options: ["High control", "Higher mundane realism", "Easy replication", "No ethical issues"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "External validity refers to:",
+          options: ["Control over extraneous variables", "Whether findings can be generalised", "Internal consistency", "Reliability"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'pop_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Populations and Samples</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/30">
+                <h3 className="text-xl font-bold text-blue-400 mb-3">🌍 Population</h3>
+                <p className="text-gray-300 mb-3">The large group of individuals a researcher is interested in studying.</p>
+                <p className="text-gray-400 text-sm">E.g., students in the South East, children with autism, men, or simply 'people'.</p>
+                <p className="text-amber-300 text-sm mt-3">This is too large to study directly!</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-green-500/30">
+                <h3 className="text-xl font-bold text-green-400 mb-3">👥 Sample</h3>
+                <p className="text-gray-300 mb-3">A smaller group drawn from the target population.</p>
+                <p className="text-gray-400 text-sm">Presumed to be representative of that population.</p>
+                <p className="text-green-300 text-sm mt-3">Allows generalisations to be made.</p>
+              </div>
+            </div>
+            <div className="mt-6 bg-rose-900/30 rounded-lg p-4 border border-rose-500/50">
+              <p className="text-rose-300">⚠️ Most samples contain some degree of <span className="font-bold">bias</span> - they don't perfectly represent the population.</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'random_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Random Sampling</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">All members of the target population have an <span className="text-rose-400 font-bold">equal chance</span> of being selected.</p>
+              <div className="mt-4 text-gray-300">
+                <p className="font-bold mb-2">Method:</p>
+                <ol className="list-decimal list-inside space-y-1">
+                  <li>Obtain a complete list of all members of the target population</li>
+                  <li>Assign all names a number</li>
+                  <li>Use lottery method (computer randomiser or hat)</li>
+                </ol>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-2">✓ Strength</h3>
+                <p className="text-gray-300 text-sm">Free from researcher bias - researcher has no influence over selection.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-2">✗ Limitations</h3>
+                <p className="text-gray-300 text-sm">Time-consuming; complete list needed; may still be unrepresentative; selected may refuse.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'systematic_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Systematic Sampling</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">Every <span className="text-rose-400 font-bold">nth member</span> of the target population is selected (e.g., every 5th pupil on a register).</p>
+              <div className="mt-4 text-gray-300">
+                <p className="font-bold mb-2">Method:</p>
+                <ol className="list-decimal list-inside space-y-1">
+                  <li>Produce a sampling frame (list in order, e.g., alphabetical)</li>
+                  <li>Nominate a sampling system (every 3rd, 6th, 8th person)</li>
+                  <li>Work through the frame until sample is complete</li>
+                </ol>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-2">✓ Strengths</h3>
+                <p className="text-gray-300 text-sm">Avoids researcher bias; usually fairly representative.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-2">✗ Limitation</h3>
+                <p className="text-gray-300 text-sm">Could be unrepresentative if list organised in a particular way.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'stratified_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Stratified Sampling</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">The sample <span className="text-rose-400 font-bold">reflects the proportions</span> of sub-groups (strata) within the target population.</p>
+              <div className="mt-4 text-gray-300">
+                <p className="font-bold mb-2">Method:</p>
+                <ol className="list-decimal list-inside space-y-1">
+                  <li>Identify different strata in the population</li>
+                  <li>Work out proportions needed for representation</li>
+                  <li>Randomly select participants from each stratum</li>
+                </ol>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-2">✓ Strengths</h3>
+                <p className="text-gray-300 text-sm">Avoids researcher bias; produces representative sample; enables generalisation.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-2">✗ Limitation</h3>
+                <p className="text-gray-300 text-sm">Cannot reflect ALL ways people differ; complete representation impossible.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'opportunity_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Opportunity Sampling</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">Selecting anyone who is <span className="text-rose-400 font-bold">willing and available</span> at the time of the study.</p>
+              <p className="text-gray-400 mt-2">The researcher takes the chance to ask whoever is around (e.g., in the street).</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-2">✓ Strength</h3>
+                <p className="text-gray-300 text-sm">Convenient - saves time and effort; much less costly than random sampling.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-2">✗ Limitations</h3>
+                <p className="text-gray-300 text-sm">Two forms of bias: (1) unrepresentative - drawn from specific area; (2) researcher may avoid certain people.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'volunteer_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Volunteer Sampling</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">Participants <span className="text-rose-400 font-bold">select themselves</span> to be part of the sample (self-selection).</p>
+              <p className="text-gray-400 mt-2">Methods: adverts in newspapers, notice boards, raising hands when asked.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-2">✓ Strengths</h3>
+                <p className="text-gray-300 text-sm">Easy - minimal input from researcher; participants are engaged/motivated.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-2">✗ Limitation</h3>
+                <p className="text-gray-300 text-sm">Volunteer bias - attracts certain profile (helpful, curious, eager to please).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'sampling_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "In random sampling, all members of the population have:",
+          options: ["Different chances of selection", "Equal chance of selection", "No chance of selection", "A 50% chance of selection"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Volunteer bias is a problem with:",
+          options: ["Random sampling", "Stratified sampling", "Volunteer sampling", "Systematic sampling"],
+          correct: 2
+        },
+        {
+          id: 3,
+          question: "Stratified sampling is designed to:",
+          options: ["Save time", "Reflect population proportions", "Avoid all bias", "Use the smallest sample"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Sampling" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'sampling_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Sampling</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-white mb-3">Scenario: College Canteen Survey</h3>
+              <p className="text-gray-300">A researcher wants to investigate the attitudes of students in her college towards the college canteen. There are 1000 students in the college. She decides to take a sample of 50 students.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
+                  <p className="text-gray-300">Explain how she could select a random sample of 50 students.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">Explain one limitation of using random sampling.</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain how she could select a stratified sample of 50 students.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 4 (2 marks)</p>
+                  <p className="text-gray-300">Explain one strength of using stratified sampling.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
+                  <p className="text-gray-300">Explain the difference between a population and a sample.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
+                  <p className="text-gray-300">Explain how a researcher could select a systematic sample.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Briefly evaluate the use of opportunity sampling in psychological research.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 21: ETHICAL ISSUES =============
+  const renderLesson21 = () => {
+    const slideType = lesson21Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={6}
+          title="Ethical Issues"
+          subtitle="BPS Code of Ethics & Dealing with Issues"
+          objectives={[
+            "Identify key ethical issues in psychological research",
+            "Explain the role of the BPS code of ethics",
+            "Describe ways of dealing with ethical issues"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "A sample is:",
+          options: ["The entire target population", "A smaller group from the population", "Always 100 people", "The researcher's hypothesis"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "In random sampling, selection is based on:",
+          options: ["Researcher choice", "Equal chance for all", "Convenience", "Volunteer willingness"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Volunteer bias means participants may be:",
+          options: ["Randomly selected", "More helpful and curious than average", "Forced to participate", "Matched on variables"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "Stratified sampling aims to:",
+          options: ["Be quick and easy", "Match population proportions", "Use only volunteers", "Avoid all selection"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Opportunity sampling involves:",
+          options: ["Random number selection", "Using available people at the time", "Proportional representation", "Self-selection by participants"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'ethics_intro') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">What Are Ethical Issues?</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                Ethical issues arise when there is a <span className="text-rose-400 font-bold">conflict</span> between the rights of participants and the goals of research to produce valid, worthwhile data.
+              </p>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+              <h3 className="text-xl font-bold text-amber-400 mb-4">The BPS Code of Ethics</h3>
+              <p className="text-gray-300 mb-4">A quasi-legal document that instructs UK psychologists about acceptable behaviour when dealing with participants.</p>
+              <div className="grid grid-cols-4 gap-4">
+                <div className="p-3 bg-blue-900/30 rounded-lg text-center">
+                  <span className="text-2xl">🤝</span>
+                  <p className="text-blue-300 font-bold mt-2">Respect</p>
+                </div>
+                <div className="p-3 bg-green-900/30 rounded-lg text-center">
+                  <span className="text-2xl">🎓</span>
+                  <p className="text-green-300 font-bold mt-2">Competence</p>
+                </div>
+                <div className="p-3 bg-purple-900/30 rounded-lg text-center">
+                  <span className="text-2xl">⚖️</span>
+                  <p className="text-purple-300 font-bold mt-2">Responsibility</p>
+                </div>
+                <div className="p-3 bg-rose-900/30 rounded-lg text-center">
+                  <span className="text-2xl">💎</span>
+                  <p className="text-rose-300 font-bold mt-2">Integrity</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'consent_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Informed Consent</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                Making participants aware of: the aims, procedures, their rights (including <span className="text-rose-400 font-bold">right to withdraw</span>), and what their data will be used for.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-amber-500/30">
+                <h3 className="text-lg font-bold text-amber-400 mb-3">⚠️ The Problem</h3>
+                <p className="text-gray-300">Knowing the aims may make behaviour unnatural, reducing validity of results.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Ways to Deal With It</h3>
+                <ul className="space-y-2 text-gray-300 text-sm">
+                  <li>• <span className="font-bold">Consent form</span> detailing all relevant information</li>
+                  <li>• <span className="font-bold">Parental consent</span> for under 16s</li>
+                  <li>• <span className="font-bold">Presumptive consent</span> - ask similar group if acceptable</li>
+                  <li>• <span className="font-bold">Retrospective consent</span> - ask after participation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'deception_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Deception</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                Deliberately <span className="text-rose-400 font-bold">misleading or withholding information</span> from participants at any stage of the investigation.
+              </p>
+              <p className="text-gray-400 mt-2">Linked to informed consent - deceived participants cannot truly consent.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-amber-500/30">
+                <h3 className="text-lg font-bold text-amber-400 mb-3">⚠️ When It May Be Justified</h3>
+                <p className="text-gray-300 text-sm">When it doesn't cause undue distress. E.g., drug trials - knowing about placebos would affect validity.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Way to Deal With It</h3>
+                <p className="text-gray-300 text-sm"><span className="font-bold">Full debrief</span> at end - reveal true aims, explain why deception was needed, allow data withdrawal.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'protection_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Protection from Harm</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                Participants should not be placed at any <span className="text-rose-400 font-bold">more risk than in daily life</span> - protected from physical AND psychological harm.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-3">Types of Harm</h3>
+                <ul className="space-y-2 text-gray-300 text-sm">
+                  <li>• Embarrassment</li>
+                  <li>• Feeling inadequate</li>
+                  <li>• Undue stress or pressure</li>
+                  <li>• Physical discomfort</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Ways to Deal With It</h3>
+                <ul className="space-y-2 text-gray-300 text-sm">
+                  <li>• Remind of <span className="font-bold">right to withdraw</span></li>
+                  <li>• Reassure behaviour was normal</li>
+                  <li>• Provide <span className="font-bold">counselling</span> if needed</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'privacy_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Privacy and Confidentiality</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/30">
+                <h3 className="text-xl font-bold text-blue-400 mb-3">🔒 Privacy</h3>
+                <p className="text-gray-300">The right to control information about yourself.</p>
+                <p className="text-gray-400 text-sm mt-2">Extends to the location of the study - institutions shouldn't be named.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-purple-500/30">
+                <h3 className="text-xl font-bold text-purple-400 mb-3">🛡️ Confidentiality</h3>
+                <p className="text-gray-300">If privacy is invaded, personal data must be protected.</p>
+                <p className="text-gray-400 text-sm mt-2">Protected by the Data Protection Act.</p>
+              </div>
+            </div>
+            <div className="mt-6 bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+              <h3 className="text-lg font-bold text-green-400 mb-3">✓ Ways to Deal With It</h3>
+              <ul className="space-y-2 text-gray-300">
+                <li>• Maintain <span className="font-bold">anonymity</span> - record no personal details</li>
+                <li>• Use <span className="font-bold">numbers or initials</span> instead of names</li>
+                <li>• Use <span className="font-bold">false names</span> in case studies (e.g., HM, Little Hans)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'dealing_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Ethics Committees & Guidelines</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                Guidelines are implemented by <span className="text-rose-400 font-bold">ethics committees</span> in research institutions who use a <span className="text-rose-400 font-bold">cost-benefit approach</span>.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
+                <h3 className="text-lg font-bold text-amber-400 mb-3">Cost-Benefit Analysis</h3>
+                <p className="text-gray-300">Weighs potential harm to participants against the value of the research findings to society.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
+                <h3 className="text-lg font-bold text-cyan-400 mb-3">Consequences</h3>
+                <p className="text-gray-300">Researchers won't go to prison but may <span className="font-bold">lose their job</span> if guidelines are breached.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'ethics_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "Informed consent requires participants to know:",
+          options: ["Just the aim", "Aims, procedures, and their rights", "Nothing at all", "Only the hypothesis"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Deception is dealt with by providing:",
+          options: ["Counselling", "A full debrief", "Financial reward", "Nothing"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Confidentiality can be maintained by:",
+          options: ["Publishing participant names", "Using initials or numbers", "Sharing data publicly", "Recording personal details"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Ethics" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'ethics_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Ethics</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-white mb-3">Scenario: Stress and Memory Study</h3>
+              <p className="text-gray-300">A researcher wants to investigate the effect of stress on memory. He tells participants that they will be given a mild electric shock if they get an answer wrong on a memory test. In fact, the shocks are fake.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
+                <p className="text-gray-300">Identify one ethical issue in this study.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
+                <p className="text-gray-300">Explain how the researcher could deal with this issue.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
+                  <p className="text-gray-300">Identify three ethical issues that might arise in psychological research.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">Explain what is meant by 'informed consent'.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain how a researcher could deal with the issue of deception.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 22: OBSERVATIONAL TECHNIQUES =============
+  const renderLesson22 = () => {
+    const slideType = lesson22Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={7}
+          title="Observational Techniques"
+          subtitle="Types, Design & Reliability"
+          objectives={[
+            "Describe naturalistic vs controlled observations",
+            "Explain covert vs overt and participant vs non-participant",
+            "Understand behavioural categories, sampling methods, and inter-observer reliability"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "Informed consent involves telling participants about:",
+          options: ["Only the hypothesis", "Aims, procedures, and their rights", "Other participants", "The researcher's credentials"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Deception should be addressed by:",
+          options: ["Never conducting research", "A full debrief afterwards", "Paying participants more", "Using larger samples"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Protection from harm means participants should face:",
+          options: ["No risk at all", "No more risk than in daily life", "Only physical risk", "Unlimited risk"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "Confidentiality is maintained by:",
+          options: ["Sharing all data publicly", "Using numbers or initials instead of names", "Discussing with other participants", "Publishing personal details"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "The BPS code of ethics is built around:",
+          options: ["One principle", "Two principles", "Three principles", "Four principles (respect, competence, responsibility, integrity)"],
+          correct: 3
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'obs_types_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Naturalistic vs Controlled Observations</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-green-500/30">
+                <h3 className="text-xl font-bold text-green-400 mb-3">🌳 Naturalistic</h3>
+                <p className="text-gray-300 mb-3">Behaviour observed in its natural setting. All aspects of environment free to vary.</p>
+                <div className="mt-4 text-sm">
+                  <p className="text-green-300">✓ High external validity - generalisable</p>
+                  <p className="text-red-300 mt-1">✗ Lack of control - hard to replicate; many EVs</p>
+                </div>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/30">
+                <h3 className="text-xl font-bold text-blue-400 mb-3">🔬 Controlled</h3>
+                <p className="text-gray-300 mb-3">Researcher controls certain variables to observe specific behaviours.</p>
+                <div className="mt-4 text-sm">
+                  <p className="text-green-300">✓ Easier to replicate; fewer confounding variables</p>
+                  <p className="text-red-300 mt-1">✗ May not apply to real-life settings</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'covert_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Covert vs Overt Observations</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-purple-500/30">
+                <h3 className="text-xl font-bold text-purple-400 mb-3">🕵️ Covert</h3>
+                <p className="text-gray-300 mb-3">Participants unaware they're being observed - behaviour is secret.</p>
+                <div className="mt-4 text-sm">
+                  <p className="text-green-300">✓ No participant reactivity - natural behaviour</p>
+                  <p className="text-red-300 mt-1">✗ Ethical issues - no consent; invasion of privacy</p>
+                </div>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-amber-500/30">
+                <h3 className="text-xl font-bold text-amber-400 mb-3">👀 Overt</h3>
+                <p className="text-gray-300 mb-3">Participants know they're being observed and have given consent.</p>
+                <div className="mt-4 text-sm">
+                  <p className="text-green-300">✓ More ethically acceptable</p>
+                  <p className="text-red-300 mt-1">✗ Behaviour may change due to awareness</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'participant_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Participant vs Non-Participant Observations</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/30">
+                <h3 className="text-xl font-bold text-cyan-400 mb-3">👥 Participant</h3>
+                <p className="text-gray-300 mb-3">Observer becomes part of the group being studied.</p>
+                <div className="mt-4 text-sm">
+                  <p className="text-green-300">✓ First-hand experience; increased insight into lives</p>
+                  <p className="text-red-300 mt-1">✗ Risk of 'going native' - losing objectivity</p>
+                </div>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-500/30">
+                <h3 className="text-xl font-bold text-gray-400 mb-3">📋 Non-Participant</h3>
+                <p className="text-gray-300 mb-3">Observer remains separate from the group.</p>
+                <div className="mt-4 text-sm">
+                  <p className="text-green-300">✓ Maintains objectivity; psychological distance</p>
+                  <p className="text-red-300 mt-1">✗ May miss valuable insider insights</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'design_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Observational Design</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-amber-400 mb-3">Behavioural Categories</h3>
+              <p className="text-gray-300 mb-3">Breaking target behaviour into a checklist. Like operationalisation - makes recording systematic.</p>
+              <p className="text-gray-400 text-sm">E.g., 'affection' → hugging, kissing, smiling, holding hands</p>
+              <ul className="mt-3 text-gray-300 text-sm">
+                <li>• Must be <span className="font-bold">operationalised</span> (precisely defined)</li>
+                <li>• Must <span className="font-bold">not overlap</span> (distinct categories)</li>
+                <li>• Must <span className="font-bold">cover all behaviours</span> possible</li>
+              </ul>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+                <h3 className="text-lg font-bold text-blue-400 mb-2">📊 Event Sampling</h3>
+                <p className="text-gray-300 text-sm">Record every time a target behaviour occurs. Good for infrequent behaviours.</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+                <h3 className="text-lg font-bold text-green-400 mb-2">⏱️ Time Sampling</h3>
+                <p className="text-gray-300 text-sm">Record behaviour at fixed intervals (e.g., every 30 seconds). Reduces number of observations needed.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'reliability_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Inter-Observer Reliability</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                Ensuring two or more observers record <span className="text-rose-400 font-bold">consistent</span> data when observing the same behaviour.
+              </p>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+              <h3 className="text-lg font-bold text-amber-400 mb-3">How to Establish Inter-Observer Reliability:</h3>
+              <ol className="space-y-2 text-gray-300">
+                <li>1. Observers familiarise themselves with behavioural categories</li>
+                <li>2. Observe the same behaviour at the same time (pilot study)</li>
+                <li>3. Compare recorded data and discuss differences</li>
+                <li>4. Calculate correlation between observations (aim for ≥ +0.80)</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'obs_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "Naturalistic observations have high:",
+          options: ["Internal validity", "Control", "External validity", "Demand characteristics"],
+          correct: 2
+        },
+        {
+          id: 2,
+          question: "In covert observation, participants are:",
+          options: ["Fully informed", "Unaware they're being observed", "Paid extra", "Given full consent"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Inter-observer reliability aims for a correlation of at least:",
+          options: ["+0.50", "+0.60", "+0.80", "+1.00"],
+          correct: 2
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Observations" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'obs_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Observations</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-white mb-3">Scenario: Playground Aggression Study</h3>
+              <p className="text-gray-300">A researcher wants to observe the aggressive behaviour of children in a playground. He decides to use a structured observation.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
+                  <p className="text-gray-300">Suggest two behavioural categories he could use.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">Explain why categories must be clear and unambiguous.</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (2 marks)</p>
+                  <p className="text-gray-300">Explain how he could use event sampling.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 4 (3 marks)</p>
+                  <p className="text-gray-300">Explain how he could establish inter-observer reliability.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
+                  <p className="text-gray-300">Distinguish between naturalistic and controlled observations.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">Explain one strength of conducting a covert observation.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (4 marks)</p>
+                  <p className="text-gray-300">Outline what is meant by 'event sampling' and 'time sampling'.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 23: SELF-REPORT METHODS =============
+  const renderLesson23 = () => {
+    const slideType = lesson23Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={8}
+          title="Self-Report Methods"
+          subtitle="Questionnaires & Interviews"
+          objectives={[
+            "Describe and evaluate questionnaires",
+            "Distinguish between open and closed questions",
+            "Describe and evaluate structured and unstructured interviews",
+            "Understand principles of good question design"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "Naturalistic observations take place in:",
+          options: ["A controlled lab", "The natural setting", "A researcher's office", "Online only"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "In covert observation, participants:",
+          options: ["Give full consent", "Are unaware they're being watched", "Control the variables", "Design the study"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "'Going native' is a risk in:",
+          options: ["Non-participant observation", "Participant observation", "Controlled observation", "Time sampling"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "Behavioural categories should be:",
+          options: ["Vague and overlapping", "Precise and non-overlapping", "Decided after observation", "Based on inference"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Inter-observer reliability is established by:",
+          options: ["Using one observer", "Comparing data from multiple observers", "Not using categories", "Random sampling"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'questionnaire_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Questionnaires</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                A <span className="text-rose-400 font-bold">pre-set list of written questions</span> to which participants respond. Used to assess thoughts and/or feelings.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
+                <ul className="space-y-2 text-gray-300 text-sm">
+                  <li>• <span className="font-bold">Cost-effective</span> - gather large amounts quickly</li>
+                  <li>• <span className="font-bold">Easy to analyse</span> - especially closed questions</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
+                <ul className="space-y-2 text-gray-300 text-sm">
+                  <li>• <span className="font-bold">Response bias</span> - social desirability; acquiescence</li>
+                  <li>• <span className="font-bold">Misunderstanding</span> - questions interpreted differently</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'questions_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Open vs Closed Questions</h2>
+            <div className="grid grid-cols-2 gap-6 mb-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/30">
+                <h3 className="text-xl font-bold text-cyan-400 mb-3">📝 Open Questions</h3>
+                <p className="text-gray-300 mb-3">No fixed range of answers - respondents answer freely.</p>
+                <p className="text-gray-400 text-sm">E.g., "How do you feel when you see a spider?"</p>
+                <div className="mt-3">
+                  <p className="text-green-300 text-sm">✓ Rich, detailed qualitative data</p>
+                  <p className="text-red-300 text-sm">✗ Difficult to analyse</p>
+                </div>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-amber-500/30">
+                <h3 className="text-xl font-bold text-amber-400 mb-3">☑️ Closed Questions</h3>
+                <p className="text-gray-300 mb-3">Fixed number of responses offered.</p>
+                <p className="text-gray-400 text-sm">E.g., "Do you smoke?" (Yes/No)</p>
+                <div className="mt-3">
+                  <p className="text-green-300 text-sm">✓ Easy to analyse quantitatively</p>
+                  <p className="text-red-300 text-sm">✗ May lack depth/detail</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+              <h3 className="text-lg font-bold text-purple-400 mb-2">Question Formats:</h3>
+              <p className="text-gray-300 text-sm"><span className="font-bold">Likert scales</span> (Strongly agree → Strongly disagree) | <span className="font-bold">Rating scales</span> (1-5) | <span className="font-bold">Fixed choice</span> (tick all that apply)</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'interview_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Interviews</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                A <span className="text-rose-400 font-bold">'live' encounter</span> (face-to-face or phone) where the interviewer asks questions to assess thoughts/experiences.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-blue-500/30">
+                <h3 className="text-lg font-bold text-blue-400 mb-3">📋 Structured Interviews</h3>
+                <p className="text-gray-300 text-sm mb-3">Pre-determined questions asked in fixed order.</p>
+                <p className="text-green-300 text-sm">✓ Easy to replicate; reduces interviewer bias</p>
+                <p className="text-red-300 text-sm">✗ Cannot elaborate or explore new topics</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">💬 Unstructured Interviews</h3>
+                <p className="text-gray-300 text-sm mb-3">Works like a conversation; no set questions.</p>
+                <p className="text-green-300 text-sm">✓ Flexible; can gain deeper insight</p>
+                <p className="text-red-300 text-sm">✗ Difficult to analyse; may lack reliability</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'design_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Designing Good Questions</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-red-500/30">
+              <h3 className="text-xl font-bold text-red-400 mb-4">❌ Things to Avoid:</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 bg-gray-700/50 rounded-lg">
+                  <p className="font-bold text-amber-400">Jargon</p>
+                  <p className="text-gray-300 text-sm">Technical terms unfamiliar to respondents</p>
+                </div>
+                <div className="p-3 bg-gray-700/50 rounded-lg">
+                  <p className="font-bold text-amber-400">Leading Questions</p>
+                  <p className="text-gray-300 text-sm">Guide respondent towards particular answer</p>
+                </div>
+                <div className="p-3 bg-gray-700/50 rounded-lg">
+                  <p className="font-bold text-amber-400">Double-Barrelled Questions</p>
+                  <p className="text-gray-300 text-sm">Two questions in one - confusing</p>
+                </div>
+                <div className="p-3 bg-gray-700/50 rounded-lg">
+                  <p className="font-bold text-amber-400">Double Negatives</p>
+                  <p className="text-gray-300 text-sm">"I am not unhappy" - hard to decipher</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'selfreport_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "Open questions produce:",
+          options: ["Quantitative data only", "Qualitative data", "No data", "Numerical ratings"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "A limitation of structured interviews is:",
+          options: ["Difficult to replicate", "Cannot deviate from the topic", "Too flexible", "No standardisation"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "A double-barrelled question:",
+          options: ["Is very short", "Contains two questions in one", "Uses technical jargon", "Is always open"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Self-Report" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'selfreport_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Self-Report</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-white mb-3">Scenario: Teenage Eating Habits</h3>
+              <p className="text-gray-300">A psychologist wants to investigate the eating habits of teenagers. She decides to use a questionnaire.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
+                  <p className="text-gray-300">Write one open question she could ask.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">Write one closed question she could ask.</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (4 marks)</p>
+                  <p className="text-gray-300">Explain one strength and one limitation of using a questionnaire.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
+                  <p className="text-gray-300">Distinguish between open and closed questions.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (4 marks)</p>
+                  <p className="text-gray-300">Explain one strength and one limitation of using a structured interview.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain why a researcher might choose to use an unstructured interview rather than a questionnaire.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 24: CORRELATIONS =============
+  const renderLesson24 = () => {
+    const slideType = lesson24Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={9}
+          title="Correlations"
+          subtitle="Co-variables, Types & Analysis"
+          objectives={[
+            "Explain the relationship between co-variables",
+            "Describe positive, negative and zero correlations",
+            "Understand correlation coefficients",
+            "Explain the difference between correlations and experiments"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "Questionnaires are best for collecting:",
+          options: ["Large amounts of data quickly", "Very detailed case studies", "Experimental data only", "Observational data"],
+          correct: 0
+        },
+        {
+          id: 2,
+          question: "Open questions produce:",
+          options: ["Quantitative data", "Qualitative data", "No data", "Numerical data only"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Structured interviews have:",
+          options: ["No questions", "Free-flowing conversation", "Pre-determined questions", "Only open questions"],
+          correct: 2
+        },
+        {
+          id: 4,
+          question: "Social desirability bias means respondents:",
+          options: ["Always lie", "Present themselves positively", "Don't understand questions", "Leave answers blank"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "A Likert scale offers:",
+          options: ["Yes/No answers", "Multiple choice", "Strongly agree to strongly disagree", "Open responses"],
+          correct: 2
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'correlation_intro') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">What Are Correlations?</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                Correlations illustrate the <span className="text-rose-400 font-bold">strength and direction</span> of an association between two or more <span className="text-rose-400 font-bold">co-variables</span>.
+              </p>
+              <p className="text-gray-400 mt-3">E.g., height and weight; hours of study and exam scores</p>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+              <h3 className="text-lg font-bold text-cyan-400 mb-3">📊 Scattergrams</h3>
+              <p className="text-gray-300">Correlations are plotted on a scattergram. One co-variable is the x-axis, the other the y-axis. Each point represents a participant's score on both variables.</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'types_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Types of Correlation</h2>
+            <div className="grid grid-cols-3 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">📈 Positive</h3>
+                <p className="text-gray-300 text-sm">As one co-variable increases, the other <span className="font-bold">increases</span>.</p>
+                <p className="text-gray-400 text-sm mt-2">E.g., More people in room → more noise</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-3">📉 Negative</h3>
+                <p className="text-gray-300 text-sm">As one co-variable increases, the other <span className="font-bold">decreases</span>.</p>
+                <p className="text-gray-400 text-sm mt-2">E.g., More people → less personal space</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-500/30">
+                <h3 className="text-lg font-bold text-gray-400 mb-3">⚫ Zero</h3>
+                <p className="text-gray-300 text-sm"><span className="font-bold">No relationship</span> between the co-variables.</p>
+                <p className="text-gray-400 text-sm mt-2">E.g., People in Manchester → rainfall in Peru</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'coefficient_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Correlation Coefficients</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                A number between <span className="text-rose-400 font-bold">-1 and +1</span> representing direction and strength of the relationship.
+              </p>
+            </div>
+            <div className="flex justify-between items-center bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-red-400">-1</p>
+                <p className="text-gray-400 text-sm">Perfect negative</p>
+              </div>
+              <div className="flex-1 mx-4 h-2 bg-gradient-to-r from-red-500 via-gray-500 to-green-500 rounded"></div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-400">0</p>
+                <p className="text-gray-400 text-sm">No correlation</p>
+              </div>
+              <div className="flex-1 mx-4 h-2 bg-gradient-to-r from-gray-500 to-green-500 rounded"></div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-400">+1</p>
+                <p className="text-gray-400 text-sm">Perfect positive</p>
+              </div>
+            </div>
+            <p className="text-gray-300 mt-4 text-center">The closer to +1 or -1, the <span className="font-bold">stronger</span> the relationship.</p>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'difference_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Correlations vs Experiments</h2>
+            <div className="grid grid-cols-2 gap-6 mb-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/30">
+                <h3 className="text-xl font-bold text-blue-400 mb-3">🔬 Experiments</h3>
+                <p className="text-gray-300">Researcher <span className="font-bold">manipulates</span> the IV to measure effect on DV.</p>
+                <p className="text-green-300 mt-3 text-sm">✓ CAN establish cause and effect</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-purple-500/30">
+                <h3 className="text-xl font-bold text-purple-400 mb-3">📊 Correlations</h3>
+                <p className="text-gray-300"><span className="font-bold">No manipulation</span> - just measuring relationship between co-variables.</p>
+                <p className="text-red-300 mt-3 text-sm">✗ CANNOT establish cause and effect</p>
+              </div>
+            </div>
+            <div className="bg-amber-900/30 rounded-lg p-4 border border-amber-500/50">
+              <p className="text-amber-300"><span className="font-bold">The Third Variable Problem:</span> An untested variable may be causing both co-variables to change. E.g., ice cream sales correlate with shark attacks - but hot weather causes both!</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'correlation_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "A correlation coefficient of -0.85 indicates:",
+          options: ["Weak positive", "Strong positive", "Strong negative", "No correlation"],
+          correct: 2
+        },
+        {
+          id: 2,
+          question: "Correlations cannot establish:",
+          options: ["Relationships", "Direction", "Cause and effect", "Strength"],
+          correct: 2
+        },
+        {
+          id: 3,
+          question: "The third variable problem refers to:",
+          options: ["Using three variables", "An untested variable causing both changes", "Three correlation types", "Three participants"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Correlations" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'correlation_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Correlations</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-white mb-3">Scenario: Revision & Exam Results</h3>
+              <p className="text-gray-300">A researcher wants to investigate the relationship between the number of hours students spend revising and their exam results.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
+                  <p className="text-gray-300">Describe what a positive correlation would look like in this study.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">What would a zero correlation mean in this context?</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain why this correlation cannot prove that revision causes better results.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
+                  <p className="text-gray-300">Explain the difference between a positive and a negative correlation.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
+                  <p className="text-gray-300">Explain why correlations cannot establish cause and effect.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (4 marks)</p>
+                  <p className="text-gray-300">Outline one strength and one limitation of using correlations in psychological research.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 25: KINDS OF DATA =============
+  const renderLesson25 = () => {
+    const slideType = lesson25Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={10}
+          title="Kinds of Data"
+          subtitle="Quantitative, Qualitative & Secondary"
+          objectives={[
+            "Distinguish between quantitative and qualitative data",
+            "Distinguish between primary and secondary data",
+            "Understand the process and value of meta-analysis"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "A positive correlation means:",
+          options: ["As one variable increases, the other decreases", "As one variable increases, the other increases", "There is no relationship", "One variable causes the other"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "A correlation coefficient of +0.90 indicates:",
+          options: ["Weak positive", "Weak negative", "Strong positive", "No correlation"],
+          correct: 2
+        },
+        {
+          id: 3,
+          question: "Correlations are plotted on:",
+          options: ["Bar charts", "Histograms", "Scattergrams", "Pie charts"],
+          correct: 2
+        },
+        {
+          id: 4,
+          question: "The 'third variable problem' refers to:",
+          options: ["Using three participants", "An untested variable affecting both co-variables", "Having three hypotheses", "Three types of correlation"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "Unlike experiments, correlations cannot establish:",
+          options: ["Relationships", "Cause and effect", "Strength", "Direction"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'quant_qual_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Quantitative vs Qualitative Data</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/30">
+                <h3 className="text-xl font-bold text-blue-400 mb-3">🔢 Quantitative</h3>
+                <p className="text-gray-300 mb-3">Data expressed in <span className="font-bold">numbers</span>. Often from experiments and closed questions.</p>
+                <div className="mt-4">
+                  <p className="text-green-300 text-sm">✓ Easy to analyse statistically</p>
+                  <p className="text-green-300 text-sm">✓ Objective and can be compared</p>
+                  <p className="text-red-300 text-sm mt-1">✗ May lack detail and context</p>
+                </div>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-purple-500/30">
+                <h3 className="text-xl font-bold text-purple-400 mb-3">📝 Qualitative</h3>
+                <p className="text-gray-300 mb-3">Data expressed in <span className="font-bold">words</span>. Often from interviews and observations.</p>
+                <div className="mt-4">
+                  <p className="text-green-300 text-sm">✓ Rich and detailed insight</p>
+                  <p className="text-green-300 text-sm">✓ Captures thoughts and feelings</p>
+                  <p className="text-red-300 text-sm mt-1">✗ Subjective; harder to analyse</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'primary_secondary_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Primary vs Secondary Data</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-green-500/30">
+                <h3 className="text-xl font-bold text-green-400 mb-3">🆕 Primary Data</h3>
+                <p className="text-gray-300 mb-3">Data collected <span className="font-bold">first-hand</span> by the researcher for the current study.</p>
+                <p className="text-gray-400 text-sm">E.g., conducting your own experiment or survey</p>
+                <div className="mt-4">
+                  <p className="text-green-300 text-sm">✓ Designed for the specific research aim</p>
+                  <p className="text-red-300 text-sm mt-1">✗ Time-consuming and expensive</p>
+                </div>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-amber-500/30">
+                <h3 className="text-xl font-bold text-amber-400 mb-3">📚 Secondary Data</h3>
+                <p className="text-gray-300 mb-3">Data <span className="font-bold">already collected</span> by someone else for another purpose.</p>
+                <p className="text-gray-400 text-sm">E.g., government statistics, previous research data</p>
+                <div className="mt-4">
+                  <p className="text-green-300 text-sm">✓ Quick and easy to access</p>
+                  <p className="text-red-300 text-sm mt-1">✗ May not fit your research aim</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'meta_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Meta-Analysis</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                A process that combines findings from <span className="text-rose-400 font-bold">many separate studies</span> to reach a general conclusion.
+              </p>
+              <p className="text-gray-400 mt-3">Uses existing data (secondary) from various sources to draw broader conclusions.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
+                <ul className="space-y-2 text-gray-300 text-sm">
+                  <li>• Very large sample size (across all studies)</li>
+                  <li>• Can identify patterns not visible in single studies</li>
+                  <li>• Increases validity of conclusions</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
+                <ul className="space-y-2 text-gray-300 text-sm">
+                  <li>• Studies may use different methods (inconsistent)</li>
+                  <li>• Publication bias - positive results more published</li>
+                  <li>• 'Garbage in, garbage out' if studies are flawed</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'data_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "Quantitative data is expressed in:",
+          options: ["Words", "Numbers", "Pictures", "Categories"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Primary data is collected:",
+          options: ["From government records", "First-hand by the researcher", "From published studies", "From textbooks"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "A meta-analysis combines:",
+          options: ["One study's results", "Findings from many studies", "Only quantitative data", "Only qualitative data"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Kinds of Data" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'data_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Data Types</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-white mb-3">Scenario: Stress Study</h3>
+              <p className="text-gray-300">A researcher conducts an experiment on stress. She measures heart rate during a stressful task and also asks participants to describe how they felt.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
+                  <p className="text-gray-300">Identify which data is quantitative and which is qualitative.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">Is this primary or secondary data? Explain why.</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain one strength and one limitation of using qualitative data in this study.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
+                  <p className="text-gray-300">Distinguish between quantitative and qualitative data.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (4 marks)</p>
+                  <p className="text-gray-300">Explain one strength and one limitation of using secondary data.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain what is meant by 'meta-analysis'.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 26: DESCRIPTIVE STATISTICS =============
+  const renderLesson26 = () => {
+    const slideType = lesson26Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={11}
+          title="Descriptive Statistics"
+          subtitle="Measures of Central Tendency & Dispersion"
+          objectives={[
+            "Calculate and interpret mean, median and mode",
+            "Calculate range and standard deviation",
+            "Understand when to use each measure"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "Quantitative data is expressed in:",
+          options: ["Words and descriptions", "Numbers", "Pictures", "Categories only"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Primary data is:",
+          options: ["Collected from other research", "First-hand by the researcher", "Always qualitative", "Government data"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Meta-analysis:",
+          options: ["Uses one study", "Combines findings from many studies", "Only uses interviews", "Is always unreliable"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "Qualitative data is likely from:",
+          options: ["Heart rate measures", "Experiments", "Open questions and interviews", "Reaction time tests"],
+          correct: 2
+        },
+        {
+          id: 5,
+          question: "A limitation of secondary data is:",
+          options: ["It's time consuming to collect", "May not fit research aims", "Always unreliable", "Cannot be analysed"],
+          correct: 1
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'central_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Measures of Central Tendency</h2>
+            <p className="text-gray-300 mb-6">A single value that describes the 'middle' or 'average' of a data set.</p>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-blue-500/30">
+                <h3 className="text-lg font-bold text-blue-400 mb-2">Mean (x̄)</h3>
+                <p className="text-gray-300 text-sm mb-2">Add all values, divide by number of values.</p>
+                <p className="text-green-300 text-sm">✓ Uses all data; most sensitive</p>
+                <p className="text-red-300 text-sm">✗ Affected by extreme values</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-2">Median</h3>
+                <p className="text-gray-300 text-sm mb-2">Middle value when data is ordered.</p>
+                <p className="text-green-300 text-sm">✓ Not affected by extremes</p>
+                <p className="text-red-300 text-sm">✗ Doesn't use all data</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-purple-500/30">
+                <h3 className="text-lg font-bold text-purple-400 mb-2">Mode</h3>
+                <p className="text-gray-300 text-sm mb-2">Most frequently occurring value.</p>
+                <p className="text-green-300 text-sm">✓ Easy; works with categories</p>
+                <p className="text-red-300 text-sm">✗ May be several or none</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'dispersion_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Measures of Dispersion</h2>
+            <p className="text-gray-300 mb-6">How <span className="font-bold">spread out</span> the data is around the central value.</p>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-amber-500/30">
+                <h3 className="text-xl font-bold text-amber-400 mb-3">Range</h3>
+                <p className="text-gray-300 mb-2">Highest value minus lowest value.</p>
+                <p className="text-gray-400 text-sm mb-3">E.g., Data: 3, 5, 8, 12 → Range = 12 - 3 = 9</p>
+                <p className="text-green-300 text-sm">✓ Quick and easy to calculate</p>
+                <p className="text-red-300 text-sm">✗ Only uses two values; affected by extremes</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/30">
+                <h3 className="text-xl font-bold text-cyan-400 mb-3">Standard Deviation (SD)</h3>
+                <p className="text-gray-300 mb-2">Average distance of each score from the mean.</p>
+                <p className="text-gray-400 text-sm mb-3">Low SD = scores clustered; High SD = spread out</p>
+                <p className="text-green-300 text-sm">✓ Uses all data; more precise measure</p>
+                <p className="text-red-300 text-sm">✗ More complex to calculate</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'choosing_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">When to Use Each Measure</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-600">
+                    <th className="text-left py-3 text-rose-400">Data Situation</th>
+                    <th className="text-left py-3 text-rose-400">Best Measure</th>
+                    <th className="text-left py-3 text-rose-400">Reason</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-300">
+                  <tr className="border-b border-gray-700">
+                    <td className="py-3">Normal distribution (no extremes)</td>
+                    <td className="py-3 text-blue-400">Mean</td>
+                    <td className="py-3">Most representative</td>
+                  </tr>
+                  <tr className="border-b border-gray-700">
+                    <td className="py-3">Extreme values (outliers)</td>
+                    <td className="py-3 text-green-400">Median</td>
+                    <td className="py-3">Not distorted</td>
+                  </tr>
+                  <tr className="border-b border-gray-700">
+                    <td className="py-3">Categorical data</td>
+                    <td className="py-3 text-purple-400">Mode</td>
+                    <td className="py-3">Only option</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3">Precise measure of spread</td>
+                    <td className="py-3 text-cyan-400">Standard Deviation</td>
+                    <td className="py-3">Uses all data</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'stats_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "The mean is affected by:",
+          options: ["The mode", "Extreme values", "The median", "Categorical data"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "The median is found by:",
+          options: ["Adding all values", "Finding the middle value", "Finding the most common value", "Subtracting highest from lowest"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "A high standard deviation means data is:",
+          options: ["Clustered closely", "Spread out widely", "All the same", "Categorical"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Descriptive Stats" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'stats_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Statistics</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-white mb-3">Data Set: Memory Scores</h3>
+              <p className="text-gray-300 mb-3">Participants remembered the following number of words:</p>
+              <p className="text-2xl font-bold text-amber-400 text-center">5, 7, 8, 8, 9, 10, 12, 14, 25</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
+                  <p className="text-gray-300">Calculate the mean, median and mode.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (1 mark)</p>
+                  <p className="text-gray-300">Calculate the range.</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain why the median might be a better measure of central tendency than the mean for this data.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (4 marks)</p>
+                  <p className="text-gray-300">Explain one strength and one limitation of using the mean as a measure of central tendency.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">Explain why standard deviation is more informative than the range.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (2 marks)</p>
+                  <p className="text-gray-300">A researcher collects data on favourite colours. Which measure of central tendency should they use? Explain why.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 27: DATA PRESENTATION =============
+  const renderLesson27 = () => {
+    const slideType = lesson27Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={12}
+          title="Data Presentation"
+          subtitle="Tables, Graphs & Distributions"
+          objectives={[
+            "Construct and interpret tables and graphs",
+            "Distinguish between bar charts, histograms and scattergrams",
+            "Understand normal and skewed distributions"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "The mean is calculated by:",
+          options: ["Finding the middle value", "Finding the most common value", "Adding all values and dividing by total", "Subtracting lowest from highest"],
+          correct: 2
+        },
+        {
+          id: 2,
+          question: "The median is best used when:",
+          options: ["Data is normally distributed", "There are extreme values", "Data is categorical", "The mode doesn't exist"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Range is calculated as:",
+          options: ["Mean minus mode", "Highest minus lowest", "Sum of all values", "Number of values"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "A low standard deviation means:",
+          options: ["Data is spread out", "Data is clustered", "There is no pattern", "The mean is wrong"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "The mode is the:",
+          options: ["Middle value", "Average value", "Most frequent value", "Highest value"],
+          correct: 2
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'tables_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Tables</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-gray-200">Tables summarise raw data, showing summary statistics (means, medians, etc.) rather than individual scores.</p>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+              <h3 className="text-lg font-bold text-amber-400 mb-3">Rules for Good Tables:</h3>
+              <ul className="space-y-2 text-gray-300">
+                <li>• <span className="font-bold">Clear title</span> describing what the table shows</li>
+                <li>• <span className="font-bold">Labelled columns and rows</span> with units where appropriate</li>
+                <li>• <span className="font-bold">Show appropriate statistics</span> (e.g., mean, SD)</li>
+                <li>• <span className="font-bold">Values to same decimal places</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'graphs_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Types of Graphs</h2>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-blue-500/30">
+                <h3 className="text-lg font-bold text-blue-400 mb-2">📊 Bar Charts</h3>
+                <p className="text-gray-300 text-sm mb-2">For <span className="font-bold">discrete/categorical</span> data</p>
+                <p className="text-gray-400 text-sm">Bars do NOT touch. E.g., mean scores for different conditions</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-2">📈 Histograms</h3>
+                <p className="text-gray-300 text-sm mb-2">For <span className="font-bold">continuous</span> data</p>
+                <p className="text-gray-400 text-sm">Bars TOUCH. E.g., frequency of test scores in ranges</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-purple-500/30">
+                <h3 className="text-lg font-bold text-purple-400 mb-2">📉 Scattergrams</h3>
+                <p className="text-gray-300 text-sm mb-2">For <span className="font-bold">correlational</span> data</p>
+                <p className="text-gray-400 text-sm">Plot two co-variables. Shows relationship pattern</p>
+              </div>
+            </div>
+            <div className="mt-6 bg-amber-900/30 rounded-lg p-4 border border-amber-500/50">
+              <p className="text-amber-300 text-sm"><span className="font-bold">Key rule:</span> Bar charts = bars don't touch (discrete data). Histograms = bars touch (continuous data).</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'distributions_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Distributions</h2>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-cyan-500/30">
+                <h3 className="text-lg font-bold text-cyan-400 mb-2">Normal Distribution</h3>
+                <p className="text-gray-300 text-sm mb-2">Symmetrical bell curve</p>
+                <p className="text-gray-400 text-sm">Mean, median and mode are the <span className="font-bold">same</span></p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-amber-500/30">
+                <h3 className="text-lg font-bold text-amber-400 mb-2">Positive Skew</h3>
+                <p className="text-gray-300 text-sm mb-2">Tail points to the <span className="font-bold">right</span> (positive)</p>
+                <p className="text-gray-400 text-sm">Most scores at low end. Mode &lt; Median &lt; Mean</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
+                <h3 className="text-lg font-bold text-red-400 mb-2">Negative Skew</h3>
+                <p className="text-gray-300 text-sm mb-2">Tail points to the <span className="font-bold">left</span> (negative)</p>
+                <p className="text-gray-400 text-sm">Most scores at high end. Mean &lt; Median &lt; Mode</p>
+              </div>
+            </div>
+            <div className="mt-6 bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+              <p className="text-gray-300"><span className="font-bold text-rose-400">Tip:</span> The tail tells you the skew direction. Positive skew = tail goes positive (right). Negative skew = tail goes negative (left).</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'graphs_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "In a bar chart, the bars:",
+          options: ["Touch", "Don't touch", "Overlap", "Are curved"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "A histogram is used for:",
+          options: ["Categorical data", "Continuous data", "Correlational data", "Qualitative data"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "In a normal distribution, mean, median and mode are:",
+          options: ["All different", "The same", "Only two are equal", "Not calculable"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Graphs" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'graphs_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Graphs</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-white mb-3">Scenario: Psychology Exam Scores</h3>
+              <p className="text-gray-300">A teacher recorded the exam scores of her psychology class and wants to display this data appropriately.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
+                  <p className="text-gray-300">Explain why a histogram rather than a bar chart should be used.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">The data shows most students scored highly with a few low scores. What type of distribution is this?</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain one difference between bar charts and histograms.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
+                  <p className="text-gray-300">Describe the features of a normal distribution.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">Explain the difference between a positive and a negative skew.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (4 marks)</p>
+                  <p className="text-gray-300">A researcher is displaying mean scores from two conditions (A and B). What type of graph should they use? Give two reasons for your answer.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 28: MATHEMATICAL SKILLS =============
+  const renderLesson28 = () => {
+    const slideType = lesson28Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={13}
+          title="Mathematical Skills"
+          subtitle="Arithmetic, Percentages & Fractions"
+          objectives={[
+            "Demonstrate knowledge of arithmetic and numerical computation",
+            "Calculate and interpret percentages",
+            "Convert between fractions, decimals and percentages"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "In a bar chart, bars:",
+          options: ["Touch each other", "Don't touch", "Overlap", "Vary in width"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "A histogram is used for:",
+          options: ["Categorical data", "Continuous data", "Qualitative data", "Correlations"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "A scattergram displays:",
+          options: ["Means", "Categories", "Correlational data", "Frequencies"],
+          correct: 2
+        },
+        {
+          id: 4,
+          question: "In a positive skew, the tail points:",
+          options: ["Left", "Right", "Up", "Down"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "In a normal distribution:",
+          options: ["Mean is highest", "Mode is highest", "Mean, median and mode are equal", "Median is highest"],
+          correct: 2
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'arithmetic_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Arithmetic & Numerical Computation</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-gray-200">These skills underpin all statistical work in psychology research.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
+                <h3 className="text-lg font-bold text-blue-400 mb-3">Basic Operations</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• Addition (+) and Subtraction (−)</li>
+                  <li>• Multiplication (×) and Division (÷)</li>
+                  <li>• Order of operations: BIDMAS</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
+                <h3 className="text-lg font-bold text-green-400 mb-3">BIDMAS</h3>
+                <ul className="space-y-1 text-gray-300 text-sm">
+                  <li><span className="font-bold">B</span>rackets first</li>
+                  <li><span className="font-bold">I</span>ndices (powers)</li>
+                  <li><span className="font-bold">D</span>ivision and <span className="font-bold">M</span>ultiplication</li>
+                  <li><span className="font-bold">A</span>ddition and <span className="font-bold">S</span>ubtraction</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'percentages_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Percentages</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                A percentage is a proportion <span className="text-rose-400 font-bold">out of 100</span>.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-amber-500/30">
+                <h3 className="text-lg font-bold text-amber-400 mb-3">Finding a Percentage</h3>
+                <p className="text-gray-300 mb-2">To find what percentage A is of B:</p>
+                <p className="text-2xl text-center font-bold text-cyan-400">(A ÷ B) × 100</p>
+                <p className="text-gray-400 text-sm mt-2">E.g., 15 out of 60 = (15 ÷ 60) × 100 = 25%</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-cyan-500/30">
+                <h3 className="text-lg font-bold text-cyan-400 mb-3">Calculating a Percentage</h3>
+                <p className="text-gray-300 mb-2">To find X% of a number:</p>
+                <p className="text-2xl text-center font-bold text-amber-400">(X ÷ 100) × number</p>
+                <p className="text-gray-400 text-sm mt-2">E.g., 20% of 80 = (20 ÷ 100) × 80 = 16</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'fractions_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Fractions, Decimals & Ratios</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-lg font-bold text-amber-400 mb-3">Converting Between Forms</h3>
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div className="p-3 bg-gray-700/50 rounded-lg">
+                  <p className="text-gray-400 text-sm">Fraction</p>
+                  <p className="text-2xl font-bold text-white">1/4</p>
+                </div>
+                <div className="p-3 bg-gray-700/50 rounded-lg">
+                  <p className="text-gray-400 text-sm">Decimal</p>
+                  <p className="text-2xl font-bold text-white">0.25</p>
+                </div>
+                <div className="p-3 bg-gray-700/50 rounded-lg">
+                  <p className="text-gray-400 text-sm">Percentage</p>
+                  <p className="text-2xl font-bold text-white">25%</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
+              <h3 className="text-lg font-bold text-green-400 mb-3">Ratios</h3>
+              <p className="text-gray-300">Express proportions as A:B. Simplify by dividing by common factors.</p>
+              <p className="text-gray-400 text-sm mt-2">E.g., 20:30 simplifies to 2:3 (both divided by 10)</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'maths_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "What is 25% of 80?",
+          options: ["15", "20", "25", "32"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "12 out of 48 as a percentage is:",
+          options: ["12%", "25%", "36%", "48%"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "The decimal 0.75 as a fraction is:",
+          options: ["1/2", "2/3", "3/4", "4/5"],
+          correct: 2
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Maths Skills" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'maths_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Maths Skills</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
+                  <p className="text-gray-300">18 participants out of 72 showed improvement. What percentage is this?</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">Calculate 35% of 60.</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (2 marks)</p>
+                  <p className="text-gray-300">Convert 3/8 into a decimal and a percentage.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 4 (2 marks)</p>
+                  <p className="text-gray-300">Simplify the ratio 45:60.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
+                  <p className="text-gray-300">A researcher found that 24 out of 96 participants showed anxiety symptoms. Calculate this as a percentage and simplify as a ratio.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">The mean score in Condition A was 45. If participants in Condition B scored 20% higher, what was their mean score?</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 29: STATISTICAL TESTING =============
+  const renderLesson29 = () => {
+    const slideType = lesson29Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={14}
+          title="Statistical Testing"
+          subtitle="The Sign Test & Significance"
+          objectives={[
+            "Understand the purpose of statistical testing",
+            "Explain probability and significance (p ≤ 0.05)",
+            "Calculate and interpret the sign test",
+            "Use a table of critical values"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "BIDMAS stands for:",
+          options: ["Brackets, Indices, Division, Multiplication, Addition, Subtraction", "Basic, Indices, Division, Mean, Addition, Standard", "Brackets, Interval, Data, Mean, Average, Skew", "None of the above"],
+          correct: 0
+        },
+        {
+          id: 2,
+          question: "To find 30% of 50:",
+          options: ["30 + 50", "(30 ÷ 100) × 50", "50 ÷ 30", "30 × 50"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "0.5 as a percentage is:",
+          options: ["5%", "0.5%", "50%", "500%"],
+          correct: 2
+        },
+        {
+          id: 4,
+          question: "The ratio 12:18 simplifies to:",
+          options: ["1:2", "2:3", "3:4", "6:9"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "15 out of 60 as a percentage is:",
+          options: ["15%", "20%", "25%", "30%"],
+          correct: 2
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'probability_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Probability & Significance</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                Statistical tests tell us the <span className="text-rose-400 font-bold">probability</span> that results occurred by chance.
+              </p>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-amber-500/30">
+              <h3 className="text-xl font-bold text-amber-400 mb-3">The 5% Significance Level (p ≤ 0.05)</h3>
+              <p className="text-gray-300 mb-3">In psychology, we accept a <span className="font-bold">5% or less</span> probability that results are due to chance.</p>
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="p-3 bg-green-900/30 rounded-lg border border-green-500/30">
+                  <p className="text-green-400 font-bold">p ≤ 0.05</p>
+                  <p className="text-gray-300 text-sm">Results are <span className="font-bold">significant</span> - accept the alternative hypothesis</p>
+                </div>
+                <div className="p-3 bg-red-900/30 rounded-lg border border-red-500/30">
+                  <p className="text-red-400 font-bold">p &gt; 0.05</p>
+                  <p className="text-gray-300 text-sm">Results are <span className="font-bold">not significant</span> - retain the null hypothesis</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'signtest_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">The Sign Test</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-gray-200">A simple statistical test used when:</p>
+              <ul className="mt-3 text-gray-300">
+                <li>• Looking for a <span className="font-bold">difference</span> between two conditions</li>
+                <li>• <span className="font-bold">Repeated measures</span> or <span className="font-bold">matched pairs</span> design</li>
+                <li>• Data is <span className="font-bold">nominal</span> (categories) or better</li>
+              </ul>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
+              <h3 className="text-lg font-bold text-cyan-400 mb-3">Steps:</h3>
+              <ol className="space-y-2 text-gray-300">
+                <li>1. Find difference between conditions for each participant (+, −, or 0)</li>
+                <li>2. <span className="font-bold">Exclude zeros</span> (no difference)</li>
+                <li>3. Count the <span className="font-bold">less frequent sign</span> (this is 'S')</li>
+                <li>4. Compare S to the critical value (from tables)</li>
+                <li>5. <span className="font-bold">S must be ≤ critical value</span> for significance</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'critical_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Using Critical Value Tables</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-gray-200">To use a table of critical values, you need:</p>
+              <ul className="mt-3 text-gray-300">
+                <li>• <span className="font-bold text-amber-400">N</span> - the number of participants (excluding zeros)</li>
+                <li>• <span className="font-bold text-amber-400">Significance level</span> - usually 0.05</li>
+                <li>• <span className="font-bold text-amber-400">One-tailed or two-tailed</span> - based on hypothesis</li>
+              </ul>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
+              <h3 className="text-lg font-bold text-green-400 mb-3">One-tailed vs Two-tailed</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 bg-gray-700/50 rounded-lg">
+                  <p className="font-bold text-blue-400">One-tailed</p>
+                  <p className="text-gray-300 text-sm">Directional hypothesis (predicts direction of difference)</p>
+                </div>
+                <div className="p-3 bg-gray-700/50 rounded-lg">
+                  <p className="font-bold text-purple-400">Two-tailed</p>
+                  <p className="text-gray-300 text-sm">Non-directional hypothesis (just predicts a difference)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'stats_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "p ≤ 0.05 means results are:",
+          options: ["Not significant", "Significant", "Invalid", "Unreliable"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "In the sign test, zeros are:",
+          options: ["Counted as positive", "Counted as negative", "Excluded", "Doubled"],
+          correct: 2
+        },
+        {
+          id: 3,
+          question: "A directional hypothesis requires a:",
+          options: ["Two-tailed test", "One-tailed test", "No statistical test", "Sign test only"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Statistical Testing" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'stats_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Sign Test</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-white mb-3">Scenario: Memory Training</h3>
+              <p className="text-gray-300 mb-3">10 participants completed a memory test before and after training. Signs of change were:</p>
+              <p className="text-xl font-bold text-center text-amber-400">+, +, +, 0, +, −, +, +, 0, +</p>
+              <p className="text-gray-400 text-sm mt-2">(Critical value for N=8, one-tailed, p≤0.05 is 1)</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
+                  <p className="text-gray-300">Calculate the value of S.</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
+                  <p className="text-gray-300">Using the critical value, state whether results are significant and explain your conclusion.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
+                  <p className="text-gray-300">Explain what is meant by p ≤ 0.05 in the context of statistical testing.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
+                  <p className="text-gray-300">Explain why a researcher might use a one-tailed rather than a two-tailed test.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (2 marks)</p>
+                  <p className="text-gray-300">State the conclusion if the calculated S value is greater than the critical value.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
+  // ============= AS LEVEL LESSON 30: PEER REVIEW & ECONOMY =============
+  const renderLesson30 = () => {
+    const slideType = lesson30Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={15}
+          title="Peer Review & The Economy"
+          subtitle="Scientific Processes & Implications"
+          objectives={[
+            "Explain the role and process of peer review",
+            "Understand the implications of research for the economy",
+            "Evaluate the peer review process"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        {
+          id: 1,
+          question: "p ≤ 0.05 means there is a:",
+          options: ["5% or less chance of chance results", "50% chance of chance results", "95% chance results are random", "100% certainty"],
+          correct: 0
+        },
+        {
+          id: 2,
+          question: "The sign test is used with:",
+          options: ["Independent groups", "Repeated measures or matched pairs", "Correlations only", "Observations only"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "In the sign test, S is the:",
+          options: ["Total number of signs", "Less frequent sign count", "More frequent sign count", "Number of zeros"],
+          correct: 1
+        },
+        {
+          id: 4,
+          question: "A two-tailed test is used when:",
+          options: ["Direction is predicted", "No direction is predicted", "Results are significant", "Sample is large"],
+          correct: 1
+        },
+        {
+          id: 5,
+          question: "For results to be significant, S must be:",
+          options: ["Equal to or less than critical value", "Greater than critical value", "Equal to zero", "The same as N"],
+          correct: 0
+        }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'peerreview_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">What is Peer Review?</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-xl text-gray-200">
+                The process where <span className="text-rose-400 font-bold">expert scientists</span> assess the quality of research before it is published.
+              </p>
+            </div>
+            <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
+              <h3 className="text-lg font-bold text-amber-400 mb-3">The Process:</h3>
+              <ol className="space-y-2 text-gray-300">
+                <li>1. Researcher submits work to a journal</li>
+                <li>2. Editor sends to experts in the field (<span className="font-bold">peers</span>)</li>
+                <li>3. Peers review methodology, analysis, and conclusions</li>
+                <li>4. Feedback given: accept, revise, or reject</li>
+                <li>5. If accepted, research is published</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'peerreview_eval_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Evaluating Peer Review</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-green-500/30">
+                <h3 className="text-xl font-bold text-green-400 mb-3">✓ Strengths</h3>
+                <ul className="space-y-2 text-gray-300 text-sm">
+                  <li>• Maintains <span className="font-bold">quality</span> of published research</li>
+                  <li>• Prevents <span className="font-bold">fraudulent</span> claims being published</li>
+                  <li>• Identifies <span className="font-bold">flaws</span> in methodology</li>
+                  <li>• Allows <span className="font-bold">funding allocation</span> to quality research</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-red-500/30">
+                <h3 className="text-xl font-bold text-red-400 mb-3">✗ Limitations</h3>
+                <ul className="space-y-2 text-gray-300 text-sm">
+                  <li>• <span className="font-bold">Publication bias</span> - positive results more likely published</li>
+                  <li>• Reviewers may be <span className="font-bold">biased</span> (competitors)</li>
+                  <li>• <span className="font-bold">Slow process</span> - delays important findings</li>
+                  <li>• <span className="font-bold">Anonymity</span> may allow unfair criticism</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'economy_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">Implications for the Economy</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <p className="text-gray-200">Psychological research can have significant <span className="font-bold">economic implications</span> - both positive and negative.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
+                <h3 className="text-lg font-bold text-green-400 mb-3">Economic Benefits</h3>
+                <ul className="space-y-2 text-gray-300 text-sm">
+                  <li>• Effective therapies <span className="font-bold">reduce NHS costs</span></li>
+                  <li>• Workplace research improves <span className="font-bold">productivity</span></li>
+                  <li>• Understanding addiction saves treatment costs</li>
+                </ul>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-5 border border-amber-500/30">
+                <h3 className="text-lg font-bold text-amber-400 mb-3">Economic Costs</h3>
+                <ul className="space-y-2 text-gray-300 text-sm">
+                  <li>• Research <span className="font-bold">funding</span> is expensive</li>
+                  <li>• Implementing findings costs money</li>
+                  <li>• Unsuccessful research = wasted resources</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'peer_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "Peer review is conducted by:",
+          options: ["The original researcher", "The general public", "Expert scientists in the field", "Journal editors only"],
+          correct: 2
+        },
+        {
+          id: 2,
+          question: "Publication bias refers to:",
+          options: ["Reviewers being anonymous", "Positive results being more likely published", "The slow review process", "Using multiple reviewers"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Psychological research can benefit the economy by:",
+          options: ["Increasing research costs", "Reducing effectiveness of treatments", "Developing cost-effective therapies", "Publishing more papers"],
+          correct: 2
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Quick Check: Peer Review" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'peer_task') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Peer Review</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+              <h3 className="text-xl font-bold text-white mb-3">Scenario: New Therapy Research</h3>
+              <p className="text-gray-300">A researcher has developed a new therapy for anxiety and wants to publish their findings in a respected psychology journal.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
+                  <p className="text-gray-300">Describe the process of peer review that their work would go through.</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
+                  <p className="text-gray-300">Explain one limitation of peer review.</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
+                  <p className="text-gray-300">Explain one way this research could have positive economic implications.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
+            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 1 (4 marks)</p>
+                  <p className="text-gray-300">Explain two reasons why peer review is important in psychology.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 2 (4 marks)</p>
+                  <p className="text-gray-300">Discuss one strength and one limitation of the peer review process.</p>
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded-lg">
+                  <p className="text-amber-400 font-bold mb-2">Question 3 (4 marks)</p>
+                  <p className="text-gray-300">Explain how psychological research can have implications for the economy.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return <div>Loading...</div>
+  }
+
   // Render placeholder for other lessons
   const renderPlaceholder = () => {
     const lesson = allLessons.find(l => l.id === currentLesson)
@@ -3543,24 +18045,62 @@ function App() {
     )
   }
 
+  // Centralized lesson rendering - ADD NEW LESSONS HERE ONLY
+  const renderCurrentLesson = () => {
+    switch (currentLesson) {
+      case 1: return renderLesson1()
+      case 2: return renderLesson2()
+      case 3: return renderLesson3()
+      case 4: return renderLesson4()
+      case 5: return renderLesson5()
+      case 6: return renderLesson6()
+      case 7: return renderLesson7()
+      case 8: return renderLesson8()
+      case 9: return renderLesson9()
+      case 10: return renderLesson10()
+      case 11: return renderLesson11()
+      case 12: return renderLesson12()
+      case 13: return renderLesson13()
+      case 14: return renderLesson14()
+      case 15: return renderLesson15()
+      case 16: return renderLesson16()
+      case 17: return renderLesson17()
+      case 18: return renderLesson18()
+      case 19: return renderLesson19()
+      case 20: return renderLesson20()
+      case 21: return renderLesson21()
+      case 22: return renderLesson22()
+      case 23: return renderLesson23()
+      case 24: return renderLesson24()
+      case 25: return renderLesson25()
+      case 26: return renderLesson26()
+      case 27: return renderLesson27()
+      case 28: return renderLesson28()
+      case 29: return renderLesson29()
+      case 30: return renderLesson30()
+      case 31: return renderALevelLesson1()
+      default: return renderPlaceholder()
+    }
+  }
+
   return (
     <div className="flex h-screen bg-gray-900 text-gray-100 font-sans overflow-hidden selection:bg-pink-500 selection:text-white">
       {/* Presentation Mode Full-Screen Overlay */}
       {isPresenting && (
         <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
-          {/* Header with Exit and Menu Toggle */}
-          <div className="flex items-center justify-between px-8 py-4 border-b border-gray-700 bg-gray-950/80 backdrop-blur">
+          {/* Header with Exit and Menu Toggle - Compact for presentation */}
+          <div className="flex items-center justify-between px-4 py-1.5 border-b border-gray-700/50 bg-gray-950/60 backdrop-blur">
             <button
               onClick={() => setSidebarOpen(!isSidebarOpen)}
-              className="p-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors text-gray-300 hover:text-white"
+              className="p-1.5 bg-gray-800/80 hover:bg-gray-700 rounded transition-colors text-gray-400 hover:text-white"
               title="Toggle sidebar (S)"
             >
-              <Menu size={24} />
+              <Menu size={18} />
             </button>
             <div />
             <button
               onClick={togglePresentation}
-              className="px-6 py-2 rounded-lg font-bold bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-all"
+              className="px-3 py-1 text-sm rounded font-bold bg-gray-800/80 hover:bg-gray-700 text-gray-400 hover:text-white transition-all"
               title="Exit presentation (ESC)"
             >
               EXIT
@@ -3652,51 +18192,43 @@ function App() {
               <div className={`w-full h-full flex ${isPresenting ? 'items-start justify-center' : 'items-center justify-center'}`}>
                 {isPresenting ? (
                   <div className="present-scale" style={{ width: '100%', maxWidth: '1200px' }}>
-                    {currentLesson === 1 && renderLesson1()}
-                    {currentLesson === 9 && renderLesson9()}
-                    {currentLesson === 16 && renderLesson16()}
-                    {currentLesson === 31 && renderALevelLesson1()}
-                    {currentLesson !== 1 && currentLesson !== 9 && currentLesson !== 16 && currentLesson !== 31 && renderPlaceholder()}
+                    {renderCurrentLesson()}
                   </div>
                 ) : (
                   <>
-                    {currentLesson === 1 && renderLesson1()}
-                    {currentLesson === 9 && renderLesson9()}
-                    {currentLesson === 16 && renderLesson16()}
-                    {currentLesson === 31 && renderALevelLesson1()}
-                    {currentLesson !== 1 && currentLesson !== 9 && currentLesson !== 16 && currentLesson !== 31 && renderPlaceholder()}
+                    {renderCurrentLesson()}
                   </>
                 )}
               </div>
             </main>
           </div>
 
-          {/* Presentation Controls - Bottom Bar */}
-          <div className="h-24 px-8 border-t border-gray-700 bg-gray-950/80 backdrop-blur flex items-center justify-between">
+          {/* Presentation Controls - Bottom Bar - Compact */}
+          <div className="h-12 px-4 border-t border-gray-700/50 bg-gray-950/60 backdrop-blur flex items-center justify-between">
               {/* Previous Button */}
               <button
                 onClick={prevSlide}
                 disabled={currentSlide === 0}
-                className={`flex items-center gap-2 px-8 py-3 text-lg rounded-lg font-bold transition-all ${
+                className={`flex items-center gap-1.5 px-4 py-1.5 text-sm rounded font-bold transition-all ${
                   currentSlide === 0
-                    ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+                    ? 'bg-gray-800/80 text-gray-600 cursor-not-allowed'
                     : level === 'gcse'
-                      ? 'bg-green-600 text-white hover:bg-green-500 shadow-lg shadow-green-600/20'
+                      ? 'bg-green-600/90 text-white hover:bg-green-500'
                       : level === 'aslevel'
-                      ? 'bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-600/20'
-                      : 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/20'
+                      ? 'bg-rose-600/90 text-white hover:bg-rose-500'
+                      : 'bg-indigo-600/90 text-white hover:bg-indigo-500'
                 }`}
               >
-                <ChevronLeft size={24} />
+                <ChevronLeft size={16} />
                 PREV
               </button>
 
               {/* Slide Counter & Dots */}
-              <div className="flex items-center gap-10">
-                <span className="text-gray-300 font-mono text-3xl font-bold">
+              <div className="flex items-center gap-6">
+                <span className="text-gray-400 font-mono text-lg font-bold">
                   {String(currentSlide + 1).padStart(2, '0')} / {String(slideCount).padStart(2, '0')}
                 </span>
-                <div className="flex gap-4">
+                <div className="flex gap-2">
                   {Array.from({ length: slideCount }).map((_, idx) => (
                     <button
                       key={idx}
@@ -3704,11 +18236,11 @@ function App() {
                       className={`rounded-full transition-all ${
                         idx === currentSlide
                           ? level === 'gcse'
-                            ? 'w-5 h-5 bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]'
+                            ? 'w-3 h-3 bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.5)]'
                             : level === 'aslevel'
-                            ? 'w-5 h-5 bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'
-                            : 'w-5 h-5 bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]'
-                          : 'w-3 h-3 bg-gray-700 hover:bg-gray-600'
+                            ? 'w-3 h-3 bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.5)]'
+                            : 'w-3 h-3 bg-indigo-500 shadow-[0_0_6px_rgba(99,102,241,0.5)]'
+                          : 'w-2 h-2 bg-gray-700 hover:bg-gray-600'
                       }`}
                       aria-label={`Go to slide ${idx + 1}`}
                     />
@@ -3720,18 +18252,18 @@ function App() {
               <button
                 onClick={nextSlide}
                 disabled={currentSlide === slideCount - 1}
-                className={`flex items-center gap-2 px-8 py-3 text-lg rounded-lg font-bold transition-all ${
+                className={`flex items-center gap-1.5 px-4 py-1.5 text-sm rounded font-bold transition-all ${
                   currentSlide === slideCount - 1
-                    ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
+                    ? 'bg-gray-800/80 text-gray-600 cursor-not-allowed'
                     : level === 'gcse'
-                      ? 'bg-green-600 text-white hover:bg-green-500 shadow-lg shadow-green-600/20'
+                      ? 'bg-green-600/90 text-white hover:bg-green-500'
                       : level === 'aslevel'
-                      ? 'bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-600/20'
-                      : 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/20'
+                      ? 'bg-rose-600/90 text-white hover:bg-rose-500'
+                      : 'bg-indigo-600/90 text-white hover:bg-indigo-500'
                 }`}
               >
                 NEXT
-                <ChevronRight size={24} />
+                <ChevronRight size={16} />
               </button>
           </div>
         </div>
@@ -3853,11 +18385,7 @@ function App() {
 
             {/* Lesson Content */}
             <main className="flex-grow relative overflow-auto custom-scrollbar bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-900 via-[#0a0a0a] to-[#0a0a0a]">
-              {currentLesson === 1 && renderLesson1()}
-              {currentLesson === 9 && renderLesson9()}
-              {currentLesson === 16 && renderLesson16()}
-              {currentLesson === 31 && renderALevelLesson1()}
-              {currentLesson !== 1 && currentLesson !== 9 && currentLesson !== 16 && currentLesson !== 31 && renderPlaceholder()}
+              {renderCurrentLesson()}
             </main>
 
             {/* Navigation Footer - Standard Mode */}
