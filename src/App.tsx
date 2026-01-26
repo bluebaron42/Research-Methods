@@ -82,6 +82,23 @@ import { CorrelationsTeach } from './components/lessons/activities/CorrelationsT
 import { DataTypesTeach } from './components/lessons/activities/DataTypesTeach'
 import { DescriptiveStatsTeach } from './components/lessons/activities/DescriptiveStatsTeach'
 
+// A Level Lesson Teach Slides (Lessons 31-42)
+import {
+  CoefficientsTeach, InterpretationTeach, CorrVsExpTeach, CoefficientInterpreter,
+  CasestudyTeach, CasestudyEvalTeach, ContentTeach, ThematicTeach, ContentCoder,
+  ReliabilityIntroTeach, TestretestTeach, InterobserverTeach, ImprovingReliabilityTeach, ReliabilityAssessor,
+  ValidityTypesTeach, FaceConcurrentTeach, EcologicalTemporalTeach, ImprovingValidityTeach, ValidityChecker,
+  TestFactorsTeach, LevelsMeasurementTeach, TestSelectorSim, TestFlowchartTeach,
+  ProbabilityTeach, SignificanceTeach, CriticalValuesTeach, TypeErrorsTeach, SignificanceCalculator,
+  NonparamIntroTeach, MannwhitneyTeach, WilcoxonTeach, MannwhitneyCalcTeach, WilcoxonCalcTeach, NonparamTestCalculator,
+  ParamAssumptionsTeach, UnrelatedTTeach, RelatedTTeach, TtestCalculator,
+  SpearmansTeach, SpearmansCalcTeach, PearsonsTeach, PearsonsCalcTeach, CorrelationCalculator,
+  ChisquaredIntroTeach, ObservedExpectedTeach, ChisquaredCalcTeach, ChisquaredCalculator,
+  ReportStructureTeach, AbstractIntroTeach, MethodResultsTeach, DiscussionRefsTeach, ReportBuilder,
+  ScienceFeaturesTeach, FalsifiabilityTeach, ParadigmsTeach, PsychAsScienceTeach, ScienceQuiz,
+  ReplicabilityTeach, ScienceEvaluator
+} from './components/lessons/activities/ALevelTeachSlides'
+
 // ============= TYPES =============
 interface Question {
   id: number
@@ -18395,13 +18412,17 @@ function App() {
       )
     }
 
-    // Placeholder for remaining slides
+    if (slideType === 'coefficients_teach') return <CoefficientsTeach isPresenting={isPresenting} />
+    if (slideType === 'interpretation_teach') return <InterpretationTeach isPresenting={isPresenting} />
+    if (slideType === 'corr_vs_exp_teach') return <CorrVsExpTeach isPresenting={isPresenting} />
+    if (slideType === 'coefficient_interpreter') return <CoefficientInterpreter isPresenting={isPresenting} />
+
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 1: Correlation Analysis</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18429,12 +18450,18 @@ function App() {
       )
     }
 
+    if (slideType === 'casestudy_teach') return <CasestudyTeach isPresenting={isPresenting} />
+    if (slideType === 'casestudy_eval_teach') return <CasestudyEvalTeach isPresenting={isPresenting} />
+    if (slideType === 'content_teach') return <ContentTeach isPresenting={isPresenting} />
+    if (slideType === 'thematic_teach') return <ThematicTeach isPresenting={isPresenting} />
+    if (slideType === 'content_coder') return <ContentCoder isPresenting={isPresenting} />
+
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 2: Case Studies & Content Analysis</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18462,12 +18489,18 @@ function App() {
       )
     }
 
+    if (slideType === 'reliability_intro_teach') return <ReliabilityIntroTeach isPresenting={isPresenting} />
+    if (slideType === 'testretest_teach') return <TestretestTeach isPresenting={isPresenting} />
+    if (slideType === 'interobserver_teach') return <InterobserverTeach isPresenting={isPresenting} />
+    if (slideType === 'improving_reliability_teach') return <ImprovingReliabilityTeach isPresenting={isPresenting} />
+    if (slideType === 'reliability_assessor') return <ReliabilityAssessor isPresenting={isPresenting} />
+
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 3: Reliability</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18495,12 +18528,18 @@ function App() {
       )
     }
 
+    if (slideType === 'validity_types_teach') return <ValidityTypesTeach isPresenting={isPresenting} />
+    if (slideType === 'face_concurrent_teach') return <FaceConcurrentTeach isPresenting={isPresenting} />
+    if (slideType === 'ecological_temporal_teach') return <EcologicalTemporalTeach isPresenting={isPresenting} />
+    if (slideType === 'improving_validity_teach') return <ImprovingValidityTeach isPresenting={isPresenting} />
+    if (slideType === 'validity_checker') return <ValidityChecker isPresenting={isPresenting} />
+
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 4: Validity</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18528,12 +18567,17 @@ function App() {
       )
     }
 
+    if (slideType === 'test_factors_teach') return <TestFactorsTeach isPresenting={isPresenting} />
+    if (slideType === 'levels_measurement_teach') return <LevelsMeasurementTeach isPresenting={isPresenting} />
+    if (slideType === 'test_flowchart_teach') return <TestFlowchartTeach isPresenting={isPresenting} />
+    if (slideType === 'test_selector_sim') return <TestSelectorSim isPresenting={isPresenting} />
+
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 5: Choosing a Statistical Test</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18561,12 +18605,18 @@ function App() {
       )
     }
 
+    if (slideType === 'probability_teach') return <ProbabilityTeach isPresenting={isPresenting} />
+    if (slideType === 'significance_teach') return <SignificanceTeach isPresenting={isPresenting} />
+    if (slideType === 'critical_values_teach') return <CriticalValuesTeach isPresenting={isPresenting} />
+    if (slideType === 'type_errors_teach') return <TypeErrorsTeach isPresenting={isPresenting} />
+    if (slideType === 'significance_calculator') return <SignificanceCalculator isPresenting={isPresenting} />
+
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 6: Probability & Significance</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18594,12 +18644,19 @@ function App() {
       )
     }
 
+    if (slideType === 'nonparam_intro_teach') return <NonparamIntroTeach isPresenting={isPresenting} />
+    if (slideType === 'mannwhitney_teach') return <MannwhitneyTeach isPresenting={isPresenting} />
+    if (slideType === 'mannwhitney_calc_teach') return <MannwhitneyCalcTeach isPresenting={isPresenting} />
+    if (slideType === 'wilcoxon_teach') return <WilcoxonTeach isPresenting={isPresenting} />
+    if (slideType === 'wilcoxon_calc_teach') return <WilcoxonCalcTeach isPresenting={isPresenting} />
+    if (slideType === 'test_calculator') return <NonparamTestCalculator isPresenting={isPresenting} />
+
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 7: Non-Parametric Tests</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18627,12 +18684,17 @@ function App() {
       )
     }
 
+    if (slideType === 'param_assumptions_teach') return <ParamAssumptionsTeach isPresenting={isPresenting} />
+    if (slideType === 'unrelated_t_teach') return <UnrelatedTTeach isPresenting={isPresenting} />
+    if (slideType === 'related_t_teach') return <RelatedTTeach isPresenting={isPresenting} />
+    if (slideType === 'ttest_calculator') return <TtestCalculator isPresenting={isPresenting} />
+
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 8: Parametric Tests</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18660,12 +18722,18 @@ function App() {
       )
     }
 
+    if (slideType === 'spearmans_teach') return <SpearmansTeach isPresenting={isPresenting} />
+    if (slideType === 'spearmans_calc_teach') return <SpearmansCalcTeach isPresenting={isPresenting} />
+    if (slideType === 'pearsons_teach') return <PearsonsTeach isPresenting={isPresenting} />
+    if (slideType === 'pearsons_calc_teach') return <PearsonsCalcTeach isPresenting={isPresenting} />
+    if (slideType === 'correlation_calculator') return <CorrelationCalculator isPresenting={isPresenting} />
+
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 9: Tests of Correlation</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18693,12 +18761,17 @@ function App() {
       )
     }
 
+    if (slideType === 'chisquared_intro_teach') return <ChisquaredIntroTeach isPresenting={isPresenting} />
+    if (slideType === 'observed_expected_teach') return <ObservedExpectedTeach isPresenting={isPresenting} />
+    if (slideType === 'chisquared_calc_teach') return <ChisquaredCalcTeach isPresenting={isPresenting} />
+    if (slideType === 'chisquared_calculator') return <ChisquaredCalculator isPresenting={isPresenting} />
+
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 10: Chi-Squared Test</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18726,12 +18799,18 @@ function App() {
       )
     }
 
+    if (slideType === 'report_structure_teach') return <ReportStructureTeach isPresenting={isPresenting} />
+    if (slideType === 'abstract_intro_teach') return <AbstractIntroTeach isPresenting={isPresenting} />
+    if (slideType === 'method_results_teach') return <MethodResultsTeach isPresenting={isPresenting} />
+    if (slideType === 'discussion_refs_teach') return <DiscussionRefsTeach isPresenting={isPresenting} />
+    if (slideType === 'report_builder') return <ReportBuilder isPresenting={isPresenting} />
+
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 11: Reporting Investigations</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18759,12 +18838,18 @@ function App() {
       )
     }
 
+    if (slideType === 'objectivity_teach') return <ScienceFeaturesTeach isPresenting={isPresenting} />
+    if (slideType === 'replicability_teach') return <ReplicabilityTeach isPresenting={isPresenting} />
+    if (slideType === 'falsifiability_teach') return <FalsifiabilityTeach isPresenting={isPresenting} />
+    if (slideType === 'paradigms_teach') return <ParadigmsTeach isPresenting={isPresenting} />
+    if (slideType === 'science_evaluator') return <ScienceEvaluator isPresenting={isPresenting} />
+
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 12: Features of Science</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
