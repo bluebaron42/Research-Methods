@@ -1,12 +1,86 @@
 import { useState, useEffect } from 'react'
 import { X, Menu, ChevronLeft, ChevronRight, Lightbulb, CheckCircle, Target, FlaskConical, Beaker, AlertTriangle, Eye, EyeOff, Zap, Brain, TrendingUp, Projector, AlertCircle, ShieldAlert, Shuffle, ClipboardList, Users, Settings, MapPin, RefreshCw, Link, User, BarChart2, BarChart3, ArrowRight, List, Layers, HelpCircle, Cog, XCircle, BookOpen, Check, Scale, ArrowLeftRight, MessageCircle, ThumbsUp, ThumbsDown, RotateCcw, FileText, BarChart, Database, Calculator, Hash, ArrowUpDown } from 'lucide-react'
 import HypothesisLab from './components/lessons/activities/HypothesisLab'
+import HypothesisBuilderLab from './components/lessons/activities/HypothesisBuilderLab'
+import VariableDetectiveCrimeScene from './components/lessons/activities/VariableDetectiveCrimeScene'
+import SampleSelectorSimulator from './components/lessons/activities/SampleSelectorSimulator'
+import CorrelationDetective from './components/lessons/activities/CorrelationDetective'
+import DesignArchitect from './components/lessons/activities/DesignArchitect'
+import ExperimentTypeSorter from './components/lessons/activities/ExperimentTypeSorter'
+import EthicsReviewBoard from './components/lessons/activities/EthicsReviewBoard'
+import ObserverTrainingAcademy from './components/lessons/activities/ObserverTrainingAcademy'
+import QuestionQualityControl from './components/lessons/activities/QuestionQualityControl'
+import DataSortingCentre from './components/lessons/activities/DataSortingCentre'
+import StatisticsCalculator from './components/lessons/activities/StatisticsCalculator'
+import GraphMaster from './components/lessons/activities/GraphMaster'
+import MathsSkillsBootCamp from './components/lessons/activities/MathsSkillsBootCamp'
+import StatisticalTestSelector from './components/lessons/activities/StatisticalTestSelector'
+import PeerReviewSimulator from './components/lessons/activities/PeerReviewSimulator'
 import { AimsAndHypothesesTeach } from './components/lessons/activities/AimsAndHypothesesTeach'
 import { VariablesTeachASLevel } from './components/lessons/activities/VariablesTeachASLevel'
 import { VariableLabALevel } from './components/lessons/activities/VariableLabASLevel'
 import { VariableDetectiveALevel } from './components/lessons/activities/VariableDetectiveASLevel'
 import { ExtendedExamTaskALevelLesson1 } from './components/lessons/activities/ExtendedExamTaskASLevelLesson1'
 import { ALevelLesson1ResearchMethodsRecap } from './components/lessons/activities/ALevelLesson1ResearchMethodsRecap'
+// Phase 4: Interactive Teacher Input Components for AS Level
+import { DemandCharacteristicsTeach } from './components/lessons/activities/DemandCharacteristicsTeach'
+import { InvestigatorEffectsTeach } from './components/lessons/activities/InvestigatorEffectsTeach'
+import { ControlMethodsTeach } from './components/lessons/activities/ControlMethodsTeach'
+import { ExperimentalDesignsTeach } from './components/lessons/activities/ExperimentalDesignsTeach'
+import IndependentGroupsTeach from './components/lessons/activities/IndependentGroupsTeach'
+import RepeatedMeasuresTeach from './components/lessons/activities/RepeatedMeasuresTeach'
+import MatchedPairsTeach from './components/lessons/activities/MatchedPairsTeach'
+import { TypesOfExperimentsTeach } from './components/lessons/activities/TypesOfExperimentsTeach'
+import LabExperimentTeach from './components/lessons/activities/LabExperimentTeach'
+import FieldExperimentTeach from './components/lessons/activities/FieldExperimentTeach'
+import NaturalExperimentTeach from './components/lessons/activities/NaturalExperimentTeach'
+import QuasiExperimentTeach from './components/lessons/activities/QuasiExperimentTeach'
+import { SamplingMethodsTeach } from './components/lessons/activities/SamplingMethodsTeach'
+import PopulationSampleTeach from './components/lessons/activities/PopulationSampleTeach'
+import RandomSamplingTeach from './components/lessons/activities/RandomSamplingTeach'
+import SystematicSamplingTeach from './components/lessons/activities/SystematicSamplingTeach'
+import StratifiedSamplingTeach from './components/lessons/activities/StratifiedSamplingTeach'
+import OpportunitySamplingTeach from './components/lessons/activities/OpportunitySamplingTeach'
+import VolunteerSamplingTeach from './components/lessons/activities/VolunteerSamplingTeach'
+// Phase 4: Ethics Teach Components
+import InformedConsentTeach from './components/lessons/activities/InformedConsentTeach'
+import DeceptionTeach from './components/lessons/activities/DeceptionTeach'
+import ProtectionFromHarmTeach from './components/lessons/activities/ProtectionFromHarmTeach'
+import PrivacyConfidentialityTeach from './components/lessons/activities/PrivacyConfidentialityTeach'
+import EthicsCommitteesTeach from './components/lessons/activities/EthicsCommitteesTeach'
+// Phase 4: Observation Teach Components
+import ObservationTypesTeach from './components/lessons/activities/ObservationTypesTeach'
+import CovertOvertTeach from './components/lessons/activities/CovertOvertTeach'
+import ParticipantNonParticipantTeach from './components/lessons/activities/ParticipantNonParticipantTeach'
+import ObservationalDesignTeach from './components/lessons/activities/ObservationalDesignTeach'
+import InterObserverReliabilityTeach from './components/lessons/activities/InterObserverReliabilityTeach'
+// Phase 4: Self-Report Teach Components
+import QuestionnaireTeach from './components/lessons/activities/QuestionnaireTeach'
+import InterviewTeach from './components/lessons/activities/InterviewTeach'
+import QuestionTypesTeach from './components/lessons/activities/QuestionTypesTeach'
+// Phase 4: Correlation and Case Study Teach Components
+import CorrelationTeach from './components/lessons/activities/CorrelationTeach'
+import CaseStudyTeach from './components/lessons/activities/CaseStudyTeach'
+// Phase 4: Additional AS Level Teach Components
+import CorrelationIntroTeach from './components/lessons/activities/CorrelationIntroTeach'
+import CorrelationTypesTeach from './components/lessons/activities/CorrelationTypesTeach'
+import CoefficientTeach from './components/lessons/activities/CoefficientTeach'
+import CorrelationVsExperimentTeach from './components/lessons/activities/CorrelationVsExperimentTeach'
+import QuantQualTeach from './components/lessons/activities/QuantQualTeach'
+import PrimarySecondaryTeach from './components/lessons/activities/PrimarySecondaryTeach'
+import MetaAnalysisTeach from './components/lessons/activities/MetaAnalysisTeach'
+import CentralTendencyTeach from './components/lessons/activities/CentralTendencyTeach'
+import DispersionTeach from './components/lessons/activities/DispersionTeach'
+import ChoosingStatsTeach from './components/lessons/activities/ChoosingStatsTeach'
+import TablesTeach from './components/lessons/activities/TablesTeach'
+import GraphsTeachAS from './components/lessons/activities/GraphsTeachAS'
+import DistributionsTeach from './components/lessons/activities/DistributionsTeach'
+import { EthicsTeach } from './components/lessons/activities/EthicsTeach'
+import { ObservationsTeach } from './components/lessons/activities/ObservationsTeach'
+import { SelfReportTeach } from './components/lessons/activities/SelfReportTeach'
+import { CorrelationsTeach } from './components/lessons/activities/CorrelationsTeach'
+import { DataTypesTeach } from './components/lessons/activities/DataTypesTeach'
+import { DescriptiveStatsTeach } from './components/lessons/activities/DescriptiveStatsTeach'
 
 // ============= TYPES =============
 interface Question {
@@ -15,6 +89,466 @@ interface Question {
   options: string[]
   correct: number
   scenario?: string  // Optional scenario context for the question
+}
+
+interface ExamQuestion {
+  id: number
+  question: string
+  marks: number
+  rubric: string[]
+  sampleAnswer?: string
+  isCalculation?: boolean
+  correctAnswer?: string | number
+}
+
+// ============= PHASE 1 COMPONENTS: CLICK-TO-REVEAL & MATH INPUT =============
+
+// Click to Reveal Panel Component
+const ClickToReveal: React.FC<{
+  title?: string
+  children: React.ReactNode
+  buttonText?: string
+  revealedButtonText?: string
+  className?: string
+  variant?: 'default' | 'rubric' | 'answer' | 'tip'
+}> = ({ 
+  title, 
+  children, 
+  buttonText = 'Click to Reveal', 
+  revealedButtonText = 'Hide',
+  className = '',
+  variant = 'default'
+}) => {
+  const [isRevealed, setIsRevealed] = useState(false)
+  
+  const variantStyles = {
+    default: {
+      container: 'bg-gray-800/50 border-gray-700',
+      button: 'bg-gray-700 hover:bg-gray-600 text-gray-200',
+      content: 'bg-gray-900/50 border-gray-600'
+    },
+    rubric: {
+      container: 'bg-emerald-900/20 border-emerald-500/30',
+      button: 'bg-emerald-700 hover:bg-emerald-600 text-emerald-100',
+      content: 'bg-emerald-950/30 border-emerald-500/30'
+    },
+    answer: {
+      container: 'bg-blue-900/20 border-blue-500/30',
+      button: 'bg-blue-700 hover:bg-blue-600 text-blue-100',
+      content: 'bg-blue-950/30 border-blue-500/30'
+    },
+    tip: {
+      container: 'bg-amber-900/20 border-amber-500/30',
+      button: 'bg-amber-700 hover:bg-amber-600 text-amber-100',
+      content: 'bg-amber-950/30 border-amber-500/30'
+    }
+  }
+  
+  const styles = variantStyles[variant]
+  
+  return (
+    <div className={`rounded-xl border ${styles.container} ${className}`}>
+      {title && (
+        <div className="px-4 py-2 border-b border-inherit">
+          <h4 className="font-bold text-sm text-gray-300">{title}</h4>
+        </div>
+      )}
+      <div className="p-4">
+        <button
+          onClick={() => setIsRevealed(!isRevealed)}
+          className={`w-full py-2 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 ${styles.button}`}
+        >
+          {isRevealed ? <EyeOff size={16} /> : <Eye size={16} />}
+          {isRevealed ? revealedButtonText : buttonText}
+        </button>
+        
+        {isRevealed && (
+          <div className={`mt-4 p-4 rounded-lg border animate-fadeIn ${styles.content}`}>
+            {children}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Mathematical Input Component with Validation
+const MathInput: React.FC<{
+  correctAnswer: string | number
+  placeholder?: string
+  label?: string
+  unit?: string
+  tolerance?: number
+  onCorrect?: () => void
+  className?: string
+}> = ({ 
+  correctAnswer, 
+  placeholder = 'Enter your answer', 
+  label,
+  unit = '',
+  tolerance = 0.01,
+  onCorrect,
+  className = ''
+}) => {
+  const [value, setValue] = useState('')
+  const [status, setStatus] = useState<'idle' | 'correct' | 'incorrect'>('idle')
+  const [showAnswer, setShowAnswer] = useState(false)
+  
+  const checkAnswer = () => {
+    const userValue = parseFloat(value)
+    const correct = typeof correctAnswer === 'string' ? parseFloat(correctAnswer) : correctAnswer
+    
+    if (isNaN(userValue)) {
+      setStatus('incorrect')
+      return
+    }
+    
+    // Check if within tolerance
+    const isCorrect = Math.abs(userValue - correct) <= tolerance
+    setStatus(isCorrect ? 'correct' : 'incorrect')
+    
+    if (isCorrect && onCorrect) {
+      onCorrect()
+    }
+  }
+  
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      checkAnswer()
+    }
+  }
+  
+  return (
+    <div className={`space-y-2 ${className}`}>
+      {label && <label className="block text-sm font-medium text-gray-300">{label}</label>}
+      <div className="flex gap-2 items-center">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => {
+            setValue(e.target.value)
+            setStatus('idle')
+          }}
+          onKeyPress={handleKeyPress}
+          placeholder={placeholder}
+          className={`flex-1 px-4 py-2 rounded-lg border bg-gray-900/50 text-white placeholder-gray-500 focus:outline-none transition-all ${
+            status === 'correct' 
+              ? 'border-green-500 bg-green-900/20' 
+              : status === 'incorrect'
+                ? 'border-red-500 bg-red-900/20'
+                : 'border-gray-700 focus:border-blue-500'
+          }`}
+        />
+        {unit && <span className="text-gray-400 text-sm">{unit}</span>}
+        <button
+          onClick={checkAnswer}
+          className="px-4 py-2 rounded-lg font-bold bg-blue-600 hover:bg-blue-500 text-white transition-all"
+        >
+          Check
+        </button>
+      </div>
+      
+      {status === 'correct' && (
+        <div className="flex items-center gap-2 text-green-400 text-sm animate-fadeIn">
+          <CheckCircle size={16} />
+          <span>Correct!</span>
+        </div>
+      )}
+      
+      {status === 'incorrect' && (
+        <div className="space-y-2 animate-fadeIn">
+          <div className="flex items-center gap-2 text-red-400 text-sm">
+            <XCircle size={16} />
+            <span>Not quite right. Try again or reveal the answer.</span>
+          </div>
+          <button
+            onClick={() => setShowAnswer(true)}
+            className="text-xs text-gray-500 hover:text-gray-400 underline"
+          >
+            Show correct answer
+          </button>
+        </div>
+      )}
+      
+      {showAnswer && (
+        <div className="p-3 rounded-lg bg-blue-900/20 border border-blue-500/30 text-blue-300 text-sm animate-fadeIn">
+          <span className="font-bold">Correct answer:</span> {correctAnswer}{unit}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Exam Questions with Marking Rubric Component
+const ExamQuestionsWithRubric: React.FC<{
+  title?: string
+  subtitle?: string
+  scenario?: string
+  questions: ExamQuestion[]
+  isPresenting?: boolean
+}> = ({ 
+  title = "Exam-Style Questions", 
+  subtitle = "Apply your understanding with marking rubrics",
+  scenario,
+  questions,
+  isPresenting = false
+}) => {
+  const [revealedRubrics, setRevealedRubrics] = useState<Record<number, boolean>>({})
+  const [mathAnswers, setMathAnswers] = useState<Record<number, boolean>>({})
+  
+  const toggleRubric = (id: number) => {
+    setRevealedRubrics(prev => ({ ...prev, [id]: !prev[id] }))
+  }
+  
+  const revealAll = () => {
+    const allRevealed = questions.reduce((acc, q) => ({ ...acc, [q.id]: true }), {})
+    setRevealedRubrics(allRevealed)
+  }
+  
+  const hideAll = () => {
+    setRevealedRubrics({})
+  }
+  
+  return (
+    <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 overflow-y-auto custom-scrollbar`}>
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-3xl font-bold text-rose-400">{title}</h2>
+            <p className="text-gray-400 text-sm">{subtitle}</p>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={revealAll}
+              className="px-4 py-2 rounded-lg text-sm font-bold bg-emerald-700 hover:bg-emerald-600 text-emerald-100 transition-all"
+            >
+              Reveal All Rubrics
+            </button>
+            <button
+              onClick={hideAll}
+              className="px-4 py-2 rounded-lg text-sm font-bold bg-gray-700 hover:bg-gray-600 text-gray-200 transition-all"
+            >
+              Hide All
+            </button>
+          </div>
+        </div>
+        
+        {/* Scenario */}
+        {scenario && (
+          <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+            <h3 className="text-xl font-bold text-rose-300 mb-3">Scenario</h3>
+            <p className="text-gray-200 leading-relaxed">{scenario}</p>
+          </div>
+        )}
+        
+        {/* Questions */}
+        <div className="space-y-6">
+          {questions.map((q) => (
+            <div key={q.id} className="bg-gray-800/50 rounded-xl border border-gray-700 overflow-hidden">
+              {/* Question Header */}
+              <div className="p-5 border-b border-gray-700">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="px-3 py-1 rounded-full bg-amber-600/20 text-amber-400 text-xs font-bold">
+                        {q.marks} {q.marks === 1 ? 'mark' : 'marks'}
+                      </span>
+                      <span className="text-gray-500 text-xs">Question {q.id}</span>
+                    </div>
+                    <p className="text-gray-200">{q.question}</p>
+                  </div>
+                </div>
+                
+                {/* Math Input for calculation questions */}
+                {q.isCalculation && q.correctAnswer && (
+                  <div className="mt-4">
+                    <MathInput
+                      correctAnswer={q.correctAnswer}
+                      placeholder="Enter your calculated answer"
+                      onCorrect={() => setMathAnswers(prev => ({ ...prev, [q.id]: true }))}
+                    />
+                  </div>
+                )}
+              </div>
+              
+              {/* Rubric Section */}
+              <div className="p-4 bg-gray-900/30">
+                <button
+                  onClick={() => toggleRubric(q.id)}
+                  className={`w-full py-2 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 ${
+                    revealedRubrics[q.id]
+                      ? 'bg-emerald-700 hover:bg-emerald-600 text-emerald-100'
+                      : 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+                  }`}
+                >
+                  {revealedRubrics[q.id] ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {revealedRubrics[q.id] ? 'Hide Marking Rubric' : 'Click to Reveal Marking Rubric'}
+                </button>
+                
+                {revealedRubrics[q.id] && (
+                  <div className="mt-4 animate-fadeIn">
+                    <div className="p-4 rounded-lg bg-emerald-950/30 border border-emerald-500/30">
+                      <h4 className="font-bold text-emerald-400 text-sm mb-3 flex items-center gap-2">
+                        <CheckCircle size={16} />
+                        Marking Rubric
+                      </h4>
+                      <ul className="space-y-2">
+                        {q.rubric.map((point, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-emerald-200 text-sm">
+                            <span className="text-emerald-500 mt-0.5">•</span>
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      
+                      {q.sampleAnswer && (
+                        <div className="mt-4 pt-4 border-t border-emerald-500/20">
+                          <h5 className="font-bold text-blue-400 text-sm mb-2">Sample Answer:</h5>
+                          <p className="text-blue-200 text-sm italic">{q.sampleAnswer}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Application Task with Marking Rubric Component
+interface TaskQuestion {
+  id: number
+  question: string
+  marks: number
+  rubric: string[]
+  sampleAnswer?: string
+}
+
+const ApplicationTaskWithRubric: React.FC<{
+  title: string
+  scenario: string
+  scenarioData?: string
+  questions: TaskQuestion[]
+  isPresenting?: boolean
+}> = ({ 
+  title,
+  scenario,
+  scenarioData,
+  questions,
+  isPresenting = false
+}) => {
+  const [revealedRubrics, setRevealedRubrics] = useState<Record<number, boolean>>({})
+  
+  const toggleRubric = (id: number) => {
+    setRevealedRubrics(prev => ({ ...prev, [id]: !prev[id] }))
+  }
+  
+  const revealAll = () => {
+    const allRevealed = questions.reduce((acc, q) => ({ ...acc, [q.id]: true }), {})
+    setRevealedRubrics(allRevealed)
+  }
+  
+  const hideAll = () => {
+    setRevealedRubrics({})
+  }
+  
+  return (
+    <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 overflow-y-auto custom-scrollbar`}>
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-3xl font-bold text-rose-400">📝 {title}</h2>
+          <div className="flex gap-2">
+            <button
+              onClick={revealAll}
+              className="px-4 py-2 rounded-lg text-sm font-bold bg-emerald-700 hover:bg-emerald-600 text-emerald-100 transition-all"
+            >
+              Reveal All Rubrics
+            </button>
+            <button
+              onClick={hideAll}
+              className="px-4 py-2 rounded-lg text-sm font-bold bg-gray-700 hover:bg-gray-600 text-gray-200 transition-all"
+            >
+              Hide All
+            </button>
+          </div>
+        </div>
+        
+        {/* Scenario */}
+        <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
+          <h3 className="text-xl font-bold text-white mb-3">Scenario</h3>
+          <p className="text-gray-300">{scenario}</p>
+          {scenarioData && (
+            <p className="text-2xl font-bold text-amber-400 text-center mt-4">{scenarioData}</p>
+          )}
+        </div>
+        
+        {/* Questions Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {questions.map((q) => (
+            <div key={q.id} className="bg-gray-800/50 rounded-xl border border-gray-700 overflow-hidden">
+              {/* Question */}
+              <div className="p-4 border-b border-gray-700">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-2 py-1 rounded bg-amber-600/20 text-amber-400 text-xs font-bold">
+                    {q.marks} {q.marks === 1 ? 'mark' : 'marks'}
+                  </span>
+                  <span className="text-gray-500 text-xs">Q{q.id}</span>
+                </div>
+                <p className="text-gray-300">{q.question}</p>
+              </div>
+              
+              {/* Rubric Toggle */}
+              <div className="p-3 bg-gray-900/30">
+                <button
+                  onClick={() => toggleRubric(q.id)}
+                  className={`w-full py-2 px-3 rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-2 ${
+                    revealedRubrics[q.id]
+                      ? 'bg-emerald-700 hover:bg-emerald-600 text-emerald-100'
+                      : 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+                  }`}
+                >
+                  {revealedRubrics[q.id] ? <EyeOff size={14} /> : <Eye size={14} />}
+                  {revealedRubrics[q.id] ? 'Hide Rubric' : 'Reveal Rubric'}
+                </button>
+                
+                {revealedRubrics[q.id] && (
+                  <div className="mt-3 animate-fadeIn">
+                    <div className="p-3 rounded-lg bg-emerald-950/30 border border-emerald-500/30">
+                      <h4 className="font-bold text-emerald-400 text-xs mb-2 flex items-center gap-1">
+                        <CheckCircle size={12} />
+                        Marking Rubric
+                      </h4>
+                      <ul className="space-y-1">
+                        {q.rubric.map((point, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-emerald-200 text-xs">
+                            <span className="text-emerald-500 mt-0.5">•</span>
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      
+                      {q.sampleAnswer && (
+                        <div className="mt-3 pt-3 border-t border-emerald-500/20">
+                          <h5 className="font-bold text-blue-400 text-xs mb-1">Sample Answer:</h5>
+                          <p className="text-blue-200 text-xs italic">{q.sampleAnswer}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 // ============= PRESENTATION MODE SCALING HELPERS =============
@@ -12479,18 +13013,18 @@ const allLessons = [
   { id: 30, title: 'Lesson 15: Peer Review & Economy', levels: ['aslevel'], description: 'Science & Society' },
   
   // ============= A LEVEL (YEAR 2) RESEARCH METHODS (from textbook) =============
-  { id: 31, title: 'Lesson 1: Research Methods Recap', levels: ['alevel'], description: 'Year 1 Overview' },
-  { id: 32, title: 'Lesson 2: Correlations', levels: ['alevel'], description: 'Coefficients & Interpretation' },
-  { id: 33, title: 'Lesson 3: Case Studies & Content Analysis', levels: ['alevel'], description: 'Coding & Thematic Analysis' },
-  { id: 34, title: 'Lesson 4: Reliability', levels: ['alevel'], description: 'Test-Retest & Inter-Observer' },
-  { id: 35, title: 'Lesson 5: Validity', levels: ['alevel'], description: 'Face, Concurrent, Ecological' },
-  { id: 36, title: 'Lesson 6: Choosing a Statistical Test', levels: ['alevel'], description: 'Design & Measurement Level' },
-  { id: 37, title: 'Lesson 7: Probability & Significance', levels: ['alevel'], description: 'Critical Values & Errors' },
-  { id: 38, title: 'Lesson 8: Non-Parametric Tests', levels: ['alevel'], description: 'Mann-Whitney & Wilcoxon' },
-  { id: 39, title: 'Lesson 9: Parametric Tests', levels: ['alevel'], description: 'Unrelated & Related t-tests' },
-  { id: 40, title: 'Lesson 10: Tests of Correlation', levels: ['alevel'], description: "Spearman's rho & Pearson's r" },
-  { id: 41, title: 'Lesson 11: Test of Association', levels: ['alevel'], description: 'Chi-Squared (χ²)' },
-  { id: 42, title: 'Lesson 12: Reporting Investigations', levels: ['alevel'], description: 'Abstract to Referencing' },
+  { id: 31, title: 'Lesson 1: Correlation Analysis', levels: ['alevel'], description: 'Coefficients & Interpretation' },
+  { id: 32, title: 'Lesson 2: Case Studies & Content Analysis', levels: ['alevel'], description: 'Coding & Thematic Analysis' },
+  { id: 33, title: 'Lesson 3: Reliability', levels: ['alevel'], description: 'Test-Retest & Inter-Observer' },
+  { id: 34, title: 'Lesson 4: Validity', levels: ['alevel'], description: 'Face, Concurrent, Ecological, Temporal' },
+  { id: 35, title: 'Lesson 5: Choosing a Statistical Test', levels: ['alevel'], description: 'Design & Measurement Level' },
+  { id: 36, title: 'Lesson 6: Probability & Significance', levels: ['alevel'], description: 'Critical Values & Type I/II Errors' },
+  { id: 37, title: 'Lesson 7: Non-Parametric Tests', levels: ['alevel'], description: 'Mann-Whitney & Wilcoxon' },
+  { id: 38, title: 'Lesson 8: Parametric Tests', levels: ['alevel'], description: 'Unrelated & Related t-tests' },
+  { id: 39, title: 'Lesson 9: Tests of Correlation', levels: ['alevel'], description: "Spearman's rho & Pearson's r" },
+  { id: 40, title: 'Lesson 10: Chi-Squared Test', levels: ['alevel'], description: 'Test of Association (χ²)' },
+  { id: 41, title: 'Lesson 11: Reporting Investigations', levels: ['alevel'], description: 'Scientific Report Sections' },
+  { id: 42, title: 'Lesson 12: Features of Science', levels: ['alevel'], description: 'Objectivity, Replicability, Paradigms' },
 ]
 
 // Get lessons filtered by current level
@@ -12502,10 +13036,10 @@ const getActiveLessons = (currentLevel: 'gcse' | 'aslevel' | 'alevel') => {
 const lessonSlideCounts: Record<number, number> = {
   // GCSE (15 lessons) - all have title slide added (+1)
   1: 11, 2: 10, 3: 10, 4: 10, 5: 12, 6: 7, 7: 8, 8: 6, 9: 7, 10: 6, 11: 8, 12: 7, 13: 6, 14: 7, 15: 6,
-  // AS Level (15 lessons)
-  16: 10, 17: 10, 18: 10, 19: 9, 20: 11, 21: 11, 22: 10, 23: 9, 24: 9, 25: 8, 26: 8, 27: 8, 28: 8, 29: 8, 30: 8,
-  // A Level (12 lessons)
-  31: 9, 32: 10, 33: 10, 34: 10, 35: 10, 36: 10, 37: 10, 38: 10, 39: 10, 40: 10, 41: 10, 42: 10
+  // AS Level (15 lessons) - Phase 2: AFL dispersed throughout lessons (lesson 16 now has title slide = 12)
+  16: 12, 17: 12, 18: 11, 19: 11, 20: 13, 21: 13, 22: 12, 23: 11, 24: 11, 25: 10, 26: 10, 27: 10, 28: 10, 29: 10, 30: 10,
+  // A Level (12 lessons) - Phase 1: Foundation structure (all have 10 slides)
+  31: 10, 32: 11, 33: 11, 34: 11, 35: 10, 36: 11, 37: 11, 38: 10, 39: 11, 40: 10, 41: 11, 42: 11
 }
 
 // Utility: build slides with teacher-first ordering per cycle
@@ -12565,10 +13099,12 @@ const lesson14Slides = ['title', 'donow', 'graphs_teach', 'distribution_teach', 
 const lesson15Slides = ['title', 'donow', 'maths_teach', 'maths_afl', 'maths_task', 'extended']
 
 // Lesson 16 slides data (AS Level Lesson 1: Experimental Method)
-const lesson16Slides: Array<'donow' | 'hypo_teach' | 'hypo_sim' | 'hypo_afl' | 'hypo_task' | 'variables_teach' | 'variables_sim' | 'variables_afl' | 'variables_task' | 'extended'> = [
+const lesson16Slides: Array<'title' | 'donow' | 'hypo_teach' | 'hypo_sim' | 'hypo_builder' | 'hypo_afl' | 'hypo_task' | 'variables_teach' | 'variables_sim' | 'variables_afl' | 'variables_task' | 'extended'> = [
+  'title',
   'donow',
   'hypo_teach',
   'hypo_sim',
+  'hypo_builder',
   'hypo_afl',
   'hypo_task',
   'variables_teach',
@@ -12579,46 +13115,84 @@ const lesson16Slides: Array<'donow' | 'hypo_teach' | 'hypo_sim' | 'hypo_afl' | '
 ]
 
 // Lesson 17 slides data (AS Level Lesson 2: Control of Variables)
-const lesson17Slides = ['title', 'donow', 'ev_teach', 'cv_teach', 'demand_teach', 'inv_teach', 'control_teach', 'control_afl', 'control_task', 'extended']
+const lesson17Slides = ['title', 'donow', 'ev_teach', 'cv_teach', 'ev_cv_afl', 'demand_teach', 'demand_afl', 'inv_teach', 'control_teach', 'control_afl', 'variable_detective', 'control_task', 'extended']
 
 // Lesson 18 slides data (AS Level Lesson 3: Experimental Design)
-const lesson18Slides = ['title', 'donow', 'ig_teach', 'ig_afl', 'rm_teach', 'rm_afl', 'mp_teach', 'mp_afl', 'design_task', 'extended']
+const lesson18Slides = ['title', 'donow', 'ig_teach', 'ig_afl', 'rm_teach', 'rm_afl', 'mp_teach', 'mp_afl', 'design_architect', 'design_task', 'extended']
 
 // Lesson 19 slides data (AS Level Lesson 4: Types of Experiment)
-const lesson19Slides = ['title', 'donow', 'lab_teach', 'field_teach', 'natural_teach', 'quasi_teach', 'types_afl', 'types_task', 'extended']
+const lesson19Slides = ['title', 'donow', 'lab_teach', 'field_teach', 'lab_field_afl', 'natural_teach', 'quasi_teach', 'nat_quasi_afl', 'experiment_sorter', 'types_task', 'extended']
 
 // Lesson 20 slides data (AS Level Lesson 5: Sampling)
-const lesson20Slides = ['title', 'donow', 'pop_teach', 'random_teach', 'systematic_teach', 'stratified_teach', 'opportunity_teach', 'volunteer_teach', 'sampling_afl', 'sampling_task', 'extended']
+const lesson20Slides = ['title', 'donow', 'pop_teach', 'random_teach', 'systematic_teach', 'sampling_afl1', 'stratified_teach', 'opportunity_teach', 'volunteer_teach', 'sampling_afl2', 'sample_simulator', 'sampling_task', 'extended']
 
 // Lesson 21 slides data (AS Level Lesson 6: Ethical Issues)
-const lesson21Slides = ['title', 'donow', 'ethics_intro', 'consent_teach', 'deception_teach', 'protection_teach', 'privacy_teach', 'dealing_teach', 'ethics_afl', 'ethics_task', 'extended']
+const lesson21Slides = ['title', 'donow', 'ethics_intro', 'consent_teach', 'deception_teach', 'ethics_afl1', 'protection_teach', 'privacy_teach', 'dealing_teach', 'ethics_afl2', 'ethics_review_board', 'ethics_task', 'extended']
 
 // Lesson 22 slides data (AS Level Lesson 7: Observational Techniques)
-const lesson22Slides = ['title', 'donow', 'obs_types_teach', 'covert_teach', 'participant_teach', 'design_teach', 'reliability_teach', 'obs_afl', 'obs_task', 'extended']
+const lesson22Slides = ['title', 'donow', 'obs_types_teach', 'covert_teach', 'participant_teach', 'obs_afl1', 'design_teach', 'reliability_teach', 'obs_afl2', 'observer_training', 'obs_task', 'extended']
 
 // Lesson 23 slides data (AS Level Lesson 8: Self-Report Methods)
-const lesson23Slides = ['title', 'donow', 'questionnaire_teach', 'questions_teach', 'interview_teach', 'design_teach', 'selfreport_afl', 'selfreport_task', 'extended']
+const lesson23Slides = ['title', 'donow', 'questionnaire_teach', 'questions_teach', 'selfreport_afl1', 'interview_teach', 'design_teach', 'selfreport_afl2', 'question_quality', 'selfreport_task', 'extended']
 
 // Lesson 24 slides data (AS Level Lesson 9: Correlations)
-const lesson24Slides = ['title', 'donow', 'correlation_intro', 'types_teach', 'coefficient_teach', 'difference_teach', 'correlation_afl', 'correlation_task', 'extended']
+const lesson24Slides = ['title', 'donow', 'correlation_intro', 'types_teach', 'correlation_afl1', 'coefficient_teach', 'difference_teach', 'correlation_afl2', 'correlation_detective', 'correlation_task', 'extended']
 
 // Lesson 25 slides data (AS Level Lesson 10: Kinds of Data)
-const lesson25Slides = ['title', 'donow', 'quant_qual_teach', 'primary_secondary_teach', 'meta_teach', 'data_afl', 'data_task', 'extended']
+const lesson25Slides = ['title', 'donow', 'quant_qual_teach', 'data_afl1', 'primary_secondary_teach', 'meta_teach', 'data_afl2', 'data_sorting', 'data_task', 'extended']
 
 // Lesson 26 slides data (AS Level Lesson 11: Descriptive Statistics)
-const lesson26Slides = ['title', 'donow', 'central_teach', 'dispersion_teach', 'choosing_teach', 'stats_afl', 'stats_task', 'extended']
+const lesson26Slides = ['title', 'donow', 'central_teach', 'stats_afl1', 'dispersion_teach', 'choosing_teach', 'stats_afl2', 'stats_calculator', 'stats_task', 'extended']
 
 // Lesson 27 slides data (AS Level Lesson 12: Data Presentation)
-const lesson27Slides = ['title', 'donow', 'tables_teach', 'graphs_teach', 'distributions_teach', 'graphs_afl', 'graphs_task', 'extended']
+const lesson27Slides = ['title', 'donow', 'tables_teach', 'graphs_teach', 'graphs_afl1', 'distributions_teach', 'graphs_afl2', 'graph_master', 'graphs_task', 'extended']
 
 // Lesson 28 slides data (AS Level Lesson 13: Mathematical Skills)
-const lesson28Slides = ['title', 'donow', 'arithmetic_teach', 'percentages_teach', 'fractions_teach', 'maths_afl', 'maths_task', 'extended']
+const lesson28Slides = ['title', 'donow', 'arithmetic_teach', 'percentages_teach', 'maths_afl1', 'fractions_teach', 'maths_afl2', 'maths_bootcamp', 'maths_task', 'extended']
 
 // Lesson 29 slides data (AS Level Lesson 14: Statistical Testing)
-const lesson29Slides = ['title', 'donow', 'probability_teach', 'signtest_teach', 'critical_teach', 'stats_afl', 'stats_task', 'extended']
+const lesson29Slides = ['title', 'donow', 'probability_teach', 'signtest_teach', 'stats_afl1', 'critical_teach', 'stats_afl2', 'test_selector', 'stats_task', 'extended']
 
 // Lesson 30 slides data (AS Level Lesson 15: Peer Review & Economy)
-const lesson30Slides = ['title', 'donow', 'peerreview_teach', 'peerreview_eval_teach', 'economy_teach', 'peer_afl', 'peer_task', 'extended']
+const lesson30Slides = ['title', 'donow', 'peerreview_teach', 'peerreview_eval_teach', 'peer_afl1', 'economy_teach', 'peer_afl2', 'peer_review_sim', 'peer_task', 'extended']
+
+// ============= A LEVEL LESSON SLIDES (Phase 1: Foundation) =============
+
+// Lesson 31 slides data (A Level Lesson 1: Correlation Analysis)
+const lesson31Slides = ['title', 'donow', 'coefficients_teach', 'interpretation_teach', 'correlation_afl1', 'corr_vs_exp_teach', 'correlation_afl2', 'coefficient_interpreter', 'correlation_task', 'extended']
+
+// Lesson 32 slides data (A Level Lesson 2: Case Studies & Content Analysis)
+const lesson32Slides = ['title', 'donow', 'casestudy_teach', 'casestudy_eval_teach', 'case_afl1', 'content_teach', 'thematic_teach', 'content_afl2', 'content_coder', 'analysis_task', 'extended']
+
+// Lesson 33 slides data (A Level Lesson 3: Reliability)
+const lesson33Slides = ['title', 'donow', 'reliability_intro_teach', 'testretest_teach', 'reliability_afl1', 'interobserver_teach', 'improving_reliability_teach', 'reliability_afl2', 'reliability_assessor', 'reliability_task', 'extended']
+
+// Lesson 34 slides data (A Level Lesson 4: Validity)
+const lesson34Slides = ['title', 'donow', 'validity_types_teach', 'face_concurrent_teach', 'validity_afl1', 'ecological_temporal_teach', 'improving_validity_teach', 'validity_afl2', 'validity_checker', 'validity_task', 'extended']
+
+// Lesson 35 slides data (A Level Lesson 5: Choosing a Statistical Test)
+const lesson35Slides = ['title', 'donow', 'test_factors_teach', 'levels_measurement_teach', 'choosing_afl1', 'test_flowchart_teach', 'choosing_afl2', 'test_selector_sim', 'choosing_task', 'extended']
+
+// Lesson 36 slides data (A Level Lesson 6: Probability & Significance)
+const lesson36Slides = ['title', 'donow', 'probability_teach', 'significance_teach', 'prob_afl1', 'critical_values_teach', 'type_errors_teach', 'prob_afl2', 'significance_calculator', 'probability_task', 'extended']
+
+// Lesson 37 slides data (A Level Lesson 7: Non-Parametric Tests)
+const lesson37Slides = ['title', 'donow', 'mannwhitney_teach', 'mannwhitney_calc_teach', 'nonparam_afl1', 'wilcoxon_teach', 'wilcoxon_calc_teach', 'nonparam_afl2', 'test_calculator', 'nonparam_task', 'extended']
+
+// Lesson 38 slides data (A Level Lesson 8: Parametric Tests)
+const lesson38Slides = ['title', 'donow', 'param_assumptions_teach', 'unrelated_t_teach', 'param_afl1', 'related_t_teach', 'param_afl2', 'ttest_calculator', 'param_task', 'extended']
+
+// Lesson 39 slides data (A Level Lesson 9: Tests of Correlation)
+const lesson39Slides = ['title', 'donow', 'spearmans_teach', 'spearmans_calc_teach', 'corr_test_afl1', 'pearsons_teach', 'pearsons_calc_teach', 'corr_test_afl2', 'correlation_calculator', 'corr_test_task', 'extended']
+
+// Lesson 40 slides data (A Level Lesson 10: Chi-Squared Test)
+const lesson40Slides = ['title', 'donow', 'chisquared_intro_teach', 'observed_expected_teach', 'chi_afl1', 'chisquared_calc_teach', 'chi_afl2', 'chisquared_calculator', 'chi_task', 'extended']
+
+// Lesson 41 slides data (A Level Lesson 11: Reporting Investigations)
+const lesson41Slides = ['title', 'donow', 'report_structure_teach', 'abstract_intro_teach', 'report_afl1', 'method_results_teach', 'discussion_refs_teach', 'report_afl2', 'report_builder', 'report_task', 'extended']
+
+// Lesson 42 slides data (A Level Lesson 12: Features of Science)
+const lesson42Slides = ['title', 'donow', 'objectivity_teach', 'replicability_teach', 'science_afl1', 'falsifiability_teach', 'paradigms_teach', 'science_afl2', 'science_evaluator', 'science_task', 'extended']
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -12816,6 +13390,10 @@ function App() {
 
     if (slideType === 'hypo_sim') {
       return <HypothesisLab />
+    }
+
+    if (slideType === 'hypo_builder') {
+      return <HypothesisBuilderLab isPresenting={isPresenting} />
     }
 
     if (slideType === 'hypo_afl') {
@@ -14124,18 +14702,26 @@ function App() {
     return <div>Loading...</div>
   }
 
-  // Render Lesson 16 content (AS Level Lesson 1: Experimental Method)
-  // A Level Lesson 1: Research Methods Recap
-  const renderALevelLesson1 = () => {
-    return (
-      <div className="w-full h-full">
-        <ALevelLesson1ResearchMethodsRecap isPresenting={isPresenting} currentSlide={currentSlide} />
-      </div>
-    )
-  }
-
   const renderLesson16 = () => {
     const slideType = lesson16Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={1}
+          title="Experimental Method"
+          subtitle="Aims, Hypotheses & Variables"
+          objectives={[
+            "Distinguish between aims and hypotheses",
+            "Write directional and non-directional hypotheses",
+            "Identify and operationalise IV and DV",
+            "Understand the role of extraneous variables"
+          ]}
+          isPresenting={isPresenting}
+          level="AS"
+        />
+      )
+    }
 
     if (slideType === 'donow') {
       const doNowQuestions: Question[] = [
@@ -14205,6 +14791,10 @@ function App() {
 
     if (slideType === 'hypo_sim') {
       return <HypothesesComparison level="aslevel" />
+    }
+
+    if (slideType === 'hypo_builder') {
+      return <HypothesisBuilderLab isPresenting={isPresenting} />
     }
 
     if (slideType === 'hypo_afl') {
@@ -14441,208 +15031,200 @@ function App() {
       )
     }
 
+    if (slideType === 'ev_cv_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "What is an extraneous variable?",
+          options: ["A variable that is deliberately manipulated", "Any variable other than the IV that could affect the DV", "The variable that is measured", "A variable that has been controlled"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "A confounding variable differs from an extraneous variable because it:",
+          options: ["Is easier to control", "Changes systematically with the IV", "Only affects the DV slightly", "Is always a participant variable"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "In the 'Speedy-uppy' drink example, personality was a confounding variable because:",
+          options: ["It was hard to measure", "All extroverts were in one group and introverts in another", "It had no effect on results", "The researcher controlled for it"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: EVs & CVs" subtitle="Can you distinguish these variables?" />
+    }
+
     if (slideType === 'demand_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Demand Characteristics</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                <span className="text-rose-400 font-bold">Demand characteristics</span> are cues from the researcher or research situation that may reveal the purpose of the investigation, causing participants to change their natural behaviour.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-xl font-bold text-green-400 mb-3">😊 The 'Please-U' Effect</h3>
-                <p className="text-gray-300">Participants work out the hypothesis and act to <span className="font-bold">support</span> it.</p>
-                <p className="text-gray-400 text-sm mt-2">They want to be 'good participants' and help the researcher.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-xl font-bold text-red-400 mb-3">😤 The 'Screw-U' Effect</h3>
-                <p className="text-gray-300">Participants deliberately <span className="font-bold">underperform</span> to sabotage results.</p>
-                <p className="text-gray-400 text-sm mt-2">They may resent being studied or want to spoil the experiment.</p>
-              </div>
-            </div>
-            <div className="mt-6 p-4 bg-amber-900/30 rounded-lg border border-amber-500/50">
-              <p className="text-amber-300">⚠️ In either case, behaviour is no longer natural - reducing the validity of the findings.</p>
-            </div>
-          </div>
-        </div>
-      )
+      return <DemandCharacteristicsTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'demand_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "Demand characteristics are:",
+          options: ["Things the researcher does wrong", "Cues that reveal the study's purpose to participants", "Variables that confound results", "Ways to control extraneous variables"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "The 'please-U' effect occurs when participants:",
+          options: ["Try to sabotage the experiment", "Behave naturally", "Try to help by confirming the hypothesis", "Ask too many questions"],
+          correct: 2
+        },
+        {
+          id: 3,
+          question: "Why do demand characteristics reduce validity?",
+          options: ["They make experiments cheaper", "Participants' behaviour is no longer natural", "The IV cannot be measured", "They increase sample size"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Demand Characteristics" subtitle="Test your understanding" />
     }
 
     if (slideType === 'inv_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Investigator Effects</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                <span className="text-rose-400 font-bold">Investigator effects</span> refer to any effect of the investigator's behaviour (conscious or unconscious) on the research outcome.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
-                <h3 className="text-lg font-bold text-purple-400 mb-3">Types of Investigator Effects</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">Leading questions</span> in interviews</li>
-                  <li>• <span className="font-bold">Differential treatment</span> (smiling more at some participants)</li>
-                  <li>• <span className="font-bold">Expectancy effects</span> (unconsciously influencing responses)</li>
-                  <li>• <span className="font-bold">Physical characteristics</span> (age, gender affecting responses)</li>
-                </ul>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
-                <h3 className="text-lg font-bold text-cyan-400 mb-3">From Design to Interaction</h3>
-                <p className="text-gray-300 mb-3">Investigator effects can occur at any stage:</p>
-                <ul className="space-y-2 text-gray-300 text-sm">
-                  <li>📋 Study design choices</li>
-                  <li>👥 Participant selection</li>
-                  <li>🗣️ During testing/interaction</li>
-                  <li>📊 Data interpretation</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <InvestigatorEffectsTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'control_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Control Methods: Randomisation & Standardisation</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/30">
-                <h3 className="text-xl font-bold text-blue-400 mb-4">🎲 Randomisation</h3>
-                <p className="text-gray-300 mb-4">Using chance to control for bias when designing materials and deciding order of conditions.</p>
-                <div className="space-y-3 text-sm">
-                  <div className="p-3 bg-gray-700/50 rounded-lg">
-                    <p className="text-gray-300"><span className="font-bold text-white">Word lists:</span> Order randomly generated (not chosen by experimenter)</p>
-                  </div>
-                  <div className="p-3 bg-gray-700/50 rounded-lg">
-                    <p className="text-gray-300"><span className="font-bold text-white">Conditions:</span> Order randomised when participants do all conditions</p>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-green-500/30">
-                <h3 className="text-xl font-bold text-green-400 mb-4">📋 Standardisation</h3>
-                <p className="text-gray-300 mb-4">Ensuring all participants are subject to the same environment, information and experience.</p>
-                <div className="space-y-3 text-sm">
-                  <div className="p-3 bg-gray-700/50 rounded-lg">
-                    <p className="text-gray-300"><span className="font-bold text-white">Procedures:</span> List of exactly what will be done</p>
-                  </div>
-                  <div className="p-3 bg-gray-700/50 rounded-lg">
-                    <p className="text-gray-300"><span className="font-bold text-white">Instructions:</span> Read from a script to each participant</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="mt-6 p-4 bg-rose-900/30 rounded-lg border border-rose-500/50">
-              <p className="text-rose-300">✓ These methods ensure non-standardised changes don't become extraneous variables.</p>
-            </div>
-          </div>
-        </div>
-      )
+      return <ControlMethodsTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'control_afl') {
       const questions: Question[] = [
         {
           id: 1,
-          question: "A confounding variable differs from an extraneous variable because it:",
-          options: ["Is easier to control", "Changes systematically with the IV", "Only affects the DV", "Is always a participant variable"],
+          question: "Investigator effects can include:",
+          options: ["Participants guessing the aim", "The researcher smiling more at certain participants", "Participants trying to sabotage results", "Using a control group"],
           correct: 1
         },
         {
           id: 2,
-          question: "The 'please-U' effect is an example of:",
-          options: ["Investigator effects", "Demand characteristics", "Confounding variables", "Randomisation"],
+          question: "Randomisation is used to:",
+          options: ["Make participants feel comfortable", "Control for experimenter bias when creating materials or ordering conditions", "Increase sample size", "Measure the DV accurately"],
           correct: 1
         },
         {
           id: 3,
-          question: "To control for order effects, a researcher should use:",
-          options: ["Standardised instructions", "Random allocation", "Randomisation of condition order", "A single-blind procedure"],
-          correct: 2
+          question: "Standardisation involves:",
+          options: ["Choosing participants randomly", "Ensuring all participants have the same experience and instructions", "Using statistics to analyse data", "Changing the IV"],
+          correct: 1
         },
         {
           id: 4,
-          question: "Investigator effects can include:",
-          options: ["Participants guessing the aim", "The researcher smiling more at certain participants", "Participants trying to sabotage results", "Using a control group"],
-          correct: 1
+          question: "Reading from a script to all participants is an example of:",
+          options: ["Randomisation", "Counterbalancing", "Standardisation", "Operationalisation"],
+          correct: 2
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Control of Variables" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Control Methods" subtitle="Investigator effects, randomisation & standardisation" />
+    }
+
+    if (slideType === 'variable_detective') {
+      return <VariableDetectiveCrimeScene isPresenting={isPresenting} />
     }
 
     if (slideType === 'control_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Identify the independent variable and dependent variable in this study.",
+          marks: 2,
+          rubric: [
+            "IV: Whether music is played or not / presence or absence of music (1 mark)",
+            "DV: Running performance / time taken to run 400m (1 mark)"
+          ],
+          sampleAnswer: "The IV is whether participants listen to music or not (music vs no music). The DV is their running performance, measured by the time taken to complete 400 metres."
+        },
+        {
+          id: 2,
+          question: "Identify one extraneous variable and explain why it is extraneous.",
+          marks: 3,
+          rubric: [
+            "Identify relevant EV - e.g. fitness level, fatigue, weather, time of day (1 mark)",
+            "Explain it could affect DV - e.g. fitter runners would run faster regardless of music (1 mark)",
+            "Explain it's not the IV being tested (1 mark)"
+          ],
+          sampleAnswer: "Fatigue is an extraneous variable because participants run the no-music condition first, they may be tired for the music condition. This tiredness could affect their running time regardless of the music, making it unclear whether any difference is due to the IV or fatigue."
+        },
+        {
+          id: 3,
+          question: "Explain how demand characteristics might affect this study.",
+          marks: 3,
+          rubric: [
+            "Define demand characteristics - cues revealing the study's purpose (1 mark)",
+            "Apply to study - participants may guess the aim is to see if music helps (1 mark)",
+            "Effect on behaviour - may try harder with music to 'help' the researcher (1 mark)"
+          ],
+          sampleAnswer: "Demand characteristics are cues that reveal the purpose of the study. Participants may guess the researcher expects music to improve performance, and consciously or unconsciously try harder when listening to music to confirm this expectation, artificially inflating the results."
+        },
+        {
+          id: 4,
+          question: "Suggest how the researcher could use standardisation to improve this study.",
+          marks: 3,
+          rubric: [
+            "Identify standardisation technique - same instructions, same track, same equipment (1 mark)",
+            "How it would be applied - e.g. all participants given identical verbal instructions (1 mark)",
+            "Benefit - ensures differences are due to IV not procedure variations (1 mark)"
+          ],
+          sampleAnswer: "The researcher could give all participants exactly the same instructions by reading from a script. They could also ensure the same music track is used for everyone, the same headphones, and the same running track conditions. This ensures any differences in performance are due to the IV (music) rather than procedural variations."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Control of Variables</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-white mb-3">Scenario: Music & Running Performance</h3>
-              <p className="text-gray-300">A psychologist wants to see if listening to music affects running performance. He asks members of a local running club to run 400 metres as fast as they can without music. He then asks them to do the same again, but this time listening to music.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
-                  <p className="text-gray-300">Identify the independent variable and dependent variable in this study.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
-                  <p className="text-gray-300">Identify one extraneous variable and explain why it is extraneous.</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain how demand characteristics might affect this study.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 4 (3 marks)</p>
-                  <p className="text-gray-300">Suggest how the researcher could use standardisation to improve this study.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="Application Task: Control of Variables"
+          scenario="A psychologist wants to see if listening to music affects running performance. He asks members of a local running club to run 400 metres as fast as they can without music. He then asks them to do the same again, but this time listening to music."
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Explain what is meant by 'extraneous variable' and 'confounding variable'.",
+          marks: 4,
+          rubric: [
+            "Extraneous variable: Any variable other than the IV that could affect the DV (1 mark)",
+            "Should be controlled to prevent affecting results (1 mark)",
+            "Confounding variable: A variable that changes systematically with the IV (1 mark)",
+            "Makes it impossible to determine if IV or CV caused the effect on DV (1 mark)"
+          ],
+          sampleAnswer: "An extraneous variable is any variable, other than the IV, that could potentially affect the DV and should be controlled. A confounding variable is a type of extraneous variable that changes systematically with the IV, making it impossible to know which variable caused the observed effect on the DV."
+        },
+        {
+          id: 2,
+          question: "Explain how demand characteristics can affect the validity of an experiment.",
+          marks: 3,
+          rubric: [
+            "Definition: Cues that reveal the purpose of the study to participants (1 mark)",
+            "Effect: Participants may change their natural behaviour (1 mark)",
+            "Impact on validity: Behaviour no longer reflects real-world responses, reducing external validity (1 mark)"
+          ],
+          sampleAnswer: "Demand characteristics are cues from the research situation that reveal the purpose of the study. When participants identify these cues, they may alter their behaviour—either to help the researcher ('please-U' effect) or to sabotage results ('screw-U' effect). This means their behaviour is no longer natural, reducing the validity of the findings."
+        },
+        {
+          id: 3,
+          question: "Outline one way in which randomisation is used in psychological research.",
+          marks: 2,
+          rubric: [
+            "Identification of appropriate use (e.g., random allocation to conditions, randomising stimulus order) (1 mark)",
+            "Explanation of how this controls for bias or extraneous variables (1 mark)"
+          ],
+          sampleAnswer: "Randomisation can be used to allocate participants to different experimental conditions. This ensures each participant has an equal chance of being in any condition, which helps control for participant variables and prevents systematic bias in group composition."
+        }
+      ]
+      
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (4 marks)</p>
-                  <p className="text-gray-300">Explain what is meant by 'extraneous variable' and 'confounding variable'.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
-                  <p className="text-gray-300">Explain how demand characteristics can affect the validity of an experiment.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (2 marks)</p>
-                  <p className="text-gray-300">Outline one way in which randomisation is used in psychological research.</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
-              <h3 className="text-lg font-bold text-gray-400 mb-2">Key Terms to Include:</h3>
-              <div className="flex flex-wrap gap-2">
-                {['Extraneous variable', 'Confounding variable', 'Demand characteristics', 'Investigator effects', 'Randomisation', 'Standardisation'].map(term => (
-                  <span key={term} className="px-3 py-1 bg-rose-600/20 text-rose-300 rounded-full text-sm">{term}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <ExamQuestionsWithRubric
+          title="📋 Extended Exam Practice: Control of Variables"
+          subtitle="Click to reveal marking rubrics for each question"
+          questions={examQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
@@ -14708,38 +15290,7 @@ function App() {
     }
 
     if (slideType === 'ig_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Independent Groups Design</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                Participants are allocated to <span className="text-rose-400 font-bold">different groups</span> where each group represents one experimental condition.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6 mb-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">No order effects</span> - participants only do the task once</li>
-                  <li>• <span className="font-bold">Less likely to guess aim</span> - see only one condition</li>
-                  <li>• <span className="font-bold">No practice/fatigue</span> effects</li>
-                </ul>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">Participant variables</span> - individual differences between groups</li>
-                  <li>• <span className="font-bold">Less economical</span> - need twice as many participants</li>
-                </ul>
-              </div>
-            </div>
-            <div className="bg-blue-900/30 rounded-lg p-4 border border-blue-500/50">
-              <p className="text-blue-300"><span className="font-bold">Solution:</span> Use <span className="text-blue-400 font-bold">random allocation</span> to assign participants to groups - each participant has equal chance of being in either condition.</p>
-            </div>
-          </div>
-        </div>
-      )
+      return <IndependentGroupsTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'ig_afl') {
@@ -14761,37 +15312,7 @@ function App() {
     }
 
     if (slideType === 'rm_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Repeated Measures Design</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                <span className="text-rose-400 font-bold">All participants</span> take part in <span className="text-rose-400 font-bold">all conditions</span> of the experiment.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6 mb-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">Controls participant variables</span> - same person in both conditions</li>
-                  <li>• <span className="font-bold">Fewer participants needed</span> - half the number for same data</li>
-                </ul>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">Order effects</span> - practice, fatigue, boredom</li>
-                  <li>• <span className="font-bold">Demand characteristics</span> - more likely to guess aim</li>
-                </ul>
-              </div>
-            </div>
-            <div className="bg-purple-900/30 rounded-lg p-4 border border-purple-500/50">
-              <p className="text-purple-300"><span className="font-bold">Solution:</span> Use <span className="text-purple-400 font-bold">counterbalancing</span> - half participants do A then B, half do B then A.</p>
-            </div>
-          </div>
-        </div>
-      )
+      return <RepeatedMeasuresTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'rm_afl') {
@@ -14813,38 +15334,7 @@ function App() {
     }
 
     if (slideType === 'mp_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Matched Pairs Design</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                Pairs of participants are <span className="text-rose-400 font-bold">matched</span> on key variables, then one member goes to each condition.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6 mb-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">No order effects</span> - each participant does one condition</li>
-                  <li>• <span className="font-bold">Fewer demand characteristics</span></li>
-                  <li>• <span className="font-bold">Reduces participant variables</span> - matched on key characteristics</li>
-                </ul>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">Never perfectly matched</span> - important differences may remain</li>
-                  <li>• <span className="font-bold">Time-consuming & expensive</span> - need pre-testing</li>
-                </ul>
-              </div>
-            </div>
-            <div className="bg-cyan-900/30 rounded-lg p-4 border border-cyan-500/50">
-              <p className="text-cyan-300"><span className="font-bold">Example:</span> In a memory study, participants matched on IQ before being assigned to music vs silence conditions.</p>
-            </div>
-          </div>
-        </div>
-      )
+      return <MatchedPairsTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'mp_afl') {
@@ -14865,65 +15355,110 @@ function App() {
       return <KnowledgeCheck questions={questions} title="Quick Check: Matched Pairs" subtitle="Test your understanding" />
     }
 
+    if (slideType === 'design_architect') {
+      return <DesignArchitect isPresenting={isPresenting} />
+    }
+
     if (slideType === 'design_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Explain how she could use an independent groups design for this study.",
+          marks: 3,
+          rubric: [
+            "Divide 20 participants into two groups (1 mark)",
+            "One group does easy task, one group does difficult task (1 mark)",
+            "Compare conformity rates between the two groups (1 mark)"
+          ],
+          sampleAnswer: "She would divide the 20 participants into two separate groups of 10. One group would complete the easy task while the other group completes the difficult task. She would then compare the number of conforming responses between the two groups to see if task difficulty affects conformity."
+        },
+        {
+          id: 2,
+          question: "Explain one strength and one limitation of using independent groups.",
+          marks: 4,
+          rubric: [
+            "Identify strength - e.g. no order effects (1 mark)",
+            "Explain strength - e.g. participants only do one condition so can't guess aim (1 mark)",
+            "Identify limitation - e.g. participant variables (1 mark)",
+            "Explain limitation - e.g. individual differences between groups may affect results (1 mark)"
+          ],
+          sampleAnswer: "A strength is there are no order effects because each participant only does one condition, so fatigue or practice cannot affect results. A limitation is participant variables - the groups may differ in personality traits like confidence, which could affect conformity independently of task difficulty."
+        },
+        {
+          id: 3,
+          question: "Explain how she could use a repeated measures design for this study.",
+          marks: 3,
+          rubric: [
+            "All 20 participants do both conditions (1 mark)",
+            "Each participant does easy task AND difficult task (1 mark)",
+            "Compare each participant's conformity across both conditions (1 mark)"
+          ],
+          sampleAnswer: "All 20 participants would complete both conditions - the easy task and the difficult task. Each person's conformity would be measured in both conditions, then the researcher would compare whether individuals showed more conformity in the difficult task than the easy task."
+        },
+        {
+          id: 4,
+          question: "Explain how counterbalancing could be used to control for order effects.",
+          marks: 3,
+          rubric: [
+            "Split participants into two groups (1 mark)",
+            "Group A does easy then difficult, Group B does difficult then easy (1 mark)",
+            "This distributes order effects evenly across conditions (1 mark)"
+          ],
+          sampleAnswer: "Half the participants (10) would do the easy task first then the difficult task, while the other half would do the difficult task first then the easy task. This ensures any order effects (like practice or fatigue) are balanced across both conditions, so they don't systematically favour one condition."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Experimental Design</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-white mb-3">Scenario: Conformity Study</h3>
-              <p className="text-gray-300">A psychologist wants to investigate whether people are more likely to conform in a difficult task than an easy task. She has recruited 20 participants.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
-                  <p className="text-gray-300">Explain how she could use an independent groups design for this study.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (4 marks)</p>
-                  <p className="text-gray-300">Explain one strength and one limitation of using independent groups.</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain how she could use a repeated measures design for this study.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 4 (3 marks)</p>
-                  <p className="text-gray-300">Explain how counterbalancing could be used to control for order effects.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="Application Task: Experimental Design"
+          scenario="A psychologist wants to investigate whether people are more likely to conform in a difficult task than an easy task. She has recruited 20 participants."
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Explain one difference between a repeated measures design and a matched pairs design.",
+          marks: 2,
+          rubric: [
+            "In repeated measures, the SAME participants do all conditions (1 mark)",
+            "In matched pairs, DIFFERENT participants are matched on key variables, with one from each pair in each condition (1 mark)"
+          ],
+          sampleAnswer: "In repeated measures design, the same participants take part in all conditions of the experiment. In matched pairs design, different participants are used but they are matched on key variables relevant to the study, with one member of each pair allocated to each condition."
+        },
+        {
+          id: 2,
+          question: "Explain why random allocation is used in an independent groups design.",
+          marks: 2,
+          rubric: [
+            "Definition: Each participant has an equal chance of being in any condition (1 mark)",
+            "Purpose: Controls for participant variables / reduces systematic bias between groups (1 mark)"
+          ],
+          sampleAnswer: "Random allocation ensures each participant has an equal chance of being assigned to any experimental condition. This helps control for participant variables by distributing individual differences evenly across groups, preventing systematic bias."
+        },
+        {
+          id: 3,
+          question: "Explain how counterbalancing is used to control for order effects.",
+          marks: 3,
+          rubric: [
+            "Definition: Half participants do condition A then B, half do B then A (1 mark)",
+            "What it controls: Practice effects and fatigue effects (1 mark)",
+            "How it works: Any order effects are distributed equally across both conditions (1 mark)"
+          ],
+          sampleAnswer: "Counterbalancing involves splitting participants so half complete condition A before B, while the other half complete B before A. This controls for order effects (such as practice improving performance or fatigue decreasing it) by ensuring any such effects are balanced equally across both experimental conditions."
+        }
+      ]
+      
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
-                  <p className="text-gray-300">Explain one difference between a repeated measures design and a matched pairs design.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">Explain why random allocation is used in an independent groups design.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain how counterbalancing is used to control for order effects.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ExamQuestionsWithRubric
+          title="📋 Extended Exam Practice: Experimental Design"
+          subtitle="Click to reveal marking rubrics for each question"
+          questions={examQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
@@ -14989,208 +15524,180 @@ function App() {
     }
 
     if (slideType === 'lab_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Laboratory Experiments</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                Conducted in a <span className="text-rose-400 font-bold">highly controlled environment</span>. The researcher manipulates the IV and measures the DV whilst maintaining strict control of extraneous variables.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">High control</span> - confident IV caused DV change (internal validity)</li>
-                  <li>• <span className="font-bold">Replication</span> - can repeat to check findings</li>
-                </ul>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">Low ecological validity</span> - artificial setting</li>
-                  <li>• <span className="font-bold">Demand characteristics</span> - know being tested</li>
-                  <li>• <span className="font-bold">Low mundane realism</span> - artificial tasks</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <LabExperimentTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'field_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Field Experiments</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                The IV is manipulated in a <span className="text-rose-400 font-bold">natural, everyday setting</span>. The researcher goes to the participants' usual environment.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">Higher mundane realism</span> - natural environment</li>
-                  <li>• <span className="font-bold">Higher external validity</span> - more generalisable</li>
-                  <li>• <span className="font-bold">Less demand characteristics</span> - may be unaware of study</li>
-                </ul>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">Loss of control</span> - harder to establish cause and effect</li>
-                  <li>• <span className="font-bold">Difficult to replicate</span></li>
-                  <li>• <span className="font-bold">Ethical issues</span> - consent/privacy</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <FieldExperimentTeach isPresenting={isPresenting} />
     }
 
-    if (slideType === 'natural_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Natural Experiments</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                The researcher takes advantage of a <span className="text-rose-400 font-bold">pre-existing independent variable</span>. The IV would have changed even if the experimenter wasn't interested.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">Unique opportunities</span> - research otherwise impossible</li>
-                  <li>• <span className="font-bold">High external validity</span> - real-world issues</li>
-                </ul>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">Rare events</span> - may happen infrequently</li>
-                  <li>• <span className="font-bold">No random allocation</span> - less confident about causation</li>
-                  <li>• <span className="font-bold">Confounding variables</span> - many group differences</li>
-                </ul>
-              </div>
-            </div>
-            <div className="mt-4 bg-cyan-900/30 rounded-lg p-4 border border-cyan-500/50">
-              <p className="text-cyan-300"><span className="font-bold">Example:</span> Romanian orphan studies - IV was adoption before/after 6 months (not manipulated by researcher).</p>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'quasi_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Quasi-Experiments</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                The IV is based on an <span className="text-rose-400 font-bold">existing difference between people</span> (e.g., age, gender, diagnosis). No one manipulates this variable - it simply exists.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">Controlled conditions</span> - often lab-based</li>
-                  <li>• <span className="font-bold">Allows study of variables</span> that can't be manipulated</li>
-                </ul>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• <span className="font-bold">No random allocation</span> - groups pre-existing</li>
-                  <li>• <span className="font-bold">Confounding variables</span> possible</li>
-                </ul>
-              </div>
-            </div>
-            <div className="mt-4 bg-purple-900/30 rounded-lg p-4 border border-purple-500/50">
-              <p className="text-purple-300"><span className="font-bold">Example:</span> Comparing anxiety levels of phobic vs non-phobic patients. The IV (having a phobia) is a pre-existing characteristic.</p>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'types_afl') {
+    if (slideType === 'lab_field_afl') {
       const questions: Question[] = [
         {
           id: 1,
           question: "A key strength of laboratory experiments is:",
-          options: ["High ecological validity", "High control over variables", "Natural setting", "No demand characteristics"],
+          options: ["High ecological validity", "High control over extraneous variables", "Natural setting reduces demand characteristics", "Easy to gain informed consent"],
           correct: 1
         },
         {
           id: 2,
-          question: "In a natural experiment, the IV:",
-          options: ["Is manipulated by the researcher", "Occurs naturally without researcher manipulation", "Is always age or gender", "Is the same as the DV"],
+          question: "Field experiments take place in:",
+          options: ["A highly controlled laboratory", "The participant's natural environment", "A hospital setting only", "Online only"],
           correct: 1
         },
         {
           id: 3,
-          question: "A quasi-experiment differs from a natural experiment because:",
-          options: ["The IV is manipulated", "The IV is a pre-existing personal characteristic", "It always takes place in a lab", "There is no DV"],
+          question: "Why might field experiments have higher external validity than lab experiments?",
+          options: ["They use bigger samples", "Behaviour occurs in natural settings so is more representative", "They always use random allocation", "The IV is more carefully controlled"],
           correct: 1
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Types of Experiment" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Lab & Field Experiments" subtitle="Compare these two experiment types" />
+    }
+
+    if (slideType === 'natural_teach') {
+      return <NaturalExperimentTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'quasi_teach') {
+      return <QuasiExperimentTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'nat_quasi_afl') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "In a natural experiment, the IV:",
+          options: ["Is manipulated by the researcher", "Occurs naturally without researcher manipulation", "Is always age or gender", "Must be measured in a lab"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "A quasi-experiment differs from a natural experiment because:",
+          options: ["The IV is manipulated", "The IV is a pre-existing characteristic of participants", "It always takes place in a lab", "There is no DV"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Neither natural nor quasi-experiments allow:",
+          options: ["Measurement of the DV", "Random allocation to conditions", "Use of a control group", "Collection of data"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Natural & Quasi-Experiments" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'experiment_sorter') {
+      return <ExperimentTypeSorter isPresenting={isPresenting} />
     }
 
     if (slideType === 'types_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Identify the type of experiment used in Scenario 1 (age and memory study).",
+          marks: 1,
+          rubric: [
+            "Quasi-experiment (1 mark) - because age is a pre-existing participant characteristic that cannot be manipulated"
+          ],
+          sampleAnswer: "This is a quasi-experiment because the IV (age) is a pre-existing characteristic of participants that cannot be randomly allocated or manipulated by the researcher."
+        },
+        {
+          id: 2,
+          question: "Explain one strength of the experimental design in Scenario 1.",
+          marks: 2,
+          rubric: [
+            "Identification of valid strength (e.g., high mundane realism, ethical - no manipulation) (1 mark)",
+            "Elaboration of why this is a strength (1 mark)"
+          ],
+          sampleAnswer: "One strength is that it has high mundane realism because participants are in their natural age group and memory performance reflects real-world differences. This means findings can be generalised to real-life contexts."
+        },
+        {
+          id: 3,
+          question: "Explain one limitation of the experimental design in Scenario 1.",
+          marks: 2,
+          rubric: [
+            "Identification of valid limitation (e.g., no random allocation, participant variables, cannot establish cause-effect) (1 mark)",
+            "Elaboration of why this is a limitation (1 mark)"
+          ],
+          sampleAnswer: "One limitation is that participants cannot be randomly allocated to conditions because age is pre-existing. This means there may be confounding variables (like education level or health) that differ between age groups, making it impossible to establish a clear cause-and-effect relationship."
+        },
+        {
+          id: 4,
+          question: "Identify the type of experiment used in Scenario 2 (noise and concentration study).",
+          marks: 1,
+          rubric: [
+            "Natural experiment (1 mark) - because the noise levels are naturally occurring environmental conditions not manipulated by the researcher"
+          ],
+          sampleAnswer: "This is a natural experiment because the IV (noise level) is a naturally occurring variable - the researcher did not create the building site or manipulate which classroom had noise."
+        },
+        {
+          id: 5,
+          question: "Explain one strength and one limitation of Scenario 2.",
+          marks: 4,
+          rubric: [
+            "Strength identified (e.g., high ecological validity, real-world setting) (1 mark)",
+            "Strength elaborated (1 mark)",
+            "Limitation identified (e.g., low control, participant variables between classes) (1 mark)",
+            "Limitation elaborated (1 mark)"
+          ],
+          sampleAnswer: "Strength: The study has high ecological validity because students are in their natural school environment doing normal puzzle work, so behaviour is representative of real-world performance. Limitation: The researcher has low control over extraneous variables - the two classes may differ in ability, motivation, or other factors, making it hard to attribute differences solely to noise."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Types of Experiment</h2>
-            <div className="space-y-6">
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-                <h3 className="text-lg font-bold text-amber-400 mb-3">Scenario 1</h3>
-                <p className="text-gray-300 mb-4">A psychologist investigates the effect of age on memory. He tests two groups: one aged 20–30 and one aged 60–70. Each participant is given a memory test.</p>
-                <p className="text-gray-400">Identify the type of experiment and explain one strength and one limitation.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-                <h3 className="text-lg font-bold text-amber-400 mb-3">Scenario 2</h3>
-                <p className="text-gray-300 mb-4">A researcher investigates noise on concentration. One classroom is next to a building site (noisy), another is on the quiet side of school. Students in both classes solve a puzzle.</p>
-                <p className="text-gray-400">Identify the type of experiment and explain one strength and one limitation.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="Application Task: Types of Experiment"
+          scenario="Scenario 1: A psychologist investigates the effect of age on memory. He tests two groups: one aged 20–30 and one aged 60–70. Each participant is given a memory test.\n\nScenario 2: A researcher investigates noise on concentration. One classroom is next to a building site (noisy), another is on the quiet side of school. Students in both classes solve a puzzle."
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Outline one difference between a natural experiment and a quasi-experiment.",
+          marks: 2,
+          rubric: [
+            "Natural experiment: IV is naturally occurring event (not a personal characteristic) (1 mark)",
+            "Quasi-experiment: IV is a pre-existing characteristic of participants such as age, gender, or occupation (1 mark)"
+          ],
+          sampleAnswer: "In a natural experiment, the IV is a naturally occurring event that the researcher has no control over (e.g., a disaster, policy change). In a quasi-experiment, the IV is a pre-existing characteristic of participants, such as their age, gender, or whether they have a particular condition."
+        },
+        {
+          id: 2,
+          question: "Explain one strength and one limitation of a laboratory experiment.",
+          marks: 4,
+          rubric: [
+            "Strength identified (e.g., high control, replicable) (1 mark)",
+            "Strength elaborated with explanation of why this matters (1 mark)",
+            "Limitation identified (e.g., low ecological validity, demand characteristics) (1 mark)",
+            "Limitation elaborated with explanation of why this matters (1 mark)"
+          ],
+          sampleAnswer: "Strength: Laboratory experiments offer high control over extraneous variables, allowing researchers to establish cause-and-effect relationships more confidently. Limitation: They often lack ecological validity because the artificial setting may not reflect real-world behaviour, meaning findings may not generalise to everyday life."
+        },
+        {
+          id: 3,
+          question: "Explain why field experiments may have higher external validity than laboratory experiments.",
+          marks: 3,
+          rubric: [
+            "Definition of external validity (1 mark)",
+            "Field experiments occur in natural settings (1 mark)",
+            "Therefore behaviour is more representative of real-world behaviour / more generalisable (1 mark)"
+          ],
+          sampleAnswer: "External validity refers to how well findings can be generalised beyond the research setting. Field experiments take place in natural, everyday environments where participants may not even know they're being studied. This means their behaviour is more likely to reflect how they would naturally act, making findings more applicable to real-world situations compared to the artificial conditions of a laboratory."
+        }
+      ]
+      
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
-                  <p className="text-gray-300">Outline one difference between a natural experiment and a quasi-experiment.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (4 marks)</p>
-                  <p className="text-gray-300">Explain one strength and one limitation of a laboratory experiment.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain why field experiments may have higher external validity than laboratory experiments.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ExamQuestionsWithRubric
+          title="📋 Extended Exam Practice: Types of Experiment"
+          subtitle="Click to reveal marking rubrics for each question"
+          questions={examQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
@@ -15255,256 +15762,179 @@ function App() {
     }
 
     if (slideType === 'pop_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Populations and Samples</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/30">
-                <h3 className="text-xl font-bold text-blue-400 mb-3">🌍 Population</h3>
-                <p className="text-gray-300 mb-3">The large group of individuals a researcher is interested in studying.</p>
-                <p className="text-gray-400 text-sm">E.g., students in the South East, children with autism, men, or simply 'people'.</p>
-                <p className="text-amber-300 text-sm mt-3">This is too large to study directly!</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-green-500/30">
-                <h3 className="text-xl font-bold text-green-400 mb-3">👥 Sample</h3>
-                <p className="text-gray-300 mb-3">A smaller group drawn from the target population.</p>
-                <p className="text-gray-400 text-sm">Presumed to be representative of that population.</p>
-                <p className="text-green-300 text-sm mt-3">Allows generalisations to be made.</p>
-              </div>
-            </div>
-            <div className="mt-6 bg-rose-900/30 rounded-lg p-4 border border-rose-500/50">
-              <p className="text-rose-300">⚠️ Most samples contain some degree of <span className="font-bold">bias</span> - they don't perfectly represent the population.</p>
-            </div>
-          </div>
-        </div>
-      )
+      return <PopulationSampleTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'random_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Random Sampling</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">All members of the target population have an <span className="text-rose-400 font-bold">equal chance</span> of being selected.</p>
-              <div className="mt-4 text-gray-300">
-                <p className="font-bold mb-2">Method:</p>
-                <ol className="list-decimal list-inside space-y-1">
-                  <li>Obtain a complete list of all members of the target population</li>
-                  <li>Assign all names a number</li>
-                  <li>Use lottery method (computer randomiser or hat)</li>
-                </ol>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-4 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-2">✓ Strength</h3>
-                <p className="text-gray-300 text-sm">Free from researcher bias - researcher has no influence over selection.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-4 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-2">✗ Limitations</h3>
-                <p className="text-gray-300 text-sm">Time-consuming; complete list needed; may still be unrepresentative; selected may refuse.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <RandomSamplingTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'systematic_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Systematic Sampling</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">Every <span className="text-rose-400 font-bold">nth member</span> of the target population is selected (e.g., every 5th pupil on a register).</p>
-              <div className="mt-4 text-gray-300">
-                <p className="font-bold mb-2">Method:</p>
-                <ol className="list-decimal list-inside space-y-1">
-                  <li>Produce a sampling frame (list in order, e.g., alphabetical)</li>
-                  <li>Nominate a sampling system (every 3rd, 6th, 8th person)</li>
-                  <li>Work through the frame until sample is complete</li>
-                </ol>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-4 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-2">✓ Strengths</h3>
-                <p className="text-gray-300 text-sm">Avoids researcher bias; usually fairly representative.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-4 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-2">✗ Limitation</h3>
-                <p className="text-gray-300 text-sm">Could be unrepresentative if list organised in a particular way.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <SystematicSamplingTeach isPresenting={isPresenting} />
     }
 
-    if (slideType === 'stratified_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Stratified Sampling</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">The sample <span className="text-rose-400 font-bold">reflects the proportions</span> of sub-groups (strata) within the target population.</p>
-              <div className="mt-4 text-gray-300">
-                <p className="font-bold mb-2">Method:</p>
-                <ol className="list-decimal list-inside space-y-1">
-                  <li>Identify different strata in the population</li>
-                  <li>Work out proportions needed for representation</li>
-                  <li>Randomly select participants from each stratum</li>
-                </ol>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-4 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-2">✓ Strengths</h3>
-                <p className="text-gray-300 text-sm">Avoids researcher bias; produces representative sample; enables generalisation.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-4 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-2">✗ Limitation</h3>
-                <p className="text-gray-300 text-sm">Cannot reflect ALL ways people differ; complete representation impossible.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'opportunity_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Opportunity Sampling</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">Selecting anyone who is <span className="text-rose-400 font-bold">willing and available</span> at the time of the study.</p>
-              <p className="text-gray-400 mt-2">The researcher takes the chance to ask whoever is around (e.g., in the street).</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-4 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-2">✓ Strength</h3>
-                <p className="text-gray-300 text-sm">Convenient - saves time and effort; much less costly than random sampling.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-4 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-2">✗ Limitations</h3>
-                <p className="text-gray-300 text-sm">Two forms of bias: (1) unrepresentative - drawn from specific area; (2) researcher may avoid certain people.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'volunteer_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Volunteer Sampling</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">Participants <span className="text-rose-400 font-bold">select themselves</span> to be part of the sample (self-selection).</p>
-              <p className="text-gray-400 mt-2">Methods: adverts in newspapers, notice boards, raising hands when asked.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-4 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-2">✓ Strengths</h3>
-                <p className="text-gray-300 text-sm">Easy - minimal input from researcher; participants are engaged/motivated.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-4 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-2">✗ Limitation</h3>
-                <p className="text-gray-300 text-sm">Volunteer bias - attracts certain profile (helpful, curious, eager to please).</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'sampling_afl') {
+    if (slideType === 'sampling_afl1') {
       const questions: Question[] = [
         {
           id: 1,
-          question: "In random sampling, all members of the population have:",
-          options: ["Different chances of selection", "Equal chance of selection", "No chance of selection", "A 50% chance of selection"],
+          question: "A population is:",
+          options: ["A small group who participate in research", "The entire group a researcher is interested in", "Always exactly 100 people", "Only people in one country"],
           correct: 1
         },
         {
           id: 2,
-          question: "Volunteer bias is a problem with:",
-          options: ["Random sampling", "Stratified sampling", "Volunteer sampling", "Systematic sampling"],
-          correct: 2
+          question: "In random sampling, every member of the population has:",
+          options: ["Different chances based on age", "Equal chance of being selected", "Already volunteered", "Been matched on key variables"],
+          correct: 1
         },
         {
           id: 3,
-          question: "Stratified sampling is designed to:",
-          options: ["Save time", "Reflect population proportions", "Avoid all bias", "Use the smallest sample"],
-          correct: 1
+          question: "In systematic sampling, participants are selected by:",
+          options: ["Choosing every nth person from a list", "Asking for volunteers", "Using whoever is available", "Matching on demographics"],
+          correct: 0
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Sampling" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Random & Systematic Sampling" subtitle="Test your understanding so far" />
+    }
+
+    if (slideType === 'stratified_teach') {
+      return <StratifiedSamplingTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'opportunity_teach') {
+      return <OpportunitySamplingTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'volunteer_teach') {
+      return <VolunteerSamplingTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'sampling_afl2') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "Stratified sampling is designed to:",
+          options: ["Save time and money", "Reflect population proportions in subgroups", "Avoid all forms of bias", "Use only male participants"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Opportunity sampling involves:",
+          options: ["Random number selection", "Using available people at the time", "Matching participants", "Complex calculations"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Volunteer bias is a limitation of:",
+          options: ["Random sampling", "Stratified sampling", "Volunteer sampling", "Systematic sampling"],
+          correct: 2
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Stratified, Opportunity & Volunteer" subtitle="Final sampling check" />
+    }
+
+    if (slideType === 'sample_simulator') {
+      return <SampleSelectorSimulator isPresenting={isPresenting} />
     }
 
     if (slideType === 'sampling_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Explain how she could select a random sample of 50 students.",
+          marks: 3,
+          rubric: [
+            "Obtain a list/sampling frame of all 1000 students (1 mark)",
+            "Assign each student a number 1-1000 (1 mark)",
+            "Use random number generator to select 50 numbers (1 mark)"
+          ],
+          sampleAnswer: "She would first obtain a list of all 1000 students in the college and assign each one a number from 1 to 1000. She would then use a random number generator (or draw numbers from a hat) to select 50 numbers, and those students would form her sample."
+        },
+        {
+          id: 2,
+          question: "Explain one limitation of using random sampling.",
+          marks: 2,
+          rubric: [
+            "Identify limitation - e.g. time-consuming, may not be representative by chance (1 mark)",
+            "Explain - e.g. by chance may get uneven groups/all from one year group (1 mark)"
+          ],
+          sampleAnswer: "A limitation is that by chance alone, the sample may still be unrepresentative. For example, random selection might result in mostly first-year students being selected, meaning the views of other year groups are underrepresented."
+        },
+        {
+          id: 3,
+          question: "Explain how she could select a stratified sample of 50 students.",
+          marks: 3,
+          rubric: [
+            "Identify relevant subgroups - e.g. year groups, courses (1 mark)",
+            "Calculate proportions - e.g. if 30% Year 1, select 30% of 50 = 15 (1 mark)",
+            "Randomly select from each subgroup (1 mark)"
+          ],
+          sampleAnswer: "She would identify relevant subgroups, such as year groups. If 30% of students are Year 1, 30% Year 2, etc., she would select the same proportions for her sample - 15 Year 1 students, 15 Year 2, etc. Within each subgroup, she would randomly select the required number."
+        },
+        {
+          id: 4,
+          question: "Explain one strength of using stratified sampling.",
+          marks: 2,
+          rubric: [
+            "Identify strength - sample is representative/reflects population composition (1 mark)",
+            "Explain benefit - ensures all subgroups are included proportionally (1 mark)"
+          ],
+          sampleAnswer: "A strength is that the sample will be representative of the population in terms of key characteristics. By ensuring each subgroup is proportionally represented, the researcher can be more confident that the findings reflect the views of all students, not just some groups."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Sampling</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-white mb-3">Scenario: College Canteen Survey</h3>
-              <p className="text-gray-300">A researcher wants to investigate the attitudes of students in her college towards the college canteen. There are 1000 students in the college. She decides to take a sample of 50 students.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
-                  <p className="text-gray-300">Explain how she could select a random sample of 50 students.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">Explain one limitation of using random sampling.</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain how she could select a stratified sample of 50 students.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 4 (2 marks)</p>
-                  <p className="text-gray-300">Explain one strength of using stratified sampling.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="Application Task: Sampling"
+          scenario="A researcher wants to investigate the attitudes of students in her college towards the college canteen. There are 1000 students in the college. She decides to take a sample of 50 students."
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Explain the difference between a population and a sample.",
+          marks: 2,
+          rubric: [
+            "Population: The entire group of people the researcher is interested in studying (1 mark)",
+            "Sample: A smaller group drawn from the population who actually take part in the study (1 mark)"
+          ],
+          sampleAnswer: "A population is the entire group of individuals that the researcher wishes to study and draw conclusions about. A sample is a smaller subset of individuals selected from this population who actually participate in the research."
+        },
+        {
+          id: 2,
+          question: "Explain how a researcher could select a systematic sample.",
+          marks: 3,
+          rubric: [
+            "Obtain a list/sampling frame of the target population (1 mark)",
+            "Calculate the sampling interval (population size ÷ required sample size) (1 mark)",
+            "Select every nth person from the list after a random starting point (1 mark)"
+          ],
+          sampleAnswer: "The researcher would first obtain a list of all members of the target population. They would then calculate a sampling interval by dividing the population size by the desired sample size. After selecting a random starting point, they would select every nth person from the list (e.g., every 10th person) until the required sample size is reached."
+        },
+        {
+          id: 3,
+          question: "Briefly evaluate the use of opportunity sampling in psychological research.",
+          marks: 3,
+          rubric: [
+            "Strength: Convenient and quick/easy to recruit participants (1 mark)",
+            "Limitation: Sample is unlikely to be representative of the target population (1 mark)",
+            "Impact: May limit generalisation of findings / produce bias (1 mark)"
+          ],
+          sampleAnswer: "Opportunity sampling is convenient and quick, as researchers can recruit whoever is available at the time. However, this method is unlikely to produce a representative sample because it relies on who happens to be accessible. This limits the ability to generalise findings to the wider population and may introduce bias."
+        }
+      ]
+      
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
-                  <p className="text-gray-300">Explain the difference between a population and a sample.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
-                  <p className="text-gray-300">Explain how a researcher could select a systematic sample.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Briefly evaluate the use of opportunity sampling in psychological research.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ExamQuestionsWithRubric
+          title="📋 Extended Exam Practice: Sampling"
+          subtitle="Click to reveal marking rubrics for each question"
+          questions={examQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
@@ -15606,221 +16036,166 @@ function App() {
     }
 
     if (slideType === 'consent_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Informed Consent</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                Making participants aware of: the aims, procedures, their rights (including <span className="text-rose-400 font-bold">right to withdraw</span>), and what their data will be used for.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-amber-500/30">
-                <h3 className="text-lg font-bold text-amber-400 mb-3">⚠️ The Problem</h3>
-                <p className="text-gray-300">Knowing the aims may make behaviour unnatural, reducing validity of results.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Ways to Deal With It</h3>
-                <ul className="space-y-2 text-gray-300 text-sm">
-                  <li>• <span className="font-bold">Consent form</span> detailing all relevant information</li>
-                  <li>• <span className="font-bold">Parental consent</span> for under 16s</li>
-                  <li>• <span className="font-bold">Presumptive consent</span> - ask similar group if acceptable</li>
-                  <li>• <span className="font-bold">Retrospective consent</span> - ask after participation</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <InformedConsentTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'deception_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Deception</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                Deliberately <span className="text-rose-400 font-bold">misleading or withholding information</span> from participants at any stage of the investigation.
-              </p>
-              <p className="text-gray-400 mt-2">Linked to informed consent - deceived participants cannot truly consent.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-amber-500/30">
-                <h3 className="text-lg font-bold text-amber-400 mb-3">⚠️ When It May Be Justified</h3>
-                <p className="text-gray-300 text-sm">When it doesn't cause undue distress. E.g., drug trials - knowing about placebos would affect validity.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Way to Deal With It</h3>
-                <p className="text-gray-300 text-sm"><span className="font-bold">Full debrief</span> at end - reveal true aims, explain why deception was needed, allow data withdrawal.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <DeceptionTeach isPresenting={isPresenting} />
     }
 
-    if (slideType === 'protection_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Protection from Harm</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                Participants should not be placed at any <span className="text-rose-400 font-bold">more risk than in daily life</span> - protected from physical AND psychological harm.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-3">Types of Harm</h3>
-                <ul className="space-y-2 text-gray-300 text-sm">
-                  <li>• Embarrassment</li>
-                  <li>• Feeling inadequate</li>
-                  <li>• Undue stress or pressure</li>
-                  <li>• Physical discomfort</li>
-                </ul>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Ways to Deal With It</h3>
-                <ul className="space-y-2 text-gray-300 text-sm">
-                  <li>• Remind of <span className="font-bold">right to withdraw</span></li>
-                  <li>• Reassure behaviour was normal</li>
-                  <li>• Provide <span className="font-bold">counselling</span> if needed</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'privacy_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Privacy and Confidentiality</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/30">
-                <h3 className="text-xl font-bold text-blue-400 mb-3">🔒 Privacy</h3>
-                <p className="text-gray-300">The right to control information about yourself.</p>
-                <p className="text-gray-400 text-sm mt-2">Extends to the location of the study - institutions shouldn't be named.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-purple-500/30">
-                <h3 className="text-xl font-bold text-purple-400 mb-3">🛡️ Confidentiality</h3>
-                <p className="text-gray-300">If privacy is invaded, personal data must be protected.</p>
-                <p className="text-gray-400 text-sm mt-2">Protected by the Data Protection Act.</p>
-              </div>
-            </div>
-            <div className="mt-6 bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-              <h3 className="text-lg font-bold text-green-400 mb-3">✓ Ways to Deal With It</h3>
-              <ul className="space-y-2 text-gray-300">
-                <li>• Maintain <span className="font-bold">anonymity</span> - record no personal details</li>
-                <li>• Use <span className="font-bold">numbers or initials</span> instead of names</li>
-                <li>• Use <span className="font-bold">false names</span> in case studies (e.g., HM, Little Hans)</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'dealing_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Ethics Committees & Guidelines</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                Guidelines are implemented by <span className="text-rose-400 font-bold">ethics committees</span> in research institutions who use a <span className="text-rose-400 font-bold">cost-benefit approach</span>.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
-                <h3 className="text-lg font-bold text-amber-400 mb-3">Cost-Benefit Analysis</h3>
-                <p className="text-gray-300">Weighs potential harm to participants against the value of the research findings to society.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700">
-                <h3 className="text-lg font-bold text-cyan-400 mb-3">Consequences</h3>
-                <p className="text-gray-300">Researchers won't go to prison but may <span className="font-bold">lose their job</span> if guidelines are breached.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'ethics_afl') {
+    if (slideType === 'ethics_afl1') {
       const questions: Question[] = [
         {
           id: 1,
           question: "Informed consent requires participants to know:",
-          options: ["Just the aim", "Aims, procedures, and their rights", "Nothing at all", "Only the hypothesis"],
+          options: ["Just the researcher's name", "Aims, procedures, and their rights", "Nothing at all", "Only the hypothesis"],
           correct: 1
         },
         {
           id: 2,
-          question: "Deception is dealt with by providing:",
-          options: ["Counselling", "A full debrief", "Financial reward", "Nothing"],
+          question: "Presumptive consent involves:",
+          options: ["Asking participants after the study", "Asking a similar group if the study is acceptable", "Never getting consent", "Only verbal agreement"],
           correct: 1
         },
         {
           id: 3,
-          question: "Confidentiality can be maintained by:",
-          options: ["Publishing participant names", "Using initials or numbers", "Sharing data publicly", "Recording personal details"],
+          question: "Why is deception linked to informed consent?",
+          options: ["They are completely unrelated", "Deceived participants cannot truly give informed consent", "Deception improves consent", "Both require payment"],
           correct: 1
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Ethics" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Consent & Deception" subtitle="Test your understanding" />
+    }
+
+    if (slideType === 'protection_teach') {
+      return <ProtectionFromHarmTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'privacy_teach') {
+      return <PrivacyConfidentialityTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'dealing_teach') {
+      return <EthicsCommitteesTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'ethics_afl2') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "Protection from harm means participants should face:",
+          options: ["No risk at all", "No more risk than in daily life", "Only physical risk", "Unlimited risk if they consent"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Confidentiality can be maintained by:",
+          options: ["Publishing participant names", "Using initials or numbers instead of names", "Sharing data publicly", "Recording all personal details"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Ethics committees use what approach to evaluate research?",
+          options: ["Random selection", "Cost-benefit analysis", "Alphabetical order", "First come first served"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Protection, Privacy & Committees" subtitle="Final ethics check" />
+    }
+
+    if (slideType === 'ethics_review_board') {
+      return <EthicsReviewBoard isPresenting={isPresenting} />
     }
 
     if (slideType === 'ethics_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Identify one ethical issue in this study.",
+          marks: 2,
+          rubric: [
+            "Identification of valid ethical issue (1 mark) - e.g., deception, protection from harm, informed consent",
+            "Brief explanation of why it is an issue in this context (1 mark)"
+          ],
+          sampleAnswer: "Deception is an ethical issue because participants are being told they will receive electric shocks when in fact they won't. This misleads them about what will happen in the study."
+        },
+        {
+          id: 2,
+          question: "Explain how the researcher could deal with this issue.",
+          marks: 3,
+          rubric: [
+            "Identification of appropriate solution (e.g., debrief, right to withdraw) (1 mark)",
+            "Explanation of how the solution would be implemented (1 mark)",
+            "Explanation of why this addresses the ethical issue (1 mark)"
+          ],
+          sampleAnswer: "The researcher should provide a thorough debrief immediately after the study, explaining that the shocks were fake and why deception was necessary for the research. Participants should be given the right to withdraw their data if they are uncomfortable knowing they were deceived. This deals with the issue because participants can then give retrospective consent and their data is only used if they agree."
+        },
+        {
+          id: 3,
+          question: "Identify another ethical issue and explain how it could be addressed.",
+          marks: 3,
+          rubric: [
+            "Second valid ethical issue identified (e.g., protection from harm - psychological stress) (1 mark)",
+            "Appropriate solution offered (1 mark)",
+            "Explanation of why solution addresses the issue (1 mark)"
+          ],
+          sampleAnswer: "Protection from harm is another ethical issue because the threat of electric shocks may cause significant psychological stress and anxiety. This could be addressed by ensuring the debriefing reassures participants, checking they are not distressed, and providing support or counselling contact details if needed. The researcher should also use a cost-benefit analysis beforehand to ensure the scientific value outweighs the potential harm."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Ethics</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-white mb-3">Scenario: Stress and Memory Study</h3>
-              <p className="text-gray-300">A researcher wants to investigate the effect of stress on memory. He tells participants that they will be given a mild electric shock if they get an answer wrong on a memory test. In fact, the shocks are fake.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
-                <p className="text-gray-300">Identify one ethical issue in this study.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
-                <p className="text-gray-300">Explain how the researcher could deal with this issue.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="Application Task: Ethics"
+          scenario="A researcher wants to investigate the effect of stress on memory. He tells participants that they will be given a mild electric shock if they get an answer wrong on a memory test. In fact, the shocks are fake."
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Identify three ethical issues that might arise in psychological research.",
+          marks: 3,
+          rubric: [
+            "Informed consent - participants must agree to take part with full knowledge (1 mark)",
+            "Deception - misleading participants about the true purpose (1 mark)",
+            "Protection from harm - physical or psychological (1 mark)",
+            "Other valid issues: confidentiality, right to withdraw, privacy (1 mark each, max 3)"
+          ],
+          sampleAnswer: "Three ethical issues are: (1) Informed consent - ensuring participants agree to take part with full knowledge of what is involved; (2) Deception - misleading participants about the nature or purpose of the study; (3) Protection from harm - ensuring participants are not exposed to physical or psychological risk beyond everyday life."
+        },
+        {
+          id: 2,
+          question: "Explain what is meant by 'informed consent'.",
+          marks: 2,
+          rubric: [
+            "Participants must agree/give permission to take part (1 mark)",
+            "They must have sufficient information about the study (aims, procedures, rights) to make an informed decision (1 mark)"
+          ],
+          sampleAnswer: "Informed consent means that participants must give their agreement to take part in a study, having been given enough information about the aims, procedures, and their rights (including the right to withdraw) to make an informed decision about whether they wish to participate."
+        },
+        {
+          id: 3,
+          question: "Explain how a researcher could deal with the issue of deception.",
+          marks: 3,
+          rubric: [
+            "Provide a full debrief at the end of the study (1 mark)",
+            "Explain the true purpose and any deception that occurred (1 mark)",
+            "Give participants the right to withdraw their data after finding out the true nature of the study (1 mark)"
+          ],
+          sampleAnswer: "The researcher should provide a full debrief after the study, explaining the true purpose and any deception used. Participants should be told why deception was necessary and be given the opportunity to withdraw their data now that they understand the true aims. The researcher should also check participants are not distressed and offer support if needed."
+        }
+      ]
+      
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
-                  <p className="text-gray-300">Identify three ethical issues that might arise in psychological research.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">Explain what is meant by 'informed consent'.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain how a researcher could deal with the issue of deception.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ExamQuestionsWithRubric
+          title="📋 Extended Exam Practice: Ethical Issues"
+          subtitle="Click to reveal marking rubrics for each question"
+          questions={examQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
@@ -15885,155 +16260,61 @@ function App() {
     }
 
     if (slideType === 'obs_types_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Naturalistic vs Controlled Observations</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-green-500/30">
-                <h3 className="text-xl font-bold text-green-400 mb-3">🌳 Naturalistic</h3>
-                <p className="text-gray-300 mb-3">Behaviour observed in its natural setting. All aspects of environment free to vary.</p>
-                <div className="mt-4 text-sm">
-                  <p className="text-green-300">✓ High external validity - generalisable</p>
-                  <p className="text-red-300 mt-1">✗ Lack of control - hard to replicate; many EVs</p>
-                </div>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/30">
-                <h3 className="text-xl font-bold text-blue-400 mb-3">🔬 Controlled</h3>
-                <p className="text-gray-300 mb-3">Researcher controls certain variables to observe specific behaviours.</p>
-                <div className="mt-4 text-sm">
-                  <p className="text-green-300">✓ Easier to replicate; fewer confounding variables</p>
-                  <p className="text-red-300 mt-1">✗ May not apply to real-life settings</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <ObservationTypesTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'covert_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Covert vs Overt Observations</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-purple-500/30">
-                <h3 className="text-xl font-bold text-purple-400 mb-3">🕵️ Covert</h3>
-                <p className="text-gray-300 mb-3">Participants unaware they're being observed - behaviour is secret.</p>
-                <div className="mt-4 text-sm">
-                  <p className="text-green-300">✓ No participant reactivity - natural behaviour</p>
-                  <p className="text-red-300 mt-1">✗ Ethical issues - no consent; invasion of privacy</p>
-                </div>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-amber-500/30">
-                <h3 className="text-xl font-bold text-amber-400 mb-3">👀 Overt</h3>
-                <p className="text-gray-300 mb-3">Participants know they're being observed and have given consent.</p>
-                <div className="mt-4 text-sm">
-                  <p className="text-green-300">✓ More ethically acceptable</p>
-                  <p className="text-red-300 mt-1">✗ Behaviour may change due to awareness</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <CovertOvertTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'participant_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Participant vs Non-Participant Observations</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/30">
-                <h3 className="text-xl font-bold text-cyan-400 mb-3">👥 Participant</h3>
-                <p className="text-gray-300 mb-3">Observer becomes part of the group being studied.</p>
-                <div className="mt-4 text-sm">
-                  <p className="text-green-300">✓ First-hand experience; increased insight into lives</p>
-                  <p className="text-red-300 mt-1">✗ Risk of 'going native' - losing objectivity</p>
-                </div>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-500/30">
-                <h3 className="text-xl font-bold text-gray-400 mb-3">📋 Non-Participant</h3>
-                <p className="text-gray-300 mb-3">Observer remains separate from the group.</p>
-                <div className="mt-4 text-sm">
-                  <p className="text-green-300">✓ Maintains objectivity; psychological distance</p>
-                  <p className="text-red-300 mt-1">✗ May miss valuable insider insights</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <ParticipantNonParticipantTeach isPresenting={isPresenting} />
     }
 
-    if (slideType === 'design_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Observational Design</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-amber-400 mb-3">Behavioural Categories</h3>
-              <p className="text-gray-300 mb-3">Breaking target behaviour into a checklist. Like operationalisation - makes recording systematic.</p>
-              <p className="text-gray-400 text-sm">E.g., 'affection' → hugging, kissing, smiling, holding hands</p>
-              <ul className="mt-3 text-gray-300 text-sm">
-                <li>• Must be <span className="font-bold">operationalised</span> (precisely defined)</li>
-                <li>• Must <span className="font-bold">not overlap</span> (distinct categories)</li>
-                <li>• Must <span className="font-bold">cover all behaviours</span> possible</li>
-              </ul>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
-                <h3 className="text-lg font-bold text-blue-400 mb-2">📊 Event Sampling</h3>
-                <p className="text-gray-300 text-sm">Record every time a target behaviour occurs. Good for infrequent behaviours.</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
-                <h3 className="text-lg font-bold text-green-400 mb-2">⏱️ Time Sampling</h3>
-                <p className="text-gray-300 text-sm">Record behaviour at fixed intervals (e.g., every 30 seconds). Reduces number of observations needed.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'reliability_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Inter-Observer Reliability</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                Ensuring two or more observers record <span className="text-rose-400 font-bold">consistent</span> data when observing the same behaviour.
-              </p>
-            </div>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-              <h3 className="text-lg font-bold text-amber-400 mb-3">How to Establish Inter-Observer Reliability:</h3>
-              <ol className="space-y-2 text-gray-300">
-                <li>1. Observers familiarise themselves with behavioural categories</li>
-                <li>2. Observe the same behaviour at the same time (pilot study)</li>
-                <li>3. Compare recorded data and discuss differences</li>
-                <li>4. Calculate correlation between observations (aim for ≥ +0.80)</li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'obs_afl') {
+    if (slideType === 'obs_afl1') {
       const questions: Question[] = [
         {
           id: 1,
           question: "Naturalistic observations have high:",
-          options: ["Internal validity", "Control", "External validity", "Demand characteristics"],
+          options: ["Internal validity", "Control over variables", "External validity", "Demand characteristics"],
           correct: 2
         },
         {
           id: 2,
           question: "In covert observation, participants are:",
-          options: ["Fully informed", "Unaware they're being observed", "Paid extra", "Given full consent"],
+          options: ["Fully informed", "Unaware they're being observed", "Paid extra", "Given written consent"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "A risk of participant observation is:",
+          options: ["Too much objectivity", "Going native - losing objectivity", "Too much distance", "High control"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Observation Types" subtitle="Test your understanding so far" />
+    }
+
+    if (slideType === 'design_teach') {
+      return <ObservationalDesignTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'reliability_teach') {
+      return <InterObserverReliabilityTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'obs_afl2') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "Behavioural categories must be:",
+          options: ["Vague and overlapping", "Operationalised and non-overlapping", "Only single behaviours", "Decided after observation"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Event sampling involves:",
+          options: ["Recording behaviour at fixed intervals", "Recording every time a target behaviour occurs", "Only observing for one hour", "Using questionnaires"],
           correct: 1
         },
         {
@@ -16043,68 +16324,111 @@ function App() {
           correct: 2
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Observations" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Design & Reliability" subtitle="Final observation check" />
+    }
+
+    if (slideType === 'observer_training') {
+      return <ObserverTrainingAcademy isPresenting={isPresenting} />
     }
 
     if (slideType === 'obs_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Suggest two behavioural categories he could use.",
+          marks: 2,
+          rubric: [
+            "First category - e.g. physical aggression (hitting, pushing, kicking) (1 mark)",
+            "Second category - e.g. verbal aggression (shouting, name-calling, threats) (1 mark)"
+          ],
+          sampleAnswer: "Two behavioural categories could be: (1) Physical aggression - including hitting, pushing, or kicking another child; (2) Verbal aggression - including shouting at, threatening, or name-calling another child."
+        },
+        {
+          id: 2,
+          question: "Explain why categories must be clear and unambiguous.",
+          marks: 2,
+          rubric: [
+            "So observers can reliably classify behaviours (1 mark)",
+            "To ensure consistency/inter-observer reliability/avoid confusion (1 mark)"
+          ],
+          sampleAnswer: "Categories must be clear so that different observers watching the same behaviour will classify it in the same way. This ensures inter-observer reliability - without clear definitions, one observer might record 'rough play' while another records it as 'aggression', making the data inconsistent."
+        },
+        {
+          id: 3,
+          question: "Explain how he could use event sampling.",
+          marks: 2,
+          rubric: [
+            "Record every time a target behaviour occurs (1 mark)",
+            "E.g. tally mark each time aggression is observed (1 mark)"
+          ],
+          sampleAnswer: "Event sampling would involve the observer making a tally mark or note every time an aggressive behaviour occurs during the observation period. This way, he counts all instances of the target behaviour rather than sampling at set intervals."
+        },
+        {
+          id: 4,
+          question: "Explain how he could establish inter-observer reliability.",
+          marks: 3,
+          rubric: [
+            "Use two or more observers watching the same behaviour (1 mark)",
+            "Compare their recordings/calculate correlation (1 mark)",
+            "Aim for high agreement (≥0.80) before conducting main study (1 mark)"
+          ],
+          sampleAnswer: "He would have two observers watch the same children at the same time and independently record the behaviours they see. He would then compare their observations and calculate a correlation coefficient. If agreement is at least +0.80, the categories and coding system are reliable. If not, categories should be refined and re-tested."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Observations</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-white mb-3">Scenario: Playground Aggression Study</h3>
-              <p className="text-gray-300">A researcher wants to observe the aggressive behaviour of children in a playground. He decides to use a structured observation.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
-                  <p className="text-gray-300">Suggest two behavioural categories he could use.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">Explain why categories must be clear and unambiguous.</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (2 marks)</p>
-                  <p className="text-gray-300">Explain how he could use event sampling.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 4 (3 marks)</p>
-                  <p className="text-gray-300">Explain how he could establish inter-observer reliability.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="Application Task: Observations"
+          scenario="A researcher wants to observe the aggressive behaviour of children in a playground. He decides to use a structured observation."
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Distinguish between naturalistic and controlled observations.",
+          marks: 3,
+          rubric: [
+            "Naturalistic: Takes place in a natural setting with no intervention (1 mark)",
+            "Controlled: Takes place in a controlled environment where variables can be manipulated (1 mark)",
+            "Clear distinction made between the two approaches (1 mark)"
+          ],
+          sampleAnswer: "In a naturalistic observation, behaviour is observed in its natural setting without any intervention from the researcher - the environment is allowed to vary freely. In a controlled observation, the researcher exerts control over certain variables and the observation typically takes place in a more artificial setting, allowing specific behaviours to be studied under standardised conditions."
+        },
+        {
+          id: 2,
+          question: "Explain one strength of conducting a covert observation.",
+          marks: 2,
+          rubric: [
+            "Identification of strength: Participants don't know they're being observed (1 mark)",
+            "Explanation: So behaviour remains natural/unaffected by awareness, increasing validity (1 mark)"
+          ],
+          sampleAnswer: "A key strength of covert observation is that participants are unaware they are being observed. This means they do not alter their behaviour due to the awareness of being watched (no participant reactivity), resulting in more natural and valid data that better represents real-world behaviour."
+        },
+        {
+          id: 3,
+          question: "Outline what is meant by 'event sampling' and 'time sampling'.",
+          marks: 4,
+          rubric: [
+            "Event sampling: Recording behaviour every time a target behaviour occurs (1 mark)",
+            "Event sampling use: Good for infrequent behaviours (1 mark)",
+            "Time sampling: Recording behaviour at fixed time intervals (1 mark)",
+            "Time sampling use: Reduces the amount of data to be collected/makes observation manageable (1 mark)"
+          ],
+          sampleAnswer: "Event sampling involves recording every occurrence of a specified target behaviour throughout the observation period - this is particularly useful for infrequent behaviours. Time sampling involves recording behaviour only at predetermined time intervals (e.g., every 30 seconds), which makes observation more manageable by reducing the continuous recording burden while still capturing a representative picture of behaviour."
+        }
+      ]
+      
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
-                  <p className="text-gray-300">Distinguish between naturalistic and controlled observations.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">Explain one strength of conducting a covert observation.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (4 marks)</p>
-                  <p className="text-gray-300">Outline what is meant by 'event sampling' and 'time sampling'.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ExamQuestionsWithRubric
+          title="📋 Extended Exam Practice: Observational Techniques"
+          subtitle="Click to reveal marking rubrics for each question"
+          questions={examQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
@@ -16170,97 +16494,39 @@ function App() {
     }
 
     if (slideType === 'questionnaire_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Questionnaires</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                A <span className="text-rose-400 font-bold">pre-set list of written questions</span> to which participants respond. Used to assess thoughts and/or feelings.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
-                <ul className="space-y-2 text-gray-300 text-sm">
-                  <li>• <span className="font-bold">Cost-effective</span> - gather large amounts quickly</li>
-                  <li>• <span className="font-bold">Easy to analyse</span> - especially closed questions</li>
-                </ul>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
-                <ul className="space-y-2 text-gray-300 text-sm">
-                  <li>• <span className="font-bold">Response bias</span> - social desirability; acquiescence</li>
-                  <li>• <span className="font-bold">Misunderstanding</span> - questions interpreted differently</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <QuestionnaireTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'questions_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Open vs Closed Questions</h2>
-            <div className="grid grid-cols-2 gap-6 mb-6">
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/30">
-                <h3 className="text-xl font-bold text-cyan-400 mb-3">📝 Open Questions</h3>
-                <p className="text-gray-300 mb-3">No fixed range of answers - respondents answer freely.</p>
-                <p className="text-gray-400 text-sm">E.g., "How do you feel when you see a spider?"</p>
-                <div className="mt-3">
-                  <p className="text-green-300 text-sm">✓ Rich, detailed qualitative data</p>
-                  <p className="text-red-300 text-sm">✗ Difficult to analyse</p>
-                </div>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-amber-500/30">
-                <h3 className="text-xl font-bold text-amber-400 mb-3">☑️ Closed Questions</h3>
-                <p className="text-gray-300 mb-3">Fixed number of responses offered.</p>
-                <p className="text-gray-400 text-sm">E.g., "Do you smoke?" (Yes/No)</p>
-                <div className="mt-3">
-                  <p className="text-green-300 text-sm">✓ Easy to analyse quantitatively</p>
-                  <p className="text-red-300 text-sm">✗ May lack depth/detail</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
-              <h3 className="text-lg font-bold text-purple-400 mb-2">Question Formats:</h3>
-              <p className="text-gray-300 text-sm"><span className="font-bold">Likert scales</span> (Strongly agree → Strongly disagree) | <span className="font-bold">Rating scales</span> (1-5) | <span className="font-bold">Fixed choice</span> (tick all that apply)</p>
-            </div>
-          </div>
-        </div>
-      )
+      return <QuestionTypesTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'selfreport_afl1') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "A strength of questionnaires is:",
+          options: ["They always get honest answers", "They can gather data from many people quickly", "They produce only qualitative data", "Participants must be present"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Open questions produce:",
+          options: ["Quantitative data only", "Qualitative data", "No data", "Only numerical ratings"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Closed questions are easier to:",
+          options: ["Get detailed responses from", "Analyse statistically", "Interpret qualitatively", "Ask follow-up questions about"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Questionnaires & Questions" subtitle="Test your understanding so far" />
     }
 
     if (slideType === 'interview_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Interviews</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                A <span className="text-rose-400 font-bold">'live' encounter</span> (face-to-face or phone) where the interviewer asks questions to assess thoughts/experiences.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-blue-500/30">
-                <h3 className="text-lg font-bold text-blue-400 mb-3">📋 Structured Interviews</h3>
-                <p className="text-gray-300 text-sm mb-3">Pre-determined questions asked in fixed order.</p>
-                <p className="text-green-300 text-sm">✓ Easy to replicate; reduces interviewer bias</p>
-                <p className="text-red-300 text-sm">✗ Cannot elaborate or explore new topics</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">💬 Unstructured Interviews</h3>
-                <p className="text-gray-300 text-sm mb-3">Works like a conversation; no set questions.</p>
-                <p className="text-green-300 text-sm">✓ Flexible; can gain deeper insight</p>
-                <p className="text-red-300 text-sm">✗ Difficult to analyse; may lack reliability</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <InterviewTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'design_teach') {
@@ -16294,86 +16560,117 @@ function App() {
       )
     }
 
-    if (slideType === 'selfreport_afl') {
+    if (slideType === 'selfreport_afl2') {
       const questions: Question[] = [
         {
           id: 1,
-          question: "Open questions produce:",
-          options: ["Quantitative data only", "Qualitative data", "No data", "Numerical ratings"],
+          question: "A limitation of structured interviews is:",
+          options: ["Difficult to replicate", "Cannot deviate from set questions to explore responses", "Too flexible", "No standardisation"],
           correct: 1
         },
         {
           id: 2,
-          question: "A limitation of structured interviews is:",
-          options: ["Difficult to replicate", "Cannot deviate from the topic", "Too flexible", "No standardisation"],
+          question: "Unstructured interviews are like:",
+          options: ["A formal questionnaire", "A conversation - flexible and exploratory", "A controlled experiment", "Multiple choice test"],
           correct: 1
         },
         {
           id: 3,
-          question: "A double-barrelled question:",
-          options: ["Is very short", "Contains two questions in one", "Uses technical jargon", "Is always open"],
+          question: "Double-barrelled questions should be avoided because:",
+          options: ["They are too short", "They ask two things at once causing confusion", "They are too simple", "They only produce qualitative data"],
           correct: 1
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Self-Report" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Interviews & Question Design" subtitle="Final self-report check" />
+    }
+
+    if (slideType === 'question_quality') {
+      return <QuestionQualityControl isPresenting={isPresenting} />
     }
 
     if (slideType === 'selfreport_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Write one open question she could ask.",
+          marks: 2,
+          rubric: [
+            "Question allows free response/not fixed options (1 mark)",
+            "Relevant to eating habits topic (1 mark)"
+          ],
+          sampleAnswer: "'Describe what you typically eat in a normal day' or 'How do you feel about your current eating habits?' - these allow teenagers to respond in their own words without restricted options."
+        },
+        {
+          id: 2,
+          question: "Write one closed question she could ask.",
+          marks: 2,
+          rubric: [
+            "Question has fixed response options (1 mark)",
+            "Relevant to eating habits topic (1 mark)"
+          ],
+          sampleAnswer: "'How many portions of fruit do you eat per day? (0 / 1-2 / 3-4 / 5+)' or 'Do you eat breakfast every day? (Yes / No)' - these have fixed options to choose from."
+        },
+        {
+          id: 3,
+          question: "Explain one strength and one limitation of using a questionnaire.",
+          marks: 4,
+          rubric: [
+            "Identify strength - e.g. can collect data from many people quickly (1 mark)",
+            "Explain strength - e.g. easy to distribute, cost-effective (1 mark)",
+            "Identify limitation - e.g. social desirability bias (1 mark)",
+            "Explain limitation - e.g. teens may lie about unhealthy eating (1 mark)"
+          ],
+          sampleAnswer: "A strength is that questionnaires can collect data from many teenagers quickly and cheaply, as they can be distributed to whole classes at once. A limitation is social desirability bias - teenagers may give answers they think are 'correct' (like claiming to eat more fruit) rather than honest answers about their actual eating habits."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Self-Report</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-white mb-3">Scenario: Teenage Eating Habits</h3>
-              <p className="text-gray-300">A psychologist wants to investigate the eating habits of teenagers. She decides to use a questionnaire.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
-                  <p className="text-gray-300">Write one open question she could ask.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">Write one closed question she could ask.</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (4 marks)</p>
-                  <p className="text-gray-300">Explain one strength and one limitation of using a questionnaire.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="Application Task: Self-Report"
+          scenario="A psychologist wants to investigate the eating habits of teenagers. She decides to use a questionnaire."
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
-                  <p className="text-gray-300">Distinguish between open and closed questions.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (4 marks)</p>
-                  <p className="text-gray-300">Explain one strength and one limitation of using a structured interview.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain why a researcher might choose to use an unstructured interview rather than a questionnaire.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Distinguish between open and closed questions.",
+          marks: 3,
+          rubric: [
+            "Open questions allow respondents to answer in their own words/no fixed response options (1 mark)",
+            "Closed questions have fixed response options/limited choice of answers (1 mark)",
+            "Example or elaboration of the difference (1 mark)"
+          ],
+          sampleAnswer: "Open questions allow participants to give their own responses without restriction (1), for example 'How do you feel about your diet?' Closed questions provide fixed response options that participants must choose from (1), such as 'Do you eat breakfast? Yes/No'. Open questions produce qualitative data while closed questions produce quantitative data (1)."
+        },
+        {
+          id: 2,
+          question: "Explain one strength and one limitation of using a structured interview.",
+          marks: 4,
+          rubric: [
+            "Identify strength - e.g. easy to replicate/standardised/quantifiable (1 mark)",
+            "Explain strength - e.g. same questions asked to all so can compare responses (1 mark)",
+            "Identify limitation - e.g. inflexible/lacks depth (1 mark)",
+            "Explain limitation - e.g. cannot follow up interesting responses/may miss important information (1 mark)"
+          ],
+          sampleAnswer: "A strength is that structured interviews are standardised (1) meaning every participant is asked exactly the same questions in the same order, making it easy to compare responses and replicate the study (1). A limitation is that they are inflexible (1) because the interviewer cannot deviate from the set questions, meaning they might miss interesting responses that could provide valuable insights (1)."
+        },
+        {
+          id: 3,
+          question: "Explain why a researcher might choose to use an unstructured interview rather than a questionnaire.",
+          marks: 3,
+          rubric: [
+            "Unstructured interviews allow follow-up/probing questions (1 mark)",
+            "Can explore unexpected topics/responses in depth (1 mark)",
+            "Higher response rate/can clarify misunderstandings/build rapport (1 mark)"
+          ],
+          sampleAnswer: "A researcher might choose an unstructured interview because they can ask follow-up questions to explore interesting responses in more depth (1). Unlike a questionnaire, the interviewer can clarify any misunderstandings immediately and ensure the participant understands each question (1). Additionally, the face-to-face interaction allows rapport to develop, which may encourage more honest and detailed responses (1)."
+        }
+      ]
+      return <ExamQuestionsWithRubric title="Self-Report Methods" questions={examQuestions} isPresenting={isPresenting} />
     }
 
     return <div>Loading...</div>
@@ -16438,189 +16735,155 @@ function App() {
     }
 
     if (slideType === 'correlation_intro') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">What Are Correlations?</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                Correlations illustrate the <span className="text-rose-400 font-bold">strength and direction</span> of an association between two or more <span className="text-rose-400 font-bold">co-variables</span>.
-              </p>
-              <p className="text-gray-400 mt-3">E.g., height and weight; hours of study and exam scores</p>
-            </div>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-              <h3 className="text-lg font-bold text-cyan-400 mb-3">📊 Scattergrams</h3>
-              <p className="text-gray-300">Correlations are plotted on a scattergram. One co-variable is the x-axis, the other the y-axis. Each point represents a participant's score on both variables.</p>
-            </div>
-          </div>
-        </div>
-      )
+      return <CorrelationIntroTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'types_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Types of Correlation</h2>
-            <div className="grid grid-cols-3 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">📈 Positive</h3>
-                <p className="text-gray-300 text-sm">As one co-variable increases, the other <span className="font-bold">increases</span>.</p>
-                <p className="text-gray-400 text-sm mt-2">E.g., More people in room → more noise</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-3">📉 Negative</h3>
-                <p className="text-gray-300 text-sm">As one co-variable increases, the other <span className="font-bold">decreases</span>.</p>
-                <p className="text-gray-400 text-sm mt-2">E.g., More people → less personal space</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-500/30">
-                <h3 className="text-lg font-bold text-gray-400 mb-3">⚫ Zero</h3>
-                <p className="text-gray-300 text-sm"><span className="font-bold">No relationship</span> between the co-variables.</p>
-                <p className="text-gray-400 text-sm mt-2">E.g., People in Manchester → rainfall in Peru</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <CorrelationTypesTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'correlation_afl1') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "In a positive correlation, as one variable increases:",
+          options: ["The other decreases", "The other increases", "There is no change", "We cannot tell"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "A negative correlation means:",
+          options: ["The variables are unrelated", "As one increases, the other decreases", "Both variables decrease together", "There is no relationship"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "A zero correlation indicates:",
+          options: ["A strong relationship", "A negative relationship", "No relationship between variables", "A perfect positive relationship"],
+          correct: 2
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Correlation Types" subtitle="Test your understanding so far" />
     }
 
     if (slideType === 'coefficient_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Correlation Coefficients</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                A number between <span className="text-rose-400 font-bold">-1 and +1</span> representing direction and strength of the relationship.
-              </p>
-            </div>
-            <div className="flex justify-between items-center bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-red-400">-1</p>
-                <p className="text-gray-400 text-sm">Perfect negative</p>
-              </div>
-              <div className="flex-1 mx-4 h-2 bg-gradient-to-r from-red-500 via-gray-500 to-green-500 rounded"></div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-gray-400">0</p>
-                <p className="text-gray-400 text-sm">No correlation</p>
-              </div>
-              <div className="flex-1 mx-4 h-2 bg-gradient-to-r from-gray-500 to-green-500 rounded"></div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-green-400">+1</p>
-                <p className="text-gray-400 text-sm">Perfect positive</p>
-              </div>
-            </div>
-            <p className="text-gray-300 mt-4 text-center">The closer to +1 or -1, the <span className="font-bold">stronger</span> the relationship.</p>
-          </div>
-        </div>
-      )
+      return <CoefficientTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'difference_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Correlations vs Experiments</h2>
-            <div className="grid grid-cols-2 gap-6 mb-6">
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/30">
-                <h3 className="text-xl font-bold text-blue-400 mb-3">🔬 Experiments</h3>
-                <p className="text-gray-300">Researcher <span className="font-bold">manipulates</span> the IV to measure effect on DV.</p>
-                <p className="text-green-300 mt-3 text-sm">✓ CAN establish cause and effect</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-purple-500/30">
-                <h3 className="text-xl font-bold text-purple-400 mb-3">📊 Correlations</h3>
-                <p className="text-gray-300"><span className="font-bold">No manipulation</span> - just measuring relationship between co-variables.</p>
-                <p className="text-red-300 mt-3 text-sm">✗ CANNOT establish cause and effect</p>
-              </div>
-            </div>
-            <div className="bg-amber-900/30 rounded-lg p-4 border border-amber-500/50">
-              <p className="text-amber-300"><span className="font-bold">The Third Variable Problem:</span> An untested variable may be causing both co-variables to change. E.g., ice cream sales correlate with shark attacks - but hot weather causes both!</p>
-            </div>
-          </div>
-        </div>
-      )
+      return <CorrelationVsExperimentTeach isPresenting={isPresenting} />
     }
 
-    if (slideType === 'correlation_afl') {
+    if (slideType === 'correlation_afl2') {
       const questions: Question[] = [
         {
           id: 1,
           question: "A correlation coefficient of -0.85 indicates:",
-          options: ["Weak positive", "Strong positive", "Strong negative", "No correlation"],
+          options: ["Weak positive relationship", "Strong positive relationship", "Strong negative relationship", "No correlation"],
           correct: 2
         },
         {
           id: 2,
-          question: "Correlations cannot establish:",
-          options: ["Relationships", "Direction", "Cause and effect", "Strength"],
+          question: "Unlike experiments, correlations cannot establish:",
+          options: ["Relationships between variables", "Direction of correlation", "Cause and effect", "Strength of relationship"],
           correct: 2
         },
         {
           id: 3,
           question: "The third variable problem refers to:",
-          options: ["Using three variables", "An untested variable causing both changes", "Three correlation types", "Three participants"],
+          options: ["Using three variables", "An untested variable causing changes in both co-variables", "Three correlation types", "Three participants needed"],
           correct: 1
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Correlations" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Coefficients & Causation" subtitle="Final correlation check" />
+    }
+
+    if (slideType === 'correlation_detective') {
+      return <CorrelationDetective isPresenting={isPresenting} />
     }
 
     if (slideType === 'correlation_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Describe what a positive correlation would look like in this study.",
+          marks: 2,
+          rubric: [
+            "As hours of revision increase, exam results increase (1 mark)",
+            "Both variables change in the same direction (1 mark)"
+          ],
+          sampleAnswer: "A positive correlation would show that as the number of hours students spend revising increases, their exam results also increase. Students who revise more would tend to achieve higher scores."
+        },
+        {
+          id: 2,
+          question: "What would a zero correlation mean in this context?",
+          marks: 2,
+          rubric: [
+            "No relationship between revision hours and exam results (1 mark)",
+            "Knowing revision time would not help predict exam score (1 mark)"
+          ],
+          sampleAnswer: "A zero correlation would mean there is no relationship between hours of revision and exam results. Some students who revise a lot would get low scores, while some who revise little would get high scores - the amount of revision would not predict exam performance."
+        },
+        {
+          id: 3,
+          question: "Explain why this correlation cannot prove that revision causes better results.",
+          marks: 3,
+          rubric: [
+            "Correlation does not equal causation/no manipulation of IV (1 mark)",
+            "Third variable problem - another factor could explain both (1 mark)",
+            "Example - e.g. motivation/intelligence could cause both (1 mark)"
+          ],
+          sampleAnswer: "A correlation cannot prove causation because no variable is being manipulated. A third variable could explain the relationship - for example, highly motivated students may both revise more AND work harder in exams, so motivation (not revision) causes better results. We cannot determine the direction of effect."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Correlations</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-white mb-3">Scenario: Revision & Exam Results</h3>
-              <p className="text-gray-300">A researcher wants to investigate the relationship between the number of hours students spend revising and their exam results.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
-                  <p className="text-gray-300">Describe what a positive correlation would look like in this study.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">What would a zero correlation mean in this context?</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain why this correlation cannot prove that revision causes better results.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="Application Task: Correlations"
+          scenario="A researcher wants to investigate the relationship between the number of hours students spend revising and their exam results."
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
-                  <p className="text-gray-300">Explain the difference between a positive and a negative correlation.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
-                  <p className="text-gray-300">Explain why correlations cannot establish cause and effect.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (4 marks)</p>
-                  <p className="text-gray-300">Outline one strength and one limitation of using correlations in psychological research.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Explain the difference between a positive and a negative correlation.",
+          marks: 3,
+          rubric: [
+            "Positive correlation: as one variable increases, the other increases (1 mark)",
+            "Negative correlation: as one variable increases, the other decreases (1 mark)",
+            "Example or further elaboration of either (1 mark)"
+          ],
+          sampleAnswer: "A positive correlation is when both co-variables increase together (1), for example as hours of sleep increase, concentration levels also increase. A negative correlation is when one co-variable increases as the other decreases (1), for example as stress levels increase, immune system functioning decreases. Both show a relationship but in opposite directions (1)."
+        },
+        {
+          id: 2,
+          question: "Explain why correlations cannot establish cause and effect.",
+          marks: 3,
+          rubric: [
+            "No manipulation of variables/no IV and DV (1 mark)",
+            "Third variable problem/extraneous variables may explain relationship (1 mark)",
+            "Cannot determine direction of causality/which variable affects which (1 mark)"
+          ],
+          sampleAnswer: "Correlations cannot establish cause and effect because there is no manipulation of an independent variable (1). A third variable that has not been measured could be responsible for the relationship between the two co-variables (1). Additionally, even if two variables are related, we cannot determine which one is causing the change in the other - the direction of causality is unknown (1)."
+        },
+        {
+          id: 3,
+          question: "Outline one strength and one limitation of using correlations in psychological research.",
+          marks: 4,
+          rubric: [
+            "Identify strength - e.g. can study variables that cannot be manipulated (1 mark)",
+            "Explain strength - e.g. useful for initial research/ethical when manipulation not possible (1 mark)",
+            "Identify limitation - e.g. cannot establish cause and effect (1 mark)",
+            "Explain limitation - e.g. third variables may be responsible/direction of effect unknown (1 mark)"
+          ],
+          sampleAnswer: "A strength of correlations is that they allow researchers to study variables that cannot be ethically or practically manipulated (1), such as the relationship between childhood trauma and adult mental health, providing valuable insights where experiments are not possible (1). A limitation is that correlations cannot demonstrate causation (1), meaning we cannot conclude that one variable causes changes in another because unmeasured third variables may be responsible for the observed relationship (1)."
+        }
+      ]
+      return <ExamQuestionsWithRubric title="Correlations" questions={examQuestions} isPresenting={isPresenting} />
     }
 
     return <div>Loading...</div>
@@ -16684,179 +16947,151 @@ function App() {
     }
 
     if (slideType === 'quant_qual_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Quantitative vs Qualitative Data</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/30">
-                <h3 className="text-xl font-bold text-blue-400 mb-3">🔢 Quantitative</h3>
-                <p className="text-gray-300 mb-3">Data expressed in <span className="font-bold">numbers</span>. Often from experiments and closed questions.</p>
-                <div className="mt-4">
-                  <p className="text-green-300 text-sm">✓ Easy to analyse statistically</p>
-                  <p className="text-green-300 text-sm">✓ Objective and can be compared</p>
-                  <p className="text-red-300 text-sm mt-1">✗ May lack detail and context</p>
-                </div>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-purple-500/30">
-                <h3 className="text-xl font-bold text-purple-400 mb-3">📝 Qualitative</h3>
-                <p className="text-gray-300 mb-3">Data expressed in <span className="font-bold">words</span>. Often from interviews and observations.</p>
-                <div className="mt-4">
-                  <p className="text-green-300 text-sm">✓ Rich and detailed insight</p>
-                  <p className="text-green-300 text-sm">✓ Captures thoughts and feelings</p>
-                  <p className="text-red-300 text-sm mt-1">✗ Subjective; harder to analyse</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <QuantQualTeach isPresenting={isPresenting} />
     }
 
-    if (slideType === 'primary_secondary_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Primary vs Secondary Data</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-green-500/30">
-                <h3 className="text-xl font-bold text-green-400 mb-3">🆕 Primary Data</h3>
-                <p className="text-gray-300 mb-3">Data collected <span className="font-bold">first-hand</span> by the researcher for the current study.</p>
-                <p className="text-gray-400 text-sm">E.g., conducting your own experiment or survey</p>
-                <div className="mt-4">
-                  <p className="text-green-300 text-sm">✓ Designed for the specific research aim</p>
-                  <p className="text-red-300 text-sm mt-1">✗ Time-consuming and expensive</p>
-                </div>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-amber-500/30">
-                <h3 className="text-xl font-bold text-amber-400 mb-3">📚 Secondary Data</h3>
-                <p className="text-gray-300 mb-3">Data <span className="font-bold">already collected</span> by someone else for another purpose.</p>
-                <p className="text-gray-400 text-sm">E.g., government statistics, previous research data</p>
-                <div className="mt-4">
-                  <p className="text-green-300 text-sm">✓ Quick and easy to access</p>
-                  <p className="text-red-300 text-sm mt-1">✗ May not fit your research aim</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'meta_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Meta-Analysis</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-xl text-gray-200">
-                A process that combines findings from <span className="text-rose-400 font-bold">many separate studies</span> to reach a general conclusion.
-              </p>
-              <p className="text-gray-400 mt-3">Uses existing data (secondary) from various sources to draw broader conclusions.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-3">✓ Strengths</h3>
-                <ul className="space-y-2 text-gray-300 text-sm">
-                  <li>• Very large sample size (across all studies)</li>
-                  <li>• Can identify patterns not visible in single studies</li>
-                  <li>• Increases validity of conclusions</li>
-                </ul>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-3">✗ Limitations</h3>
-                <ul className="space-y-2 text-gray-300 text-sm">
-                  <li>• Studies may use different methods (inconsistent)</li>
-                  <li>• Publication bias - positive results more published</li>
-                  <li>• 'Garbage in, garbage out' if studies are flawed</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'data_afl') {
+    if (slideType === 'data_afl1') {
       const questions: Question[] = [
         {
           id: 1,
           question: "Quantitative data is expressed in:",
-          options: ["Words", "Numbers", "Pictures", "Categories"],
+          options: ["Words and descriptions", "Numbers and measurements", "Pictures only", "Categories only"],
           correct: 1
         },
         {
           id: 2,
+          question: "Qualitative data provides:",
+          options: ["Easy statistical analysis", "Rich, detailed insight", "Only numerical ratings", "Objective measurements"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "A limitation of quantitative data is that it:",
+          options: ["Cannot be compared", "May lack detail and context", "Is always subjective", "Cannot be analysed"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Quantitative vs Qualitative" subtitle="Test your understanding so far" />
+    }
+
+    if (slideType === 'primary_secondary_teach') {
+      return <PrimarySecondaryTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'meta_teach') {
+      return <MetaAnalysisTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'data_afl2') {
+      const questions: Question[] = [
+        {
+          id: 1,
           question: "Primary data is collected:",
-          options: ["From government records", "First-hand by the researcher", "From published studies", "From textbooks"],
+          options: ["From government records", "First-hand by the researcher for this study", "From published studies", "From textbooks"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "Secondary data is:",
+          options: ["Always more reliable", "Data collected by someone else for another purpose", "Only numerical", "Always more detailed"],
           correct: 1
         },
         {
           id: 3,
           question: "A meta-analysis combines:",
-          options: ["One study's results", "Findings from many studies", "Only quantitative data", "Only qualitative data"],
+          options: ["One study's results", "Findings from many separate studies", "Only quantitative data", "Only qualitative data"],
           correct: 1
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Kinds of Data" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Primary, Secondary & Meta-Analysis" subtitle="Final data types check" />
+    }
+
+    if (slideType === 'data_sorting') {
+      return <DataSortingCentre isPresenting={isPresenting} />
     }
 
     if (slideType === 'data_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Identify which data is quantitative and which is qualitative.",
+          marks: 2,
+          rubric: [
+            "Heart rate is quantitative (numerical/measurable) (1 mark)",
+            "Descriptions of feelings are qualitative (words/non-numerical) (1 mark)"
+          ],
+          sampleAnswer: "Heart rate measurements are quantitative data because they are numerical (e.g., 85 bpm). The descriptions of how participants felt are qualitative data because they are expressed in words rather than numbers."
+        },
+        {
+          id: 2,
+          question: "Is this primary or secondary data? Explain why.",
+          marks: 2,
+          rubric: [
+            "Primary data (1 mark)",
+            "Because it is collected first-hand by the researcher for this specific study (1 mark)"
+          ],
+          sampleAnswer: "This is primary data because the researcher is collecting it herself, first-hand, specifically for this study. She is directly measuring heart rate and gathering participant responses for her own research purposes."
+        },
+        {
+          id: 3,
+          question: "Explain one strength and one limitation of using qualitative data in this study.",
+          marks: 3,
+          rubric: [
+            "Identify strength - e.g. provides rich, detailed information (1 mark)",
+            "Explain - e.g. captures how stress actually feels to participants (1 mark)",
+            "Identify and explain limitation - e.g. subjective/difficult to analyse/compare (1 mark)"
+          ],
+          sampleAnswer: "A strength is that qualitative data provides rich detail about the subjective experience of stress - participants can express exactly how they felt in their own words, capturing nuances that numbers cannot. A limitation is that the data is subjective and difficult to analyse statistically or compare across participants."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Data Types</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-white mb-3">Scenario: Stress Study</h3>
-              <p className="text-gray-300">A researcher conducts an experiment on stress. She measures heart rate during a stressful task and also asks participants to describe how they felt.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
-                  <p className="text-gray-300">Identify which data is quantitative and which is qualitative.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">Is this primary or secondary data? Explain why.</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain one strength and one limitation of using qualitative data in this study.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="Application Task: Data Types"
+          scenario="A researcher conducts an experiment on stress. She measures heart rate during a stressful task and also asks participants to describe how they felt."
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
-                  <p className="text-gray-300">Distinguish between quantitative and qualitative data.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (4 marks)</p>
-                  <p className="text-gray-300">Explain one strength and one limitation of using secondary data.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain what is meant by 'meta-analysis'.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Distinguish between quantitative and qualitative data.",
+          marks: 3,
+          rubric: [
+            "Quantitative data is numerical/can be counted or measured (1 mark)",
+            "Qualitative data is non-numerical/descriptive/in words (1 mark)",
+            "Example of each or further elaboration (1 mark)"
+          ],
+          sampleAnswer: "Quantitative data is numerical and can be measured or counted (1), for example reaction times in milliseconds or scores on a memory test. Qualitative data is non-numerical and expressed in words (1), such as descriptions of how participants felt during an experiment. Quantitative data can be statistically analysed while qualitative data provides rich detail (1)."
+        },
+        {
+          id: 2,
+          question: "Explain one strength and one limitation of using secondary data.",
+          marks: 4,
+          rubric: [
+            "Identify strength - e.g. saves time/money/already collected (1 mark)",
+            "Explain strength - e.g. large datasets available/can study historical trends (1 mark)",
+            "Identify limitation - e.g. may not fit research needs/quality unknown (1 mark)",
+            "Explain limitation - e.g. collected for different purpose/may lack validity (1 mark)"
+          ],
+          sampleAnswer: "A strength of secondary data is that it saves considerable time and resources (1) as the researcher does not need to collect the data themselves, allowing access to large datasets that would be impossible to collect independently (1). A limitation is that the data was collected for a different purpose (1), meaning it may not perfectly match the researcher's needs and the researcher has no control over how it was collected, potentially affecting its validity (1)."
+        },
+        {
+          id: 3,
+          question: "Explain what is meant by 'meta-analysis'.",
+          marks: 3,
+          rubric: [
+            "Combines/analyses findings from multiple studies (1 mark)",
+            "On the same topic/research question (1 mark)",
+            "To reach an overall conclusion/identify patterns/increase reliability (1 mark)"
+          ],
+          sampleAnswer: "A meta-analysis is a research method that statistically combines the results from multiple studies (1) that have investigated the same research question or topic (1). By pooling data from many studies, meta-analysis increases statistical power and allows researchers to draw more reliable overall conclusions about the effect being studied (1)."
+        }
+      ]
+      return <ExamQuestionsWithRubric title="Kinds of Data" questions={examQuestions} isPresenting={isPresenting} />
     }
 
     return <div>Loading...</div>
@@ -16920,187 +17155,150 @@ function App() {
     }
 
     if (slideType === 'central_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Measures of Central Tendency</h2>
-            <p className="text-gray-300 mb-6">A single value that describes the 'middle' or 'average' of a data set.</p>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-blue-500/30">
-                <h3 className="text-lg font-bold text-blue-400 mb-2">Mean (x̄)</h3>
-                <p className="text-gray-300 text-sm mb-2">Add all values, divide by number of values.</p>
-                <p className="text-green-300 text-sm">✓ Uses all data; most sensitive</p>
-                <p className="text-red-300 text-sm">✗ Affected by extreme values</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-2">Median</h3>
-                <p className="text-gray-300 text-sm mb-2">Middle value when data is ordered.</p>
-                <p className="text-green-300 text-sm">✓ Not affected by extremes</p>
-                <p className="text-red-300 text-sm">✗ Doesn't use all data</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-purple-500/30">
-                <h3 className="text-lg font-bold text-purple-400 mb-2">Mode</h3>
-                <p className="text-gray-300 text-sm mb-2">Most frequently occurring value.</p>
-                <p className="text-green-300 text-sm">✓ Easy; works with categories</p>
-                <p className="text-red-300 text-sm">✗ May be several or none</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <CentralTendencyTeach isPresenting={isPresenting} />
     }
 
-    if (slideType === 'dispersion_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Measures of Dispersion</h2>
-            <p className="text-gray-300 mb-6">How <span className="font-bold">spread out</span> the data is around the central value.</p>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-amber-500/30">
-                <h3 className="text-xl font-bold text-amber-400 mb-3">Range</h3>
-                <p className="text-gray-300 mb-2">Highest value minus lowest value.</p>
-                <p className="text-gray-400 text-sm mb-3">E.g., Data: 3, 5, 8, 12 → Range = 12 - 3 = 9</p>
-                <p className="text-green-300 text-sm">✓ Quick and easy to calculate</p>
-                <p className="text-red-300 text-sm">✗ Only uses two values; affected by extremes</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/30">
-                <h3 className="text-xl font-bold text-cyan-400 mb-3">Standard Deviation (SD)</h3>
-                <p className="text-gray-300 mb-2">Average distance of each score from the mean.</p>
-                <p className="text-gray-400 text-sm mb-3">Low SD = scores clustered; High SD = spread out</p>
-                <p className="text-green-300 text-sm">✓ Uses all data; more precise measure</p>
-                <p className="text-red-300 text-sm">✗ More complex to calculate</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'choosing_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">When to Use Each Measure</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-600">
-                    <th className="text-left py-3 text-rose-400">Data Situation</th>
-                    <th className="text-left py-3 text-rose-400">Best Measure</th>
-                    <th className="text-left py-3 text-rose-400">Reason</th>
-                  </tr>
-                </thead>
-                <tbody className="text-gray-300">
-                  <tr className="border-b border-gray-700">
-                    <td className="py-3">Normal distribution (no extremes)</td>
-                    <td className="py-3 text-blue-400">Mean</td>
-                    <td className="py-3">Most representative</td>
-                  </tr>
-                  <tr className="border-b border-gray-700">
-                    <td className="py-3">Extreme values (outliers)</td>
-                    <td className="py-3 text-green-400">Median</td>
-                    <td className="py-3">Not distorted</td>
-                  </tr>
-                  <tr className="border-b border-gray-700">
-                    <td className="py-3">Categorical data</td>
-                    <td className="py-3 text-purple-400">Mode</td>
-                    <td className="py-3">Only option</td>
-                  </tr>
-                  <tr>
-                    <td className="py-3">Precise measure of spread</td>
-                    <td className="py-3 text-cyan-400">Standard Deviation</td>
-                    <td className="py-3">Uses all data</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'stats_afl') {
+    if (slideType === 'stats_afl1') {
       const questions: Question[] = [
         {
           id: 1,
-          question: "The mean is affected by:",
-          options: ["The mode", "Extreme values", "The median", "Categorical data"],
+          question: "The mean is calculated by:",
+          options: ["Finding the middle value", "Adding all values and dividing by the number of values", "Finding the most common value", "Subtracting lowest from highest"],
           correct: 1
         },
         {
           id: 2,
-          question: "The median is found by:",
-          options: ["Adding all values", "Finding the middle value", "Finding the most common value", "Subtracting highest from lowest"],
+          question: "The median is:",
+          options: ["The total divided by the count", "The middle value when data is ordered", "The most frequent value", "The range of the data"],
           correct: 1
         },
         {
           id: 3,
-          question: "A high standard deviation means data is:",
-          options: ["Clustered closely", "Spread out widely", "All the same", "Categorical"],
+          question: "A limitation of the mean is that it is:",
+          options: ["Too simple", "Affected by extreme values", "Cannot be calculated", "Only works with words"],
           correct: 1
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Descriptive Stats" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Central Tendency" subtitle="Test your understanding so far" />
+    }
+
+    if (slideType === 'dispersion_teach') {
+      return <DispersionTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'choosing_teach') {
+      return <ChoosingStatsTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'stats_afl2') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "The range is calculated by:",
+          options: ["Adding all values", "Subtracting lowest value from highest value", "Finding the average", "Counting all values"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "A high standard deviation means data is:",
+          options: ["Clustered closely together", "Spread out widely", "All the same value", "Categorical"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "For categorical data (like favourite colour), you should use:",
+          options: ["Mean", "Median", "Mode", "Standard deviation"],
+          correct: 2
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Dispersion & Choosing Measures" subtitle="Final statistics check" />
+    }
+
+    if (slideType === 'stats_calculator') {
+      return <StatisticsCalculator isPresenting={isPresenting} />
     }
 
     if (slideType === 'stats_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Calculate the mean, median and mode.",
+          marks: 3,
+          rubric: [
+            "Mean = 98 ÷ 9 = 10.89 (accept 10.9 or 11) (1 mark)",
+            "Median = 9 (middle value when ordered) (1 mark)",
+            "Mode = 8 (most frequent value) (1 mark)"
+          ],
+          sampleAnswer: "Mean: 5+7+8+8+9+10+12+14+25 = 98; 98÷9 = 10.89. Median: Data is already ordered, middle value (5th of 9) = 9. Mode: 8 appears twice, all other values appear once, so mode = 8."
+        },
+        {
+          id: 2,
+          question: "Calculate the range.",
+          marks: 1,
+          rubric: [
+            "Range = 25 - 5 = 20 (1 mark)"
+          ],
+          sampleAnswer: "Range = highest value - lowest value = 25 - 5 = 20"
+        },
+        {
+          id: 3,
+          question: "Explain why the median might be a better measure of central tendency than the mean for this data.",
+          marks: 3,
+          rubric: [
+            "There is an extreme score/outlier (25) in the data (1 mark)",
+            "This pulls the mean up/makes it unrepresentative (1 mark)",
+            "Median is not affected by extreme scores/gives more typical value (1 mark)"
+          ],
+          sampleAnswer: "The data contains an extreme score (25) which is much higher than the other values. This outlier pulls the mean up to 10.89, which is higher than most of the actual scores. The median (9) is not affected by this extreme value and better represents the typical memory performance of participants."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Statistics</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-white mb-3">Data Set: Memory Scores</h3>
-              <p className="text-gray-300 mb-3">Participants remembered the following number of words:</p>
-              <p className="text-2xl font-bold text-amber-400 text-center">5, 7, 8, 8, 9, 10, 12, 14, 25</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
-                  <p className="text-gray-300">Calculate the mean, median and mode.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (1 mark)</p>
-                  <p className="text-gray-300">Calculate the range.</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain why the median might be a better measure of central tendency than the mean for this data.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="Application Task: Statistics"
+          scenario="Participants remembered the following number of words:"
+          scenarioData="5, 7, 8, 8, 9, 10, 12, 14, 25"
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (4 marks)</p>
-                  <p className="text-gray-300">Explain one strength and one limitation of using the mean as a measure of central tendency.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">Explain why standard deviation is more informative than the range.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (2 marks)</p>
-                  <p className="text-gray-300">A researcher collects data on favourite colours. Which measure of central tendency should they use? Explain why.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Explain one strength and one limitation of using the mean as a measure of central tendency.",
+          marks: 4,
+          rubric: [
+            "Identify strength - e.g. uses all data/most sensitive (1 mark)",
+            "Explain strength - e.g. gives most representative average/accounts for all values (1 mark)",
+            "Identify limitation - e.g. affected by extreme scores/outliers (1 mark)",
+            "Explain limitation - e.g. can give unrepresentative/misleading average (1 mark)"
+          ],
+          sampleAnswer: "A strength of the mean is that it uses all the data in its calculation (1), making it the most sensitive measure of central tendency as every value contributes to the final average (1). A limitation is that the mean is distorted by extreme scores or outliers (1), which can pull the average up or down and give an unrepresentative value that doesn't reflect the typical score (1)."
+        },
+        {
+          id: 2,
+          question: "Explain why standard deviation is more informative than the range.",
+          marks: 2,
+          rubric: [
+            "Standard deviation uses all data points/range only uses two values (1 mark)",
+            "Standard deviation not affected by extreme values/anomalies as much as range (1 mark)"
+          ],
+          sampleAnswer: "Standard deviation is more informative because it takes into account every value in the data set rather than just the highest and lowest (1). Unlike the range, standard deviation is less affected by a single extreme score or outlier, giving a more accurate picture of how spread out the data actually is (1)."
+        },
+        {
+          id: 3,
+          question: "A researcher collects data on favourite colours. Which measure of central tendency should they use? Explain why.",
+          marks: 2,
+          rubric: [
+            "Mode (1 mark)",
+            "Because data is categorical/nominal/cannot calculate mean or median with words/colours (1 mark)"
+          ],
+          sampleAnswer: "The researcher should use the mode (1) because the data on favourite colours is categorical/nominal data, meaning you cannot perform mathematical calculations on it - you cannot find the 'average' of colours like red and blue, but you can identify which colour appears most frequently (1)."
+        }
+      ]
+      return <ExamQuestionsWithRubric title="Descriptive Statistics" questions={examQuestions} isPresenting={isPresenting} />
     }
 
     return <div>Loading...</div>
@@ -17164,167 +17362,150 @@ function App() {
     }
 
     if (slideType === 'tables_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Tables</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <p className="text-gray-200">Tables summarise raw data, showing summary statistics (means, medians, etc.) rather than individual scores.</p>
-            </div>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-              <h3 className="text-lg font-bold text-amber-400 mb-3">Rules for Good Tables:</h3>
-              <ul className="space-y-2 text-gray-300">
-                <li>• <span className="font-bold">Clear title</span> describing what the table shows</li>
-                <li>• <span className="font-bold">Labelled columns and rows</span> with units where appropriate</li>
-                <li>• <span className="font-bold">Show appropriate statistics</span> (e.g., mean, SD)</li>
-                <li>• <span className="font-bold">Values to same decimal places</span></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      )
+      return <TablesTeach isPresenting={isPresenting} />
     }
 
     if (slideType === 'graphs_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Types of Graphs</h2>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-blue-500/30">
-                <h3 className="text-lg font-bold text-blue-400 mb-2">📊 Bar Charts</h3>
-                <p className="text-gray-300 text-sm mb-2">For <span className="font-bold">discrete/categorical</span> data</p>
-                <p className="text-gray-400 text-sm">Bars do NOT touch. E.g., mean scores for different conditions</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-green-500/30">
-                <h3 className="text-lg font-bold text-green-400 mb-2">📈 Histograms</h3>
-                <p className="text-gray-300 text-sm mb-2">For <span className="font-bold">continuous</span> data</p>
-                <p className="text-gray-400 text-sm">Bars TOUCH. E.g., frequency of test scores in ranges</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-purple-500/30">
-                <h3 className="text-lg font-bold text-purple-400 mb-2">📉 Scattergrams</h3>
-                <p className="text-gray-300 text-sm mb-2">For <span className="font-bold">correlational</span> data</p>
-                <p className="text-gray-400 text-sm">Plot two co-variables. Shows relationship pattern</p>
-              </div>
-            </div>
-            <div className="mt-6 bg-amber-900/30 rounded-lg p-4 border border-amber-500/50">
-              <p className="text-amber-300 text-sm"><span className="font-bold">Key rule:</span> Bar charts = bars don't touch (discrete data). Histograms = bars touch (continuous data).</p>
-            </div>
-          </div>
-        </div>
-      )
+      return <GraphsTeachAS isPresenting={isPresenting} />
     }
 
-    if (slideType === 'distributions_teach') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">Distributions</h2>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-cyan-500/30">
-                <h3 className="text-lg font-bold text-cyan-400 mb-2">Normal Distribution</h3>
-                <p className="text-gray-300 text-sm mb-2">Symmetrical bell curve</p>
-                <p className="text-gray-400 text-sm">Mean, median and mode are the <span className="font-bold">same</span></p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-amber-500/30">
-                <h3 className="text-lg font-bold text-amber-400 mb-2">Positive Skew</h3>
-                <p className="text-gray-300 text-sm mb-2">Tail points to the <span className="font-bold">right</span> (positive)</p>
-                <p className="text-gray-400 text-sm">Most scores at low end. Mode &lt; Median &lt; Mean</p>
-              </div>
-              <div className="bg-gray-800/50 rounded-xl p-5 border border-red-500/30">
-                <h3 className="text-lg font-bold text-red-400 mb-2">Negative Skew</h3>
-                <p className="text-gray-300 text-sm mb-2">Tail points to the <span className="font-bold">left</span> (negative)</p>
-                <p className="text-gray-400 text-sm">Most scores at high end. Mean &lt; Median &lt; Mode</p>
-              </div>
-            </div>
-            <div className="mt-6 bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-              <p className="text-gray-300"><span className="font-bold text-rose-400">Tip:</span> The tail tells you the skew direction. Positive skew = tail goes positive (right). Negative skew = tail goes negative (left).</p>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (slideType === 'graphs_afl') {
+    if (slideType === 'graphs_afl1') {
       const questions: Question[] = [
         {
           id: 1,
-          question: "In a bar chart, the bars:",
-          options: ["Touch", "Don't touch", "Overlap", "Are curved"],
+          question: "Bar charts are used for:",
+          options: ["Continuous data", "Discrete/categorical data", "Correlational data", "Qualitative data only"],
           correct: 1
         },
         {
           id: 2,
-          question: "A histogram is used for:",
-          options: ["Categorical data", "Continuous data", "Correlational data", "Qualitative data"],
+          question: "In a histogram, the bars:",
+          options: ["Don't touch", "Touch", "Overlap", "Have gaps of varying sizes"],
           correct: 1
         },
         {
           id: 3,
+          question: "A scattergram is used to display:",
+          options: ["Mean scores", "Frequency counts", "Correlational data", "Categorical data"],
+          correct: 2
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Graph Types" subtitle="Test your understanding so far" />
+    }
+
+    if (slideType === 'distributions_teach') {
+      return <DistributionsTeach isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'graphs_afl2') {
+      const questions: Question[] = [
+        {
+          id: 1,
           question: "In a normal distribution, mean, median and mode are:",
           options: ["All different", "The same", "Only two are equal", "Not calculable"],
           correct: 1
+        },
+        {
+          id: 2,
+          question: "In a positive skew, most scores are at the:",
+          options: ["High end", "Low end", "Middle", "Both extremes"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "In a negative skew, the tail points:",
+          options: ["Right (positive)", "Left (negative)", "Upward", "Downward"],
+          correct: 1
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Graphs" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Distributions" subtitle="Test your understanding so far" />
+    }
+
+    if (slideType === 'graph_master') {
+      return <GraphMaster isPresenting={isPresenting} />
     }
 
     if (slideType === 'graphs_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Explain why a histogram rather than a bar chart should be used.",
+          marks: 2,
+          rubric: [
+            "Exam scores are continuous/interval data (1 mark)",
+            "Histograms are for continuous data/bar charts for discrete categories (1 mark)"
+          ],
+          sampleAnswer: "Exam scores are continuous numerical data (interval level) that can take any value within a range. Histograms are used for continuous data where the bars touch to show the continuous nature, whereas bar charts are for discrete categories with gaps between bars."
+        },
+        {
+          id: 2,
+          question: "The data shows most students scored highly with a few low scores. What type of distribution is this?",
+          marks: 2,
+          rubric: [
+            "Negative skew (1 mark)",
+            "Because most scores are at the high end with a tail towards lower scores (1 mark)"
+          ],
+          sampleAnswer: "This is a negative skew (also called left skew). Most scores cluster at the high end of the distribution, with a long tail extending towards the lower scores where a few students performed poorly."
+        },
+        {
+          id: 3,
+          question: "Explain one difference between bar charts and histograms.",
+          marks: 3,
+          rubric: [
+            "Bar chart bars have gaps / histogram bars touch (1 mark)",
+            "Bar charts for discrete/categorical data (1 mark)",
+            "Histograms for continuous/interval data (1 mark)"
+          ],
+          sampleAnswer: "Bar charts have gaps between the bars and are used for discrete, categorical data like favourite colour or experimental condition. Histograms have no gaps between bars (they touch) and are used for continuous, interval data like test scores or reaction times."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Graphs</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-white mb-3">Scenario: Psychology Exam Scores</h3>
-              <p className="text-gray-300">A teacher recorded the exam scores of her psychology class and wants to display this data appropriately.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
-                  <p className="text-gray-300">Explain why a histogram rather than a bar chart should be used.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">The data shows most students scored highly with a few low scores. What type of distribution is this?</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain one difference between bar charts and histograms.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="Application Task: Graphs"
+          scenario="A teacher recorded the exam scores of her psychology class and wants to display this data appropriately."
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
-                  <p className="text-gray-300">Describe the features of a normal distribution.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">Explain the difference between a positive and a negative skew.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (4 marks)</p>
-                  <p className="text-gray-300">A researcher is displaying mean scores from two conditions (A and B). What type of graph should they use? Give two reasons for your answer.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Describe the features of a normal distribution.",
+          marks: 3,
+          rubric: [
+            "Bell-shaped/symmetrical curve (1 mark)",
+            "Mean, median and mode are the same/in the centre (1 mark)",
+            "Most data clusters around the mean/tails at both ends (1 mark)"
+          ],
+          sampleAnswer: "A normal distribution forms a bell-shaped, symmetrical curve (1). The mean, median and mode all fall at the same point in the centre of the distribution (1). Most of the data clusters around the mean with progressively fewer scores towards the extremes, creating symmetrical tails at both ends (1)."
+        },
+        {
+          id: 2,
+          question: "Explain the difference between a positive and a negative skew.",
+          marks: 2,
+          rubric: [
+            "Positive skew: most scores at lower end/tail extends towards higher values (1 mark)",
+            "Negative skew: most scores at higher end/tail extends towards lower values (1 mark)"
+          ],
+          sampleAnswer: "A positive skew occurs when most scores cluster at the lower end of the distribution with a long tail extending towards higher values (1). A negative skew is the opposite, where most scores cluster at the higher end with a long tail extending towards lower values (1)."
+        },
+        {
+          id: 3,
+          question: "A researcher is displaying mean scores from two conditions (A and B). What type of graph should they use? Give two reasons for your answer.",
+          marks: 4,
+          rubric: [
+            "Bar chart (1 mark)",
+            "First reason - e.g. comparing discrete/separate categories/conditions (1 mark)",
+            "Second reason - e.g. data is discontinuous/shows differences between groups clearly/appropriate for experimental conditions (1 mark)",
+            "Elaboration or additional relevant detail (1 mark)"
+          ],
+          sampleAnswer: "The researcher should use a bar chart (1). Bar charts are appropriate because they are used to display discrete/separate categories such as the two experimental conditions A and B (1). They allow for clear visual comparison between the mean scores of each group (1). Additionally, the gaps between bars emphasise that these are distinct conditions rather than continuous data (1)."
+        }
+      ]
+      return <ExamQuestionsWithRubric title="Data Presentation" questions={examQuestions} isPresenting={isPresenting} />
     }
 
     return <div>Loading...</div>
@@ -17448,6 +17629,30 @@ function App() {
       )
     }
 
+    if (slideType === 'maths_afl1') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "According to BIDMAS, which operation comes first in 3 + 4 × 2?",
+          options: ["Addition", "Multiplication", "They are equal", "Depends on the calculator"],
+          correct: 1
+        },
+        {
+          id: 2,
+          question: "24 out of 80 as a percentage is:",
+          options: ["24%", "30%", "40%", "80%"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "To find 15% of 60, you calculate:",
+          options: ["15 + 60", "60 ÷ 15", "(15 ÷ 100) × 60", "15 × 60 ÷ 10"],
+          correct: 2
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Arithmetic & Percentages" subtitle="Test your understanding so far" />
+    }
+
     if (slideType === 'fractions_teach') {
       return (
         <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
@@ -17480,82 +17685,128 @@ function App() {
       )
     }
 
-    if (slideType === 'maths_afl') {
+    if (slideType === 'maths_afl2') {
       const questions: Question[] = [
         {
           id: 1,
-          question: "What is 25% of 80?",
-          options: ["15", "20", "25", "32"],
+          question: "The decimal 0.5 as a fraction is:",
+          options: ["1/4", "1/2", "1/5", "2/5"],
           correct: 1
         },
         {
           id: 2,
-          question: "12 out of 48 as a percentage is:",
-          options: ["12%", "25%", "36%", "48%"],
-          correct: 1
+          question: "The ratio 30:45 simplifies to:",
+          options: ["2:3", "3:4", "6:9", "1:2"],
+          correct: 0
         },
         {
           id: 3,
-          question: "The decimal 0.75 as a fraction is:",
-          options: ["1/2", "2/3", "3/4", "4/5"],
-          correct: 2
+          question: "0.25 as a percentage is:",
+          options: ["2.5%", "25%", "0.25%", "250%"],
+          correct: 1
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Maths Skills" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Fractions & Ratios" subtitle="Test your understanding so far" />
+    }
+
+    if (slideType === 'maths_bootcamp') {
+      return <MathsSkillsBootCamp isPresenting={isPresenting} />
     }
 
     if (slideType === 'maths_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "18 participants out of 72 showed improvement. What percentage is this?",
+          marks: 2,
+          rubric: [
+            "Correct calculation: 18 ÷ 72 × 100 (1 mark)",
+            "Correct answer: 25% (1 mark)"
+          ],
+          sampleAnswer: "18 ÷ 72 = 0.25; 0.25 × 100 = 25%. So 25% of participants showed improvement."
+        },
+        {
+          id: 2,
+          question: "Calculate 35% of 60.",
+          marks: 2,
+          rubric: [
+            "Correct method: 35 ÷ 100 × 60 OR 60 × 0.35 (1 mark)",
+            "Correct answer: 21 (1 mark)"
+          ],
+          sampleAnswer: "35% of 60 = 0.35 × 60 = 21"
+        },
+        {
+          id: 3,
+          question: "Convert 3/8 into a decimal and a percentage.",
+          marks: 2,
+          rubric: [
+            "Decimal: 3 ÷ 8 = 0.375 (1 mark)",
+            "Percentage: 0.375 × 100 = 37.5% (1 mark)"
+          ],
+          sampleAnswer: "3 ÷ 8 = 0.375 (decimal). To convert to percentage: 0.375 × 100 = 37.5%"
+        },
+        {
+          id: 4,
+          question: "Simplify the ratio 45:60.",
+          marks: 2,
+          rubric: [
+            "Find common factor (15) or work towards simplest form (1 mark)",
+            "Correct answer: 3:4 (1 mark)"
+          ],
+          sampleAnswer: "45:60 - divide both by 15 = 3:4"
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Maths Skills</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
-                  <p className="text-gray-300">18 participants out of 72 showed improvement. What percentage is this?</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">Calculate 35% of 60.</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (2 marks)</p>
-                  <p className="text-gray-300">Convert 3/8 into a decimal and a percentage.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 4 (2 marks)</p>
-                  <p className="text-gray-300">Simplify the ratio 45:60.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="Application Task: Maths Skills"
+          scenario="Answer the following mathematical questions relevant to psychological research."
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
-                  <p className="text-gray-300">A researcher found that 24 out of 96 participants showed anxiety symptoms. Calculate this as a percentage and simplify as a ratio.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">The mean score in Condition A was 45. If participants in Condition B scored 20% higher, what was their mean score?</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "A researcher found that 24 out of 96 participants showed anxiety symptoms. Calculate this as a percentage and simplify as a ratio.",
+          marks: 3,
+          rubric: [
+            "Calculation: 24 ÷ 96 × 100 = 25% (1 mark)",
+            "Percentage answer: 25% (1 mark)",
+            "Ratio simplified: 24:96 = 1:4 (1 mark)"
+          ],
+          sampleAnswer: "To find the percentage: 24 ÷ 96 × 100 = 25% (1). So 25% of participants showed anxiety symptoms (1). As a ratio: 24:96 simplifies to 1:4 (dividing both by 24), meaning 1 in 4 participants showed symptoms (1).",
+          isCalculation: true,
+          correctAnswer: 25
+        },
+        {
+          id: 2,
+          question: "The mean score in Condition A was 45. If participants in Condition B scored 20% higher, what was their mean score?",
+          marks: 2,
+          rubric: [
+            "Calculate 20% of 45 = 9 (1 mark)",
+            "Add to get 45 + 9 = 54 (1 mark)"
+          ],
+          sampleAnswer: "First calculate 20% of 45: 45 × 0.20 = 9 (1). Then add this to the original score: 45 + 9 = 54. So the mean score in Condition B was 54 (1).",
+          isCalculation: true,
+          correctAnswer: 54
+        },
+        {
+          id: 3,
+          question: "A study has 120 participants. If 3/5 are female, how many males are in the study?",
+          marks: 2,
+          rubric: [
+            "Calculate females: 120 × 3/5 = 72 (1 mark)",
+            "Calculate males: 120 - 72 = 48 (1 mark)"
+          ],
+          sampleAnswer: "First find the number of females: 120 × 3/5 = 72 females (1). Then subtract from total: 120 - 72 = 48 males in the study (1).",
+          isCalculation: true,
+          correctAnswer: 48
+        }
+      ]
+      return <ExamQuestionsWithRubric title="Mathematical Skills" questions={examQuestions} isPresenting={isPresenting} />
     }
 
     return <div>Loading...</div>
@@ -17676,6 +17927,30 @@ function App() {
       )
     }
 
+    if (slideType === 'stats_afl1') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "p ≤ 0.05 means there is:",
+          options: ["50% chance results are due to chance", "95% chance results are due to chance", "5% or less chance results are due to chance", "100% certainty"],
+          correct: 2
+        },
+        {
+          id: 2,
+          question: "The sign test is used with:",
+          options: ["Independent groups only", "Correlational designs", "Repeated measures or matched pairs", "Observational studies only"],
+          correct: 2
+        },
+        {
+          id: 3,
+          question: "In the sign test, participants with no difference (zeros) are:",
+          options: ["Counted as positive", "Counted as negative", "Excluded from the analysis", "Counted twice"],
+          correct: 2
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Significance & Sign Test" subtitle="Test your understanding so far" />
+    }
+
     if (slideType === 'critical_teach') {
       return (
         <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
@@ -17707,84 +17982,105 @@ function App() {
       )
     }
 
-    if (slideType === 'stats_afl') {
+    if (slideType === 'stats_afl2') {
       const questions: Question[] = [
         {
           id: 1,
-          question: "p ≤ 0.05 means results are:",
-          options: ["Not significant", "Significant", "Invalid", "Unreliable"],
+          question: "To use a critical value table, you need to know:",
+          options: ["Only the N value", "N, significance level, and number of tails", "Only the significance level", "The actual data values"],
           correct: 1
         },
         {
           id: 2,
-          question: "In the sign test, zeros are:",
-          options: ["Counted as positive", "Counted as negative", "Excluded", "Doubled"],
-          correct: 2
+          question: "A one-tailed test is used when:",
+          options: ["No direction is predicted", "The hypothesis is directional", "Results are not significant", "Sample size is small"],
+          correct: 1
         },
         {
           id: 3,
-          question: "A directional hypothesis requires a:",
-          options: ["Two-tailed test", "One-tailed test", "No statistical test", "Sign test only"],
+          question: "For results to be significant in the sign test, S must be:",
+          options: ["Greater than the critical value", "Equal to or less than the critical value", "Equal to zero always", "Greater than N"],
           correct: 1
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Statistical Testing" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Critical Values" subtitle="Test your understanding so far" />
+    }
+
+    if (slideType === 'test_selector') {
+      return <StatisticalTestSelector isPresenting={isPresenting} />
     }
 
     if (slideType === 'stats_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Calculate the value of S.",
+          marks: 2,
+          rubric: [
+            "Identifies that zeros are excluded so N=8 (1 mark)",
+            "Correctly identifies S=1 (the less frequent sign, which is minus) (1 mark)"
+          ],
+          sampleAnswer: "First, remove the zeros from the data, leaving N=8 participants. Count the plus signs (+): there are 7. Count the minus signs (−): there is 1. S is the less frequent sign, so S = 1."
+        },
+        {
+          id: 2,
+          question: "Using the critical value, state whether results are significant and explain your conclusion.",
+          marks: 3,
+          rubric: [
+            "Compares S (1) to critical value (1) - states S equals or is less than critical value (1 mark)",
+            "Concludes results ARE significant (1 mark)",
+            "Explains what this means - e.g., less than 5% probability results are due to chance / memory training had a real effect / reject null hypothesis (1 mark)"
+          ],
+          sampleAnswer: "The calculated value of S is 1, and the critical value is also 1. For results to be significant in the sign test, S must be equal to or less than the critical value. Since S (1) ≤ critical value (1), the results are significant at p≤0.05. This means there is less than a 5% probability that the improvement in memory scores was due to chance alone, so we can conclude that the memory training had a genuine positive effect."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Sign Test</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-white mb-3">Scenario: Memory Training</h3>
-              <p className="text-gray-300 mb-3">10 participants completed a memory test before and after training. Signs of change were:</p>
-              <p className="text-xl font-bold text-center text-amber-400">+, +, +, 0, +, −, +, +, 0, +</p>
-              <p className="text-gray-400 text-sm mt-2">(Critical value for N=8, one-tailed, p≤0.05 is 1)</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (2 marks)</p>
-                  <p className="text-gray-300">Calculate the value of S.</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
-                  <p className="text-gray-300">Using the critical value, state whether results are significant and explain your conclusion.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="📝 Application Task: Sign Test"
+          scenario="10 participants completed a memory test before and after training. Signs of change were:"
+          scenarioData="+, +, +, 0, +, −, +, +, 0, + (Critical value for N=8, one-tailed, p≤0.05 is 1)"
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
-                  <p className="text-gray-300">Explain what is meant by p ≤ 0.05 in the context of statistical testing.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (3 marks)</p>
-                  <p className="text-gray-300">Explain why a researcher might use a one-tailed rather than a two-tailed test.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (2 marks)</p>
-                  <p className="text-gray-300">State the conclusion if the calculated S value is greater than the critical value.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Explain what is meant by p ≤ 0.05 in the context of statistical testing.",
+          marks: 3,
+          rubric: [
+            "5% probability/5 in 100 chance (1 mark)",
+            "That results are due to chance (1 mark)",
+            "Therefore 95% confident results are significant/due to IV/not due to chance (1 mark)"
+          ],
+          sampleAnswer: "p ≤ 0.05 means there is a 5% probability, or 5 in 100 chance (1), that the results occurred by chance alone rather than due to the manipulation of the independent variable (1). This means researchers can be 95% confident that the results are significant and reflect a real effect (1)."
+        },
+        {
+          id: 2,
+          question: "Explain why a researcher might use a one-tailed rather than a two-tailed test.",
+          marks: 3,
+          rubric: [
+            "One-tailed used when direction of results is predicted (1 mark)",
+            "Based on previous research/theory suggesting specific direction (1 mark)",
+            "More likely to find significant result/more statistical power (1 mark)"
+          ],
+          sampleAnswer: "A researcher would use a one-tailed test when they have a directional hypothesis predicting the specific direction of results (1). This would be based on previous research or established theory that strongly suggests which condition will perform better (1). One-tailed tests are also more powerful, meaning they are more likely to detect a significant effect when one exists (1)."
+        },
+        {
+          id: 3,
+          question: "State the conclusion if the calculated S value is greater than the critical value.",
+          marks: 2,
+          rubric: [
+            "Results are not significant/fail to reject null hypothesis (1 mark)",
+            "S must be equal to or less than critical value to be significant (1 mark)"
+          ],
+          sampleAnswer: "If the calculated S value is greater than the critical value, the results are not significant (1). In the sign test, the calculated value must be equal to or less than the critical value for the results to be statistically significant, so we fail to reject the null hypothesis (1)."
+        }
+      ]
+      return <ExamQuestionsWithRubric title="Statistical Testing" questions={examQuestions} isPresenting={isPresenting} />
     }
 
     return <div>Loading...</div>
@@ -17902,6 +18198,30 @@ function App() {
       )
     }
 
+    if (slideType === 'peer_afl1') {
+      const questions: Question[] = [
+        {
+          id: 1,
+          question: "Peer review is conducted by:",
+          options: ["The original researcher", "The general public", "Expert scientists in the field", "Journal editors only"],
+          correct: 2
+        },
+        {
+          id: 2,
+          question: "The main purpose of peer review is to:",
+          options: ["Speed up publication", "Ensure quality of research before publication", "Increase costs", "Reduce the number of published papers"],
+          correct: 1
+        },
+        {
+          id: 3,
+          question: "Publication bias refers to:",
+          options: ["Reviewers being anonymous", "Positive results being more likely published", "The slow review process", "Using multiple reviewers"],
+          correct: 1
+        }
+      ]
+      return <KnowledgeCheck questions={questions} title="Check: Peer Review" subtitle="Test your understanding so far" />
+    }
+
     if (slideType === 'economy_teach') {
       return (
         <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
@@ -17933,89 +18253,521 @@ function App() {
       )
     }
 
-    if (slideType === 'peer_afl') {
+    if (slideType === 'peer_afl2') {
       const questions: Question[] = [
         {
           id: 1,
-          question: "Peer review is conducted by:",
-          options: ["The original researcher", "The general public", "Expert scientists in the field", "Journal editors only"],
+          question: "One economic benefit of psychological research is:",
+          options: ["Increasing research costs", "Reducing effectiveness of treatments", "Developing cost-effective therapies", "Publishing more papers"],
           correct: 2
         },
         {
           id: 2,
-          question: "Publication bias refers to:",
-          options: ["Reviewers being anonymous", "Positive results being more likely published", "The slow review process", "Using multiple reviewers"],
+          question: "Psychological research can benefit the economy by:",
+          options: ["Making treatments more expensive", "Improving workplace productivity", "Increasing absenteeism", "Slowing down NHS services"],
           correct: 1
         },
         {
           id: 3,
-          question: "Psychological research can benefit the economy by:",
-          options: ["Increasing research costs", "Reducing effectiveness of treatments", "Developing cost-effective therapies", "Publishing more papers"],
+          question: "Research funding is considered an economic cost because:",
+          options: ["It always produces useful results", "It is always cheap", "It requires significant financial investment", "It has no benefits"],
           correct: 2
         }
       ]
-      return <KnowledgeCheck questions={questions} title="Quick Check: Peer Review" subtitle="Test your understanding" />
+      return <KnowledgeCheck questions={questions} title="Check: Economic Implications" subtitle="Test your understanding so far" />
+    }
+
+    if (slideType === 'peer_review_sim') {
+      return <PeerReviewSimulator isPresenting={isPresenting} />
     }
 
     if (slideType === 'peer_task') {
+      const taskQuestions: TaskQuestion[] = [
+        {
+          id: 1,
+          question: "Describe the process of peer review that their work would go through.",
+          marks: 3,
+          rubric: [
+            "Research submitted to journal/editor (1 mark)",
+            "Sent to experts/other psychologists in the same field for review (1 mark)",
+            "Reviewers check methodology/validity/conclusions and recommend accept/reject/revise (1 mark)"
+          ],
+          sampleAnswer: "The researcher would first submit their work to a psychology journal (1). The editor would then send the paper to two or more experts in the field of anxiety treatment for anonymous review (1). These peer reviewers would evaluate the methodology, check the validity of findings, and recommend whether to accept, reject, or request revisions to the paper (1)."
+        },
+        {
+          id: 2,
+          question: "Explain one limitation of peer review.",
+          marks: 2,
+          rubric: [
+            "Identifies a limitation - e.g., bias, slow process, anonymity issues, publication bias, old boys' network (1 mark)",
+            "Explains how this is a problem - e.g., innovative research may be rejected, delays progress, reviewers may favour certain approaches (1 mark)"
+          ],
+          sampleAnswer: "One limitation is that peer reviewers may be biased (1). For example, reviewers may reject research that contradicts their own theories or that uses methods they are unfamiliar with, which could prevent innovative or ground-breaking research from being published (1)."
+        },
+        {
+          id: 3,
+          question: "Explain one way this research could have positive economic implications.",
+          marks: 3,
+          rubric: [
+            "Identifies economic benefit - e.g., reduced healthcare costs, increased productivity, fewer sick days (1 mark)",
+            "Links to the specific research - e.g., effective anxiety treatment (1 mark)",
+            "Explains the mechanism - e.g., people can work/less NHS burden/fewer prescriptions needed (1 mark)"
+          ],
+          sampleAnswer: "If the new therapy is effective, it could reduce healthcare costs (1) because an effective anxiety treatment would mean fewer people require ongoing support from the NHS (1). This would reduce the financial burden on health services and potentially allow people with anxiety to return to work more quickly, contributing to the economy through increased productivity (1)."
+        }
+      ]
       return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📝 Application Task: Peer Review</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30 mb-6">
-              <h3 className="text-xl font-bold text-white mb-3">Scenario: New Therapy Research</h3>
-              <p className="text-gray-300">A researcher has developed a new therapy for anxiety and wants to publish their findings in a respected psychology journal.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (3 marks)</p>
-                  <p className="text-gray-300">Describe the process of peer review that their work would go through.</p>
-                </div>
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (2 marks)</p>
-                  <p className="text-gray-300">Explain one limitation of peer review.</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (3 marks)</p>
-                  <p className="text-gray-300">Explain one way this research could have positive economic implications.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ApplicationTaskWithRubric
+          title="📝 Application Task: Peer Review"
+          scenario="A researcher has developed a new therapy for anxiety and wants to publish their findings in a respected psychology journal."
+          questions={taskQuestions}
+          isPresenting={isPresenting}
+        />
       )
     }
 
     if (slideType === 'extended') {
-      return (
-        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-rose-400 mb-6">📋 Extended Exam Practice</h2>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-rose-500/30">
-              <div className="space-y-6">
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 1 (4 marks)</p>
-                  <p className="text-gray-300">Explain two reasons why peer review is important in psychology.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 2 (4 marks)</p>
-                  <p className="text-gray-300">Discuss one strength and one limitation of the peer review process.</p>
-                </div>
-                <div className="p-4 bg-gray-700/50 rounded-lg">
-                  <p className="text-amber-400 font-bold mb-2">Question 3 (4 marks)</p>
-                  <p className="text-gray-300">Explain how psychological research can have implications for the economy.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      const examQuestions: ExamQuestion[] = [
+        {
+          id: 1,
+          question: "Explain two reasons why peer review is important in psychology.",
+          marks: 4,
+          rubric: [
+            "First reason identified - e.g. ensures quality/validity of research (1 mark)",
+            "First reason explained - e.g. experts check methods/findings are accurate (1 mark)",
+            "Second reason identified - e.g. prevents fraudulent/flawed research (1 mark)",
+            "Second reason explained - e.g. protects scientific integrity/public from false claims (1 mark)"
+          ],
+          sampleAnswer: "Peer review is important because it ensures the quality of published research (1) by having experts in the field check that the methodology is sound and the conclusions are supported by the data (1). It also helps prevent fraudulent or flawed research from being published (1), protecting the integrity of psychology as a science and preventing the public from being misled by false claims (1)."
+        },
+        {
+          id: 2,
+          question: "Discuss one strength and one limitation of the peer review process.",
+          marks: 4,
+          rubric: [
+            "Identify strength - e.g. maintains scientific standards/quality control (1 mark)",
+            "Explain strength - e.g. only valid research is published/increases reliability (1 mark)",
+            "Identify limitation - e.g. can be biased/takes time/anonymity issues (1 mark)",
+            "Explain limitation - e.g. reviewers may favour certain approaches/delay publication (1 mark)"
+          ],
+          sampleAnswer: "A strength is that peer review maintains scientific standards (1) by ensuring only methodologically sound research is published, which increases confidence in the validity of findings (1). A limitation is that reviewers may be biased (1), potentially favouring research that supports their own theoretical perspective or rejecting innovative ideas that challenge established views (1)."
+        },
+        {
+          id: 3,
+          question: "Explain how psychological research can have implications for the economy.",
+          marks: 4,
+          rubric: [
+            "Identify one economic implication - e.g. workplace productivity/mental health treatment (1 mark)",
+            "Explain how research contributes - e.g. reduces absenteeism/improves efficiency (1 mark)",
+            "Identify second implication - e.g. reduces healthcare costs/improves education (1 mark)",
+            "Explain economic benefit - e.g. effective treatments save NHS money/better educational outcomes (1 mark)"
+          ],
+          sampleAnswer: "Psychological research on stress and mental health can improve workplace productivity (1) by helping organisations implement strategies that reduce absenteeism and improve employee wellbeing, saving businesses money (1). Research into effective therapies can also reduce healthcare costs (1) by providing evidence for treatments that work, meaning the NHS can allocate resources efficiently rather than funding ineffective interventions (1)."
+        }
+      ]
+      return <ExamQuestionsWithRubric title="Peer Review & Economy" questions={examQuestions} isPresenting={isPresenting} />
     }
 
     return <div>Loading...</div>
+  }
+
+  // ============= A LEVEL LESSON RENDER FUNCTIONS (Phase 1: Foundation) =============
+
+  // Render A Level Lesson 1: Correlation Analysis (replaces old Recap lesson)
+  const renderLesson31 = () => {
+    const slideType = lesson31Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={1}
+          title="Correlation Analysis"
+          subtitle="Coefficients & Interpretation"
+          objectives={[
+            "Calculate and interpret correlation coefficients",
+            "Understand the difference between correlations and experiments",
+            "Analyse the strength and direction of correlations",
+            "Evaluate the use of correlational research"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    // Placeholder for remaining slides
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 1: Correlation Analysis</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render A Level Lesson 2: Case Studies & Content Analysis
+  const renderLesson32 = () => {
+    const slideType = lesson32Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={2}
+          title="Case Studies & Content Analysis"
+          subtitle="Coding & Thematic Analysis"
+          objectives={[
+            "Understand the characteristics and uses of case studies",
+            "Explain content analysis and coding procedures",
+            "Describe thematic analysis techniques",
+            "Evaluate strengths and limitations of these methods"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 2: Case Studies & Content Analysis</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render A Level Lesson 3: Reliability
+  const renderLesson33 = () => {
+    const slideType = lesson33Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={3}
+          title="Reliability"
+          subtitle="Test-Retest & Inter-Observer"
+          objectives={[
+            "Define and explain types of reliability",
+            "Describe test-retest reliability",
+            "Explain inter-observer reliability",
+            "Suggest ways to improve reliability"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 3: Reliability</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render A Level Lesson 4: Validity
+  const renderLesson34 = () => {
+    const slideType = lesson34Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={4}
+          title="Validity"
+          subtitle="Face, Concurrent, Ecological, Temporal"
+          objectives={[
+            "Define and distinguish types of validity",
+            "Explain face and concurrent validity",
+            "Understand ecological and temporal validity",
+            "Describe ways to assess and improve validity"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 4: Validity</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render A Level Lesson 5: Choosing a Statistical Test
+  const renderLesson35 = () => {
+    const slideType = lesson35Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={5}
+          title="Choosing a Statistical Test"
+          subtitle="Design & Measurement Level"
+          objectives={[
+            "Understand factors affecting test choice",
+            "Distinguish levels of measurement (nominal, ordinal, interval)",
+            "Use a decision flowchart to select appropriate tests",
+            "Justify test selection with reasons"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 5: Choosing a Statistical Test</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render A Level Lesson 6: Probability & Significance
+  const renderLesson36 = () => {
+    const slideType = lesson36Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={6}
+          title="Probability & Significance"
+          subtitle="Critical Values & Type I/II Errors"
+          objectives={[
+            "Understand probability in psychological research",
+            "Explain significance levels (p ≤ 0.05)",
+            "Use statistical tables and critical values",
+            "Distinguish Type I and Type II errors"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 6: Probability & Significance</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render A Level Lesson 7: Non-Parametric Tests
+  const renderLesson37 = () => {
+    const slideType = lesson37Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={7}
+          title="Non-Parametric Tests"
+          subtitle="Mann-Whitney & Wilcoxon"
+          objectives={[
+            "Understand when to use non-parametric tests",
+            "Calculate and interpret the Mann-Whitney U test",
+            "Calculate and interpret the Wilcoxon signed-rank test",
+            "Use critical value tables correctly"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 7: Non-Parametric Tests</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render A Level Lesson 8: Parametric Tests
+  const renderLesson38 = () => {
+    const slideType = lesson38Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={8}
+          title="Parametric Tests"
+          subtitle="Unrelated & Related t-tests"
+          objectives={[
+            "Understand assumptions for parametric tests",
+            "Calculate the unrelated (independent) t-test",
+            "Calculate the related (paired) t-test",
+            "Interpret t-test results and critical values"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 8: Parametric Tests</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render A Level Lesson 9: Tests of Correlation
+  const renderLesson39 = () => {
+    const slideType = lesson39Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={9}
+          title="Tests of Correlation"
+          subtitle="Spearman's rho & Pearson's r"
+          objectives={[
+            "Understand when to use Spearman's vs Pearson's",
+            "Calculate Spearman's rank correlation coefficient",
+            "Calculate Pearson's product-moment correlation",
+            "Interpret correlation coefficients and significance"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 9: Tests of Correlation</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render A Level Lesson 10: Chi-Squared Test
+  const renderLesson40 = () => {
+    const slideType = lesson40Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={10}
+          title="Chi-Squared Test"
+          subtitle="Test of Association (χ²)"
+          objectives={[
+            "Understand when to use Chi-Squared",
+            "Calculate observed and expected frequencies",
+            "Compute the Chi-Squared statistic",
+            "Interpret results using critical values and degrees of freedom"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 10: Chi-Squared Test</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render A Level Lesson 11: Reporting Investigations
+  const renderLesson41 = () => {
+    const slideType = lesson41Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={11}
+          title="Reporting Investigations"
+          subtitle="Scientific Report Sections"
+          objectives={[
+            "Understand the structure of a scientific report",
+            "Write an effective abstract and introduction",
+            "Describe method, results and discussion sections",
+            "Use appropriate referencing conventions"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 11: Reporting Investigations</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render A Level Lesson 12: Features of Science
+  const renderLesson42 = () => {
+    const slideType = lesson42Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={12}
+          title="Features of Science"
+          subtitle="Objectivity, Replicability, Paradigms"
+          objectives={[
+            "Explain objectivity and the empirical method",
+            "Understand replicability and falsifiability",
+            "Describe theory construction and hypothesis testing",
+            "Explain paradigms and paradigm shifts (Kuhn)"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 12: Features of Science</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+          <p className="text-gray-500 text-sm mt-4">Phase 1 Foundation - Content coming in Phase 2</p>
+        </div>
+      </div>
+    )
   }
 
   // Render placeholder for other lessons
@@ -18078,7 +18830,18 @@ function App() {
       case 28: return renderLesson28()
       case 29: return renderLesson29()
       case 30: return renderLesson30()
-      case 31: return renderALevelLesson1()
+      case 31: return renderLesson31()
+      case 32: return renderLesson32()
+      case 33: return renderLesson33()
+      case 34: return renderLesson34()
+      case 35: return renderLesson35()
+      case 36: return renderLesson36()
+      case 37: return renderLesson37()
+      case 38: return renderLesson38()
+      case 39: return renderLesson39()
+      case 40: return renderLesson40()
+      case 41: return renderLesson41()
+      case 42: return renderLesson42()
       default: return renderPlaceholder()
     }
   }
