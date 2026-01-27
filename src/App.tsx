@@ -18412,17 +18412,53 @@ function App() {
       )
     }
 
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "A correlation coefficient of +0.85 indicates:", options: ["A weak positive relationship", "A strong positive relationship", "A strong negative relationship"], correct: 1 },
+        { id: 2, question: "Which correlation is STRONGER?", options: ["+0.45", "-0.72", "+0.50"], correct: 1 },
+        { id: 3, question: "Correlations can show:", options: ["Cause and effect", "Relationships between variables", "Which variable causes the other"], correct: 1 },
+        { id: 4, question: "A scattergraph with points going down from left to right shows:", options: ["Positive correlation", "Negative correlation", "No correlation"], correct: 1 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
     if (slideType === 'coefficients_teach') return <CoefficientsTeach isPresenting={isPresenting} />
     if (slideType === 'interpretation_teach') return <InterpretationTeach isPresenting={isPresenting} />
+
+    if (slideType === 'correlation_afl1') {
+      const questions: Question[] = [
+        { id: 1, scenario: "A researcher found r = -0.68 between hours of sleep and stress levels.", question: "What does this correlation tell us?", options: ["Moderately strong negative - more sleep associated with less stress", "Weak positive - sleep and stress increase together", "No relationship exists"], correct: 0 },
+        { id: 2, scenario: "r = +0.92 between ice cream sales and drowning deaths.", question: "What explains this correlation?", options: ["Ice cream causes drowning", "Drowning causes ice cream sales", "Third variable (hot weather) causes both"], correct: 2 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Correlation Interpretation" subtitle="Understanding coefficients" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'corr_vs_exp_teach') return <CorrVsExpTeach isPresenting={isPresenting} />
+
+    if (slideType === 'correlation_afl2') {
+      const questions: Question[] = [
+        { id: 1, question: "Correlational research CANNOT establish:", options: ["Relationships between variables", "Cause and effect", "The strength of a relationship"], correct: 1 },
+        { id: 2, question: "The 'third variable problem' refers to:", options: ["Having too many participants", "An unmeasured variable causing both co-variables", "Using three different conditions"], correct: 1 },
+        { id: 3, question: "A researcher finds a negative correlation. This means:", options: ["The study failed", "As one variable increases, the other decreases", "There is no relationship"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Correlations vs Experiments" subtitle="Key differences" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'coefficient_interpreter') return <CoefficientInterpreter isPresenting={isPresenting} />
+
+    if (slideType === 'correlation_task') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
 
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 1: Correlation Analysis</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18450,18 +18486,55 @@ function App() {
       )
     }
 
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "A case study typically involves:", options: ["Large samples", "In-depth study of one individual/group", "Controlled experiments"], correct: 1 },
+        { id: 2, question: "Content analysis is used to analyse:", options: ["Numbers only", "Written/visual/audio material", "Brain scans"], correct: 1 },
+        { id: 3, question: "Which is an advantage of case studies?", options: ["Easy to generalise", "Rich, detailed data", "Quick to conduct"], correct: 1 },
+        { id: 4, question: "Coding in content analysis means:", options: ["Writing computer programs", "Categorising data into themes", "Encrypting data"], correct: 1 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
     if (slideType === 'casestudy_teach') return <CasestudyTeach isPresenting={isPresenting} />
     if (slideType === 'casestudy_eval_teach') return <CasestudyEvalTeach isPresenting={isPresenting} />
+
+    if (slideType === 'case_afl1') {
+      const questions: Question[] = [
+        { id: 1, question: "Case studies provide:", options: ["Statistical generalisations", "Rich, detailed qualitative data", "Quick, easy data collection"], correct: 1 },
+        { id: 2, question: "A limitation of case studies is:", options: ["Too much control", "Cannot generalise to wider population", "Too many participants"], correct: 1 },
+        { id: 3, question: "HM and Phineas Gage are examples of:", options: ["Experimental studies", "Case studies", "Surveys"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Case Study Evaluation" subtitle="Strengths and limitations" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'content_teach') return <ContentTeach isPresenting={isPresenting} />
     if (slideType === 'thematic_teach') return <ThematicTeach isPresenting={isPresenting} />
+
+    if (slideType === 'content_afl2') {
+      const questions: Question[] = [
+        { id: 1, question: "Inter-rater reliability in content analysis checks:", options: ["If participants agree", "If different coders get similar results", "If the study can be replicated"], correct: 1 },
+        { id: 2, question: "Thematic analysis involves:", options: ["Statistical tests", "Identifying patterns and themes in data", "Random sampling"], correct: 1 },
+        { id: 3, question: "A coding frame should be:", options: ["As vague as possible", "Clearly operationalised and consistent", "Changed frequently"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Content Analysis Check" subtitle="Coding and thematic analysis" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'content_coder') return <ContentCoder isPresenting={isPresenting} />
+
+    if (slideType === 'analysis_task') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
 
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 2: Case Studies & Content Analysis</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18489,18 +18562,52 @@ function App() {
       )
     }
 
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "Reliability refers to:", options: ["Whether a test measures what it claims", "Whether results are consistent", "Whether results can be generalised"], correct: 1 },
+        { id: 2, question: "If you get similar results when repeating a test, it has:", options: ["High validity", "High reliability", "High generalisability"], correct: 1 },
+        { id: 3, question: "Inter-rater reliability checks if:", options: ["The same person gets consistent results", "Different observers agree", "Results can be replicated"], correct: 1 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
     if (slideType === 'reliability_intro_teach') return <ReliabilityIntroTeach isPresenting={isPresenting} />
     if (slideType === 'testretest_teach') return <TestretestTeach isPresenting={isPresenting} />
+
+    if (slideType === 'reliability_afl1') {
+      const questions: Question[] = [
+        { id: 1, scenario: "A questionnaire given twice to the same participants, 2 weeks apart", question: "This tests:", options: ["Test-retest reliability", "Inter-observer reliability", "Split-half reliability"], correct: 0 },
+        { id: 2, scenario: "Two researchers independently code the same interview transcripts", question: "This tests:", options: ["Test-retest reliability", "Inter-observer reliability", "Internal reliability"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Reliability Types" subtitle="Identify the type of reliability" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'interobserver_teach') return <InterobserverTeach isPresenting={isPresenting} />
     if (slideType === 'improving_reliability_teach') return <ImprovingReliabilityTeach isPresenting={isPresenting} />
+
+    if (slideType === 'reliability_afl2') {
+      const questions: Question[] = [
+        { id: 1, question: "To improve inter-observer reliability, researchers should:", options: ["Use different coding schemes", "Train observers and operationalise categories clearly", "Work independently without discussion"], correct: 1 },
+        { id: 2, question: "A correlation of r = 0.45 for test-retest reliability indicates:", options: ["Good reliability", "Poor reliability - needs improvement", "Perfect reliability"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Improving Reliability" subtitle="Strategies and interpretation" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'reliability_assessor') return <ReliabilityAssessor isPresenting={isPresenting} />
+
+    if (slideType === 'reliability_task') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
 
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 3: Reliability</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18528,18 +18635,52 @@ function App() {
       )
     }
 
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "Validity refers to whether a test:", options: ["Gives consistent results", "Measures what it claims to measure", "Can be generalised"], correct: 1 },
+        { id: 2, question: "Face validity means:", options: ["The test looks like it measures what it should", "The test gives the same results twice", "Experts agree it's valid"], correct: 0 },
+        { id: 3, question: "Ecological validity is about:", options: ["Environmental impact", "Real-world applicability", "Internal consistency"], correct: 1 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
     if (slideType === 'validity_types_teach') return <ValidityTypesTeach isPresenting={isPresenting} />
     if (slideType === 'face_concurrent_teach') return <FaceConcurrentTeach isPresenting={isPresenting} />
+
+    if (slideType === 'validity_afl1') {
+      const questions: Question[] = [
+        { id: 1, question: "Face validity is limited because:", options: ["It's too expensive", "It's only a surface-level check", "It requires special equipment"], correct: 1 },
+        { id: 2, question: "Concurrent validity involves:", options: ["Testing at different times", "Correlating with an established measure", "Asking participants their opinion"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Types of Validity" subtitle="Face and concurrent validity" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'ecological_temporal_teach') return <EcologicalTemporalTeach isPresenting={isPresenting} />
     if (slideType === 'improving_validity_teach') return <ImprovingValidityTeach isPresenting={isPresenting} />
+
+    if (slideType === 'validity_afl2') {
+      const questions: Question[] = [
+        { id: 1, scenario: "A lab study of memory uses abstract word lists in a quiet environment", question: "The main validity concern is:", options: ["Low internal validity", "Low ecological validity", "Low face validity"], correct: 1 },
+        { id: 2, question: "Temporal validity concerns:", options: ["Whether findings apply to other times", "How long the study took", "The timing of measurements"], correct: 0 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="External Validity" subtitle="Ecological and temporal validity" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'validity_checker') return <ValidityChecker isPresenting={isPresenting} />
+
+    if (slideType === 'validity_task') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
 
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 4: Validity</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18567,17 +18708,51 @@ function App() {
       )
     }
 
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "Nominal data involves:", options: ["Categories/labels", "Ranked orders", "Measured intervals"], correct: 0 },
+        { id: 2, question: "Which is ordinal data?", options: ["Height in cm", "Position in a race (1st, 2nd)", "Temperature in °C"], correct: 1 },
+        { id: 3, question: "Parametric tests require:", options: ["Nominal data", "Interval/ratio data + normal distribution", "Any type of data"], correct: 1 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
     if (slideType === 'test_factors_teach') return <TestFactorsTeach isPresenting={isPresenting} />
     if (slideType === 'levels_measurement_teach') return <LevelsMeasurementTeach isPresenting={isPresenting} />
+
+    if (slideType === 'test_afl1') {
+      const questions: Question[] = [
+        { id: 1, scenario: "Independent groups, ordinal data", question: "Appropriate test:", options: ["Related t-test", "Mann-Whitney U", "Chi-squared"], correct: 1 },
+        { id: 2, scenario: "Repeated measures, interval data, normal distribution", question: "Appropriate test:", options: ["Related t-test", "Wilcoxon", "Mann-Whitney U"], correct: 0 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Test Selection" subtitle="Match design to test" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'test_flowchart_teach') return <TestFlowchartTeach isPresenting={isPresenting} />
+
+    if (slideType === 'test_afl2') {
+      const questions: Question[] = [
+        { id: 1, scenario: "A researcher compares anxiety scores (interval, normally distributed) between treatment and control groups (independent)", question: "Which test?", options: ["Unrelated t-test", "Wilcoxon", "Chi-squared"], correct: 0 },
+        { id: 2, question: "Spearman's rho is used for:", options: ["Differences between groups", "Correlations with ordinal data", "Categorical frequencies"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Test Selection Practice" subtitle="Apply your knowledge" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'test_selector_sim') return <TestSelectorSim isPresenting={isPresenting} />
+
+    if (slideType === 'test_task') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
 
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 5: Choosing a Statistical Test</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18605,18 +18780,52 @@ function App() {
       )
     }
 
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "p ≤ 0.05 means:", options: ["5% chance results are due to chance", "95% confident in results", "Both of these"], correct: 2 },
+        { id: 2, question: "A Type I error occurs when:", options: ["Rejecting a true null hypothesis", "Accepting a false null hypothesis", "Failing to replicate"], correct: 0 },
+        { id: 3, question: "Critical values are found in:", options: ["The research question", "Statistical tables", "The hypothesis"], correct: 1 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
     if (slideType === 'probability_teach') return <ProbabilityTeach isPresenting={isPresenting} />
     if (slideType === 'significance_teach') return <SignificanceTeach isPresenting={isPresenting} />
+
+    if (slideType === 'probability_afl1') {
+      const questions: Question[] = [
+        { id: 1, question: "Psychology uses p ≤ 0.05 because:", options: ["It's the only valid level", "It balances Type I and II error risk", "It's required by law"], correct: 1 },
+        { id: 2, question: "If p = 0.03, you would:", options: ["Reject the null hypothesis", "Accept the null hypothesis", "Need more data"], correct: 0 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Probability Basics" subtitle="Significance levels" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'critical_values_teach') return <CriticalValuesTeach isPresenting={isPresenting} />
     if (slideType === 'type_errors_teach') return <TypeErrorsTeach isPresenting={isPresenting} />
+
+    if (slideType === 'probability_afl2') {
+      const questions: Question[] = [
+        { id: 1, scenario: "A researcher claims their drug works but it actually doesn't (false positive)", question: "This is:", options: ["Type I error", "Type II error", "Valid conclusion"], correct: 0 },
+        { id: 2, scenario: "A study fails to find an effect that actually exists", question: "This is:", options: ["Type I error", "Type II error", "Good methodology"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Error Types" subtitle="Type I and II errors" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'significance_calculator') return <SignificanceCalculator isPresenting={isPresenting} />
+
+    if (slideType === 'probability_task') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
 
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 6: Probability & Significance</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18644,19 +18853,53 @@ function App() {
       )
     }
 
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "Non-parametric tests are used when:", options: ["Data is interval and normal", "Data doesn't meet parametric assumptions", "Sample size is very large"], correct: 1 },
+        { id: 2, question: "Mann-Whitney U is used for:", options: ["Related data", "Independent groups", "Correlations"], correct: 1 },
+        { id: 3, question: "Wilcoxon is used for:", options: ["Independent groups", "Related/matched data", "Nominal data"], correct: 1 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
     if (slideType === 'nonparam_intro_teach') return <NonparamIntroTeach isPresenting={isPresenting} />
     if (slideType === 'mannwhitney_teach') return <MannwhitneyTeach isPresenting={isPresenting} />
+
+    if (slideType === 'nonparam_afl1') {
+      const questions: Question[] = [
+        { id: 1, question: "Mann-Whitney U compares:", options: ["Means directly", "Ranks between two independent groups", "Frequencies"], correct: 1 },
+        { id: 2, scenario: "Ordinal data, independent groups, N=12", question: "Appropriate test:", options: ["Unrelated t-test", "Mann-Whitney U", "Chi-squared"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Mann-Whitney U" subtitle="When and why" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'mannwhitney_calc_teach') return <MannwhitneyCalcTeach isPresenting={isPresenting} />
     if (slideType === 'wilcoxon_teach') return <WilcoxonTeach isPresenting={isPresenting} />
     if (slideType === 'wilcoxon_calc_teach') return <WilcoxonCalcTeach isPresenting={isPresenting} />
+
+    if (slideType === 'nonparam_afl2') {
+      const questions: Question[] = [
+        { id: 1, question: "In Wilcoxon, you:", options: ["Rank differences, ignoring sign", "Rank original scores", "Calculate means"], correct: 0 },
+        { id: 2, scenario: "Repeated measures, ordinal data", question: "Use:", options: ["Mann-Whitney U", "Wilcoxon signed-rank", "Unrelated t-test"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Wilcoxon Test" subtitle="Calculation and use" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'test_calculator') return <NonparamTestCalculator isPresenting={isPresenting} />
+
+    if (slideType === 'nonparam_task') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
 
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 7: Non-Parametric Tests</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18684,17 +18927,51 @@ function App() {
       )
     }
 
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "Parametric tests require:", options: ["Nominal data only", "Normal distribution + interval data", "Ordinal data only"], correct: 1 },
+        { id: 2, question: "Unrelated t-test is for:", options: ["Same participants tested twice", "Different participants in each condition", "Matched pairs"], correct: 1 },
+        { id: 3, question: "Related t-test is for:", options: ["Independent groups", "Repeated measures or matched pairs", "Correlations"], correct: 1 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
     if (slideType === 'param_assumptions_teach') return <ParamAssumptionsTeach isPresenting={isPresenting} />
     if (slideType === 'unrelated_t_teach') return <UnrelatedTTeach isPresenting={isPresenting} />
+
+    if (slideType === 'param_afl1') {
+      const questions: Question[] = [
+        { id: 1, question: "Key assumptions for parametric tests include:", options: ["Homogeneity of variance and normal distribution", "Random sampling only", "Large sample sizes only"], correct: 0 },
+        { id: 2, scenario: "Independent groups, interval data, normal distribution", question: "Appropriate test:", options: ["Wilcoxon", "Unrelated t-test", "Chi-squared"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Parametric Assumptions" subtitle="When to use t-tests" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'related_t_teach') return <RelatedTTeach isPresenting={isPresenting} />
+
+    if (slideType === 'param_afl2') {
+      const questions: Question[] = [
+        { id: 1, scenario: "Before and after measurements on same participants, interval data", question: "Use:", options: ["Unrelated t-test", "Related t-test", "Mann-Whitney U"], correct: 1 },
+        { id: 2, question: "Degrees of freedom affect:", options: ["The critical value needed", "The research question", "The sampling method"], correct: 0 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="t-Test Application" subtitle="Choosing and interpreting" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'ttest_calculator') return <TtestCalculator isPresenting={isPresenting} />
+
+    if (slideType === 'param_task') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
 
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 8: Parametric Tests</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18722,18 +18999,52 @@ function App() {
       )
     }
 
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "Spearman's rho is used for:", options: ["Interval data with normal distribution", "Ordinal data or non-normal interval data", "Nominal data"], correct: 1 },
+        { id: 2, question: "Pearson's r requires:", options: ["Ordinal data", "Interval/ratio data with normal distribution", "Any type of data"], correct: 1 },
+        { id: 3, question: "A correlation of -0.85 indicates:", options: ["Weak negative relationship", "Strong negative relationship", "No relationship"], correct: 1 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
     if (slideType === 'spearmans_teach') return <SpearmansTeach isPresenting={isPresenting} />
     if (slideType === 'spearmans_calc_teach') return <SpearmansCalcTeach isPresenting={isPresenting} />
+
+    if (slideType === 'corr_afl1') {
+      const questions: Question[] = [
+        { id: 1, question: "To calculate Spearman's rho, you first:", options: ["Calculate the mean", "Rank the data", "Square all values"], correct: 1 },
+        { id: 2, scenario: "Ordinal data, testing for relationship between two variables", question: "Use:", options: ["Pearson's r", "Spearman's rho", "Chi-squared"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Spearman's Rho" subtitle="Calculation basics" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'pearsons_teach') return <PearsonsTeach isPresenting={isPresenting} />
     if (slideType === 'pearsons_calc_teach') return <PearsonsCalcTeach isPresenting={isPresenting} />
+
+    if (slideType === 'corr_afl2') {
+      const questions: Question[] = [
+        { id: 1, question: "Pearson's r ranges from:", options: ["-1 to +1", "0 to 1", "0 to 100"], correct: 0 },
+        { id: 2, scenario: "Interval data, normally distributed, testing correlation between hours studied and exam score", question: "Use:", options: ["Spearman's rho", "Pearson's r", "Unrelated t-test"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Pearson's r" subtitle="Application and interpretation" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'correlation_calculator') return <CorrelationCalculator isPresenting={isPresenting} />
+
+    if (slideType === 'corr_task') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
 
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 9: Tests of Correlation</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18761,17 +19072,51 @@ function App() {
       )
     }
 
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "Chi-squared is used for:", options: ["Interval data", "Nominal (categorical) data", "Ordinal data"], correct: 1 },
+        { id: 2, question: "Expected frequencies are:", options: ["What you actually observe", "What you'd expect by chance", "Always equal to observed"], correct: 1 },
+        { id: 3, question: "Degrees of freedom for chi-squared:", options: ["(rows-1) × (columns-1)", "N - 1", "N - 2"], correct: 0 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
     if (slideType === 'chisquared_intro_teach') return <ChisquaredIntroTeach isPresenting={isPresenting} />
     if (slideType === 'observed_expected_teach') return <ObservedExpectedTeach isPresenting={isPresenting} />
+
+    if (slideType === 'chisquared_afl1') {
+      const questions: Question[] = [
+        { id: 1, question: "Chi-squared tests for:", options: ["Differences in means", "Association between categorical variables", "Correlations"], correct: 1 },
+        { id: 2, scenario: "Comparing observed vs expected frequencies of gender and career choice", question: "Appropriate test:", options: ["t-test", "Chi-squared", "Spearman's rho"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Chi-Squared Basics" subtitle="When and why" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'chisquared_calc_teach') return <ChisquaredCalcTeach isPresenting={isPresenting} />
+
+    if (slideType === 'chisquared_afl2') {
+      const questions: Question[] = [
+        { id: 1, question: "Chi-squared formula involves:", options: ["(O-E)² / E summed", "Mean difference / SE", "Rank sums"], correct: 0 },
+        { id: 2, question: "A significant chi-squared result means:", options: ["Strong correlation", "Association exists between variables", "Cause and effect"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Chi-Squared Calculation" subtitle="Formula and interpretation" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'chisquared_calculator') return <ChisquaredCalculator isPresenting={isPresenting} />
+
+    if (slideType === 'chisquared_task') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
 
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 10: Chi-Squared Test</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18799,18 +19144,52 @@ function App() {
       )
     }
 
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "The abstract should:", options: ["Summarise the entire study briefly", "Present all raw data", "Only state the hypothesis"], correct: 0 },
+        { id: 2, question: "The method section includes:", options: ["Statistical analysis results", "Design, participants, materials, procedure", "Theory and previous research"], correct: 1 },
+        { id: 3, question: "The discussion section:", options: ["Presents raw data", "Interprets findings and discusses limitations", "Lists materials used"], correct: 1 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
     if (slideType === 'report_structure_teach') return <ReportStructureTeach isPresenting={isPresenting} />
     if (slideType === 'abstract_intro_teach') return <AbstractIntroTeach isPresenting={isPresenting} />
+
+    if (slideType === 'report_afl1') {
+      const questions: Question[] = [
+        { id: 1, question: "Standard report order is:", options: ["Method, Results, Abstract, Discussion", "Abstract, Introduction, Method, Results, Discussion", "Introduction, Discussion, Method, Results"], correct: 1 },
+        { id: 2, question: "The introduction should:", options: ["Present results", "Review relevant literature and state hypotheses", "Describe the procedure"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Report Structure" subtitle="Abstract and introduction" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'method_results_teach') return <MethodResultsTeach isPresenting={isPresenting} />
     if (slideType === 'discussion_refs_teach') return <DiscussionRefsTeach isPresenting={isPresenting} />
+
+    if (slideType === 'report_afl2') {
+      const questions: Question[] = [
+        { id: 1, question: "Results section should include:", options: ["Interpretation of findings", "Descriptive and inferential statistics", "Previous research"], correct: 1 },
+        { id: 2, question: "APA referencing for a journal article includes:", options: ["Author, date, title, journal, volume, pages", "Just the website URL", "Only the author's name"], correct: 0 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Results & Discussion" subtitle="Writing and referencing" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'report_builder') return <ReportBuilder isPresenting={isPresenting} />
+
+    if (slideType === 'report_task') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
 
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 11: Reporting Investigations</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
@@ -18838,18 +19217,52 @@ function App() {
       )
     }
 
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "Objectivity in science means:", options: ["Personal opinions are valued", "Findings are free from researcher bias", "Only lab studies are used"], correct: 1 },
+        { id: 2, question: "A falsifiable hypothesis:", options: ["Can never be disproved", "Can be tested and potentially disproved", "Is always correct"], correct: 1 },
+        { id: 3, question: "A paradigm shift occurs when:", options: ["Minor changes to theory", "A whole new framework replaces the old one", "Research is replicated"], correct: 1 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
     if (slideType === 'objectivity_teach') return <ScienceFeaturesTeach isPresenting={isPresenting} />
     if (slideType === 'replicability_teach') return <ReplicabilityTeach isPresenting={isPresenting} />
+
+    if (slideType === 'science_afl1') {
+      const questions: Question[] = [
+        { id: 1, question: "The empirical method relies on:", options: ["Logical reasoning alone", "Observation and measurement", "Theoretical speculation"], correct: 1 },
+        { id: 2, question: "Replicability is important because:", options: ["It saves time", "It verifies findings aren't due to chance", "It's required by ethics boards"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Scientific Features" subtitle="Objectivity and replicability" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'falsifiability_teach') return <FalsifiabilityTeach isPresenting={isPresenting} />
     if (slideType === 'paradigms_teach') return <ParadigmsTeach isPresenting={isPresenting} />
+
+    if (slideType === 'science_afl2') {
+      const questions: Question[] = [
+        { id: 1, question: "Popper argued that scientific theories must be:", options: ["Impossible to disprove", "Potentially falsifiable", "Based on common sense"], correct: 1 },
+        { id: 2, scenario: "Kuhn's concept of paradigm shifts", question: "This refers to:", options: ["Small incremental changes", "Revolutionary changes in scientific thinking", "Replication of studies"], correct: 1 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Falsifiability & Paradigms" subtitle="Popper and Kuhn" isPresenting={isPresenting} />
+    }
+
     if (slideType === 'science_evaluator') return <ScienceEvaluator isPresenting={isPresenting} />
+
+    if (slideType === 'science_task') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'extended') {
+      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+    }
 
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
           <p className="text-purple-400 text-xl mb-2">A Level Lesson 12: Features of Science</p>
           <p className="text-gray-400">Slide: {slideType}</p>
-          <p className="text-gray-500 text-sm mt-4">AFL/Task slides - to be implemented</p>
         </div>
       </div>
     )
