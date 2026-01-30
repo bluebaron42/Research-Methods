@@ -99,6 +99,19 @@ import {
   ReplicabilityTeach, ScienceEvaluator
 } from './components/lessons/activities/ALevelTeachSlides'
 
+// A Level Visual Patterns (Phase 4 Visual Overhaul)
+import {
+  SpotlightCards,
+  StepReveal,
+  CarouselNavigator,
+  ClickRevealCards,
+  TabbedPanels,
+  Accordion,
+  ComparisonTable,
+  FlowchartDecision,
+  InteractiveScatterPlot
+} from './components/lessons/activities/ALevelVisualPatterns'
+
 // ============= TYPES =============
 interface Question {
   id: number
@@ -13036,10 +13049,10 @@ const allLessons = [
   { id: 34, title: 'Lesson 4: Validity', levels: ['alevel'], description: 'Face, Concurrent, Ecological, Temporal' },
   { id: 35, title: 'Lesson 5: Choosing a Statistical Test', levels: ['alevel'], description: 'Design & Measurement Level' },
   { id: 36, title: 'Lesson 6: Probability & Significance', levels: ['alevel'], description: 'Critical Values & Type I/II Errors' },
-  { id: 37, title: 'Lesson 7: Non-Parametric Tests', levels: ['alevel'], description: 'Mann-Whitney & Wilcoxon' },
-  { id: 38, title: 'Lesson 8: Parametric Tests', levels: ['alevel'], description: 'Unrelated & Related t-tests' },
-  { id: 39, title: 'Lesson 9: Tests of Correlation', levels: ['alevel'], description: "Spearman's rho & Pearson's r" },
-  { id: 40, title: 'Lesson 10: Chi-Squared Test', levels: ['alevel'], description: 'Test of Association (χ²)' },
+  { id: 37, title: 'Lesson 7: Non-Parametric Tests', levels: ['alevel'], description: 'When to use Mann-Whitney & Wilcoxon' },
+  { id: 38, title: 'Lesson 8: Parametric Tests', levels: ['alevel'], description: 'When to use t-tests' },
+  { id: 39, title: 'Lesson 9: Tests of Correlation', levels: ['alevel'], description: "When to use Spearman's & Pearson's" },
+  { id: 40, title: 'Lesson 10: Chi-Squared Test', levels: ['alevel'], description: 'When to use Chi-Squared (χ²)' },
   { id: 41, title: 'Lesson 11: Reporting Investigations', levels: ['alevel'], description: 'Scientific Report Sections' },
   { id: 42, title: 'Lesson 12: Features of Science', levels: ['alevel'], description: 'Objectivity, Replicability, Paradigms' },
 ]
@@ -13055,8 +13068,8 @@ const lessonSlideCounts: Record<number, number> = {
   1: 11, 2: 10, 3: 10, 4: 10, 5: 12, 6: 7, 7: 8, 8: 6, 9: 7, 10: 6, 11: 8, 12: 7, 13: 6, 14: 7, 15: 6,
   // AS Level (15 lessons) - Phase 2: AFL dispersed throughout lessons (lesson 16 now has title slide = 12)
   16: 12, 17: 12, 18: 11, 19: 11, 20: 13, 21: 13, 22: 12, 23: 11, 24: 11, 25: 10, 26: 10, 27: 10, 28: 10, 29: 10, 30: 10,
-  // A Level (12 lessons) - Phase 1: Foundation structure (all have 10 slides)
-  31: 10, 32: 11, 33: 11, 34: 11, 35: 10, 36: 11, 37: 11, 38: 10, 39: 11, 40: 10, 41: 11, 42: 11
+  // A Level (12 lessons) - Refactored: No calculation slides for tests except Sign Test
+  31: 10, 32: 11, 33: 11, 34: 11, 35: 10, 36: 11, 37: 10, 38: 10, 39: 10, 40: 10, 41: 11, 42: 11
 }
 
 // Utility: build slides with teacher-first ordering per cycle
@@ -13188,22 +13201,22 @@ const lesson33Slides = ['title', 'donow', 'reliability_intro_teach', 'testretest
 const lesson34Slides = ['title', 'donow', 'validity_types_teach', 'face_concurrent_teach', 'validity_afl1', 'ecological_temporal_teach', 'improving_validity_teach', 'validity_afl2', 'validity_checker', 'validity_task', 'extended']
 
 // Lesson 35 slides data (A Level Lesson 5: Choosing a Statistical Test)
-const lesson35Slides = ['title', 'donow', 'test_factors_teach', 'levels_measurement_teach', 'choosing_afl1', 'test_flowchart_teach', 'choosing_afl2', 'test_selector_sim', 'choosing_task', 'extended']
+const lesson35Slides = ['title', 'donow', 'test_factors_teach', 'levels_measurement_teach', 'test_afl1', 'test_flowchart_teach', 'decision_tree_table', 'test_afl2', 'test_selector_sim', 'test_task', 'extended']
 
 // Lesson 36 slides data (A Level Lesson 6: Probability & Significance)
-const lesson36Slides = ['title', 'donow', 'probability_teach', 'significance_teach', 'prob_afl1', 'critical_values_teach', 'type_errors_teach', 'prob_afl2', 'significance_calculator', 'probability_task', 'extended']
+const lesson36Slides = ['title', 'donow', 'probability_teach', 'significance_teach', 'probability_afl1', 'critical_values_teach', 'type_errors_teach', 'probability_afl2', 'significance_calculator', 'probability_task', 'extended']
 
-// Lesson 37 slides data (A Level Lesson 7: Non-Parametric Tests)
-const lesson37Slides = ['title', 'donow', 'mannwhitney_teach', 'mannwhitney_calc_teach', 'nonparam_afl1', 'wilcoxon_teach', 'wilcoxon_calc_teach', 'nonparam_afl2', 'test_calculator', 'nonparam_task', 'extended']
+// Lesson 37 slides data (A Level Lesson 7: Non-Parametric Tests) - Understanding, not calculating
+const lesson37Slides = ['title', 'donow', 'nonparam_intro_teach', 'mannwhitney_teach', 'nonparam_afl1', 'wilcoxon_teach', 'nonparam_afl2', 'test_selection_practice', 'nonparam_task', 'extended']
 
-// Lesson 38 slides data (A Level Lesson 8: Parametric Tests)
-const lesson38Slides = ['title', 'donow', 'param_assumptions_teach', 'unrelated_t_teach', 'param_afl1', 'related_t_teach', 'param_afl2', 'ttest_calculator', 'param_task', 'extended']
+// Lesson 38 slides data (A Level Lesson 8: Parametric Tests) - Understanding, not calculating
+const lesson38Slides = ['title', 'donow', 'param_assumptions_teach', 'unrelated_t_teach', 'param_afl1', 'related_t_teach', 'param_afl2', 'test_selection_practice2', 'param_task', 'extended']
 
-// Lesson 39 slides data (A Level Lesson 9: Tests of Correlation)
-const lesson39Slides = ['title', 'donow', 'spearmans_teach', 'spearmans_calc_teach', 'corr_test_afl1', 'pearsons_teach', 'pearsons_calc_teach', 'corr_test_afl2', 'correlation_calculator', 'corr_test_task', 'extended']
+// Lesson 39 slides data (A Level Lesson 9: Tests of Correlation) - Understanding, not calculating
+const lesson39Slides = ['title', 'donow', 'spearmans_teach', 'pearsons_teach', 'corr_afl1', 'interpreting_correlation_teach', 'corr_afl2', 'correlation_practice', 'corr_task', 'extended']
 
-// Lesson 40 slides data (A Level Lesson 10: Chi-Squared Test)
-const lesson40Slides = ['title', 'donow', 'chisquared_intro_teach', 'observed_expected_teach', 'chi_afl1', 'chisquared_calc_teach', 'chi_afl2', 'chisquared_calculator', 'chi_task', 'extended']
+// Lesson 40 slides data (A Level Lesson 10: Chi-Squared Test) - Understanding, not calculating
+const lesson40Slides = ['title', 'donow', 'chisquared_intro_teach', 'observed_expected_teach', 'chisquared_afl1', 'chisquared_interpretation_teach', 'chisquared_afl2', 'chisquared_practice', 'chisquared_task', 'extended']
 
 // Lesson 41 slides data (A Level Lesson 11: Reporting Investigations)
 const lesson41Slides = ['title', 'donow', 'report_structure_teach', 'abstract_intro_teach', 'report_afl1', 'method_results_teach', 'discussion_refs_teach', 'report_afl2', 'report_builder', 'report_task', 'extended']
@@ -13217,6 +13230,10 @@ function App() {
   const [isSidebarOpen, setSidebarOpen] = useState(true)
   const [level, setLevel] = useState<'gcse' | 'aslevel' | 'alevel'>('gcse')
   const [isPresenting, setIsPresenting] = useState(false)
+  // Shared state for click-to-reveal answers (used by A Level lessons)
+  const [showAnswer1, setShowAnswer1] = useState(false)
+  const [showAnswer2, setShowAnswer2] = useState(false)
+  const [showExtended, setShowExtended] = useState(false)
 
   const slideCount = lessonSlideCounts[currentLesson] || 5
 
@@ -13278,11 +13295,23 @@ function App() {
   const theme = themeColors[level]
 
   const nextSlide = () => {
-    if (currentSlide < slideCount - 1) setCurrentSlide(currentSlide + 1)
+    if (currentSlide < slideCount - 1) {
+      setCurrentSlide(currentSlide + 1)
+      // Reset reveal states when changing slides
+      setShowAnswer1(false)
+      setShowAnswer2(false)
+      setShowExtended(false)
+    }
   }
 
   const prevSlide = () => {
-    if (currentSlide > 0) setCurrentSlide(currentSlide - 1)
+    if (currentSlide > 0) {
+      setCurrentSlide(currentSlide - 1)
+      // Reset reveal states when changing slides
+      setShowAnswer1(false)
+      setShowAnswer2(false)
+      setShowExtended(false)
+    }
   }
 
   // Toggle presentation mode with fullscreen - exact logic from Relationships repo
@@ -18417,7 +18446,8 @@ function App() {
         { id: 1, question: "A correlation coefficient of +0.85 indicates:", options: ["A weak positive relationship", "A strong positive relationship", "A strong negative relationship"], correct: 1 },
         { id: 2, question: "Which correlation is STRONGER?", options: ["+0.45", "-0.72", "+0.50"], correct: 1 },
         { id: 3, question: "Correlations can show:", options: ["Cause and effect", "Relationships between variables", "Which variable causes the other"], correct: 1 },
-        { id: 4, question: "A scattergraph with points going down from left to right shows:", options: ["Positive correlation", "Negative correlation", "No correlation"], correct: 1 }
+        { id: 4, question: "A scattergraph with points going down from left to right shows:", options: ["Positive correlation", "Negative correlation", "No correlation"], correct: 1 },
+        { id: 5, question: "The sign test is used when data is at which level of measurement?", options: ["Interval level", "Nominal level (direction of difference)", "Only ratio level"], correct: 1 }
       ]
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
@@ -18491,7 +18521,8 @@ function App() {
         { id: 1, question: "A case study typically involves:", options: ["Large samples", "In-depth study of one individual/group", "Controlled experiments"], correct: 1 },
         { id: 2, question: "Content analysis is used to analyse:", options: ["Numbers only", "Written/visual/audio material", "Brain scans"], correct: 1 },
         { id: 3, question: "Which is an advantage of case studies?", options: ["Easy to generalise", "Rich, detailed data", "Quick to conduct"], correct: 1 },
-        { id: 4, question: "Coding in content analysis means:", options: ["Writing computer programs", "Categorising data into themes", "Encrypting data"], correct: 1 }
+        { id: 4, question: "Coding in content analysis means:", options: ["Writing computer programs", "Categorising data into themes", "Encrypting data"], correct: 1 },
+        { id: 5, question: "A correlation coefficient of r = -0.78 indicates:", options: ["A weak positive relationship", "A strong negative relationship", "No relationship between variables"], correct: 1 }
       ]
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
@@ -18566,7 +18597,9 @@ function App() {
       const doNowQuestions: Question[] = [
         { id: 1, question: "Reliability refers to:", options: ["Whether a test measures what it claims", "Whether results are consistent", "Whether results can be generalised"], correct: 1 },
         { id: 2, question: "If you get similar results when repeating a test, it has:", options: ["High validity", "High reliability", "High generalisability"], correct: 1 },
-        { id: 3, question: "Inter-rater reliability checks if:", options: ["The same person gets consistent results", "Different observers agree", "Results can be replicated"], correct: 1 }
+        { id: 3, question: "Inter-rater reliability checks if:", options: ["The same person gets consistent results", "Different observers agree", "Results can be replicated"], correct: 1 },
+        { id: 4, question: "A key limitation of case studies is:", options: ["They provide too little detail", "Findings cannot easily be generalised", "They are too quick to conduct"], correct: 1 },
+        { id: 5, question: "In content analysis, inter-rater reliability is important because it:", options: ["Shows the study was ethical", "Ensures coders categorise data consistently", "Increases sample size"], correct: 1 }
       ]
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
@@ -18639,7 +18672,9 @@ function App() {
       const doNowQuestions: Question[] = [
         { id: 1, question: "Validity refers to whether a test:", options: ["Gives consistent results", "Measures what it claims to measure", "Can be generalised"], correct: 1 },
         { id: 2, question: "Face validity means:", options: ["The test looks like it measures what it should", "The test gives the same results twice", "Experts agree it's valid"], correct: 0 },
-        { id: 3, question: "Ecological validity is about:", options: ["Environmental impact", "Real-world applicability", "Internal consistency"], correct: 1 }
+        { id: 3, question: "Ecological validity is about:", options: ["Environmental impact", "Real-world applicability", "Internal consistency"], correct: 1 },
+        { id: 4, question: "Test-retest reliability is checked by:", options: ["Using different tests on the same day", "Giving the same test twice over time", "Having multiple researchers code data"], correct: 1 },
+        { id: 5, question: "To improve inter-observer reliability, researchers should:", options: ["Work completely independently", "Train observers and operationalise categories", "Use different coding systems"], correct: 1 }
       ]
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
@@ -18712,13 +18747,126 @@ function App() {
       const doNowQuestions: Question[] = [
         { id: 1, question: "Nominal data involves:", options: ["Categories/labels", "Ranked orders", "Measured intervals"], correct: 0 },
         { id: 2, question: "Which is ordinal data?", options: ["Height in cm", "Position in a race (1st, 2nd)", "Temperature in °C"], correct: 1 },
-        { id: 3, question: "Parametric tests require:", options: ["Nominal data", "Interval/ratio data + normal distribution", "Any type of data"], correct: 1 }
+        { id: 3, question: "Parametric tests require:", options: ["Nominal data", "Interval/ratio data + normal distribution", "Any type of data"], correct: 1 },
+        { id: 4, question: "Independent groups design means:", options: ["Same participants in all conditions", "Different participants in each condition", "Participants matched on key variables"], correct: 1 },
+        { id: 5, question: "Mann-Whitney U is a:", options: ["Parametric test", "Non-parametric test", "Correlation test"], correct: 1 }
       ]
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
 
-    if (slideType === 'test_factors_teach') return <TestFactorsTeach isPresenting={isPresenting} />
-    if (slideType === 'levels_measurement_teach') return <LevelsMeasurementTeach isPresenting={isPresenting} />
+    if (slideType === 'test_factors_teach') {
+      return (
+        <SpotlightCards
+          title="🎯 Factors Affecting Test Choice"
+          subtitle="Click each card to spotlight and explore the key factors"
+          isPresenting={isPresenting}
+          columns={3}
+          cards={[
+            {
+              id: 'design',
+              title: 'Research Design',
+              icon: '👥',
+              color: 'purple',
+              content: <p>The type of experimental design determines which test to use</p>,
+              details: [
+                'Independent groups - different participants in each condition',
+                'Repeated measures - same participants tested twice',
+                'Matched pairs - participants paired on key variables',
+                'Correlational - looking for relationships, not differences'
+              ]
+            },
+            {
+              id: 'measurement',
+              title: 'Level of Measurement',
+              icon: '📏',
+              color: 'blue',
+              content: <p>The type of data collected affects test selection</p>,
+              details: [
+                'Nominal - categories (male/female, yes/no)',
+                'Ordinal - ranked order (1st, 2nd, 3rd)',
+                'Interval/Ratio - equal intervals (°C, cm, seconds)'
+              ]
+            },
+            {
+              id: 'parametric',
+              title: 'Parametric Assumptions',
+              icon: '📊',
+              color: 'green',
+              content: <p>Data must meet certain criteria for parametric tests</p>,
+              details: [
+                'Data must be interval/ratio level',
+                'Data should be normally distributed',
+                'Groups should have similar variances',
+                'If NOT met → use non-parametric test'
+              ]
+            }
+          ]}
+        />
+      )
+    }
+
+    if (slideType === 'levels_measurement_teach') {
+      return (
+        <CarouselNavigator
+          title="📏 Levels of Measurement"
+          subtitle="Navigate through the three types of data measurement"
+          isPresenting={isPresenting}
+          slides={[
+            {
+              title: 'Nominal (Categorical)',
+              icon: '🏷️',
+              color: 'rose',
+              content: (
+                <div className="space-y-4">
+                  <p className="text-lg">Data in named categories with <strong className="text-rose-300">no order or ranking</strong></p>
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div className="bg-gray-700/50 p-3 rounded"><span className="text-rose-300">✓</span> Gender (male/female)</div>
+                    <div className="bg-gray-700/50 p-3 rounded"><span className="text-rose-300">✓</span> Eye colour</div>
+                    <div className="bg-gray-700/50 p-3 rounded"><span className="text-rose-300">✓</span> Yes/No responses</div>
+                    <div className="bg-gray-700/50 p-3 rounded"><span className="text-rose-300">✓</span> Left/Right handed</div>
+                  </div>
+                </div>
+              ),
+              example: 'Use Chi-squared test for nominal data'
+            },
+            {
+              title: 'Ordinal (Ranked)',
+              icon: '🥇',
+              color: 'amber',
+              content: (
+                <div className="space-y-4">
+                  <p className="text-lg">Data can be put in order, but <strong className="text-amber-300">intervals aren't equal</strong></p>
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div className="bg-gray-700/50 p-3 rounded"><span className="text-amber-300">✓</span> Race position (1st, 2nd)</div>
+                    <div className="bg-gray-700/50 p-3 rounded"><span className="text-amber-300">✓</span> Rating scales (1-10)</div>
+                    <div className="bg-gray-700/50 p-3 rounded"><span className="text-amber-300">✓</span> Likert scales</div>
+                    <div className="bg-gray-700/50 p-3 rounded"><span className="text-amber-300">✓</span> Satisfaction ratings</div>
+                  </div>
+                </div>
+              ),
+              example: 'Use Mann-Whitney U, Wilcoxon, or Spearman\'s rho'
+            },
+            {
+              title: 'Interval/Ratio',
+              icon: '📐',
+              color: 'green',
+              content: (
+                <div className="space-y-4">
+                  <p className="text-lg">Data with <strong className="text-green-300">equal intervals</strong> between values; ratio has true zero</p>
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div className="bg-gray-700/50 p-3 rounded"><span className="text-green-300">✓</span> Temperature (°C)</div>
+                    <div className="bg-gray-700/50 p-3 rounded"><span className="text-green-300">✓</span> Time (seconds)</div>
+                    <div className="bg-gray-700/50 p-3 rounded"><span className="text-green-300">✓</span> Test scores (marks)</div>
+                    <div className="bg-gray-700/50 p-3 rounded"><span className="text-green-300">✓</span> Height (cm)</div>
+                  </div>
+                </div>
+              ),
+              example: 'Use t-tests (if normally distributed) or Pearson\'s r'
+            }
+          ]}
+        />
+      )
+    }
 
     if (slideType === 'test_afl1') {
       const questions: Question[] = [
@@ -18728,7 +18876,169 @@ function App() {
       return <SplitKnowledgeCheck questions={questions} title="Test Selection" subtitle="Match design to test" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'test_flowchart_teach') return <TestFlowchartTeach isPresenting={isPresenting} />
+    if (slideType === 'test_flowchart_teach') {
+      return (
+        <FlowchartDecision
+          title="🗺️ Test Selection Flowchart"
+          subtitle="Answer the questions to find the right statistical test"
+          isPresenting={isPresenting}
+          startNodeId="start"
+          nodes={[
+            {
+              id: 'start',
+              question: 'What are you looking for?',
+              options: [
+                { label: '📊 Difference between groups', nextId: 'difference' },
+                { label: '🔗 Relationship/Correlation', nextId: 'correlation' },
+                { label: '📋 Association between categories', nextId: 'association' }
+              ]
+            },
+            {
+              id: 'difference',
+              question: 'What is your experimental design?',
+              options: [
+                { label: '👥 Independent groups (different participants)', nextId: 'diff_independent' },
+                { label: '🔄 Repeated measures / Matched pairs', nextId: 'diff_related' }
+              ]
+            },
+            {
+              id: 'diff_independent',
+              question: 'What type of data do you have?',
+              options: [
+                { label: '📏 Interval/ratio + normally distributed', nextId: null, result: '✅ Unrelated t-test' },
+                { label: '🏷️ Ordinal or non-normal data', nextId: null, result: '✅ Mann-Whitney U' }
+              ]
+            },
+            {
+              id: 'diff_related',
+              question: 'What type of data do you have?',
+              options: [
+                { label: '📏 Interval/ratio + normally distributed', nextId: null, result: '✅ Related t-test' },
+                { label: '🏷️ Ordinal or non-normal data', nextId: null, result: '✅ Wilcoxon signed-rank' }
+              ]
+            },
+            {
+              id: 'correlation',
+              question: 'What type of data do you have?',
+              options: [
+                { label: '📏 Interval/ratio + normally distributed', nextId: null, result: '✅ Pearson\'s r' },
+                { label: '🏷️ Ordinal or non-normal data', nextId: null, result: '✅ Spearman\'s rho' }
+              ]
+            },
+            {
+              id: 'association',
+              question: 'Is your data nominal (categories)?',
+              options: [
+                { label: '✓ Yes - counting frequencies in categories', nextId: null, result: '✅ Chi-squared test' },
+                { label: '✗ No - it\'s ordinal or interval', nextId: 'correlation' }
+              ]
+            }
+          ]}
+        />
+      )
+    }
+
+    if (slideType === 'decision_tree_table') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-purple-400 mb-2">📊 Decision Tree: Choosing a Statistical Test</h2>
+            <p className="text-gray-400 mb-6">Use this table to quickly identify the correct test based on your research design and data type</p>
+            
+            <div className="overflow-hidden rounded-lg border border-gray-700 shadow-2xl">
+              {/* Header Row 1 */}
+              <div className="grid grid-cols-4 bg-gray-800">
+                <div className="p-3 border-r border-gray-700"></div>
+                <div className="col-span-2 p-3 text-center bg-amber-900/40 border-b border-amber-700">
+                  <span className="text-amber-300 font-bold text-lg">Test of Difference</span>
+                </div>
+                <div className="p-3 text-center bg-green-900/40 border-l border-gray-700">
+                  <span className="text-green-300 font-bold text-lg">Test of Association</span>
+                </div>
+              </div>
+              
+              {/* Header Row 2 */}
+              <div className="grid grid-cols-4 bg-gray-800 border-b border-gray-700">
+                <div className="p-3 border-r border-gray-700"></div>
+                <div className="p-3 text-center bg-amber-900/30 border-r border-gray-700">
+                  <span className="text-amber-200 font-semibold">Unrelated Design</span>
+                  <p className="text-amber-400/70 text-xs mt-1">Independent groups</p>
+                </div>
+                <div className="p-3 text-center bg-green-900/30 border-r border-gray-700">
+                  <span className="text-green-200 font-semibold">Related Design</span>
+                  <p className="text-green-400/70 text-xs mt-1">Repeated / Matched</p>
+                </div>
+                <div className="p-3 text-center bg-green-900/30">
+                  <span className="text-green-200 font-semibold">Correlation</span>
+                  <p className="text-green-400/70 text-xs mt-1">Relationship</p>
+                </div>
+              </div>
+              
+              {/* Nominal Data Row */}
+              <div className="grid grid-cols-4 border-b border-gray-700 hover:bg-gray-800/50 transition-colors">
+                <div className="p-4 bg-blue-900/30 border-r border-gray-700">
+                  <span className="text-blue-300 font-bold">Nominal Data</span>
+                  <p className="text-blue-400/70 text-xs mt-1">Categories only</p>
+                </div>
+                <div className="p-4 text-center border-r border-gray-700">
+                  <span className="text-white font-semibold bg-purple-600/40 px-3 py-1 rounded-full">Chi-squared</span>
+                </div>
+                <div className="p-4 text-center border-r border-gray-700">
+                  <span className="text-white font-semibold bg-purple-600/40 px-3 py-1 rounded-full">Sign test</span>
+                </div>
+                <div className="p-4 text-center">
+                  <span className="text-white font-semibold bg-purple-600/40 px-3 py-1 rounded-full">Chi-squared</span>
+                </div>
+              </div>
+              
+              {/* Ordinal Data Row */}
+              <div className="grid grid-cols-4 border-b border-gray-700 hover:bg-gray-800/50 transition-colors">
+                <div className="p-4 bg-blue-900/30 border-r border-gray-700">
+                  <span className="text-blue-300 font-bold">Ordinal Data</span>
+                  <p className="text-blue-400/70 text-xs mt-1">Ranked / Rating scales</p>
+                </div>
+                <div className="p-4 text-center border-r border-gray-700">
+                  <span className="text-white font-semibold bg-teal-600/40 px-3 py-1 rounded-full">Mann-Whitney</span>
+                </div>
+                <div className="p-4 text-center border-r border-gray-700">
+                  <span className="text-white font-semibold bg-teal-600/40 px-3 py-1 rounded-full">Wilcoxon</span>
+                </div>
+                <div className="p-4 text-center">
+                  <span className="text-white font-semibold bg-teal-600/40 px-3 py-1 rounded-full">Spearman's rho</span>
+                </div>
+              </div>
+              
+              {/* Interval Data Row */}
+              <div className="grid grid-cols-4 hover:bg-gray-800/50 transition-colors">
+                <div className="p-4 bg-blue-900/30 border-r border-gray-700">
+                  <span className="text-blue-300 font-bold">Interval Data</span>
+                  <p className="text-blue-400/70 text-xs mt-1">+ Normal distribution</p>
+                </div>
+                <div className="p-4 text-center border-r border-gray-700">
+                  <span className="text-white font-semibold bg-rose-600/40 px-3 py-1 rounded-full">Unrelated t-test</span>
+                </div>
+                <div className="p-4 text-center border-r border-gray-700">
+                  <span className="text-white font-semibold bg-rose-600/40 px-3 py-1 rounded-full">Related t-test</span>
+                </div>
+                <div className="p-4 text-center">
+                  <span className="text-white font-semibold bg-rose-600/40 px-3 py-1 rounded-full">Pearson's r</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Key Factors Box */}
+            <div className="mt-6 bg-gray-800/50 p-5 rounded-lg border border-purple-700">
+              <h3 className="text-purple-300 font-bold mb-3">📌 Factors Affecting Test Choice:</h3>
+              <div className="space-y-2 text-gray-300 text-sm">
+                <p><strong className="text-amber-300">1. Difference or Correlation:</strong> Is the hypothesis about differences between groups, or a relationship between variables?</p>
+                <p><strong className="text-green-300">2. Experimental Design:</strong> Repeated measures/matched pairs = <em>related</em>. Independent groups = <em>unrelated</em>.</p>
+                <p><strong className="text-blue-300">3. Level of Measurement:</strong> Is the data nominal (categories), ordinal (ranked), or interval (equal units)?</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     if (slideType === 'test_afl2') {
       const questions: Question[] = [
@@ -18738,14 +19048,84 @@ function App() {
       return <SplitKnowledgeCheck questions={questions} title="Test Selection Practice" subtitle="Apply your knowledge" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'test_selector_sim') return <TestSelectorSim isPresenting={isPresenting} />
+    if (slideType === 'test_selector_sim') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-purple-400 mb-6">🎯 Test Selection Practice</h2>
+            <p className="text-gray-300 mb-6">For each scenario, select the appropriate statistical test:</p>
+            <div className="space-y-4">
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>1.</strong> Comparing memory test scores (%) between two age groups (different participants), data normally distributed</p>
+                <p className="text-green-400">→ Unrelated t-test</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>2.</strong> Testing association between handedness (left/right) and sport preference (individual/team)</p>
+                <p className="text-green-400">→ Chi-squared</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>3.</strong> Relationship between stress ratings (1-10) and sleep quality ratings (1-10)</p>
+                <p className="text-green-400">→ Spearman's rho</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>4.</strong> Before/after anxiety scores in therapy patients, measured in standard units, normally distributed</p>
+                <p className="text-green-400">→ Related t-test</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     if (slideType === 'test_task') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-amber-400 mb-6">📝 Exam Practice: Choosing Tests</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 mb-6">
+              <p className="text-white mb-4"><strong>A researcher investigates whether there is a relationship between hours of sleep and reaction time. She measures sleep (in hours) and reaction time (in ms) in 20 participants. Both variables are normally distributed.</strong></p>
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(a) Identify an appropriate statistical test for this study. (1 mark)</p>
+                  <button onClick={() => setShowAnswer1(!showAnswer1)} className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded text-white text-sm font-semibold flex items-center gap-2">
+                    {showAnswer1 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer1 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Pearson's r (correlation coefficient)</p>}
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(b) Explain why this test is appropriate. (3 marks)</p>
+                  <button onClick={() => setShowAnswer2(!showAnswer2)} className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded text-white text-sm font-semibold flex items-center gap-2">
+                    {showAnswer2 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer2 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Pearson's r is appropriate because: (1) The researcher is investigating a relationship/correlation between two variables, not a difference. (2) Both variables are measured at interval/ratio level (hours and milliseconds are continuous measurements). (3) The data is normally distributed, meeting the parametric assumptions required for Pearson's r.</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">🚀 Extended: Justifying Test Selection</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+              <p className="text-white mb-4"><strong>Question:</strong> A researcher wishes to investigate whether there is a difference in aggression levels between children who play violent video games and children who play non-violent video games. She uses an independent groups design and measures aggression using a standardised rating scale. Explain which statistical test should be used and justify your answer. (6 marks)</p>
+              <button onClick={() => setShowExtended(!showExtended)} className="mt-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 rounded text-white text-sm font-semibold flex items-center gap-2">
+                {showExtended ? <><EyeOff size={16} /> Hide Model Answer</> : <><Eye size={16} /> Reveal Model Answer</>}
+              </button>
+              {showExtended && (
+                <div className="mt-4 p-4 bg-gray-700/50 rounded animate-fadeIn">
+                  <p className="text-rose-300 font-semibold mb-2">Model Answer:</p>
+                  <p className="text-gray-300 text-sm">The Mann-Whitney U test should be used (1). This is because the researcher is looking for a difference between two conditions, not a correlation or association (1). The design uses independent groups, with different participants in each condition (violent vs non-violent games) (1). The data from the standardised rating scale would be ordinal, as rating scales produce ranked data rather than true interval measurements (1). Mann-Whitney U is the appropriate non-parametric test for independent groups with ordinal data (1). If the data were interval level and normally distributed, an unrelated t-test would be more appropriate, but rating scales typically don't meet parametric assumptions (1).</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )
     }
 
     return (
@@ -18784,13 +19164,96 @@ function App() {
       const doNowQuestions: Question[] = [
         { id: 1, question: "p ≤ 0.05 means:", options: ["5% chance results are due to chance", "95% confident in results", "Both of these"], correct: 2 },
         { id: 2, question: "A Type I error occurs when:", options: ["Rejecting a true null hypothesis", "Accepting a false null hypothesis", "Failing to replicate"], correct: 0 },
-        { id: 3, question: "Critical values are found in:", options: ["The research question", "Statistical tables", "The hypothesis"], correct: 1 }
+        { id: 3, question: "Critical values are found in:", options: ["The research question", "Statistical tables", "The hypothesis"], correct: 1 },
+        { id: 4, question: "A Type II error is also called a:", options: ["False positive", "False negative", "True positive"], correct: 1 },
+        { id: 5, question: "If p = 0.08 at the 0.05 level:", options: ["Results are significant", "Results are not significant", "More data is needed"], correct: 1 }
       ]
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
 
-    if (slideType === 'probability_teach') return <ProbabilityTeach isPresenting={isPresenting} />
-    if (slideType === 'significance_teach') return <SignificanceTeach isPresenting={isPresenting} />
+    if (slideType === 'probability_teach') {
+      return (
+        <TabbedPanels
+          title="🎲 Probability in Psychology"
+          subtitle="Understand probability and significance levels"
+          isPresenting={isPresenting}
+          tabs={[
+            {
+              id: 'what',
+              label: 'What is Probability?',
+              icon: '🎲',
+              color: 'purple',
+              content: (
+                <div className="space-y-4">
+                  <p className="text-lg text-gray-300">The likelihood that something will occur, expressed as a number between 0 and 1</p>
+                  <div className="grid grid-cols-3 gap-4 mt-4">
+                    <div className="bg-gray-700/50 p-4 rounded-lg text-center">
+                      <p className="text-4xl font-bold text-red-400">p = 0</p>
+                      <p className="text-gray-400 mt-2">Impossible</p>
+                    </div>
+                    <div className="bg-gray-700/50 p-4 rounded-lg text-center">
+                      <p className="text-4xl font-bold text-yellow-400">p = 0.5</p>
+                      <p className="text-gray-400 mt-2">50% chance</p>
+                    </div>
+                    <div className="bg-gray-700/50 p-4 rounded-lg text-center">
+                      <p className="text-4xl font-bold text-green-400">p = 1</p>
+                      <p className="text-gray-400 mt-2">Certain</p>
+                    </div>
+                  </div>
+                </div>
+              )
+            },
+            {
+              id: 'why',
+              label: 'Why p ≤ 0.05?',
+              icon: '🎯',
+              color: 'blue',
+              content: (
+                <div className="space-y-4">
+                  <p className="text-lg text-gray-300">The conventional significance level in psychology</p>
+                  <ul className="space-y-3 mt-4">
+                    <li className="flex items-start gap-3"><span className="text-blue-400">✓</span><span>Means ≤5% probability results are due to chance</span></li>
+                    <li className="flex items-start gap-3"><span className="text-blue-400">✓</span><span>95% confident results are genuine</span></li>
+                    <li className="flex items-start gap-3"><span className="text-blue-400">✓</span><span>Balance between Type I and Type II errors</span></li>
+                  </ul>
+                  <div className="mt-6 p-4 bg-amber-900/30 rounded-lg border border-amber-700">
+                    <p className="text-amber-300"><strong>📌 Remember:</strong> p ≤ 0.05 is written as "p less than or equal to 0.05" - it means results are statistically significant!</p>
+                  </div>
+                </div>
+              )
+            }
+          ]}
+        />
+      )
+    }
+
+    if (slideType === 'significance_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-green-400 mb-6">✓ Statistical Significance</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-green-500/50 mb-6">
+              <h3 className="text-xl font-semibold text-green-300 mb-4">What Does "Significant" Mean?</h3>
+              <p className="text-gray-300 mb-4">A result is <strong className="text-green-300">statistically significant</strong> when there is a low probability (usually ≤5%) that it occurred by chance alone.</p>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-green-900/30 p-4 rounded-lg">
+                  <p className="text-green-300 font-bold">If p ≤ 0.05</p>
+                  <p className="text-gray-300">→ Reject null hypothesis</p>
+                  <p className="text-gray-300">→ Accept alternative hypothesis</p>
+                  <p className="text-gray-300">→ Results ARE significant</p>
+                </div>
+                <div className="bg-red-900/30 p-4 rounded-lg">
+                  <p className="text-red-300 font-bold">If p &gt; 0.05</p>
+                  <p className="text-gray-300">→ Accept null hypothesis</p>
+                  <p className="text-gray-300">→ Reject alternative hypothesis</p>
+                  <p className="text-gray-300">→ Results are NOT significant</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     if (slideType === 'probability_afl1') {
       const questions: Question[] = [
@@ -18800,8 +19263,75 @@ function App() {
       return <SplitKnowledgeCheck questions={questions} title="Probability Basics" subtitle="Significance levels" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'critical_values_teach') return <CriticalValuesTeach isPresenting={isPresenting} />
-    if (slideType === 'type_errors_teach') return <TypeErrorsTeach isPresenting={isPresenting} />
+    if (slideType === 'critical_values_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-teal-400 mb-6">📊 Critical Values</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-teal-500/50 mb-6">
+              <h3 className="text-xl font-semibold text-teal-300 mb-4">Using Statistical Tables</h3>
+              <p className="text-gray-300 mb-4">Critical values are found in statistical tables and tell you the boundary for significance.</p>
+              <div className="space-y-3">
+                <div className="bg-gray-700/50 p-3 rounded">
+                  <p className="text-teal-300 font-semibold">To use a critical values table, you need:</p>
+                  <ul className="text-gray-300 text-sm mt-2 space-y-1">
+                    <li>• <strong>N</strong> (sample size) or <strong>df</strong> (degrees of freedom)</li>
+                    <li>• <strong>Significance level</strong> (usually p = 0.05)</li>
+                    <li>• Whether the test is <strong>one-tailed or two-tailed</strong></li>
+                  </ul>
+                </div>
+                <div className="bg-gray-700/50 p-3 rounded">
+                  <p className="text-gray-300"><strong>Observed value</strong> vs <strong>Critical value</strong></p>
+                  <p className="text-gray-400 text-sm mt-1">Some tests: observed must be ≥ critical (e.g., t-test, chi-squared)</p>
+                  <p className="text-gray-400 text-sm">Some tests: observed must be ≤ critical (e.g., Mann-Whitney, Sign test)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'type_errors_teach') {
+      return (
+        <ComparisonTable
+          title="⚠️ Type I and Type II Errors"
+          subtitle="Click each row to reveal the comparison"
+          isPresenting={isPresenting}
+          optionALabel="Type I Error (False Positive)"
+          optionBLabel="Type II Error (False Negative)"
+          optionAColor="rose"
+          optionBColor="blue"
+          items={[
+            {
+              aspect: 'Definition',
+              optionA: 'Rejecting the null hypothesis when it is actually TRUE',
+              optionB: 'Accepting the null hypothesis when it is actually FALSE'
+            },
+            {
+              aspect: 'What it means',
+              optionA: 'Saying there IS an effect when there ISN\'T',
+              optionB: 'Saying there is NO effect when there IS one'
+            },
+            {
+              aspect: 'Result',
+              optionA: '"Finding" a difference that doesn\'t exist',
+              optionB: 'Missing a real difference'
+            },
+            {
+              aspect: 'More likely with',
+              optionA: 'Higher significance levels (e.g., p ≤ 0.10)',
+              optionB: 'Stricter significance levels (e.g., p ≤ 0.01)'
+            },
+            {
+              aspect: 'Example',
+              optionA: 'Claiming a drug works when it doesn\'t',
+              optionB: 'Missing that a drug is actually effective'
+            }
+          ]}
+        />
+      )
+    }
 
     if (slideType === 'probability_afl2') {
       const questions: Question[] = [
@@ -18811,14 +19341,84 @@ function App() {
       return <SplitKnowledgeCheck questions={questions} title="Error Types" subtitle="Type I and II errors" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'significance_calculator') return <SignificanceCalculator isPresenting={isPresenting} />
+    if (slideType === 'significance_calculator') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-purple-400 mb-6">🔢 Interpreting Significance</h2>
+            <p className="text-gray-300 mb-6">Practice determining whether results are significant:</p>
+            <div className="space-y-4">
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>1.</strong> p = 0.03, significance level set at 0.05</p>
+                <p className="text-green-400">→ SIGNIFICANT (0.03 ≤ 0.05) - Reject null hypothesis</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>2.</strong> p = 0.08, significance level set at 0.05</p>
+                <p className="text-red-400">→ NOT SIGNIFICANT (0.08 &gt; 0.05) - Accept null hypothesis</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>3.</strong> Observed value = 12, Critical value = 10, test requires observed ≥ critical</p>
+                <p className="text-green-400">→ SIGNIFICANT (12 ≥ 10) - Reject null hypothesis</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>4.</strong> Mann-Whitney U: observed = 15, critical = 13</p>
+                <p className="text-red-400">→ NOT SIGNIFICANT (15 &gt; 13, U must be ≤ critical) - Accept null</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     if (slideType === 'probability_task') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-amber-400 mb-6">📝 Exam Practice: Probability & Significance</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 mb-6">
+              <p className="text-white mb-4"><strong>A researcher tests whether a new teaching method improves test scores. Using a related t-test, she obtains t = 2.45 with df = 19. The critical value at p = 0.05 (two-tailed) is 2.093.</strong></p>
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(a) Are the results significant? Explain your answer. (2 marks)</p>
+                  <button onClick={() => setShowAnswer1(!showAnswer1)} className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded text-white text-sm font-semibold flex items-center gap-2">
+                    {showAnswer1 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer1 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Yes, the results are significant (1). The observed t value (2.45) is greater than the critical value (2.093), meaning p ≤ 0.05, so we reject the null hypothesis (1).</p>}
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(b) Explain what it would mean if a Type I error had been made in this study. (2 marks)</p>
+                  <button onClick={() => setShowAnswer2(!showAnswer2)} className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded text-white text-sm font-semibold flex items-center gap-2">
+                    {showAnswer2 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer2 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">A Type I error would mean the researcher concluded the teaching method improves test scores when it actually doesn't (1). This would be a false positive - rejecting the null hypothesis when it is actually true (1).</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">🚀 Extended: Type I vs Type II Errors</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+              <p className="text-white mb-4"><strong>Question:</strong> Discuss the implications of using a more stringent significance level (p ≤ 0.01) versus a more lenient one (p ≤ 0.10) in psychological research. Refer to Type I and Type II errors in your answer. (6 marks)</p>
+              <button onClick={() => setShowExtended(!showExtended)} className="mt-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 rounded text-white text-sm font-semibold flex items-center gap-2">
+                {showExtended ? <><EyeOff size={16} /> Hide Model Answer</> : <><Eye size={16} /> Reveal Model Answer</>}
+              </button>
+              {showExtended && (
+                <div className="mt-4 p-4 bg-gray-700/50 rounded animate-fadeIn">
+                  <p className="text-rose-300 font-semibold mb-2">Model Answer:</p>
+                  <p className="text-gray-300 text-sm">Using a more stringent significance level (p ≤ 0.01) reduces the risk of Type I errors because you require stronger evidence before rejecting the null hypothesis (1). However, this increases the risk of Type II errors - you might miss real effects because the threshold for significance is harder to reach (1). This might be appropriate in high-stakes research like drug trials where false positives could be dangerous (1). Conversely, a more lenient level (p ≤ 0.10) increases the risk of Type I errors - claiming effects exist when they don't (1). However, it reduces Type II errors, making it easier to detect real effects (1). This might be suitable for exploratory research where missing a potential finding would be costly, though findings would need replication (1).</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )
     }
 
     return (
@@ -18831,7 +19431,7 @@ function App() {
     )
   }
 
-  // Render A Level Lesson 7: Non-Parametric Tests
+  // Render A Level Lesson 7: Non-Parametric Tests (Understanding when to use, NOT calculating)
   const renderLesson37 = () => {
     const slideType = lesson37Slides[currentSlide]
 
@@ -18840,12 +19440,12 @@ function App() {
         <LessonTitleSlide
           lessonNumber={7}
           title="Non-Parametric Tests"
-          subtitle="Mann-Whitney & Wilcoxon"
+          subtitle="Understanding When to Use Mann-Whitney & Wilcoxon"
           objectives={[
-            "Understand when to use non-parametric tests",
-            "Calculate and interpret the Mann-Whitney U test",
-            "Calculate and interpret the Wilcoxon signed-rank test",
-            "Use critical value tables correctly"
+            "Understand when non-parametric tests are appropriate",
+            "Know when to use the Mann-Whitney U test",
+            "Know when to use the Wilcoxon signed-rank test",
+            "Select the correct test based on research design"
           ]}
           isPresenting={isPresenting}
           level="A2"
@@ -18857,42 +19457,225 @@ function App() {
       const doNowQuestions: Question[] = [
         { id: 1, question: "Non-parametric tests are used when:", options: ["Data is interval and normal", "Data doesn't meet parametric assumptions", "Sample size is very large"], correct: 1 },
         { id: 2, question: "Mann-Whitney U is used for:", options: ["Related data", "Independent groups", "Correlations"], correct: 1 },
-        { id: 3, question: "Wilcoxon is used for:", options: ["Independent groups", "Related/matched data", "Nominal data"], correct: 1 }
+        { id: 3, question: "Wilcoxon is used for:", options: ["Independent groups", "Related/matched data", "Nominal data"], correct: 1 },
+        { id: 4, question: "Non-parametric tests use:", options: ["Mean and standard deviation", "Ranked data", "Only interval data"], correct: 1 },
+        { id: 5, question: "A limitation of non-parametric tests is:", options: ["They're too powerful", "Less statistical power than parametric", "They require normal distribution"], correct: 1 }
       ]
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
 
-    if (slideType === 'nonparam_intro_teach') return <NonparamIntroTeach isPresenting={isPresenting} />
-    if (slideType === 'mannwhitney_teach') return <MannwhitneyTeach isPresenting={isPresenting} />
+    if (slideType === 'nonparam_intro_teach') {
+      return (
+        <ClickRevealCards
+          title="📊 Non-Parametric Tests: Introduction"
+          subtitle="Click cards to reveal when and why to use non-parametric tests"
+          isPresenting={isPresenting}
+          cards={[
+            { type: 'neutral', title: 'Data is ordinal (ranked/ordered)', content: 'Rating scales, rankings, and Likert scales produce ordinal data that requires non-parametric tests.' },
+            { type: 'neutral', title: 'Data is not normally distributed', content: 'When data is skewed or doesn\'t follow a bell curve, parametric assumptions are violated.' },
+            { type: 'neutral', title: 'Sample size is small', content: 'With small samples, it\'s harder to verify normal distribution, so non-parametric is safer.' },
+            { type: 'strength', title: 'Work with ranked data', content: 'Non-parametric tests convert raw scores to ranks, making them suitable for ordinal measurements.' },
+            { type: 'strength', title: 'More robust to outliers', content: 'Extreme scores have less impact because data is ranked rather than using actual values.' },
+            { type: 'limitation', title: 'Less statistical power', content: 'Non-parametric tests are less likely to detect a real effect compared to parametric alternatives.' }
+          ]}
+        />
+      )
+    }
+
+    if (slideType === 'mannwhitney_teach') {
+      return (
+        <SpotlightCards
+          title="🔬 Mann-Whitney U Test"
+          subtitle="Click each card to learn when to use Mann-Whitney U"
+          isPresenting={isPresenting}
+          columns={3}
+          cards={[
+            {
+              id: 'design',
+              title: 'Independent Groups',
+              icon: '👥',
+              color: 'green',
+              content: <p>Different participants in each condition</p>,
+              details: [
+                'Two separate groups being compared',
+                'No participant appears in both conditions',
+                'E.g., comparing males vs females'
+              ]
+            },
+            {
+              id: 'data',
+              title: 'Ordinal Data',
+              icon: '📊',
+              color: 'green',
+              content: <p>Ranked or rating scale data</p>,
+              details: [
+                'Data that can be ordered but intervals aren\'t equal',
+                'Likert scales (1-5, 1-7)',
+                'Rating scales (1-10)',
+                'Or interval data that\'s not normally distributed'
+              ]
+            },
+            {
+              id: 'purpose',
+              title: 'Looking for Difference',
+              icon: '↔️',
+              color: 'green',
+              content: <p>Between two groups</p>,
+              details: [
+                'Testing if Group A differs from Group B',
+                'Not looking for correlation or association',
+                'Comparing medians rather than means'
+              ]
+            }
+          ]}
+        />
+      )
+    }
 
     if (slideType === 'nonparam_afl1') {
       const questions: Question[] = [
-        { id: 1, question: "Mann-Whitney U compares:", options: ["Means directly", "Ranks between two independent groups", "Frequencies"], correct: 1 },
-        { id: 2, scenario: "Ordinal data, independent groups, N=12", question: "Appropriate test:", options: ["Unrelated t-test", "Mann-Whitney U", "Chi-squared"], correct: 1 }
+        { id: 1, question: "Mann-Whitney U is used for:", options: ["Repeated measures with ordinal data", "Independent groups with ordinal data", "Correlational designs"], correct: 1 },
+        { id: 2, scenario: "A researcher compares stress levels (rated 1-10) between students and workers using different participants", question: "Appropriate test:", options: ["Wilcoxon", "Mann-Whitney U", "Related t-test"], correct: 1 }
       ]
-      return <SplitKnowledgeCheck questions={questions} title="Mann-Whitney U" subtitle="When and why" isPresenting={isPresenting} />
+      return <SplitKnowledgeCheck questions={questions} title="Mann-Whitney U" subtitle="When to use it" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'mannwhitney_calc_teach') return <MannwhitneyCalcTeach isPresenting={isPresenting} />
-    if (slideType === 'wilcoxon_teach') return <WilcoxonTeach isPresenting={isPresenting} />
-    if (slideType === 'wilcoxon_calc_teach') return <WilcoxonCalcTeach isPresenting={isPresenting} />
+    if (slideType === 'wilcoxon_teach') {
+      return (
+        <SpotlightCards
+          title="🔬 Wilcoxon Signed-Rank Test"
+          subtitle="Click each card to learn when to use Wilcoxon"
+          isPresenting={isPresenting}
+          columns={3}
+          cards={[
+            {
+              id: 'repeated',
+              title: 'Repeated Measures',
+              icon: '🔄',
+              color: 'blue',
+              content: <p>Same participants tested twice</p>,
+              details: [
+                'Before and after measurements',
+                'Testing the same person in both conditions',
+                'Comparing paired scores'
+              ]
+            },
+            {
+              id: 'matched',
+              title: 'OR Matched Pairs',
+              icon: '👥',
+              color: 'blue',
+              content: <p>Participants matched on key variables</p>,
+              details: [
+                'Different people paired together',
+                'Matched on age, gender, IQ, etc.',
+                'Each pair treated as a single unit'
+              ]
+            },
+            {
+              id: 'data',
+              title: 'Ordinal Data',
+              icon: '📊',
+              color: 'blue',
+              content: <p>Ranked or rating scale data</p>,
+              details: [
+                'Data from rating scales (1-10)',
+                'Likert scale responses',
+                'Or interval data that\'s not normally distributed'
+              ]
+            }
+          ]}
+        />
+      )
+    }
 
     if (slideType === 'nonparam_afl2') {
       const questions: Question[] = [
-        { id: 1, question: "In Wilcoxon, you:", options: ["Rank differences, ignoring sign", "Rank original scores", "Calculate means"], correct: 0 },
-        { id: 2, scenario: "Repeated measures, ordinal data", question: "Use:", options: ["Mann-Whitney U", "Wilcoxon signed-rank", "Unrelated t-test"], correct: 1 }
+        { id: 1, question: "Wilcoxon signed-rank is used for:", options: ["Independent groups", "Repeated measures or matched pairs", "Nominal data"], correct: 1 },
+        { id: 2, scenario: "Anxiety scores (ordinal) measured before and after therapy in the same participants", question: "Use:", options: ["Mann-Whitney U", "Wilcoxon signed-rank", "Unrelated t-test"], correct: 1 }
       ]
-      return <SplitKnowledgeCheck questions={questions} title="Wilcoxon Test" subtitle="Calculation and use" isPresenting={isPresenting} />
+      return <SplitKnowledgeCheck questions={questions} title="Wilcoxon Test" subtitle="When to use it" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'test_calculator') return <NonparamTestCalculator isPresenting={isPresenting} />
+    if (slideType === 'test_selection_practice') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-purple-400 mb-6">🎯 Test Selection Practice</h2>
+            <p className="text-gray-300 mb-6">For each scenario, identify the correct non-parametric test:</p>
+            <div className="space-y-4">
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>1.</strong> Comparing memory scores (ranked) between two different age groups</p>
+                <p className="text-green-400">→ Mann-Whitney U (independent groups, ordinal data)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>2.</strong> Measuring happiness ratings before and after a holiday (same people)</p>
+                <p className="text-green-400">→ Wilcoxon (repeated measures, ordinal data)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>3.</strong> Comparing confidence levels between matched pairs of students</p>
+                <p className="text-green-400">→ Wilcoxon (matched pairs, ordinal data)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>4.</strong> Testing if males and females differ in risk-taking scores (0-20 scale, not normally distributed)</p>
+                <p className="text-green-400">→ Mann-Whitney U (independent groups, non-normal distribution)</p>
+              </div>
+            </div>
+            <div className="mt-6 p-4 bg-purple-900/30 rounded-lg border border-purple-700">
+              <p className="text-purple-300"><strong>Remember:</strong> You do NOT need to calculate these tests - just know when to use them!</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     if (slideType === 'nonparam_task') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-amber-400 mb-6">📝 Exam Practice: Non-Parametric Tests</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 mb-6">
+              <p className="text-white mb-4"><strong>A researcher wants to investigate whether a new teaching method improves test performance. She uses an independent groups design with 15 students in each group. One group is taught using the new method, the other using traditional methods. Test scores are measured on an ordinal scale.</strong></p>
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(a) Identify an appropriate statistical test for this study. (1 mark)</p>
+                  <button onClick={() => setShowAnswer1(!showAnswer1)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm flex items-center gap-2">
+                    {showAnswer1 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer1 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Sample answer: Mann-Whitney U test</p>}
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(b) Explain why this test is appropriate. (3 marks)</p>
+                  <button onClick={() => setShowAnswer2(!showAnswer2)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm flex items-center gap-2">
+                    {showAnswer2 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer2 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Sample answer: Mann-Whitney U is appropriate because: (1) The study is looking for a difference between two groups, (2) The design uses independent groups (different participants in each condition), (3) The data is ordinal (ranked test scores). Mann-Whitney U is the non-parametric alternative when data doesn't meet the assumptions for a parametric test.</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">🚀 Extended: Justifying Test Selection</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+              <p className="text-white mb-4"><strong>Question:</strong> A psychologist measures stress levels (rated 1-10) in participants before and after a mindfulness intervention. Explain which statistical test should be used and justify your answer with reference to the design, data type, and assumptions. (6 marks)</p>
+              <div className="mt-4 p-4 bg-gray-700/50 rounded">
+                <p className="text-rose-300 font-semibold mb-2">Model Answer:</p>
+                <button onClick={() => setShowExtended(!showExtended)} className="px-3 py-1 bg-rose-600 hover:bg-rose-700 rounded text-white text-sm flex items-center gap-2">
+                  {showExtended ? <><EyeOff size={16} /> Hide Model Answer</> : <><Eye size={16} /> Reveal Model Answer</>}
+                </button>
+                {showExtended && <p className="text-green-400 mt-3 text-sm animate-fadeIn">The Wilcoxon signed-rank test should be used (1). This is because the study uses a repeated measures design where the same participants are measured before and after the intervention (1). The data is ordinal, as stress ratings on a 1-10 scale represent ranked categories rather than true interval measurements (1). Additionally, with rating scales the data is unlikely to be normally distributed, violating the assumptions for a parametric test (1). The Wilcoxon test is the non-parametric alternative to the related t-test, making it suitable for repeated measures designs with ordinal or non-normal data (1). It analyses the differences between paired scores to determine if there is a significant change (1).</p>}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     return (
@@ -18905,7 +19688,7 @@ function App() {
     )
   }
 
-  // Render A Level Lesson 8: Parametric Tests
+  // Render A Level Lesson 8: Parametric Tests (Understanding when to use, NOT calculating)
   const renderLesson38 = () => {
     const slideType = lesson38Slides[currentSlide]
 
@@ -18914,12 +19697,12 @@ function App() {
         <LessonTitleSlide
           lessonNumber={8}
           title="Parametric Tests"
-          subtitle="Unrelated & Related t-tests"
+          subtitle="Understanding When to Use t-tests"
           objectives={[
-            "Understand assumptions for parametric tests",
-            "Calculate the unrelated (independent) t-test",
-            "Calculate the related (paired) t-test",
-            "Interpret t-test results and critical values"
+            "Understand the assumptions for parametric tests",
+            "Know when to use the unrelated (independent) t-test",
+            "Know when to use the related (paired) t-test",
+            "Select the correct test based on research design"
           ]}
           isPresenting={isPresenting}
           level="A2"
@@ -18931,13 +19714,93 @@ function App() {
       const doNowQuestions: Question[] = [
         { id: 1, question: "Parametric tests require:", options: ["Nominal data only", "Normal distribution + interval data", "Ordinal data only"], correct: 1 },
         { id: 2, question: "Unrelated t-test is for:", options: ["Same participants tested twice", "Different participants in each condition", "Matched pairs"], correct: 1 },
-        { id: 3, question: "Related t-test is for:", options: ["Independent groups", "Repeated measures or matched pairs", "Correlations"], correct: 1 }
+        { id: 3, question: "Related t-test is for:", options: ["Independent groups", "Repeated measures or matched pairs", "Correlations"], correct: 1 },
+        { id: 4, question: "Parametric tests are preferred because they have:", options: ["Less assumptions", "Greater statistical power", "Simpler calculations"], correct: 1 },
+        { id: 5, question: "Homogeneity of variance means:", options: ["Groups have similar spread of scores", "Data is normally distributed", "Equal sample sizes"], correct: 0 }
       ]
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
 
-    if (slideType === 'param_assumptions_teach') return <ParamAssumptionsTeach isPresenting={isPresenting} />
-    if (slideType === 'unrelated_t_teach') return <UnrelatedTTeach isPresenting={isPresenting} />
+    if (slideType === 'param_assumptions_teach') {
+      return (
+        <StepReveal
+          title="📊 Parametric Test Assumptions"
+          subtitle="Reveal each assumption one by one - all must be met!"
+          isPresenting={isPresenting}
+          steps={[
+            {
+              title: 'Interval/Ratio Data',
+              content: 'Data must be measured on a continuous scale with equal intervals (e.g., time in seconds, test scores in marks, height in cm).',
+              icon: '📏'
+            },
+            {
+              title: 'Normal Distribution',
+              content: 'Data should be approximately normally distributed (bell-shaped curve). Most scores cluster around the mean with fewer at extremes.',
+              icon: '📈'
+            },
+            {
+              title: 'Homogeneity of Variance',
+              content: 'Groups being compared should have similar variances (spread of scores). The data should be equally spread in both groups.',
+              icon: '⚖️'
+            },
+            {
+              title: 'If Assumptions NOT Met...',
+              content: 'Use non-parametric alternatives: Mann-Whitney U instead of unrelated t-test, or Wilcoxon instead of related t-test.',
+              icon: '⚠️'
+            }
+          ]}
+        />
+      )
+    }
+
+    if (slideType === 'unrelated_t_teach') {
+      return (
+        <SpotlightCards
+          title="🔬 Unrelated (Independent) t-Test"
+          subtitle="Click each requirement to learn more"
+          isPresenting={isPresenting}
+          columns={3}
+          cards={[
+            {
+              id: 'design',
+              title: 'Independent Groups',
+              icon: '👥',
+              color: 'green',
+              content: <p>Different participants in each condition</p>,
+              details: [
+                'Two completely separate groups',
+                'No participant tested twice',
+                'E.g., Treatment group vs Control group'
+              ]
+            },
+            {
+              id: 'data',
+              title: 'Interval/Ratio Data',
+              icon: '📏',
+              color: 'green',
+              content: <p>Continuous measurements with equal intervals</p>,
+              details: [
+                'Time in seconds or milliseconds',
+                'Test scores as percentages or marks',
+                'Physical measurements (height, weight)'
+              ]
+            },
+            {
+              id: 'distribution',
+              title: 'Normal Distribution',
+              icon: '📈',
+              color: 'green',
+              content: <p>Data approximately normally distributed</p>,
+              details: [
+                'Bell-shaped curve when plotted',
+                'Most scores around the mean',
+                'Similar variance in both groups'
+              ]
+            }
+          ]}
+        />
+      )
+    }
 
     if (slideType === 'param_afl1') {
       const questions: Question[] = [
@@ -18947,24 +19810,142 @@ function App() {
       return <SplitKnowledgeCheck questions={questions} title="Parametric Assumptions" subtitle="When to use t-tests" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'related_t_teach') return <RelatedTTeach isPresenting={isPresenting} />
+    if (slideType === 'related_t_teach') {
+      return (
+        <SpotlightCards
+          title="🔬 Related (Paired) t-Test"
+          subtitle="Click each requirement to learn more"
+          isPresenting={isPresenting}
+          columns={3}
+          cards={[
+            {
+              id: 'repeated',
+              title: 'Repeated Measures',
+              icon: '🔄',
+              color: 'blue',
+              content: <p>Same participants tested twice</p>,
+              details: [
+                'Before and after measurements',
+                'Each person provides two data points',
+                'Compares paired scores'
+              ]
+            },
+            {
+              id: 'matched',
+              title: 'OR Matched Pairs',
+              icon: '👥',
+              color: 'blue',
+              content: <p>Participants matched on key variables</p>,
+              details: [
+                'Different people paired together',
+                'Matched on relevant characteristics',
+                'Each pair treated as one unit'
+              ]
+            },
+            {
+              id: 'assumptions',
+              title: 'Interval + Normal',
+              icon: '📏',
+              color: 'blue',
+              content: <p>Parametric assumptions must be met</p>,
+              details: [
+                'Data measured on interval/ratio scale',
+                'Differences are normally distributed',
+                'Continuous measurements required'
+              ]
+            }
+          ]}
+        />
+      )
+    }
 
     if (slideType === 'param_afl2') {
       const questions: Question[] = [
-        { id: 1, scenario: "Before and after measurements on same participants, interval data", question: "Use:", options: ["Unrelated t-test", "Related t-test", "Mann-Whitney U"], correct: 1 },
-        { id: 2, question: "Degrees of freedom affect:", options: ["The critical value needed", "The research question", "The sampling method"], correct: 0 }
+        { id: 1, scenario: "Before and after measurements on same participants, interval data, normally distributed", question: "Use:", options: ["Unrelated t-test", "Related t-test", "Mann-Whitney U"], correct: 1 },
+        { id: 2, scenario: "Two separate groups tested once each, interval data, normal distribution", question: "Use:", options: ["Related t-test", "Unrelated t-test", "Wilcoxon"], correct: 1 }
       ]
-      return <SplitKnowledgeCheck questions={questions} title="t-Test Application" subtitle="Choosing and interpreting" isPresenting={isPresenting} />
+      return <SplitKnowledgeCheck questions={questions} title="t-Test Selection" subtitle="Choosing the right t-test" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'ttest_calculator') return <TtestCalculator isPresenting={isPresenting} />
+    if (slideType === 'test_selection_practice2') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-purple-400 mb-6">🎯 Parametric vs Non-Parametric Decision</h2>
+            <p className="text-gray-300 mb-6">Decide whether to use a parametric test (t-test) or non-parametric alternative:</p>
+            <div className="space-y-4">
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>1.</strong> Independent groups, reaction times (ms), normally distributed</p>
+                <p className="text-green-400">→ Unrelated t-test (parametric assumptions met)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>2.</strong> Repeated measures, satisfaction ratings (1-7 scale)</p>
+                <p className="text-green-400">→ Wilcoxon (ordinal data, doesn't meet parametric assumptions)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>3.</strong> Matched pairs, test scores (%), normally distributed</p>
+                <p className="text-green-400">→ Related t-test (parametric assumptions met)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>4.</strong> Independent groups, anxiety scores, skewed distribution</p>
+                <p className="text-green-400">→ Mann-Whitney U (non-normal distribution)</p>
+              </div>
+            </div>
+            <div className="mt-6 p-4 bg-purple-900/30 rounded-lg border border-purple-700">
+              <p className="text-purple-300"><strong>Key:</strong> Parametric tests need interval/ratio data + normal distribution. Otherwise, use non-parametric!</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     if (slideType === 'param_task') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-amber-400 mb-6">📝 Exam Practice: Parametric Tests</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 mb-6">
+              <p className="text-white mb-4"><strong>A researcher investigates whether caffeine affects reaction time. She tests 20 participants' reaction times (in ms) before and after drinking coffee. The data is normally distributed.</strong></p>
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(a) Identify an appropriate statistical test for this study. (1 mark)</p>
+                  <button onClick={() => setShowAnswer1(!showAnswer1)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm flex items-center gap-2">
+                    {showAnswer1 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer1 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Sample answer: Related t-test (or paired t-test)</p>}
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(b) Explain why a parametric test is appropriate here. (3 marks)</p>
+                  <button onClick={() => setShowAnswer2(!showAnswer2)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm flex items-center gap-2">
+                    {showAnswer2 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer2 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Sample answer: A parametric test is appropriate because: (1) The data is interval/ratio level (reaction time in milliseconds is measured on a continuous scale), (2) The data is normally distributed (as stated in the question), (3) The design is repeated measures (same participants tested twice), making the related t-test the appropriate parametric test.</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">🚀 Extended: Comparing Parametric & Non-Parametric</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+              <p className="text-white mb-4"><strong>Question:</strong> Evaluate the advantages and disadvantages of using parametric tests compared to non-parametric tests in psychological research. (6 marks)</p>
+              <div className="mt-4 p-4 bg-gray-700/50 rounded">
+                <p className="text-rose-300 font-semibold mb-2">Model Answer:</p>
+                <button onClick={() => setShowExtended(!showExtended)} className="px-3 py-1 bg-rose-600 hover:bg-rose-700 rounded text-white text-sm flex items-center gap-2">
+                  {showExtended ? <><EyeOff size={16} /> Hide Model Answer</> : <><Eye size={16} /> Reveal Model Answer</>}
+                </button>
+                {showExtended && <p className="text-green-400 mt-3 text-sm animate-fadeIn">Parametric tests (like the t-test) have greater statistical power than non-parametric alternatives, meaning they are more likely to detect a real effect when one exists (1). However, they require strict assumptions to be met: data must be interval/ratio level, normally distributed, and groups should have similar variances (1). If these assumptions are violated, parametric tests may give inaccurate results (1). Non-parametric tests (like Mann-Whitney and Wilcoxon) can be used with ordinal data and don't require normal distribution (1), making them more flexible and suitable for rating scales commonly used in psychology (1). However, they are less powerful, meaning larger sample sizes may be needed to detect effects, and they cannot be used to analyse interval/ratio data as precisely as parametric tests (1).</p>}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     return (
@@ -18977,7 +19958,7 @@ function App() {
     )
   }
 
-  // Render A Level Lesson 9: Tests of Correlation
+  // Render A Level Lesson 9: Tests of Correlation (Understanding when to use, NOT calculating)
   const renderLesson39 = () => {
     const slideType = lesson39Slides[currentSlide]
 
@@ -18986,12 +19967,12 @@ function App() {
         <LessonTitleSlide
           lessonNumber={9}
           title="Tests of Correlation"
-          subtitle="Spearman's rho & Pearson's r"
+          subtitle="Understanding When to Use Spearman's & Pearson's"
           objectives={[
-            "Understand when to use Spearman's vs Pearson's",
-            "Calculate Spearman's rank correlation coefficient",
-            "Calculate Pearson's product-moment correlation",
-            "Interpret correlation coefficients and significance"
+            "Understand when to use Spearman's rho vs Pearson's r",
+            "Know the assumptions for each correlation test",
+            "Interpret correlation coefficients correctly",
+            "Select the appropriate test for different data types"
           ]}
           isPresenting={isPresenting}
           level="A2"
@@ -19003,41 +19984,266 @@ function App() {
       const doNowQuestions: Question[] = [
         { id: 1, question: "Spearman's rho is used for:", options: ["Interval data with normal distribution", "Ordinal data or non-normal interval data", "Nominal data"], correct: 1 },
         { id: 2, question: "Pearson's r requires:", options: ["Ordinal data", "Interval/ratio data with normal distribution", "Any type of data"], correct: 1 },
-        { id: 3, question: "A correlation of -0.85 indicates:", options: ["Weak negative relationship", "Strong negative relationship", "No relationship"], correct: 1 }
+        { id: 3, question: "A correlation of -0.85 indicates:", options: ["Weak negative relationship", "Strong negative relationship", "No relationship"], correct: 1 },
+        { id: 4, question: "A correlation coefficient ranges from:", options: ["-1 to +1", "0 to 1", "0 to 100"], correct: 0 },
+        { id: 5, question: "Correlation does NOT show:", options: ["Strength of relationship", "Direction of relationship", "Cause and effect"], correct: 2 }
       ]
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
 
-    if (slideType === 'spearmans_teach') return <SpearmansTeach isPresenting={isPresenting} />
-    if (slideType === 'spearmans_calc_teach') return <SpearmansCalcTeach isPresenting={isPresenting} />
+    if (slideType === 'spearmans_teach') {
+      return (
+        <SpotlightCards
+          title="🔬 Spearman's Rho (ρ)"
+          subtitle="Click each card to learn when to use Spearman's correlation"
+          isPresenting={isPresenting}
+          columns={3}
+          cards={[
+            {
+              id: 'ordinal',
+              title: 'Ordinal Data',
+              icon: '📊',
+              color: 'teal',
+              content: <p>Ranked or rating scale data</p>,
+              details: [
+                'Data from rating scales (1-10)',
+                'Likert scale responses',
+                'Rankings or ordered categories'
+              ]
+            },
+            {
+              id: 'nonnormal',
+              title: 'Non-Normal Data',
+              icon: '📈',
+              color: 'teal',
+              content: <p>Or skewed distributions</p>,
+              details: [
+                'Data that doesn\'t follow a bell curve',
+                'Interval data with outliers',
+                'Small sample sizes'
+              ]
+            },
+            {
+              id: 'correlation',
+              title: 'Correlation',
+              icon: '🔗',
+              color: 'teal',
+              content: <p>Relationship between two variables</p>,
+              details: [
+                'Looking for association, not difference',
+                'Both variables measured on same participants',
+                'E.g., happiness ratings vs stress ratings'
+              ]
+            }
+          ]}
+        />
+      )
+    }
+
+    if (slideType === 'pearsons_teach') {
+      return (
+        <SpotlightCards
+          title="🔬 Pearson's r"
+          subtitle="Click each card to learn when to use Pearson's correlation"
+          isPresenting={isPresenting}
+          columns={3}
+          cards={[
+            {
+              id: 'interval',
+              title: 'Interval/Ratio Data',
+              icon: '📏',
+              color: 'indigo',
+              content: <p>Continuous measurements</p>,
+              details: [
+                'Time measurements (seconds, hours)',
+                'Test scores (marks, percentages)',
+                'Physical measurements (cm, kg)'
+              ]
+            },
+            {
+              id: 'normal',
+              title: 'Normal Distribution',
+              icon: '📈',
+              color: 'indigo',
+              content: <p>Data approximately normally distributed</p>,
+              details: [
+                'Bell-shaped curve when plotted',
+                'Most scores cluster around the mean',
+                'Few extreme outliers'
+              ]
+            },
+            {
+              id: 'correlation',
+              title: 'Correlation',
+              icon: '🔗',
+              color: 'indigo',
+              content: <p>Relationship between two variables</p>,
+              details: [
+                'Testing if variables are related',
+                'Both variables from same participants',
+                'E.g., hours studied vs exam score'
+              ]
+            }
+          ]}
+        />
+      )
+    }
 
     if (slideType === 'corr_afl1') {
       const questions: Question[] = [
-        { id: 1, question: "To calculate Spearman's rho, you first:", options: ["Calculate the mean", "Rank the data", "Square all values"], correct: 1 },
-        { id: 2, scenario: "Ordinal data, testing for relationship between two variables", question: "Use:", options: ["Pearson's r", "Spearman's rho", "Chi-squared"], correct: 1 }
+        { id: 1, scenario: "Data on stress ratings (1-10) and job satisfaction ratings (1-10)", question: "Use:", options: ["Pearson's r", "Spearman's rho", "Chi-squared"], correct: 1 },
+        { id: 2, question: "Spearman's rho is used when:", options: ["Data is interval and normally distributed", "Data is ordinal or not normally distributed", "Looking for differences between groups"], correct: 1 }
       ]
-      return <SplitKnowledgeCheck questions={questions} title="Spearman's Rho" subtitle="Calculation basics" isPresenting={isPresenting} />
+      return <SplitKnowledgeCheck questions={questions} title="Spearman's Rho" subtitle="When to use it" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'pearsons_teach') return <PearsonsTeach isPresenting={isPresenting} />
-    if (slideType === 'pearsons_calc_teach') return <PearsonsCalcTeach isPresenting={isPresenting} />
+    if (slideType === 'interpreting_correlation_teach') {
+      return (
+        <TabbedPanels
+          title="📊 Interpreting Correlation Coefficients"
+          subtitle="Click tabs to explore strength and direction"
+          isPresenting={isPresenting}
+          tabs={[
+            {
+              id: 'strength',
+              label: 'Strength Guidelines',
+              icon: '💪',
+              color: 'teal',
+              content: (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="bg-green-900/30 p-4 rounded-lg border border-green-700 flex justify-between items-center">
+                      <span className="text-green-400 font-bold text-xl">±0.80 to ±1.00</span>
+                      <span className="text-white text-lg">= Strong Correlation</span>
+                    </div>
+                    <div className="bg-yellow-900/30 p-4 rounded-lg border border-yellow-700 flex justify-between items-center">
+                      <span className="text-yellow-400 font-bold text-xl">±0.50 to ±0.79</span>
+                      <span className="text-white text-lg">= Moderate Correlation</span>
+                    </div>
+                    <div className="bg-orange-900/30 p-4 rounded-lg border border-orange-700 flex justify-between items-center">
+                      <span className="text-orange-400 font-bold text-xl">±0.30 to ±0.49</span>
+                      <span className="text-white text-lg">= Weak Correlation</span>
+                    </div>
+                    <div className="bg-red-900/30 p-4 rounded-lg border border-red-700 flex justify-between items-center">
+                      <span className="text-red-400 font-bold text-xl">±0.00 to ±0.29</span>
+                      <span className="text-white text-lg">= Very Weak/No Correlation</span>
+                    </div>
+                  </div>
+                </div>
+              )
+            },
+            {
+              id: 'direction',
+              label: 'Direction',
+              icon: '↔️',
+              color: 'purple',
+              content: (
+                <div className="space-y-6">
+                  <div className="bg-green-900/30 p-6 rounded-lg border border-green-700">
+                    <h4 className="text-2xl font-bold text-green-400 mb-2">Positive Correlation (+)</h4>
+                    <p className="text-gray-300 text-lg">As one variable increases, the other <strong className="text-green-300">also increases</strong></p>
+                    <p className="text-gray-400 mt-2 text-sm">Example: More revision hours → Higher exam scores</p>
+                  </div>
+                  <div className="bg-red-900/30 p-6 rounded-lg border border-red-700">
+                    <h4 className="text-2xl font-bold text-red-400 mb-2">Negative Correlation (-)</h4>
+                    <p className="text-gray-300 text-lg">As one variable increases, the other <strong className="text-red-300">decreases</strong></p>
+                    <p className="text-gray-400 mt-2 text-sm">Example: More stress → Lower immune function</p>
+                  </div>
+                </div>
+              )
+            }
+          ]}
+          bottomNote={{
+            text: '⚠️ Remember: Correlation does NOT imply causation! A correlation only shows that two variables are related, not that one causes the other.',
+            color: 'amber'
+          }}
+        />
+      )
+    }
 
     if (slideType === 'corr_afl2') {
       const questions: Question[] = [
-        { id: 1, question: "Pearson's r ranges from:", options: ["-1 to +1", "0 to 1", "0 to 100"], correct: 0 },
-        { id: 2, scenario: "Interval data, normally distributed, testing correlation between hours studied and exam score", question: "Use:", options: ["Spearman's rho", "Pearson's r", "Unrelated t-test"], correct: 1 }
+        { id: 1, scenario: "Exam scores (%) and hours of revision, both normally distributed", question: "Use:", options: ["Spearman's rho", "Pearson's r", "Mann-Whitney U"], correct: 1 },
+        { id: 2, question: "A correlation coefficient of r = 0.45 indicates:", options: ["Strong positive correlation", "Moderate positive correlation", "Weak positive correlation"], correct: 1 }
       ]
-      return <SplitKnowledgeCheck questions={questions} title="Pearson's r" subtitle="Application and interpretation" isPresenting={isPresenting} />
+      return <SplitKnowledgeCheck questions={questions} title="Pearson's r" subtitle="When to use and interpret" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'correlation_calculator') return <CorrelationCalculator isPresenting={isPresenting} />
+    if (slideType === 'correlation_practice') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-purple-400 mb-6">🎯 Correlation Test Selection Practice</h2>
+            <div className="space-y-4">
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>1.</strong> Investigating the relationship between IQ scores and reaction time (ms), both normally distributed</p>
+                <p className="text-green-400">→ Pearson's r (interval data, normal distribution)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>2.</strong> Relationship between class rank and popularity rank</p>
+                <p className="text-green-400">→ Spearman's rho (ordinal/ranked data)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>3.</strong> Relationship between happiness ratings (1-10) and number of friends</p>
+                <p className="text-green-400">→ Spearman's rho (ordinal rating scale)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>4.</strong> Age (years) and annual income (£), normally distributed sample</p>
+                <p className="text-green-400">→ Pearson's r (ratio data, normal distribution)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     if (slideType === 'corr_task') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-amber-400 mb-6">📝 Exam Practice: Correlation Tests</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 mb-6">
+              <p className="text-white mb-4"><strong>A researcher wants to investigate whether there is a relationship between self-esteem scores (measured on a 1-40 scale) and anxiety levels (measured on a 1-20 scale). She collects data from 30 participants.</strong></p>
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(a) Identify an appropriate statistical test. (1 mark)</p>
+                  <button onClick={() => setShowAnswer1(!showAnswer1)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm flex items-center gap-2">
+                    {showAnswer1 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer1 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Sample answer: Spearman's rho (or Spearman's rank correlation coefficient)</p>}
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(b) Explain why this test is appropriate. (3 marks)</p>
+                  <button onClick={() => setShowAnswer2(!showAnswer2)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm flex items-center gap-2">
+                    {showAnswer2 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer2 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Sample answer: Spearman's rho is appropriate because: (1) The study is looking for a relationship/correlation between two variables, (2) Both variables are measured on ordinal scales (rating scales are treated as ordinal), (3) No information is given about normal distribution, so Spearman's is safer than Pearson's.</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">🚀 Extended: Interpreting Correlation Results</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+              <p className="text-white mb-4"><strong>Question:</strong> A researcher reports a significant positive correlation (r = 0.62, p &lt; 0.05) between hours of social media use and symptoms of depression. Discuss what conclusions can and cannot be drawn from this finding. (6 marks)</p>
+              <div className="mt-4 p-4 bg-gray-700/50 rounded">
+                <p className="text-rose-300 font-semibold mb-2">Model Answer:</p>
+                <button onClick={() => setShowExtended(!showExtended)} className="px-3 py-1 bg-rose-600 hover:bg-rose-700 rounded text-white text-sm flex items-center gap-2">
+                  {showExtended ? <><EyeOff size={16} /> Hide Model Answer</> : <><Eye size={16} /> Reveal Model Answer</>}
+                </button>
+                {showExtended && <p className="text-green-400 mt-3 text-sm animate-fadeIn">The correlation of r = 0.62 suggests a moderate positive relationship between social media use and depression symptoms (1). The finding is statistically significant (p &lt; 0.05), meaning there is less than a 5% probability this relationship occurred by chance (1). However, correlation does not imply causation - we cannot conclude that social media causes depression (1). There may be a third variable (confounding variable) such as loneliness that influences both social media use and depression (1). The direction of causality is also unclear - depressed individuals might use more social media as a coping mechanism, rather than social media causing depression (1). To establish causation, an experimental design with manipulation of variables and control of confounding variables would be needed (1).</p>}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     return (
@@ -19050,7 +20256,7 @@ function App() {
     )
   }
 
-  // Render A Level Lesson 10: Chi-Squared Test
+  // Render A Level Lesson 10: Chi-Squared Test (Understanding when to use, NOT calculating)
   const renderLesson40 = () => {
     const slideType = lesson40Slides[currentSlide]
 
@@ -19059,12 +20265,12 @@ function App() {
         <LessonTitleSlide
           lessonNumber={10}
           title="Chi-Squared Test"
-          subtitle="Test of Association (χ²)"
+          subtitle="Understanding When to Use Chi-Squared (χ²)"
           objectives={[
-            "Understand when to use Chi-Squared",
-            "Calculate observed and expected frequencies",
-            "Compute the Chi-Squared statistic",
-            "Interpret results using critical values and degrees of freedom"
+            "Understand when to use the Chi-Squared test",
+            "Know the assumptions and requirements for Chi-Squared",
+            "Understand the concept of observed vs expected frequencies",
+            "Interpret Chi-Squared results correctly"
           ]}
           isPresenting={isPresenting}
           level="A2"
@@ -19075,41 +20281,203 @@ function App() {
     if (slideType === 'donow') {
       const doNowQuestions: Question[] = [
         { id: 1, question: "Chi-squared is used for:", options: ["Interval data", "Nominal (categorical) data", "Ordinal data"], correct: 1 },
-        { id: 2, question: "Expected frequencies are:", options: ["What you actually observe", "What you'd expect by chance", "Always equal to observed"], correct: 1 },
-        { id: 3, question: "Degrees of freedom for chi-squared:", options: ["(rows-1) × (columns-1)", "N - 1", "N - 2"], correct: 0 }
+        { id: 2, question: "Chi-squared tests for:", options: ["Differences in means", "Association between categories", "Correlations"], correct: 1 },
+        { id: 3, question: "Chi-squared requires:", options: ["Normal distribution", "Independent observations in each cell", "Matched pairs"], correct: 1 },
+        { id: 4, question: "Chi-squared compares:", options: ["Means with standard deviations", "Observed with expected frequencies", "Before and after scores"], correct: 1 },
+        { id: 5, question: "Expected frequencies in chi-squared should be:", options: ["Less than 5", "At least 5", "At least 20"], correct: 1 }
       ]
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
 
-    if (slideType === 'chisquared_intro_teach') return <ChisquaredIntroTeach isPresenting={isPresenting} />
-    if (slideType === 'observed_expected_teach') return <ObservedExpectedTeach isPresenting={isPresenting} />
+    if (slideType === 'chisquared_intro_teach') {
+      return (
+        <SpotlightCards
+          title="🔬 Chi-Squared (χ²) Test"
+          subtitle="Click each card to learn when to use Chi-squared"
+          isPresenting={isPresenting}
+          columns={3}
+          cards={[
+            {
+              id: 'nominal',
+              title: 'Nominal Data',
+              icon: '📊',
+              color: 'amber',
+              content: <p>Categorical data (e.g., yes/no, male/female)</p>,
+              details: [
+                'Data in categories, not numbers',
+                'Gender, eye colour, preferences',
+                'Yes/No or multiple choice responses'
+              ]
+            },
+            {
+              id: 'association',
+              title: 'Test of Association',
+              icon: '🔗',
+              color: 'amber',
+              content: <p>Is there a relationship between categories?</p>,
+              details: [
+                'Testing if two categorical variables are related',
+                'Not looking for differences in means',
+                'Examining patterns in frequency data'
+              ]
+            },
+            {
+              id: 'frequency',
+              title: 'Frequency Data',
+              icon: '📋',
+              color: 'amber',
+              content: <p>Counts how many in each category</p>,
+              details: [
+                'Observed frequencies (actual counts)',
+                'Compared to expected frequencies',
+                'E.g., 30 males vs 20 females chose Option A'
+              ]
+            }
+          ]}
+        />
+      )
+    }
+
+    if (slideType === 'observed_expected_teach') {
+      return (
+        <ComparisonTable
+          title="📊 Observed vs Expected Frequencies"
+          subtitle="Understanding what Chi-squared compares"
+          isPresenting={isPresenting}
+          columns={[
+            { title: 'Observed Frequencies (O)', color: 'orange' },
+            { title: 'Expected Frequencies (E)', color: 'blue' }
+          ]}
+          rows={[
+            { label: 'Definition', values: ['The actual counts you collect in your research', 'What we would expect if there was NO association'] },
+            { label: 'Source', values: ['From your data collection', 'Calculated from row and column totals'] },
+            { label: 'Example', values: ['30 males chose Option A, 20 females chose Option A', 'If no association: 25 males, 25 females expected'] },
+            { label: 'In Formula', values: ['The "O" in (O-E)²/E', 'The "E" in (O-E)²/E'] }
+          ]}
+          bottomNote={{
+            text: 'Key Concept: Chi-squared compares observed vs expected. A large difference suggests a significant association exists!',
+            color: 'purple'
+          }}
+        />
+      )
+    }
 
     if (slideType === 'chisquared_afl1') {
       const questions: Question[] = [
-        { id: 1, question: "Chi-squared tests for:", options: ["Differences in means", "Association between categorical variables", "Correlations"], correct: 1 },
-        { id: 2, scenario: "Comparing observed vs expected frequencies of gender and career choice", question: "Appropriate test:", options: ["t-test", "Chi-squared", "Spearman's rho"], correct: 1 }
+        { id: 1, question: "Chi-squared is used when:", options: ["Comparing means between groups", "Testing association between categorical variables", "Looking at correlations"], correct: 1 },
+        { id: 2, scenario: "Investigating if there's an association between gender (male/female) and preferred learning style (visual/auditory/kinesthetic)", question: "Appropriate test:", options: ["t-test", "Chi-squared", "Spearman's rho"], correct: 1 }
       ]
-      return <SplitKnowledgeCheck questions={questions} title="Chi-Squared Basics" subtitle="When and why" isPresenting={isPresenting} />
+      return <SplitKnowledgeCheck questions={questions} title="Chi-Squared Basics" subtitle="When to use it" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'chisquared_calc_teach') return <ChisquaredCalcTeach isPresenting={isPresenting} />
+    if (slideType === 'chisquared_interpretation_teach') {
+      return (
+        <ComparisonTable
+          title="📊 Interpreting Chi-Squared Results"
+          subtitle="Click to compare significant vs non-significant outcomes"
+          isPresenting={isPresenting}
+          columns={[
+            { title: 'Significant Result ✅', color: 'green' },
+            { title: 'Non-Significant Result ❌', color: 'red' }
+          ]}
+          rows={[
+            { label: 'When', values: ['χ² calculated ≥ critical value', 'χ² calculated < critical value'] },
+            { label: 'Decision', values: ['Reject null hypothesis', 'Accept null hypothesis'] },
+            { label: 'Meaning', values: ['There IS a significant association', 'There is NO significant association'] },
+            { label: 'Interpretation', values: ['Observed frequencies differ significantly from expected', 'Observed frequencies are close to what we\'d expect by chance'] }
+          ]}
+          bottomNote={{
+            text: '⚠️ Chi-squared can only tell us IF there\'s an association, not the direction or strength. It also cannot establish causation.',
+            color: 'amber'
+          }}
+        />
+      )
+    }
 
     if (slideType === 'chisquared_afl2') {
       const questions: Question[] = [
-        { id: 1, question: "Chi-squared formula involves:", options: ["(O-E)² / E summed", "Mean difference / SE", "Rank sums"], correct: 0 },
-        { id: 2, question: "A significant chi-squared result means:", options: ["Strong correlation", "Association exists between variables", "Cause and effect"], correct: 1 }
+        { id: 1, question: "A significant chi-squared result means:", options: ["One variable causes the other", "There is an association between variables", "The variables are strongly correlated"], correct: 1 },
+        { id: 2, scenario: "χ² = 8.5, critical value = 5.99 at p<0.05", question: "Conclusion:", options: ["Not significant - no association", "Significant - there is an association", "Need more data"], correct: 1 }
       ]
-      return <SplitKnowledgeCheck questions={questions} title="Chi-Squared Calculation" subtitle="Formula and interpretation" isPresenting={isPresenting} />
+      return <SplitKnowledgeCheck questions={questions} title="Chi-Squared Interpretation" subtitle="Drawing conclusions" isPresenting={isPresenting} />
     }
 
-    if (slideType === 'chisquared_calculator') return <ChisquaredCalculator isPresenting={isPresenting} />
+    if (slideType === 'chisquared_practice') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-purple-400 mb-6">🎯 Chi-Squared Selection Practice</h2>
+            <p className="text-gray-300 mb-4">For each scenario, decide if Chi-squared is appropriate:</p>
+            <div className="space-y-4">
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>1.</strong> Is there an association between eye colour (blue/brown/green) and hair colour (blonde/brown/black)?</p>
+                <p className="text-green-400">→ ✓ Chi-squared (two categorical variables)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>2.</strong> Is there a relationship between age (years) and income (£)?</p>
+                <p className="text-red-400">→ ✗ Use correlation test (both are continuous variables)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>3.</strong> Is there an association between political party preference and region of the UK?</p>
+                <p className="text-green-400">→ ✓ Chi-squared (two categorical variables)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <p className="text-white mb-2"><strong>4.</strong> Do males and females differ in their average exam scores?</p>
+                <p className="text-red-400">→ ✗ Use t-test (comparing means, not frequencies)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     if (slideType === 'chisquared_task') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-amber-400 mb-6">📝 Exam Practice: Chi-Squared</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 mb-6">
+              <p className="text-white mb-4"><strong>A researcher wants to investigate whether there is an association between handedness (left/right) and preferred sport (team/individual). She surveys 100 participants and records their responses in a 2×2 contingency table.</strong></p>
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(a) Identify an appropriate statistical test. (1 mark)</p>
+                  <button onClick={() => setShowAnswer1(!showAnswer1)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm flex items-center gap-2">
+                    {showAnswer1 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer1 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Sample answer: Chi-squared test (of association)</p>}
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(b) Explain why this test is appropriate. (3 marks)</p>
+                  <button onClick={() => setShowAnswer2(!showAnswer2)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm flex items-center gap-2">
+                    {showAnswer2 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer2 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Sample answer: Chi-squared is appropriate because: (1) The research is testing for an association between two variables, (2) Both variables are nominal/categorical (handedness and sport preference are both categories), (3) The data consists of frequencies (counts of people in each category combination).</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">🚀 Extended: Evaluating Chi-Squared Studies</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+              <p className="text-white mb-4"><strong>Question:</strong> A researcher reports a significant Chi-squared result (χ² = 12.4, df = 2, p &lt; 0.01) showing an association between social media use (none/moderate/heavy) and mental health status (good/poor). Evaluate the conclusions that can be drawn from this study. (6 marks)</p>
+              <div className="mt-4 p-4 bg-gray-700/50 rounded">
+                <p className="text-rose-300 font-semibold mb-2">Model Answer:</p>
+                <button onClick={() => setShowExtended(!showExtended)} className="px-3 py-1 bg-rose-600 hover:bg-rose-700 rounded text-white text-sm flex items-center gap-2">
+                  {showExtended ? <><EyeOff size={16} /> Hide Model Answer</> : <><Eye size={16} /> Reveal Model Answer</>}
+                </button>
+                {showExtended && <p className="text-green-400 mt-3 text-sm animate-fadeIn">The significant result (p &lt; 0.01) suggests there is a less than 1% probability that the association occurred by chance (1). This means there is a statistically significant association between social media use and mental health status (1). However, chi-squared cannot tell us the direction or strength of this association - only that one exists (1). Importantly, we cannot conclude that social media use causes poor mental health, as chi-squared is a test of association, not causation (1). There may be confounding variables such as age, social support, or pre-existing conditions that influence both variables (1). Additionally, the categorical nature of the data (especially 'good/poor' mental health) loses nuance that might be captured with more detailed measurement scales (1).</p>}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     return (
@@ -19148,7 +20516,9 @@ function App() {
       const doNowQuestions: Question[] = [
         { id: 1, question: "The abstract should:", options: ["Summarise the entire study briefly", "Present all raw data", "Only state the hypothesis"], correct: 0 },
         { id: 2, question: "The method section includes:", options: ["Statistical analysis results", "Design, participants, materials, procedure", "Theory and previous research"], correct: 1 },
-        { id: 3, question: "The discussion section:", options: ["Presents raw data", "Interprets findings and discusses limitations", "Lists materials used"], correct: 1 }
+        { id: 3, question: "The discussion section:", options: ["Presents raw data", "Interprets findings and discusses limitations", "Lists materials used"], correct: 1 },
+        { id: 4, question: "The introduction should include:", options: ["Raw data tables", "Background literature and aims/hypotheses", "Statistical test results"], correct: 1 },
+        { id: 5, question: "Results section presents:", options: ["Interpretation of findings", "Descriptive and inferential statistics", "Participant recruitment details"], correct: 1 }
       ]
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
@@ -19178,11 +20548,51 @@ function App() {
     if (slideType === 'report_builder') return <ReportBuilder isPresenting={isPresenting} />
 
     if (slideType === 'report_task') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-amber-400 mb-6">📝 Exam Practice: Report Writing</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 mb-6">
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(a) Explain why the method section is important in a scientific report. (3 marks)</p>
+                  <button onClick={() => setShowAnswer1(!showAnswer1)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm flex items-center gap-2">
+                    {showAnswer1 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer1 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Sample answer: The method section is important because (1) it allows other researchers to replicate the study exactly, (2) it enables readers to evaluate whether the methodology is appropriate and valid, (3) it provides transparency about how the research was conducted, allowing judgement of potential confounding variables or ethical issues.</p>}
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(b) What information should be included in the abstract? (4 marks)</p>
+                  <button onClick={() => setShowAnswer2(!showAnswer2)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm flex items-center gap-2">
+                    {showAnswer2 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer2 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Sample answer: The abstract should include: (1) the aim/hypothesis of the study, (2) a brief description of the method (design, participants, procedure), (3) the main findings/results, (4) the conclusion drawn from the findings. It should be concise (typically 150-250 words) and allow readers to quickly understand the study.</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">🚀 Extended: Evaluating Research Reports</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+              <p className="text-white mb-4"><strong>Question:</strong> Discuss the importance of the discussion section in a psychological research report. (6 marks)</p>
+              <div className="mt-4 p-4 bg-gray-700/50 rounded">
+                <p className="text-rose-300 font-semibold mb-2">Model Answer:</p>
+                <button onClick={() => setShowExtended(!showExtended)} className="px-3 py-1 bg-rose-600 hover:bg-rose-700 rounded text-white text-sm flex items-center gap-2">
+                  {showExtended ? <><EyeOff size={16} /> Hide Model Answer</> : <><Eye size={16} /> Reveal Model Answer</>}
+                </button>
+                {showExtended && <p className="text-green-400 mt-3 text-sm animate-fadeIn">The discussion section is crucial because it interprets and explains the findings in relation to the original hypothesis and existing research (1). It allows the researcher to explain whether results support or contradict previous studies, contributing to the broader body of knowledge (1). The discussion identifies limitations of the study, such as sample issues, methodological weaknesses, or potential confounding variables, which helps readers evaluate the validity of conclusions (1). It also suggests implications of the findings for real-world applications or theoretical understanding (1). Furthermore, the discussion proposes future research directions, helping to advance the field (1). Finally, it demonstrates the researcher's understanding of how their work fits within the wider scientific context, showing academic rigour (1).</p>}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     return (
@@ -19221,7 +20631,9 @@ function App() {
       const doNowQuestions: Question[] = [
         { id: 1, question: "Objectivity in science means:", options: ["Personal opinions are valued", "Findings are free from researcher bias", "Only lab studies are used"], correct: 1 },
         { id: 2, question: "A falsifiable hypothesis:", options: ["Can never be disproved", "Can be tested and potentially disproved", "Is always correct"], correct: 1 },
-        { id: 3, question: "A paradigm shift occurs when:", options: ["Minor changes to theory", "A whole new framework replaces the old one", "Research is replicated"], correct: 1 }
+        { id: 3, question: "A paradigm shift occurs when:", options: ["Minor changes to theory", "A whole new framework replaces the old one", "Research is replicated"], correct: 1 },
+        { id: 4, question: "Replicability means:", options: ["A study can be repeated with similar results", "Only one researcher conducts the study", "Findings are published quickly"], correct: 0 },
+        { id: 5, question: "The empirical method involves:", options: ["Theoretical speculation only", "Systematic observation and measurement", "Accepting untested claims"], correct: 1 }
       ]
       return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
     }
@@ -19251,11 +20663,51 @@ function App() {
     if (slideType === 'science_evaluator') return <ScienceEvaluator isPresenting={isPresenting} />
 
     if (slideType === 'science_task') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-amber-400 mb-6">📝 Exam Practice: Features of Science</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 mb-6">
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(a) Explain what is meant by 'falsifiability' in scientific research. (2 marks)</p>
+                  <button onClick={() => setShowAnswer1(!showAnswer1)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm flex items-center gap-2">
+                    {showAnswer1 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer1 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Sample answer: Falsifiability means that a scientific theory or hypothesis must be capable of being tested and potentially proven wrong (1). If a theory cannot be disproved by any possible evidence, it is not considered scientific according to Popper's criteria (1).</p>}
+                </div>
+                <div className="p-4 bg-gray-700/50 rounded">
+                  <p className="text-amber-300 font-semibold">(b) Explain how replicability contributes to scientific knowledge. (3 marks)</p>
+                  <button onClick={() => setShowAnswer2(!showAnswer2)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm flex items-center gap-2">
+                    {showAnswer2 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                  </button>
+                  {showAnswer2 && <p className="text-green-400 mt-2 text-sm animate-fadeIn">Sample answer: Replicability allows other researchers to repeat a study using the same methods to verify the original findings (1). If results can be replicated, this increases confidence that findings are reliable and not due to chance or researcher error (1). This process helps to establish scientific facts and build a credible body of knowledge (1).</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     if (slideType === 'extended') {
-      return <ExtendedExamTaskALevelLesson1 isPresenting={isPresenting} />
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">🚀 Extended: Is Psychology a Science?</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+              <p className="text-white mb-4"><strong>Question:</strong> Discuss whether psychology can be considered a science, with reference to the features of science. (8 marks)</p>
+              <div className="mt-4 p-4 bg-gray-700/50 rounded">
+                <p className="text-rose-300 font-semibold mb-2">Model Answer:</p>
+                <button onClick={() => setShowExtended(!showExtended)} className="px-3 py-1 bg-rose-600 hover:bg-rose-700 rounded text-white text-sm flex items-center gap-2">
+                  {showExtended ? <><EyeOff size={16} /> Hide Model Answer</> : <><Eye size={16} /> Reveal Model Answer</>}
+                </button>
+                {showExtended && <p className="text-green-400 mt-3 text-sm animate-fadeIn">Psychology can be considered a science in several ways. It uses the empirical method, collecting data through observation and measurement rather than speculation (1). Many psychological studies use controlled experiments with standardised procedures, allowing for objectivity and minimising researcher bias (1). Hypotheses are testable and falsifiable, such as predicting that a memory technique will improve recall scores (1). Studies can be replicated, and psychology has faced a 'replication crisis' which shows the discipline takes replicability seriously (1). However, some argue psychology is less scientific because human behaviour is difficult to measure objectively - participants may show demand characteristics or social desirability (1). Some areas like psychoanalysis are criticised as unfalsifiable, as any evidence can be explained within the theory (1). Kuhn argued psychology is 'pre-paradigmatic' as there is no single dominant theory, unlike physics or chemistry (1). Despite these limitations, mainstream psychology increasingly adopts scientific methods, particularly in areas like cognitive and biological psychology, suggesting it can be considered a science, albeit one studying complex phenomena (1).</p>}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     return (
