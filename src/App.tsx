@@ -13048,13 +13048,14 @@ const allLessons = [
   { id: 33, title: 'Lesson 3: Reliability', levels: ['alevel'], description: 'Test-Retest & Inter-Observer' },
   { id: 34, title: 'Lesson 4: Validity', levels: ['alevel'], description: 'Face, Concurrent, Ecological, Temporal' },
   { id: 35, title: 'Lesson 5: Choosing a Statistical Test', levels: ['alevel'], description: 'Design & Measurement Level' },
-  { id: 36, title: 'Lesson 6: Probability & Significance', levels: ['alevel'], description: 'Critical Values & Type I/II Errors' },
-  { id: 37, title: 'Lesson 7: Non-Parametric Tests', levels: ['alevel'], description: 'When to use Mann-Whitney & Wilcoxon' },
-  { id: 38, title: 'Lesson 8: Parametric Tests', levels: ['alevel'], description: 'When to use t-tests' },
-  { id: 39, title: 'Lesson 9: Tests of Correlation', levels: ['alevel'], description: "When to use Spearman's & Pearson's" },
-  { id: 40, title: 'Lesson 10: Chi-Squared Test', levels: ['alevel'], description: 'When to use Chi-Squared (χ²)' },
-  { id: 41, title: 'Lesson 11: Reporting Investigations', levels: ['alevel'], description: 'Scientific Report Sections' },
-  { id: 42, title: 'Lesson 12: Features of Science', levels: ['alevel'], description: 'Objectivity, Replicability, Paradigms' },
+  { id: 36, title: 'Lesson 6: The Sign Test', levels: ['alevel'], description: 'Calculating & Interpreting the Sign Test' },
+  { id: 37, title: 'Lesson 7: Probability & Significance', levels: ['alevel'], description: 'Critical Values & Type I/II Errors' },
+  { id: 38, title: 'Lesson 8: Non-Parametric Tests', levels: ['alevel'], description: 'When to use Mann-Whitney & Wilcoxon' },
+  { id: 39, title: 'Lesson 9: Parametric Tests', levels: ['alevel'], description: 'When to use t-tests' },
+  { id: 40, title: 'Lesson 10: Tests of Correlation', levels: ['alevel'], description: "When to use Spearman's & Pearson's" },
+  { id: 41, title: 'Lesson 11: Chi-Squared Test', levels: ['alevel'], description: 'When to use Chi-Squared (χ²)' },
+  { id: 42, title: 'Lesson 12: Reporting Investigations', levels: ['alevel'], description: 'Scientific Report Sections' },
+  { id: 43, title: 'Lesson 13: Features of Science', levels: ['alevel'], description: 'Objectivity, Replicability, Paradigms' },
 ]
 
 // Get lessons filtered by current level
@@ -13068,8 +13069,8 @@ const lessonSlideCounts: Record<number, number> = {
   1: 11, 2: 10, 3: 10, 4: 10, 5: 12, 6: 7, 7: 8, 8: 6, 9: 7, 10: 6, 11: 8, 12: 7, 13: 6, 14: 7, 15: 6,
   // AS Level (15 lessons) - Phase 2: AFL dispersed throughout lessons (lesson 16 now has title slide = 12)
   16: 12, 17: 12, 18: 11, 19: 11, 20: 13, 21: 13, 22: 12, 23: 11, 24: 11, 25: 10, 26: 10, 27: 10, 28: 10, 29: 10, 30: 10,
-  // A Level (12 lessons) - Refactored: No calculation slides for tests except Sign Test
-  31: 10, 32: 11, 33: 11, 34: 11, 35: 10, 36: 11, 37: 10, 38: 10, 39: 10, 40: 10, 41: 11, 42: 11
+  // A Level (13 lessons) - Refactored: No calculation slides for tests except Sign Test
+  31: 10, 32: 11, 33: 11, 34: 11, 35: 11, 36: 12, 37: 11, 38: 10, 39: 10, 40: 10, 41: 10, 42: 11, 43: 11
 }
 
 // Utility: build slides with teacher-first ordering per cycle
@@ -13203,26 +13204,29 @@ const lesson34Slides = ['title', 'donow', 'validity_types_teach', 'face_concurre
 // Lesson 35 slides data (A Level Lesson 5: Choosing a Statistical Test)
 const lesson35Slides = ['title', 'donow', 'test_factors_teach', 'levels_measurement_teach', 'test_afl1', 'test_flowchart_teach', 'decision_tree_table', 'test_afl2', 'test_selector_sim', 'test_task', 'extended']
 
-// Lesson 36 slides data (A Level Lesson 6: Probability & Significance)
-const lesson36Slides = ['title', 'donow', 'probability_teach', 'significance_teach', 'probability_afl1', 'critical_values_teach', 'type_errors_teach', 'probability_afl2', 'significance_calculator', 'probability_task', 'extended']
+// Lesson 36 slides data (A Level Lesson 6: The Sign Test)
+const lesson36Slides = ['title', 'donow', 'signtest_intro_teach', 'signtest_when_teach', 'signtest_afl1', 'signtest_steps_teach', 'signtest_worked_example', 'signtest_afl2', 'signtest_practice', 'critical_values_teach', 'signtest_interpretation', 'extended']
 
-// Lesson 37 slides data (A Level Lesson 7: Non-Parametric Tests) - Understanding, not calculating
-const lesson37Slides = ['title', 'donow', 'nonparam_intro_teach', 'mannwhitney_teach', 'nonparam_afl1', 'wilcoxon_teach', 'nonparam_afl2', 'test_selection_practice', 'nonparam_task', 'extended']
+// Lesson 37 slides data (A Level Lesson 7: Probability & Significance)
+const lesson37Slides = ['title', 'donow', 'probability_teach', 'significance_teach', 'probability_afl1', 'critical_values_teach', 'type_errors_teach', 'probability_afl2', 'significance_calculator', 'probability_task', 'extended']
 
-// Lesson 38 slides data (A Level Lesson 8: Parametric Tests) - Understanding, not calculating
-const lesson38Slides = ['title', 'donow', 'param_assumptions_teach', 'unrelated_t_teach', 'param_afl1', 'related_t_teach', 'param_afl2', 'test_selection_practice2', 'param_task', 'extended']
+// Lesson 38 slides data (A Level Lesson 8: Non-Parametric Tests) - Understanding, not calculating
+const lesson38Slides = ['title', 'donow', 'nonparam_intro_teach', 'mannwhitney_teach', 'nonparam_afl1', 'wilcoxon_teach', 'nonparam_afl2', 'test_selection_practice', 'nonparam_task', 'extended']
 
-// Lesson 39 slides data (A Level Lesson 9: Tests of Correlation) - Understanding, not calculating
-const lesson39Slides = ['title', 'donow', 'spearmans_teach', 'pearsons_teach', 'corr_afl1', 'interpreting_correlation_teach', 'corr_afl2', 'correlation_practice', 'corr_task', 'extended']
+// Lesson 39 slides data (A Level Lesson 9: Parametric Tests) - Understanding, not calculating
+const lesson39Slides = ['title', 'donow', 'param_assumptions_teach', 'unrelated_t_teach', 'param_afl1', 'related_t_teach', 'param_afl2', 'test_selection_practice2', 'param_task', 'extended']
 
-// Lesson 40 slides data (A Level Lesson 10: Chi-Squared Test) - Understanding, not calculating
-const lesson40Slides = ['title', 'donow', 'chisquared_intro_teach', 'observed_expected_teach', 'chisquared_afl1', 'chisquared_interpretation_teach', 'chisquared_afl2', 'chisquared_practice', 'chisquared_task', 'extended']
+// Lesson 40 slides data (A Level Lesson 10: Tests of Correlation) - Understanding, not calculating
+const lesson40Slides = ['title', 'donow', 'spearmans_teach', 'pearsons_teach', 'corr_afl1', 'interpreting_correlation_teach', 'corr_afl2', 'correlation_practice', 'corr_task', 'extended']
 
-// Lesson 41 slides data (A Level Lesson 11: Reporting Investigations)
-const lesson41Slides = ['title', 'donow', 'report_structure_teach', 'abstract_intro_teach', 'report_afl1', 'method_results_teach', 'discussion_refs_teach', 'report_afl2', 'report_builder', 'report_task', 'extended']
+// Lesson 41 slides data (A Level Lesson 11: Chi-Squared Test) - Understanding, not calculating
+const lesson41Slides = ['title', 'donow', 'chisquared_intro_teach', 'observed_expected_teach', 'chisquared_afl1', 'chisquared_interpretation_teach', 'chisquared_afl2', 'chisquared_practice', 'chisquared_task', 'extended']
 
-// Lesson 42 slides data (A Level Lesson 12: Features of Science)
-const lesson42Slides = ['title', 'donow', 'objectivity_teach', 'replicability_teach', 'science_afl1', 'falsifiability_teach', 'paradigms_teach', 'science_afl2', 'science_evaluator', 'science_task', 'extended']
+// Lesson 42 slides data (A Level Lesson 12: Reporting Investigations)
+const lesson42Slides = ['title', 'donow', 'report_structure_teach', 'abstract_intro_teach', 'report_afl1', 'method_results_teach', 'discussion_refs_teach', 'report_afl2', 'report_builder', 'report_task', 'extended']
+
+// Lesson 43 slides data (A Level Lesson 13: Features of Science)
+const lesson43Slides = ['title', 'donow', 'objectivity_teach', 'replicability_teach', 'science_afl1', 'falsifiability_teach', 'paradigms_teach', 'science_afl2', 'science_evaluator', 'science_task', 'extended']
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -13234,6 +13238,12 @@ function App() {
   const [showAnswer1, setShowAnswer1] = useState(false)
   const [showAnswer2, setShowAnswer2] = useState(false)
   const [showExtended, setShowExtended] = useState(false)
+  
+  // State for Lesson 36 Sign Test interactive practice
+  const [extendedScenario, setExtendedScenario] = useState(0)
+  const [extendedShowA, setExtendedShowA] = useState(false)
+  const [extendedShowB, setExtendedShowB] = useState(false)
+  const [extendedShowC, setExtendedShowC] = useState(false)
 
   const slideCount = lessonSlideCounts[currentLesson] || 5
 
@@ -19138,7 +19148,7 @@ function App() {
     )
   }
 
-  // Render A Level Lesson 6: Probability & Significance
+  // Render A Level Lesson 6: The Sign Test (COMPREHENSIVE)
   const renderLesson36 = () => {
     const slideType = lesson36Slides[currentSlide]
 
@@ -19146,6 +19156,735 @@ function App() {
       return (
         <LessonTitleSlide
           lessonNumber={6}
+          title="The Sign Test"
+          subtitle="Calculating & Interpreting Your First Statistical Test"
+          objectives={[
+            "Understand when to use the sign test",
+            "Calculate the sign test step-by-step",
+            "Use critical value tables correctly",
+            "Interpret sign test results and draw conclusions"
+          ]}
+          isPresenting={isPresenting}
+          level="A2"
+        />
+      )
+    }
+
+    if (slideType === 'donow') {
+      const doNowQuestions: Question[] = [
+        { id: 1, question: "The sign test is used for:", options: ["Independent groups", "Repeated measures/matched pairs", "Correlations"], correct: 1 },
+        { id: 2, question: "In the sign test, what type of data is needed?", options: ["Interval only", "Nominal (at least)", "Ratio only"], correct: 1 },
+        { id: 3, question: "p ≤ 0.05 means:", options: ["5% chance results are due to chance", "50% confidence", "95% chance of error"], correct: 0 },
+        { id: 4, question: "A directional hypothesis uses a:", options: ["Two-tailed test", "One-tailed test", "No statistical test"], correct: 1 },
+        { id: 5, question: "When comparing before/after scores, this is a:", options: ["Independent groups design", "Repeated measures design", "Correlational design"], correct: 1 }
+      ]
+      return <DoNowQuiz questions={doNowQuestions} isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'signtest_intro_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-rose-400 mb-6">📊 What is the Sign Test?</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-rose-500/50 mb-6">
+              <p className="text-xl text-gray-300 mb-4">The sign test is the <span className="text-rose-400 font-bold">simplest statistical test</span> in psychology. It's used to determine whether there is a <span className="text-rose-400 font-bold">significant difference</span> between two related conditions.</p>
+              <div className="grid md:grid-cols-2 gap-4 mt-6">
+                <div className="bg-rose-900/30 p-4 rounded-lg border border-rose-700">
+                  <h3 className="text-rose-300 font-bold mb-2">✓ What it tells us</h3>
+                  <p className="text-gray-300">Whether the difference between two conditions is <strong>statistically significant</strong> (not due to chance)</p>
+                </div>
+                <div className="bg-blue-900/30 p-4 rounded-lg border border-blue-700">
+                  <h3 className="text-blue-300 font-bold mb-2">📈 Why it matters</h3>
+                  <p className="text-gray-300">Allows us to move beyond descriptive statistics and make <strong>inferences</strong> about our findings</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-amber-900/30 p-4 rounded-lg border border-amber-700">
+              <p className="text-amber-300"><strong>💡 Key Point:</strong> The sign test only looks at the <em>direction</em> of difference (+ or −), not the size. This makes it simple but less powerful than other tests.</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'signtest_when_teach') {
+      return (
+        <SpotlightCards
+          title="🎯 When to Use the Sign Test"
+          subtitle="Click each card to learn the three conditions for using the sign test"
+          isPresenting={isPresenting}
+          columns={3}
+          cards={[
+            {
+              id: 'difference',
+              title: 'Looking for a Difference',
+              icon: '↔️',
+              color: 'rose',
+              content: <p>Testing whether there is a difference between two conditions</p>,
+              details: [
+                'NOT testing for a correlation/relationship',
+                'Comparing two sets of related scores',
+                'E.g., before vs after, condition A vs condition B'
+              ]
+            },
+            {
+              id: 'design',
+              title: 'Repeated Measures or Matched Pairs',
+              icon: '🔄',
+              color: 'blue',
+              content: <p>Same participants tested twice OR matched pairs</p>,
+              details: [
+                'Repeated measures: same people in both conditions',
+                'Matched pairs: different people paired on key variables',
+                'NOT independent groups (different people, unmatched)'
+              ]
+            },
+            {
+              id: 'data',
+              title: 'Nominal Data (at least)',
+              icon: '📊',
+              color: 'green',
+              content: <p>Data can be categorised as better/worse, more/less</p>,
+              details: [
+                'Minimum requirement: can tell direction of difference',
+                'Works with nominal, ordinal, interval, or ratio data',
+                'We only need + or − signs, not actual numbers'
+              ]
+            }
+          ]}
+        />
+      )
+    }
+
+    if (slideType === 'signtest_afl1') {
+      const questions: Question[] = [
+        { id: 1, question: "The sign test requires:", options: ["Independent groups", "Repeated measures or matched pairs", "Correlational design"], correct: 1 },
+        { id: 2, scenario: "A study compares memory scores before and after caffeine consumption in 12 participants", question: "Can the sign test be used?", options: ["Yes - repeated measures, looking for difference", "No - wrong type of design", "No - data isn't nominal"], correct: 0 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Sign Test Conditions" subtitle="When to use it" isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'signtest_steps_teach') {
+      return (
+        <StepReveal
+          title="📝 How to Calculate the Sign Test: 5 Steps"
+          subtitle="Click each step to reveal - master these for the exam!"
+          isPresenting={isPresenting}
+          steps={[
+            {
+              title: 'Step 1: Find the Direction of Difference',
+              content: (
+                <div className="space-y-3">
+                  <p className="text-gray-300">For each participant, subtract Condition 1 from Condition 2</p>
+                  <div className="bg-gray-700/50 p-4 rounded-lg">
+                    <p className="text-green-400">If score improved/increased → <strong className="text-2xl">+</strong></p>
+                    <p className="text-red-400">If score decreased/worsened → <strong className="text-2xl">−</strong></p>
+                    <p className="text-yellow-400">If no change → <strong className="text-2xl">0</strong></p>
+                  </div>
+                </div>
+              ),
+              color: 'rose'
+            },
+            {
+              title: 'Step 2: Remove Any Zeros',
+              content: (
+                <div className="space-y-3">
+                  <p className="text-gray-300">Participants with no difference (0) are <strong className="text-amber-300">excluded</strong> from the analysis</p>
+                  <div className="bg-amber-900/30 p-4 rounded-lg border border-amber-700">
+                    <p className="text-amber-300">⚠️ This reduces your N (sample size) for the calculation!</p>
+                    <p className="text-gray-400 text-sm mt-2">E.g., 12 participants but 2 had zeros → N = 10</p>
+                  </div>
+                </div>
+              ),
+              color: 'amber'
+            },
+            {
+              title: 'Step 3: Count the Plus and Minus Signs',
+              content: (
+                <div className="space-y-3">
+                  <p className="text-gray-300">Count how many participants showed improvement (+) vs decline (−)</p>
+                  <div className="bg-gray-700/50 p-4 rounded-lg">
+                    <p className="text-gray-300">Example: 8 participants improved (+), 2 declined (−)</p>
+                    <p className="text-gray-400 text-sm mt-2">Record both counts - you'll need the smaller one</p>
+                  </div>
+                </div>
+              ),
+              color: 'blue'
+            },
+            {
+              title: 'Step 4: Find S (the calculated value)',
+              content: (
+                <div className="space-y-3">
+                  <p className="text-gray-300 text-xl"><strong className="text-green-400">S = the LESS frequent sign</strong></p>
+                  <div className="bg-green-900/30 p-4 rounded-lg border border-green-700">
+                    <p className="text-green-300">If 8 improved (+) and 2 declined (−)</p>
+                    <p className="text-green-300 text-xl font-bold mt-2">S = 2 (the smaller number)</p>
+                  </div>
+                  <p className="text-gray-400 text-sm">This is your <em>observed value</em> that you compare to the critical value</p>
+                </div>
+              ),
+              color: 'green'
+            },
+            {
+              title: 'Step 5: Compare S to Critical Value',
+              content: (
+                <div className="space-y-3">
+                  <p className="text-gray-300">Look up the critical value in the table using N, significance level, and number of tails</p>
+                  <div className="bg-purple-900/30 p-4 rounded-lg border border-purple-700">
+                    <p className="text-purple-300 text-xl font-bold">For significance: S must be ≤ critical value</p>
+                    <p className="text-gray-300 mt-2">If S ≤ critical → <span className="text-green-400 font-bold">SIGNIFICANT</span> (reject null)</p>
+                    <p className="text-gray-300">If S &gt; critical → <span className="text-red-400 font-bold">NOT significant</span> (accept null)</p>
+                  </div>
+                </div>
+              ),
+              color: 'purple'
+            }
+          ]}
+        />
+      )
+    }
+
+    if (slideType === 'signtest_worked_example') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 overflow-auto`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-teal-400 mb-4">🧪 Worked Example: Memory Training Study</h2>
+            <div className="bg-gray-800/50 p-4 rounded-lg border border-teal-500/50 mb-4">
+              <p className="text-gray-300"><strong className="text-teal-300">Scenario:</strong> A psychologist tests whether memory training improves recall. 10 participants complete a memory test before and after training.</p>
+              <p className="text-teal-300 mt-2"><strong>Hypothesis (directional):</strong> Memory training will improve recall scores.</p>
+            </div>
+            
+            {/* Data Table */}
+            <div className="overflow-hidden rounded-lg border border-gray-700 mb-4">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-800">
+                  <tr>
+                    <th className="p-2 text-left text-gray-400 border-r border-gray-700">Participant</th>
+                    <th className="p-2 text-center text-gray-400 border-r border-gray-700">Before</th>
+                    <th className="p-2 text-center text-gray-400 border-r border-gray-700">After</th>
+                    <th className="p-2 text-center text-gray-400">Sign</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { p: 1, before: 12, after: 15, sign: '+' },
+                    { p: 2, before: 8, after: 11, sign: '+' },
+                    { p: 3, before: 14, after: 14, sign: '0' },
+                    { p: 4, before: 10, after: 13, sign: '+' },
+                    { p: 5, before: 9, after: 7, sign: '−' },
+                    { p: 6, before: 11, after: 15, sign: '+' },
+                    { p: 7, before: 7, after: 10, sign: '+' },
+                    { p: 8, before: 13, after: 16, sign: '+' },
+                    { p: 9, before: 10, after: 10, sign: '0' },
+                    { p: 10, before: 6, after: 9, sign: '+' }
+                  ].map((row, i) => (
+                    <tr key={i} className={`border-t border-gray-700 ${row.sign === '0' ? 'bg-yellow-900/20' : ''}`}>
+                      <td className="p-2 text-gray-300 border-r border-gray-700">{row.p}</td>
+                      <td className="p-2 text-center text-gray-300 border-r border-gray-700">{row.before}</td>
+                      <td className="p-2 text-center text-gray-300 border-r border-gray-700">{row.after}</td>
+                      <td className={`p-2 text-center font-bold ${row.sign === '+' ? 'text-green-400' : row.sign === '−' ? 'text-red-400' : 'text-yellow-400'}`}>{row.sign}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Calculation Steps */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <h3 className="text-purple-400 font-bold mb-2">Calculation:</h3>
+                <p className="text-gray-300">• Plus signs (+): <span className="text-green-400 font-bold">7</span></p>
+                <p className="text-gray-300">• Minus signs (−): <span className="text-red-400 font-bold">1</span></p>
+                <p className="text-gray-300">• Zeros (excluded): <span className="text-yellow-400">2</span></p>
+                <p className="text-gray-300 mt-2">• <strong>N = 8</strong> (10 − 2 zeros)</p>
+                <p className="text-gray-300">• <strong className="text-green-400">S = 1</strong> (less frequent sign)</p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <h3 className="text-purple-400 font-bold mb-2">Critical Value Lookup:</h3>
+                <p className="text-gray-300">• N = 8</p>
+                <p className="text-gray-300">• One-tailed (directional hypothesis)</p>
+                <p className="text-gray-300">• p ≤ 0.05</p>
+                <p className="text-gray-300 mt-2"><strong className="text-teal-300">Critical value = 1</strong></p>
+              </div>
+            </div>
+
+            {/* Conclusion */}
+            <div className="mt-4 bg-green-900/30 p-4 rounded-lg border border-green-700">
+              <h3 className="text-green-400 font-bold mb-2">✅ Conclusion:</h3>
+              <p className="text-gray-300">S (1) ≤ Critical value (1) → <strong className="text-green-300">Results ARE significant</strong></p>
+              <p className="text-gray-300 mt-2">We can reject the null hypothesis. There is a significant improvement in memory scores after training (p ≤ 0.05, one-tailed).</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'signtest_afl2') {
+      const questions: Question[] = [
+        { id: 1, question: "In the sign test, S is:", options: ["The total number of signs", "The MORE frequent sign", "The LESS frequent sign"], correct: 2 },
+        { id: 2, question: "For results to be significant, S must be:", options: ["Greater than critical value", "Equal to or less than critical value", "Equal to N"], correct: 1 },
+        { id: 3, question: "If 3 participants show zeros (no difference):", options: ["Count them as positive", "Count them as negative", "Exclude them from N"], correct: 2 }
+      ]
+      return <SplitKnowledgeCheck questions={questions} title="Sign Test Calculation" subtitle="Test your understanding" isPresenting={isPresenting} />
+    }
+
+    if (slideType === 'signtest_practice') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 overflow-auto`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-amber-400 mb-4">🎯 Practice: Calculate the Sign Test</h2>
+            <div className="bg-gray-800/50 p-4 rounded-lg border border-amber-500/50 mb-4">
+              <p className="text-gray-300"><strong className="text-amber-300">Scenario:</strong> A researcher investigates whether relaxation therapy reduces stress. 12 participants rate their stress (1-10) before and after therapy.</p>
+              <p className="text-amber-300 mt-2"><strong>Hypothesis (directional):</strong> Relaxation therapy will reduce stress levels.</p>
+            </div>
+            
+            {/* Data Table */}
+            <div className="overflow-hidden rounded-lg border border-gray-700 mb-4">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-800">
+                  <tr>
+                    <th className="p-2 text-left text-gray-400 border-r border-gray-700">P</th>
+                    {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => (
+                      <th key={n} className="p-2 text-center text-gray-400 border-r border-gray-700">{n}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-t border-gray-700">
+                    <td className="p-2 text-gray-300 border-r border-gray-700 font-semibold">Before</td>
+                    {[7, 8, 6, 9, 5, 8, 7, 6, 9, 8, 7, 6].map((v, i) => (
+                      <td key={i} className="p-2 text-center text-gray-300 border-r border-gray-700">{v}</td>
+                    ))}
+                  </tr>
+                  <tr className="border-t border-gray-700">
+                    <td className="p-2 text-gray-300 border-r border-gray-700 font-semibold">After</td>
+                    {[5, 6, 6, 7, 4, 5, 6, 5, 6, 6, 5, 4].map((v, i) => (
+                      <td key={i} className="p-2 text-center text-gray-300 border-r border-gray-700">{v}</td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 mb-4">
+              <p className="text-gray-300"><strong className="text-purple-300">Critical value table (one-tailed, p ≤ 0.05):</strong></p>
+              <p className="text-gray-400 text-sm mt-2">N=10: cv=1 | N=11: cv=2 | N=12: cv=2 | N=13: cv=3</p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="p-4 bg-gray-700/50 rounded">
+                <p className="text-amber-300 font-semibold">(a) Calculate the value of S. (3 marks)</p>
+                <button onClick={() => setShowAnswer1(!showAnswer1)} className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded text-white text-sm font-semibold flex items-center gap-2">
+                  {showAnswer1 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                </button>
+                {showAnswer1 && (
+                  <div className="text-green-400 mt-2 text-sm animate-fadeIn">
+                    <p>Signs: −, −, 0, −, −, −, −, −, −, −, −, − (1 mark)</p>
+                    <p>One zero, so N = 11 (1 mark)</p>
+                    <p>Plus signs = 0, Minus signs = 11. S = 0 (less frequent) (1 mark)</p>
+                  </div>
+                )}
+              </div>
+              <div className="p-4 bg-gray-700/50 rounded">
+                <p className="text-amber-300 font-semibold">(b) State whether the results are significant and justify your answer. (2 marks)</p>
+                <button onClick={() => setShowAnswer2(!showAnswer2)} className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded text-white text-sm font-semibold flex items-center gap-2">
+                  {showAnswer2 ? <><EyeOff size={16} /> Hide Answer</> : <><Eye size={16} /> Reveal Answer</>}
+                </button>
+                {showAnswer2 && (
+                  <div className="text-green-400 mt-2 text-sm animate-fadeIn">
+                    <p>The results ARE significant (1 mark)</p>
+                    <p>Because S (0) ≤ critical value (2) for N=11 at p≤0.05 one-tailed (1 mark)</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'critical_values_teach') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-purple-400 mb-4">📋 Sign Test Critical Values Table</h2>
+            <p className="text-gray-300 mb-4">Use this table to find the critical value. For significance, <strong className="text-green-300">S must be ≤ the critical value</strong>.</p>
+            
+            <div className="overflow-hidden rounded-lg border border-gray-700 mb-4">
+              <table className="w-full text-sm">
+                <thead className="bg-purple-900/50">
+                  <tr>
+                    <th rowSpan={2} className="p-3 text-left text-purple-300 border-r border-gray-700">N</th>
+                    <th colSpan={2} className="p-2 text-center text-purple-300 border-r border-gray-700">One-tailed</th>
+                    <th colSpan={2} className="p-2 text-center text-purple-300">Two-tailed</th>
+                  </tr>
+                  <tr className="bg-purple-900/30">
+                    <th className="p-2 text-center text-purple-200 border-r border-gray-700">p ≤ 0.05</th>
+                    <th className="p-2 text-center text-purple-200 border-r border-gray-700">p ≤ 0.01</th>
+                    <th className="p-2 text-center text-purple-200 border-r border-gray-700">p ≤ 0.05</th>
+                    <th className="p-2 text-center text-purple-200">p ≤ 0.01</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { n: 5, vals: [0, '-', '-', '-'] },
+                    { n: 6, vals: [0, '-', 0, '-'] },
+                    { n: 7, vals: [0, 0, 0, '-'] },
+                    { n: 8, vals: [1, 0, 0, 0] },
+                    { n: 9, vals: [1, 0, 1, 0] },
+                    { n: 10, vals: [1, 0, 1, 0] },
+                    { n: 11, vals: [2, 1, 1, 0] },
+                    { n: 12, vals: [2, 1, 2, 1] },
+                    { n: 13, vals: [3, 1, 2, 1] },
+                    { n: 14, vals: [3, 2, 2, 1] },
+                    { n: 15, vals: [3, 2, 3, 2] },
+                  ].map((row, i) => (
+                    <tr key={i} className="border-t border-gray-700 hover:bg-gray-800/50">
+                      <td className="p-2 text-gray-300 font-semibold border-r border-gray-700">{row.n}</td>
+                      {row.vals.map((v, j) => (
+                        <td key={j} className={`p-2 text-center border-r border-gray-700 ${v === '-' ? 'text-gray-500' : 'text-white font-bold'}`}>{v}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-teal-900/30 p-4 rounded-lg border border-teal-700">
+                <h3 className="text-teal-300 font-bold mb-2">One-tailed test</h3>
+                <p className="text-gray-300 text-sm">Use when your hypothesis is <strong>directional</strong> (predicts which way)</p>
+                <p className="text-teal-300 text-sm mt-2">E.g., "Training will <em>improve</em> scores"</p>
+              </div>
+              <div className="bg-blue-900/30 p-4 rounded-lg border border-blue-700">
+                <h3 className="text-blue-300 font-bold mb-2">Two-tailed test</h3>
+                <p className="text-gray-300 text-sm">Use when your hypothesis is <strong>non-directional</strong> (just predicts a difference)</p>
+                <p className="text-blue-300 text-sm mt-2">E.g., "Training will <em>affect</em> scores"</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'signtest_interpretation') {
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800`}>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-green-400 mb-6">✍️ Writing Your Conclusion</h2>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-green-500/50 mb-6">
+              <h3 className="text-green-300 font-bold mb-3">Template for Exam Answers:</h3>
+              <div className="bg-gray-700/50 p-4 rounded-lg">
+                <p className="text-gray-300 italic">"The calculated value of S is <span className="text-amber-300">[X]</span>. The critical value for N = <span className="text-amber-300">[N]</span> at p ≤ 0.05 (<span className="text-amber-300">[one/two]</span>-tailed) is <span className="text-amber-300">[CV]</span>. Since S is <span className="text-amber-300">[≤ / &gt;]</span> the critical value, the results <span className="text-amber-300">[are / are not]</span> significant. Therefore, we <span className="text-amber-300">[reject / accept]</span> the null hypothesis and conclude that <span className="text-amber-300">[state finding in context]</span>."</p>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-green-900/30 p-4 rounded-lg border border-green-700">
+                <h3 className="text-green-300 font-bold mb-2">✅ If Significant (S ≤ CV)</h3>
+                <p className="text-gray-300 text-sm">"The results are significant at p ≤ 0.05. We reject the null hypothesis. There is a significant difference/improvement in [DV] due to [IV]."</p>
+              </div>
+              <div className="bg-red-900/30 p-4 rounded-lg border border-red-700">
+                <h3 className="text-red-300 font-bold mb-2">❌ If Not Significant (S &gt; CV)</h3>
+                <p className="text-gray-300 text-sm">"The results are not significant at p ≤ 0.05. We accept the null hypothesis. There is no significant difference in [DV] due to [IV]."</p>
+              </div>
+            </div>
+
+            <div className="mt-6 bg-amber-900/30 p-4 rounded-lg border border-amber-700">
+              <h3 className="text-amber-300 font-bold mb-2">📌 Exam Tips:</h3>
+              <ul className="text-gray-300 text-sm space-y-1">
+                <li>• Always state whether S is ≤ or &gt; critical value</li>
+                <li>• Mention the significance level (usually p ≤ 0.05)</li>
+                <li>• Say whether you accept or reject the null hypothesis</li>
+                <li>• Relate back to the context of the study</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (slideType === 'extended') {
+      const scenarios = [
+        {
+          id: 1,
+          title: "Free-Throw Accuracy",
+          context: "A sports psychologist investigates whether visualisation improves free-throw accuracy. 15 basketball players attempt 10 free throws, then use visualisation techniques for a week, then attempt another 10 free throws.",
+          hypothesis: "Visualisation will improve free-throw accuracy (directional)",
+          beforeLabel: "Before",
+          afterLabel: "After",
+          before: [5,7,4,6,8,5,3,6,7,5,4,6,5,7,6],
+          after: [7,8,5,7,9,7,5,7,8,5,6,8,7,9,8],
+          criticalValue: 3,
+          n: 14,
+          tails: "one-tailed",
+          answerA: "Looking for a difference (1), repeated measures design (same players tested twice) (1), data is at least nominal/can assign + or − signs (1).",
+          answerB: "Signs: +,+,+,+,+,+,+,+,+,0,+,+,+,+,+ (1). One zero, so N = 14 (1). S = 0 (no minus signs, so 0 is less frequent) (1).",
+          answerC: "S (0) is less than the critical value (3) (1), therefore results are significant at p≤0.05 (1). We reject the null hypothesis and conclude that visualisation significantly improves free-throw accuracy (1)."
+        },
+        {
+          id: 2,
+          title: "Memory Training",
+          context: "A researcher tests whether memory training improves recall. 12 participants complete a word recall test before and after a 2-week memory training programme.",
+          hypothesis: "Memory training will improve recall scores (directional)",
+          beforeLabel: "Before",
+          afterLabel: "After",
+          before: [12, 8, 14, 10, 9, 11, 7, 13, 10, 6, 15, 11],
+          after: [15, 11, 14, 13, 12, 15, 10, 16, 10, 9, 18, 14],
+          criticalValue: 2,
+          n: 11,
+          tails: "one-tailed",
+          answerA: "Looking for a difference (1), repeated measures design (same participants tested twice) (1), data is at least nominal/can assign + or − signs (1).",
+          answerB: "Signs: +,+,0,+,+,+,+,+,0,+,+,+ (1). Two zeros, so N = 10 (1). S = 0 (no minus signs) (1).",
+          answerC: "S (0) is less than the critical value (2) (1), therefore results are significant at p≤0.05 (1). We reject the null hypothesis and conclude that memory training significantly improves recall (1)."
+        },
+        {
+          id: 3,
+          title: "Anxiety Reduction",
+          context: "A clinical psychologist investigates whether mindfulness reduces anxiety. 10 patients rate their anxiety (1-10) before and after an 8-week mindfulness course.",
+          hypothesis: "Mindfulness will reduce anxiety levels (directional)",
+          beforeLabel: "Before",
+          afterLabel: "After",
+          before: [8, 7, 9, 6, 8, 7, 9, 8, 7, 6],
+          after: [5, 6, 7, 4, 6, 5, 6, 5, 6, 4],
+          criticalValue: 1,
+          n: 10,
+          tails: "one-tailed",
+          answerA: "Looking for a difference (1), repeated measures design (same patients measured twice) (1), data is at least nominal/ordinal rating scale (1).",
+          answerB: "Signs: −,−,−,−,−,−,−,−,−,− (1). No zeros, so N = 10 (1). S = 0 (no plus signs, all showed reduction) (1).",
+          answerC: "S (0) is less than the critical value (1) (1), therefore results are significant at p≤0.05 (1). We reject the null hypothesis and conclude that mindfulness significantly reduces anxiety (1)."
+        },
+        {
+          id: 4,
+          title: "Caffeine and Reaction Time",
+          context: "A researcher investigates whether caffeine affects reaction time. 8 participants complete a reaction time task before and after consuming 200mg caffeine.",
+          hypothesis: "Caffeine will affect reaction time (non-directional)",
+          beforeLabel: "Before (ms)",
+          afterLabel: "After (ms)",
+          before: [320, 280, 350, 290, 310, 340, 300, 330],
+          after: [290, 260, 320, 310, 280, 300, 280, 290],
+          criticalValue: 0,
+          n: 8,
+          tails: "two-tailed",
+          answerA: "Looking for a difference (1), repeated measures design (same participants tested twice) (1), data is at least nominal/can assign + or − signs (1).",
+          answerB: "Signs: −,−,−,+,−,−,−,− (1). No zeros, so N = 8 (1). S = 1 (one plus sign is less frequent) (1).",
+          answerC: "S (1) is greater than the critical value (0) (1), therefore results are NOT significant at p≤0.05 two-tailed (1). We accept the null hypothesis - no significant effect of caffeine on reaction time (1)."
+        },
+        {
+          id: 5,
+          title: "Sleep Quality",
+          context: "A health psychologist tests whether reducing screen time improves sleep quality. 11 participants rate sleep quality (1-10) before and after 2 weeks of reduced screen time.",
+          hypothesis: "Reducing screen time will improve sleep quality (directional)",
+          beforeLabel: "Before",
+          afterLabel: "After",
+          before: [5, 4, 6, 3, 5, 4, 6, 5, 4, 3, 5],
+          after: [7, 6, 7, 5, 6, 6, 8, 7, 6, 5, 6],
+          criticalValue: 2,
+          n: 11,
+          tails: "one-tailed",
+          answerA: "Looking for a difference (1), repeated measures design (same participants rated twice) (1), data is at least ordinal (rating scale) (1).",
+          answerB: "Signs: +,+,+,+,+,+,+,+,+,+,+ (1). No zeros, so N = 11 (1). S = 0 (no minus signs) (1).",
+          answerC: "S (0) is less than the critical value (2) (1), therefore results are significant at p≤0.05 (1). We reject the null hypothesis and conclude that reducing screen time significantly improves sleep quality (1)."
+        },
+        {
+          id: 6,
+          title: "Test Performance",
+          context: "A teacher investigates whether background music affects test performance. 9 students complete two equivalent tests: one with music and one in silence (counterbalanced).",
+          hypothesis: "Background music will affect test performance (non-directional)",
+          beforeLabel: "Silence",
+          afterLabel: "Music",
+          before: [72, 68, 75, 80, 65, 70, 78, 82, 69],
+          after: [70, 72, 73, 78, 68, 74, 75, 80, 72],
+          criticalValue: 1,
+          n: 9,
+          tails: "two-tailed",
+          answerA: "Looking for a difference (1), repeated measures design (same students in both conditions) (1), data is at least nominal/can determine direction (1).",
+          answerB: "Signs: −,+,−,−,+,+,−,−,+ (1). No zeros, so N = 9 (1). S = 4 (four plus signs vs five minus) (1).",
+          answerC: "S (4) is greater than the critical value (1) (1), therefore results are NOT significant at p≤0.05 two-tailed (1). We accept the null hypothesis - no significant effect of music on test performance (1)."
+        },
+        {
+          id: 7,
+          title: "Stress Reduction",
+          context: "A researcher tests whether exercise reduces stress. 13 office workers rate their stress (1-10) before and after a 4-week exercise programme.",
+          hypothesis: "Exercise will reduce stress levels (directional)",
+          beforeLabel: "Before",
+          afterLabel: "After",
+          before: [8, 7, 9, 8, 6, 9, 7, 8, 9, 7, 8, 6, 9],
+          after: [6, 5, 7, 6, 5, 7, 5, 6, 6, 5, 6, 5, 7],
+          criticalValue: 3,
+          n: 13,
+          tails: "one-tailed",
+          answerA: "Looking for a difference (1), repeated measures design (same workers measured twice) (1), data is at least ordinal (stress ratings) (1).",
+          answerB: "Signs: −,−,−,−,−,−,−,−,−,−,−,−,− (1). No zeros, so N = 13 (1). S = 0 (all showed decrease, no plus signs) (1).",
+          answerC: "S (0) is less than the critical value (3) (1), therefore results are significant at p≤0.05 (1). We reject the null hypothesis and conclude that exercise significantly reduces stress (1)."
+        },
+        {
+          id: 8,
+          title: "Confidence Building",
+          context: "A sports coach tests whether a confidence-building workshop improves athletes' self-belief. 10 athletes rate confidence (1-10) before and after the workshop.",
+          hypothesis: "The workshop will improve confidence (directional)",
+          beforeLabel: "Before",
+          afterLabel: "After",
+          before: [6, 5, 7, 4, 6, 5, 6, 7, 5, 4],
+          after: [7, 7, 8, 6, 7, 6, 8, 8, 6, 5],
+          criticalValue: 1,
+          n: 10,
+          tails: "one-tailed",
+          answerA: "Looking for a difference (1), repeated measures design (same athletes rated twice) (1), data is at least ordinal (confidence ratings) (1).",
+          answerB: "Signs: +,+,+,+,+,+,+,+,+,+ (1). No zeros, so N = 10 (1). S = 0 (no minus signs, all improved) (1).",
+          answerC: "S (0) is less than the critical value (1) (1), therefore results are significant at p≤0.05 (1). We reject the null hypothesis and conclude that the workshop significantly improves confidence (1)."
+        },
+        {
+          id: 9,
+          title: "Pain Perception",
+          context: "A researcher investigates whether distraction reduces pain perception. 12 participants rate pain (1-10) during a cold pressor task with and without distraction.",
+          hypothesis: "Distraction will affect pain perception (non-directional)",
+          beforeLabel: "No Distraction",
+          afterLabel: "Distraction",
+          before: [7, 8, 6, 9, 7, 8, 6, 7, 8, 9, 7, 8],
+          after: [5, 6, 5, 7, 6, 7, 4, 5, 6, 7, 5, 6],
+          criticalValue: 2,
+          n: 12,
+          tails: "two-tailed",
+          answerA: "Looking for a difference (1), repeated measures design (same participants in both conditions) (1), data is at least ordinal (pain ratings) (1).",
+          answerB: "Signs: −,−,−,−,−,−,−,−,−,−,−,− (1). No zeros, so N = 12 (1). S = 0 (all showed decrease, no plus signs) (1).",
+          answerC: "S (0) is less than the critical value (2) (1), therefore results are significant at p≤0.05 two-tailed (1). We reject the null hypothesis and conclude that distraction significantly affects pain perception (1)."
+        },
+        {
+          id: 10,
+          title: "Reading Speed",
+          context: "An educational psychologist tests whether a speed reading course improves reading speed. 14 students are tested (words per minute) before and after the course.",
+          hypothesis: "The course will improve reading speed (directional)",
+          beforeLabel: "Before (wpm)",
+          afterLabel: "After (wpm)",
+          before: [180, 210, 195, 220, 175, 200, 185, 215, 190, 205, 180, 195, 210, 188],
+          after: [220, 245, 210, 250, 195, 230, 205, 245, 220, 230, 200, 215, 240, 210],
+          criticalValue: 3,
+          n: 14,
+          tails: "one-tailed",
+          answerA: "Looking for a difference (1), repeated measures design (same students tested twice) (1), data is at least nominal/can assign direction (1).",
+          answerB: "Signs: +,+,+,+,+,+,+,+,+,+,+,+,+,+ (1). No zeros, so N = 14 (1). S = 0 (all improved, no minus signs) (1).",
+          answerC: "S (0) is less than the critical value (3) (1), therefore results are significant at p≤0.05 (1). We reject the null hypothesis and conclude that the speed reading course significantly improves reading speed (1)."
+        }
+      ]
+      
+      const scenario = scenarios[extendedScenario]
+      const participantCount = scenario.before.length
+      
+      const nextScenario = () => {
+        setExtendedScenario((prev) => (prev + 1) % scenarios.length)
+        setExtendedShowA(false)
+        setExtendedShowB(false)
+        setExtendedShowC(false)
+      }
+      
+      const prevScenario = () => {
+        setExtendedScenario((prev) => (prev - 1 + scenarios.length) % scenarios.length)
+        setExtendedShowA(false)
+        setExtendedShowB(false)
+        setExtendedShowC(false)
+      }
+
+      return (
+        <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-6 bg-gradient-to-br from-gray-900 to-gray-800 overflow-auto`}>
+          <div className="max-w-5xl mx-auto">
+            {/* Header with Navigation */}
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-rose-400">🎯 Sign Test Practice</h2>
+              <div className="flex items-center gap-3">
+                <button onClick={prevScenario} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-white text-sm">← Prev</button>
+                <span className="text-gray-400 text-sm font-semibold">{extendedScenario + 1} / {scenarios.length}</span>
+                <button onClick={nextScenario} className="px-3 py-1 bg-rose-600 hover:bg-rose-500 rounded text-white text-sm">Next →</button>
+              </div>
+            </div>
+            
+            {/* Scenario Card */}
+            <div className="bg-gray-800/50 p-4 rounded-lg border border-rose-500/50 mb-4">
+              <h3 className="text-rose-300 font-bold text-lg mb-2">📋 Scenario {scenario.id}: {scenario.title}</h3>
+              <p className="text-gray-300 text-sm">{scenario.context}</p>
+              <p className="text-amber-300 text-sm mt-2"><strong>Hypothesis:</strong> {scenario.hypothesis}</p>
+            </div>
+            
+            {/* Data Table */}
+            <div className="overflow-x-auto rounded-lg border border-gray-700 mb-4">
+              <table className="w-full text-xs">
+                <thead className="bg-gray-800">
+                  <tr>
+                    <th className="p-2 text-gray-400 border-r border-gray-700 text-left">P</th>
+                    {Array.from({length: participantCount}, (_, i) => (
+                      <th key={i} className="p-1 text-center text-gray-400 border-r border-gray-700 min-w-[28px]">{i + 1}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-t border-gray-700">
+                    <td className="p-2 text-gray-300 border-r border-gray-700 font-semibold whitespace-nowrap">{scenario.beforeLabel}</td>
+                    {scenario.before.map((v, i) => (
+                      <td key={i} className="p-1 text-center text-gray-300 border-r border-gray-700">{v}</td>
+                    ))}
+                  </tr>
+                  <tr className="border-t border-gray-700">
+                    <td className="p-2 text-gray-300 border-r border-gray-700 font-semibold whitespace-nowrap">{scenario.afterLabel}</td>
+                    {scenario.after.map((v, i) => (
+                      <td key={i} className="p-1 text-center text-gray-300 border-r border-gray-700">{v}</td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Critical Value Info */}
+            <div className="bg-purple-900/30 p-3 rounded-lg border border-purple-700 mb-4">
+              <p className="text-purple-300 text-sm"><strong>Critical value</strong> for N={scenario.n} ({scenario.tails}, p≤0.05) = <span className="text-white font-bold">{scenario.criticalValue}</span></p>
+            </div>
+
+            {/* Questions */}
+            <div className="space-y-3">
+              <div className="p-3 bg-gray-700/50 rounded">
+                <p className="text-amber-300 font-semibold text-sm">(a) Explain why the sign test is an appropriate test for this study. (3 marks)</p>
+                <button onClick={() => setExtendedShowA(!extendedShowA)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded text-white text-xs">
+                  {extendedShowA ? 'Hide Answer' : 'Reveal Answer'}
+                </button>
+                {extendedShowA && <p className="text-green-400 mt-2 text-xs animate-fadeIn">{scenario.answerA}</p>}
+              </div>
+              <div className="p-3 bg-gray-700/50 rounded">
+                <p className="text-amber-300 font-semibold text-sm">(b) Calculate S and state N. (3 marks)</p>
+                <button onClick={() => setExtendedShowB(!extendedShowB)} className="mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded text-white text-xs">
+                  {extendedShowB ? 'Hide Answer' : 'Reveal Answer'}
+                </button>
+                {extendedShowB && <p className="text-green-400 mt-2 text-xs animate-fadeIn">{scenario.answerB}</p>}
+              </div>
+              <div className="p-3 bg-gray-700/50 rounded">
+                <p className="text-amber-300 font-semibold text-sm">(c) Using the critical value, state whether results are significant and write your conclusion. (3 marks)</p>
+                <button onClick={() => setExtendedShowC(!extendedShowC)} className="mt-2 px-3 py-1 bg-rose-600 hover:bg-rose-500 rounded text-white text-xs">
+                  {extendedShowC ? 'Hide Answer' : 'Reveal Answer'}
+                </button>
+                {extendedShowC && <p className="text-green-400 mt-2 text-xs animate-fadeIn">{scenario.answerC}</p>}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
+        <div className="text-center">
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 6: The Sign Test</p>
+          <p className="text-gray-400">Slide: {slideType}</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Render A Level Lesson 7: Probability & Significance
+  const renderLesson37 = () => {
+    const slideType = lesson37Slides[currentSlide]
+
+    if (slideType === 'title') {
+      return (
+        <LessonTitleSlide
+          lessonNumber={7}
           title="Probability & Significance"
           subtitle="Critical Values & Type I/II Errors"
           objectives={[
@@ -19424,21 +20163,21 @@ function App() {
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
-          <p className="text-purple-400 text-xl mb-2">A Level Lesson 6: Probability & Significance</p>
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 7: Probability & Significance</p>
           <p className="text-gray-400">Slide: {slideType}</p>
         </div>
       </div>
     )
   }
 
-  // Render A Level Lesson 7: Non-Parametric Tests (Understanding when to use, NOT calculating)
-  const renderLesson37 = () => {
-    const slideType = lesson37Slides[currentSlide]
+  // Render A Level Lesson 8: Non-Parametric Tests (Understanding when to use, NOT calculating)
+  const renderLesson38 = () => {
+    const slideType = lesson38Slides[currentSlide]
 
     if (slideType === 'title') {
       return (
         <LessonTitleSlide
-          lessonNumber={7}
+          lessonNumber={8}
           title="Non-Parametric Tests"
           subtitle="Understanding When to Use Mann-Whitney & Wilcoxon"
           objectives={[
@@ -19681,21 +20420,21 @@ function App() {
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
-          <p className="text-purple-400 text-xl mb-2">A Level Lesson 7: Non-Parametric Tests</p>
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 8: Non-Parametric Tests</p>
           <p className="text-gray-400">Slide: {slideType}</p>
         </div>
       </div>
     )
   }
 
-  // Render A Level Lesson 8: Parametric Tests (Understanding when to use, NOT calculating)
-  const renderLesson38 = () => {
-    const slideType = lesson38Slides[currentSlide]
+  // Render A Level Lesson 9: Parametric Tests (Understanding when to use, NOT calculating)
+  const renderLesson39 = () => {
+    const slideType = lesson39Slides[currentSlide]
 
     if (slideType === 'title') {
       return (
         <LessonTitleSlide
-          lessonNumber={8}
+          lessonNumber={9}
           title="Parametric Tests"
           subtitle="Understanding When to Use t-tests"
           objectives={[
@@ -19951,21 +20690,21 @@ function App() {
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
-          <p className="text-purple-400 text-xl mb-2">A Level Lesson 8: Parametric Tests</p>
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 9: Parametric Tests</p>
           <p className="text-gray-400">Slide: {slideType}</p>
         </div>
       </div>
     )
   }
 
-  // Render A Level Lesson 9: Tests of Correlation (Understanding when to use, NOT calculating)
-  const renderLesson39 = () => {
-    const slideType = lesson39Slides[currentSlide]
+  // Render A Level Lesson 10: Tests of Correlation (Understanding when to use, NOT calculating)
+  const renderLesson40 = () => {
+    const slideType = lesson40Slides[currentSlide]
 
     if (slideType === 'title') {
       return (
         <LessonTitleSlide
-          lessonNumber={9}
+          lessonNumber={10}
           title="Tests of Correlation"
           subtitle="Understanding When to Use Spearman's & Pearson's"
           objectives={[
@@ -20249,21 +20988,21 @@ function App() {
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
-          <p className="text-purple-400 text-xl mb-2">A Level Lesson 9: Tests of Correlation</p>
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 10: Tests of Correlation</p>
           <p className="text-gray-400">Slide: {slideType}</p>
         </div>
       </div>
     )
   }
 
-  // Render A Level Lesson 10: Chi-Squared Test (Understanding when to use, NOT calculating)
-  const renderLesson40 = () => {
-    const slideType = lesson40Slides[currentSlide]
+  // Render A Level Lesson 11: Chi-Squared Test (Understanding when to use, NOT calculating)
+  const renderLesson41 = () => {
+    const slideType = lesson41Slides[currentSlide]
 
     if (slideType === 'title') {
       return (
         <LessonTitleSlide
-          lessonNumber={10}
+          lessonNumber={11}
           title="Chi-Squared Test"
           subtitle="Understanding When to Use Chi-Squared (χ²)"
           objectives={[
@@ -20483,21 +21222,21 @@ function App() {
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
-          <p className="text-purple-400 text-xl mb-2">A Level Lesson 10: Chi-Squared Test</p>
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 11: Chi-Squared Test</p>
           <p className="text-gray-400">Slide: {slideType}</p>
         </div>
       </div>
     )
   }
 
-  // Render A Level Lesson 11: Reporting Investigations
-  const renderLesson41 = () => {
-    const slideType = lesson41Slides[currentSlide]
+  // Render A Level Lesson 12: Reporting Investigations
+  const renderLesson42 = () => {
+    const slideType = lesson42Slides[currentSlide]
 
     if (slideType === 'title') {
       return (
         <LessonTitleSlide
-          lessonNumber={11}
+          lessonNumber={12}
           title="Reporting Investigations"
           subtitle="Scientific Report Sections"
           objectives={[
@@ -20598,21 +21337,21 @@ function App() {
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
-          <p className="text-purple-400 text-xl mb-2">A Level Lesson 11: Reporting Investigations</p>
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 12: Reporting Investigations</p>
           <p className="text-gray-400">Slide: {slideType}</p>
         </div>
       </div>
     )
   }
 
-  // Render A Level Lesson 12: Features of Science
-  const renderLesson42 = () => {
-    const slideType = lesson42Slides[currentSlide]
+  // Render A Level Lesson 13: Features of Science
+  const renderLesson43 = () => {
+    const slideType = lesson43Slides[currentSlide]
 
     if (slideType === 'title') {
       return (
         <LessonTitleSlide
-          lessonNumber={12}
+          lessonNumber={13}
           title="Features of Science"
           subtitle="Objectivity, Replicability, Paradigms"
           objectives={[
@@ -20713,7 +21452,7 @@ function App() {
     return (
       <div className={`w-full ${isPresenting ? 'h-full' : 'min-h-[600px]'} p-8 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center`}>
         <div className="text-center">
-          <p className="text-purple-400 text-xl mb-2">A Level Lesson 12: Features of Science</p>
+          <p className="text-purple-400 text-xl mb-2">A Level Lesson 13: Features of Science</p>
           <p className="text-gray-400">Slide: {slideType}</p>
         </div>
       </div>
@@ -20792,6 +21531,7 @@ function App() {
       case 40: return renderLesson40()
       case 41: return renderLesson41()
       case 42: return renderLesson42()
+      case 43: return renderLesson43()
       default: return renderPlaceholder()
     }
   }

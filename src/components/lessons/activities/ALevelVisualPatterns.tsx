@@ -98,7 +98,7 @@ export const SpotlightCards: React.FC<SpotlightCardsProps> = ({
 // ========================================
 interface RevealStep {
   title: string
-  content: string
+  content: React.ReactNode
   icon?: string
   color?: string
 }
